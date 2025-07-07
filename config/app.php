@@ -9,6 +9,10 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'key' => env('APP_KEY'),
+
+    'cipher' => 'AES-256-CBC',
+
     'timezone' => 'UTC',
 
     'locale' => 'en',
