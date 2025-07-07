@@ -32,6 +32,7 @@ return [
         Illuminate\Encryption\EncryptionServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
         Illuminate\Queue\QueueServiceProvider::class,
+        Illuminate\Validation\ValidationServiceProvider::class,
         Laravel\Breeze\BreezeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
@@ -42,5 +43,6 @@ return [
         'Route' => Illuminate\Support\Facades\Route::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'Cache' => Illuminate\Support\Facades\Cache::class,
+        'Validator' => Illuminate\Support\Facades\Validator::class,
     ],
 ];
