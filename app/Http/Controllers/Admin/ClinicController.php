@@ -18,4 +18,19 @@ class ClinicController extends Controller
     {
         return view('admin.clinics.create');
     }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'nome' => 'required',
+            'cnpj' => 'required',
+            'responsavel' => 'required',
+            'plano' => 'required',
+            'idioma_preferido' => 'required',
+        ]);
+
+        Clinic::create($data);
+
+        return redirect()->route('clinicas.index');
+    }
 }
