@@ -27,6 +27,7 @@ return [
         Illuminate\Cache\CacheServiceProvider::class,
         Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Cookie\CookieServiceProvider::class,
         Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Encryption\EncryptionServiceProvider::class,
