@@ -6,7 +6,6 @@ Core do sistema SaaS odontológico utilizando Laravel 11.
 - PHP 8.2+
 - Composer
 - MySQL (Laragon)
-- Node.js + NPM
 - Laravel instalado globalmente (opcional)
 
 ## Passo a passo (Laragon - Windows)
@@ -15,10 +14,9 @@ Core do sistema SaaS odontológico utilizando Laravel 11.
    ```bash
    cd C:\laragon\www\dentix
    ```
-3. Instale as dependências do Composer e NPM:
+3. Instale as dependências do Composer:
    ```bash
    composer install
-   npm install && npm run build
    ```
 4. Copie o arquivo `.env.example` para `.env` e configure o banco de dados MySQL.
 5. Gere a chave da aplicação:
