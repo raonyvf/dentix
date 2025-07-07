@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('cadeiras', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('clinic_id')->constrained('clinics');
             $table->foreignId('unidade_id')->constrained('unidades');
             $table->string('nome');
             $table->string('especialidade');
