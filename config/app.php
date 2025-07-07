@@ -24,6 +24,7 @@ return [
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Database\DatabaseServiceProvider::class,
         Illuminate\Filesystem\FilesystemServiceProvider::class,
+        Illuminate\Cache\CacheServiceProvider::class,
         Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Illuminate\Cookie\CookieServiceProvider::class,
@@ -39,5 +40,6 @@ return [
         'DB' => Illuminate\Support\Facades\DB::class,
         'Route' => Illuminate\Support\Facades\Route::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
+        'Cache' => Illuminate\Support\Facades\Cache::class,
     ],
 ];
