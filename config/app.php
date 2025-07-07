@@ -31,6 +31,7 @@ return [
         Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Encryption\EncryptionServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
+        Illuminate\Queue\QueueServiceProvider::class,
         Laravel\Breeze\BreezeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
