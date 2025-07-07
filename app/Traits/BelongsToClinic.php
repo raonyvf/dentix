@@ -8,15 +8,23 @@ trait BelongsToClinic
 {
     protected static function bootBelongsToClinic()
     {
-        if (auth()->check()) {
-            static::addGlobalScope('clinic', function (Builder $builder) {
-                $builder->where('clinic_id', auth()->id() ? auth()->user()->clinic_id : null);
+        if (! auth()->check()) {
+            return;
+        }
+
+        $instance = new static;
+
+        if (\Schema::hasColumn($instance->getTable(), 'clinic_id')) {
+            static::addGlobalScope('clinic', function (Builder $builder) use ($instance) {
+                $builder->where($instance->getTable() . '.clinic_id', auth()->user()->clinic_id);
             });
         }
     }
 
     public function initializeBelongsToClinic()
     {
-        $this->fillable[] = 'clinic_id';
+        if (\Schema::hasColumn($this->getTable(), 'clinic_id')) {
+            $this->fillable[] = 'clinic_id';
+        }
     }
 }
