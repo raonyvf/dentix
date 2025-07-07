@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cadeira;
+use App\Models\Unidade;
 use Illuminate\Http\Request;
 
 class CadeiraController extends Controller
@@ -16,6 +17,22 @@ class CadeiraController extends Controller
 
     public function create()
     {
-        return view('admin.cadeiras.create');
+        $unidades = Unidade::all();
+        return view('admin.cadeiras.create', compact('unidades'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'unidade_id' => 'required|exists:unidades,id',
+            'nome' => 'required',
+            'especialidade' => 'required',
+            'status' => 'required',
+            'horarios_disponiveis' => 'required',
+        ]);
+
+        Cadeira::create($data);
+
+        return redirect()->route('cadeiras.index');
     }
 }
