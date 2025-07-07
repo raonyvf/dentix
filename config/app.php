@@ -29,6 +29,7 @@ return [
         Illuminate\Cookie\CookieServiceProvider::class,
         Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Encryption\EncryptionServiceProvider::class,
+        Illuminate\Hashing\HashServiceProvider::class,
         Laravel\Breeze\BreezeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
@@ -37,5 +38,6 @@ return [
         'App' => Illuminate\Support\Facades\App::class,
         'DB' => Illuminate\Support\Facades\DB::class,
         'Route' => Illuminate\Support\Facades\Route::class,
+        'Hash' => Illuminate\Support\Facades\Hash::class,
     ],
 ];
