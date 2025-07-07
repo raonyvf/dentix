@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\UnidadeController;
 use App\Http\Controllers\Admin\CadeiraController;
 
 Route::get('/', function () {
-    return view('admin.index');
+    return view('dashboard');
 })->name('admin.index');
 
 Route::resource('clinicas', ClinicController::class);

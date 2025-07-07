@@ -1,28 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ sidebarCollapsed: JSON.parse(localStorage.getItem('sidebarCollapsed') ?? 'false') }" x-init="$watch('sidebarCollapsed', val => localStorage.setItem('sidebarCollapsed', val))" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name') }}</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-        header { background: #0d6efd; color: #fff; padding: 1rem; }
-        nav a { color: #fff; margin-right: 1rem; }
-        .container { padding: 1rem; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
-        .card { border: 1px solid #ccc; padding: 1rem; border-radius: 5px; }
-        .btn { display: inline-block; padding: 0.5rem 1rem; background: #0d6efd; color: #fff; text-decoration: none; border-radius: 3px; }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
-<header>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/admin">Admin</a>
-    </nav>
-</header>
-<div class="container">
-    @yield('content')
-</div>
+<body class="flex h-full bg-gray-100">
+    @auth
+        <aside :class="sidebarCollapsed ? 'w-20' : 'w-64'" class="h-full bg-white border-r shadow transition-all duration-300">
+            @include('partials.sidebar')
+        </aside>
+    @endauth
+    <div class="flex flex-col flex-1 min-h-screen">
+        @auth
+            @include('partials.topbar')
+        @endauth
+        <main class="flex-1 p-6 overflow-y-auto">
+            @yield('content')
+        </main>
+    </div>
 </body>
 </html>

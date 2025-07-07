@@ -1,12 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Criar Cadeira</h1>
-    <form method="POST" action="{{ route('cadeiras.store') }}">
+<div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow">
+    <h1 class="text-xl font-semibold mb-4">Criar Cadeira</h1>
+    <form method="POST" action="{{ route('cadeiras.store') }}" class="space-y-4">
         @csrf
         <div>
-            <label>Unidade</label>
-            <select name="unidade_id" required>
+            <label class="block text-sm font-medium text-gray-700">Unidade</label>
+            <select name="unidade_id" required class="mt-1 w-full rounded-md border-gray-300">
                 <option value="">Selecione</option>
                 @foreach ($unidades as $unidade)
                     <option value="{{ $unidade->id }}">{{ $unidade->nome }}</option>
@@ -14,21 +15,22 @@
             </select>
         </div>
         <div>
-            <label>Nome</label>
-            <input type="text" name="nome" required />
+            <label class="block text-sm font-medium text-gray-700">Nome</label>
+            <input class="mt-1 w-full rounded-md border-gray-300" type="text" name="nome" required />
         </div>
         <div>
-            <label>Especialidade</label>
-            <input type="text" name="especialidade" required />
+            <label class="block text-sm font-medium text-gray-700">Especialidade</label>
+            <input class="mt-1 w-full rounded-md border-gray-300" type="text" name="especialidade" required />
         </div>
         <div>
-            <label>Status</label>
-            <input type="text" name="status" required />
+            <label class="block text-sm font-medium text-gray-700">Status</label>
+            <input class="mt-1 w-full rounded-md border-gray-300" type="text" name="status" required />
         </div>
         <div>
-            <label>Horários Disponíveis</label>
-            <input type="text" name="horarios_disponiveis" required />
+            <label class="block text-sm font-medium text-gray-700">Horários Disponíveis</label>
+            <input class="mt-1 w-full rounded-md border-gray-300" type="text" name="horarios_disponiveis" required />
         </div>
-        <button type="submit" class="btn">Salvar</button>
+        <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
     </form>
+</div>
 @endsection
