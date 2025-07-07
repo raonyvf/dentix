@@ -27,5 +27,6 @@ return [
         'DB' => Illuminate\Support\Facades\DB::class,
         'Route' => Illuminate\Support\Facades\Route::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Str' => Illuminate\Support\Str::class,
     ],
 ];
