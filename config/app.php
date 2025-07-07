@@ -20,6 +20,7 @@ return [
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Database\DatabaseServiceProvider::class,
         Illuminate\Filesystem\FilesystemServiceProvider::class,
+        Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Laravel\Breeze\BreezeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
