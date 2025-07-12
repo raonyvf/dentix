@@ -18,17 +18,22 @@
             <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
             <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome" required />
         </div>
-        <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Endereço</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco" required />
-        </div>
-        <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Cidade</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" required />
-        </div>
-        <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Estado</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" required />
+        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+            <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div class="sm:col-span-2">
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Logradouro</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco" required />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Cidade</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" required />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Estado</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" required />
+                </div>
+            </div>
         </div>
         <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Contato</label>
