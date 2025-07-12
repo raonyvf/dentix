@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('cidade');
             $table->string('estado');
             $table->string('contato');
-            $table->string('horarios_funcionamento');
+            $table->json('horarios_funcionamento');
             $table->timestamps();
         });
     }
