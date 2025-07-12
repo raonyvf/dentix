@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Clinic;
+use App\Models\Plano;
+use App\Rules\Cnpj;
 use Illuminate\Http\Request;
 
 class ClinicController extends Controller
@@ -16,17 +18,17 @@ class ClinicController extends Controller
 
     public function create()
     {
-        return view('admin.clinics.create');
+        $planos = Plano::all();
+        return view('admin.clinics.create', compact('planos'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'nome' => 'required',
-            'cnpj' => 'required',
+            'cnpj' => ['required', new Cnpj],
             'responsavel' => 'required',
-            'plano' => 'required',
-            'idioma_preferido' => 'required',
+            'plano_id' => 'required|exists:planos,id',
         ]);
 
         Clinic::create($data);
