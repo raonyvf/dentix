@@ -14,12 +14,12 @@
             <form method="POST" action="{{ route('login') }}" class="space-y-5">
                 @csrf
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input id="email" class="w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary" type="email" name="email" required autofocus />
+                    <label for="email" class="mb-2 block text-sm font-medium text-gray-700">Email</label>
+                    <input id="email" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" required autofocus />
                 </div>
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
-                    <input id="password" class="w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary" type="password" name="password" required />
+                    <label for="password" class="mb-2 block text-sm font-medium text-gray-700">Senha</label>
+                    <input id="password" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="password" name="password" required />
                 </div>
                 <button type="submit" class="w-full py-2 px-4 bg-primary text-white rounded-lg hover:bg-primary/90">Entrar</button>
             </form>
