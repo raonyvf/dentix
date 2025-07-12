@@ -19,11 +19,12 @@
         </div>
         <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Plano</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="plano" required />
-        </div>
-        <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Idioma Preferido</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="idioma_preferido" required />
+            <select name="plano_id" required class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                <option value="">Selecione</option>
+                @foreach ($planos as $plano)
+                    <option value="{{ $plano->id }}">{{ $plano->nome }}</option>
+                @endforeach
+            </select>
         </div>
         <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
     </form>
