@@ -61,6 +61,7 @@ Se você executou `php artisan migrate:fresh` e perdeu seu cadastro, crie um usu
 php artisan db:seed --class=AdminUserSeeder
 ```
 
+
 Caso o Artisan indique que a classe `AdminUserSeeder` não existe, execute:
 
 ```bash
@@ -71,3 +72,4 @@ Isso recriará o autoloader do Composer e permitirá que a classe seja encontrad
 
 Ele gerará a conta `admin@example.com` com a senha `password`. Acesse com essas
 credenciais e, se desejar, altere a senha após o login.
+
