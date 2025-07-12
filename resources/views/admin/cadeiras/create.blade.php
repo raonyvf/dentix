@@ -6,8 +6,8 @@
     <form method="POST" action="{{ route('cadeiras.store') }}" class="space-y-4">
         @csrf
         <div>
-            <label class="block text-sm font-medium text-gray-700">Unidade</label>
-            <select name="unidade_id" required class="mt-1 w-full rounded-md border-gray-300">
+            <label class="mb-2 block text-sm font-medium text-gray-700">Unidade</label>
+            <select name="unidade_id" required class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
                 <option value="">Selecione</option>
                 @foreach ($unidades as $unidade)
                     <option value="{{ $unidade->id }}">{{ $unidade->nome }}</option>
@@ -15,20 +15,20 @@
             </select>
         </div>
         <div>
-            <label class="block text-sm font-medium text-gray-700">Nome</label>
-            <input class="mt-1 w-full rounded-md border-gray-300" type="text" name="nome" required />
+            <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome" required />
         </div>
         <div>
-            <label class="block text-sm font-medium text-gray-700">Especialidade</label>
-            <input class="mt-1 w-full rounded-md border-gray-300" type="text" name="especialidade" required />
+            <label class="mb-2 block text-sm font-medium text-gray-700">Especialidade</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="especialidade" required />
         </div>
         <div>
-            <label class="block text-sm font-medium text-gray-700">Status</label>
-            <input class="mt-1 w-full rounded-md border-gray-300" type="text" name="status" required />
+            <label class="mb-2 block text-sm font-medium text-gray-700">Status</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="status" required />
         </div>
         <div>
-            <label class="block text-sm font-medium text-gray-700">Horários Disponíveis</label>
-            <input class="mt-1 w-full rounded-md border-gray-300" type="text" name="horarios_disponiveis" required />
+            <label class="mb-2 block text-sm font-medium text-gray-700">Horários Disponíveis</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="horarios_disponiveis" required />
         </div>
         <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
     </form>
