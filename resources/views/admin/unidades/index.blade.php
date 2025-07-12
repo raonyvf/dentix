@@ -12,6 +12,7 @@
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nome</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cidade</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -20,6 +21,9 @@
                     <td class="px-4 py-2 whitespace-nowrap">{{ $unidade->nome }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $unidade->cidade }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $unidade->estado }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">
+                        <a href="{{ route('unidades.edit', $unidade) }}" class="text-blue-600 hover:underline">Editar</a>
+                    </td>
                 </tr>
             @empty
                 <tr>
