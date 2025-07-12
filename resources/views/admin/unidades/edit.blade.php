@@ -11,7 +11,13 @@
         'sabado' => 'Sábado',
         'domingo' => 'Domingo',
     ];
-    $horarios = $unidade->horarios_funcionamento ?? [];
+    $horarios = $unidade->horarios
+        ->mapWithKeys(fn($h) => [
+            $h->dia_semana => [
+                'abertura' => $h->hora_inicio,
+                'fechamento' => $h->hora_fim,
+            ],
+        ])->toArray();
 @endphp
 <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Editar Unidade</h1>
