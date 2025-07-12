@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Unidade;
 use App\Models\Clinic;
+use App\Models\Horario;
 use Illuminate\Http\Request;
 
 class UnidadeController extends Controller
@@ -33,10 +34,21 @@ class UnidadeController extends Controller
             'horarios' => 'required|array',
         ]);
 
-        $data['horarios_funcionamento'] = $data['horarios'];
+        $horarios = $data['horarios'];
         unset($data['horarios']);
 
-        Unidade::create($data);
+        $unidade = Unidade::create($data);
+
+        foreach ($horarios as $dia => $horario) {
+            if (($horario['abertura'] ?? false) && ($horario['fechamento'] ?? false)) {
+                $unidade->horarios()->create([
+                    'clinic_id' => $unidade->clinic_id,
+                    'dia_semana' => $dia,
+                    'hora_inicio' => $horario['abertura'],
+                    'hora_fim' => $horario['fechamento'],
+                ]);
+            }
+        }
 
         return redirect()->route('unidades.index');
     }
@@ -59,10 +71,22 @@ class UnidadeController extends Controller
             'horarios' => 'required|array',
         ]);
 
-        $data['horarios_funcionamento'] = $data['horarios'];
+        $horarios = $data['horarios'];
         unset($data['horarios']);
 
         $unidade->update($data);
+        $unidade->horarios()->delete();
+
+        foreach ($horarios as $dia => $horario) {
+            if (($horario['abertura'] ?? false) && ($horario['fechamento'] ?? false)) {
+                $unidade->horarios()->create([
+                    'clinic_id' => $unidade->clinic_id,
+                    'dia_semana' => $dia,
+                    'hora_inicio' => $horario['abertura'],
+                    'hora_fim' => $horario['fechamento'],
+                ]);
+            }
+        }
 
         return redirect()->route('unidades.index');
     }
