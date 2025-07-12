@@ -52,3 +52,14 @@ DB_DATABASE=dentix
 DB_USERNAME=dentix
 DB_PASSWORD=senha
 ```
+
+### Usuário administrador padrão
+
+Se você executou `php artisan migrate:fresh` e perdeu seu cadastro, crie um usuário de acesso com:
+
+```bash
+php artisan db:seed --class=AdminUserSeeder
+```
+
+Ele gerará a conta `admin@example.com` com a senha `password`. Acesse com essas
+credenciais e, se desejar, altere a senha após o login.
