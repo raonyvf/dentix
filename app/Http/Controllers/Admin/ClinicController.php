@@ -35,4 +35,24 @@ class ClinicController extends Controller
 
         return redirect()->route('clinicas.index')->with('success', 'Clínica salva com sucesso.');
     }
+
+    public function edit(Clinic $clinic)
+    {
+        $planos = Plano::all();
+        return view('admin.clinics.edit', compact('clinic', 'planos'));
+    }
+
+    public function update(Request $request, Clinic $clinic)
+    {
+        $data = $request->validate([
+            'nome' => 'required',
+            'cnpj' => ['required', new Cnpj],
+            'responsavel' => 'required',
+            'plano_id' => 'required|exists:planos,id',
+        ]);
+
+        $clinic->update($data);
+
+        return redirect()->route('clinicas.index')->with('success', 'Clínica atualizada com sucesso.');
+    }
 }
