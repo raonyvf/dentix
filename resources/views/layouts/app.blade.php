@@ -17,6 +17,9 @@
             @include('partials.topbar')
         @endauth
         <main class="flex-1 p-6 overflow-y-auto">
+            @if (session('success'))
+                @include('components.alert-success', ['slot' => session('success')])
+            @endif
             @yield('content')
         </main>
     </div>

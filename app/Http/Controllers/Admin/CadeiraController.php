@@ -33,6 +33,6 @@ class CadeiraController extends Controller
 
         Cadeira::create($data);
 
-        return redirect()->route('cadeiras.index');
+        return redirect()->route('cadeiras.index')->with('success', 'Cadeira salva com sucesso.');
     }
 }
