@@ -44,6 +44,7 @@ return [
         'Route' => Illuminate\Support\Facades\Route::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'Cache' => Illuminate\Support\Facades\Cache::class,
+        'Auth' => Illuminate\Support\Facades\Auth::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
     ],
 ];
