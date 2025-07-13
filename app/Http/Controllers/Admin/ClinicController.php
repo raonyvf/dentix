@@ -33,6 +33,6 @@ class ClinicController extends Controller
 
         Clinic::create($data);
 
-        return redirect()->route('clinicas.index');
+        return redirect()->route('clinicas.index')->with('success', 'Clínica salva com sucesso.');
     }
 }

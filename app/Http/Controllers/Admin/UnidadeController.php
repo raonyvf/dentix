@@ -50,7 +50,7 @@ class UnidadeController extends Controller
             }
         }
 
-        return redirect()->route('unidades.index');
+        return redirect()->route('unidades.index')->with('success', 'Unidade salva com sucesso.');
     }
 
     public function edit(Unidade $unidade)
@@ -88,6 +88,6 @@ class UnidadeController extends Controller
             }
         }
 
-        return redirect()->route('unidades.index');
+        return redirect()->route('unidades.index')->with('success', 'Unidade atualizada com sucesso.');
     }
 }
