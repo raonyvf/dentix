@@ -30,6 +30,11 @@ class CadeiraController extends Controller
             'status' => 'required',
         ]);
 
+        $unidade = Unidade::find($data['unidade_id']);
+        if ($unidade) {
+            $data['clinic_id'] = $unidade->clinic_id;
+        }
+
         Cadeira::create($data);
 
         return redirect()->route('cadeiras.index')->with('success', 'Cadeira salva com sucesso.');
