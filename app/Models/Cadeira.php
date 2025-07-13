@@ -8,7 +8,7 @@ class Cadeira extends Model
 {
 
     protected $fillable = [
-        'unidade_id', 'nome', 'especialidade', 'status', 'horarios_disponiveis'
+        'unidade_id', 'nome', 'especialidade', 'status'
     ];
 
     public function unidade()

@@ -29,10 +29,7 @@
                 <option value="Desativa" @selected(old('status') === 'Desativa')>Desativa</option>
             </select>
         </div>
-        <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Horários Disponíveis</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="horarios_disponiveis" required />
-        </div>
+
         <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
     </form>
 </div>

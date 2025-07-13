@@ -28,7 +28,6 @@ class CadeiraController extends Controller
             'nome' => 'required',
             'especialidade' => 'required',
             'status' => 'required',
-            'horarios_disponiveis' => 'required',
         ]);
 
         Cadeira::create($data);
@@ -49,7 +48,6 @@ class CadeiraController extends Controller
             'nome' => 'required',
             'especialidade' => 'required',
             'status' => 'required',
-            'horarios_disponiveis' => 'required',
         ]);
 
         $cadeira->update($data);
