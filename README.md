@@ -34,6 +34,17 @@ verifique a pasta `database/migrations` e remova qualquer arquivo antigo chamado
 A coluna `horarios_funcionamento` foi substituída pela tabela `horarios` e essa
 migration não é mais necessária.
 
+### Erro "Field 'horarios_disponiveis' doesn't have a default value"
+
+Se, ao criar uma cadeira, surgir o erro:
+
+```
+SQLSTATE[HY000]: General error: 1364 Field 'horarios_disponiveis' doesn't have a default value
+```
+
+significa que sua tabela `cadeiras` ainda possui a coluna `horarios_disponiveis`. Remova-a executando a migration
+`2025_07_13_160000_remove_horarios_disponiveis_from_cadeiras_table.php` com `php artisan migrate`.
+
 ### Criando um usuário MySQL
 
 Para evitar usar a conta `root`, você pode criar um usuário e um banco exclusivos para o Dentix. Abra o terminal do Laragon e execute:
