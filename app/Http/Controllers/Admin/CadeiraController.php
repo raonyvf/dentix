@@ -35,4 +35,25 @@ class CadeiraController extends Controller
 
         return redirect()->route('cadeiras.index')->with('success', 'Cadeira salva com sucesso.');
     }
+
+    public function edit(Cadeira $cadeira)
+    {
+        $unidades = Unidade::all();
+        return view('admin.cadeiras.edit', compact('cadeira', 'unidades'));
+    }
+
+    public function update(Request $request, Cadeira $cadeira)
+    {
+        $data = $request->validate([
+            'unidade_id' => 'required|exists:unidades,id',
+            'nome' => 'required',
+            'especialidade' => 'required',
+            'status' => 'required',
+            'horarios_disponiveis' => 'required',
+        ]);
+
+        $cadeira->update($data);
+
+        return redirect()->route('cadeiras.index')->with('success', 'Cadeira atualizada com sucesso.');
+    }
 }

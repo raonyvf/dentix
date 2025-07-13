@@ -12,6 +12,7 @@
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nome</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">CNPJ</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Responsável</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -20,10 +21,13 @@
                     <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->nome }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->cnpj }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->responsavel }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">
+                        <a href="{{ route('clinicas.edit', $clinic) }}" class="text-blue-600 hover:underline">Editar</a>
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="3" class="px-4 py-2 text-center">Nenhuma clínica cadastrada.</td>
+                    <td colspan="4" class="px-4 py-2 text-center">Nenhuma clínica cadastrada.</td>
                 </tr>
             @endforelse
         </tbody>
