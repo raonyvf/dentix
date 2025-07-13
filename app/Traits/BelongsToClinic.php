@@ -9,7 +9,7 @@ trait BelongsToClinic
 {
     protected static function bootBelongsToClinic()
     {
-        if (! auth()->check()) {
+        if (! auth()->check() || is_null(auth()->user()->clinic_id)) {
             return;
         }
 
