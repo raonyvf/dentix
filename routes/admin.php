@@ -9,6 +9,7 @@ Route::get('/', function () {
     return view('dashboard');
 })->name('admin.index');
 
-Route::resource('clinicas', ClinicController::class);
+Route::resource('clinicas', ClinicController::class)
+    ->parameters(['clinicas' => 'clinic']);
 Route::resource('unidades', UnidadeController::class);
 Route::resource('cadeiras', CadeiraController::class);
