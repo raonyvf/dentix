@@ -52,7 +52,7 @@
                 <svg x-show="!sidebarCollapsed" :class="{'rotate-90': openAccess}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
             </button>
             <div x-show="openAccess && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-12" x-cloak>
-                <a href="#" class="block py-1 hover:underline">Usuários</a>
+                <a href="{{ route('usuarios.index') }}" class="block py-1 hover:underline">Usuários</a>
                 <a href="{{ route('perfis.index') }}" class="block py-1 hover:underline">Perfis</a>
             </div>
         </div>
