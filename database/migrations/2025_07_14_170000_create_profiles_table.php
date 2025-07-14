@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('clinic_id')->constrained('clinics');
+            $table->foreignId('clinic_id')->nullable()->constrained('clinics');
             $table->string('nome');
             $table->timestamps();
         });

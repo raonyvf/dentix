@@ -44,5 +44,17 @@
                 <a href="{{ route('cadeiras.index') }}" class="block py-1 hover:underline">Cadeiras</a>
             </div>
         </div>
+
+        <div class="mt-2" x-data="{ openAccess: false }">
+            <button @click="openAccess = !openAccess" class="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Gestão de Acessos' : ''">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a2 2 0 100-4 2 2 0 00-2 2m-6 0a2 2 0 11-4 0 2 2 0 004 0zm0 6h6m2 0a2 2 0 100-4 2 2 0 00-2 2m-6 0a2 2 0 11-4 0 2 2 0 004 0z" /></svg>
+                <span class="ml-3" x-show="!sidebarCollapsed">Gestão de Acessos</span>
+                <svg x-show="!sidebarCollapsed" :class="{'rotate-90': openAccess}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+            <div x-show="openAccess && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-12" x-cloak>
+                <a href="#" class="block py-1 hover:underline">Usuários</a>
+                <a href="{{ route('perfis.index') }}" class="block py-1 hover:underline">Perfis</a>
+            </div>
+        </div>
     </nav>
 </div>

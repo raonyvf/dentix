@@ -84,3 +84,7 @@ Isso recriará o autoloader do Composer e permitirá que a classe seja encontrad
 Ele gerará a conta `admin@example.com` com a senha `password`. Acesse com essas
 credenciais e, se desejar, altere a senha após o login.
 
+Esse seeder também cria o perfil **Administrador** com todas as permissões e o
+associa automaticamente a esse usuário para que você já possa gerenciar novos
+perfis e usuários.
+
