@@ -7,13 +7,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\BelongsToClinic;
+use App\Models\Profile;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, BelongsToClinic;
 
     protected $fillable = [
-        'name', 'email', 'password', 'clinic_id'
+        'name',
+        'email',
+        'password',
+        'clinic_id',
+        'profile_id',
     ];
 
     protected $hidden = [
@@ -28,4 +33,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Clinic::class);
     }
+
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class);
+    }
 }
+
