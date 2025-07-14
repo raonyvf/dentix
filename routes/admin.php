@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ClinicController;
 use App\Http\Controllers\Admin\UnidadeController;
 use App\Http\Controllers\Admin\CadeiraController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -15,3 +16,4 @@ Route::resource('clinicas', ClinicController::class)
 Route::resource('unidades', UnidadeController::class);
 Route::resource('cadeiras', CadeiraController::class);
 Route::resource('perfis', ProfileController::class)->parameters(['perfis' => 'perfil']);
+Route::resource('usuarios', UserController::class);
