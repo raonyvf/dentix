@@ -45,18 +45,17 @@ SQLSTATE[HY000]: General error: 1364 Field 'horarios_disponiveis' doesn't have a
 significa que sua tabela `cadeiras` ainda possui a coluna `horarios_disponiveis`. Remova-a executando a migration
 `2025_07_13_160000_remove_horarios_disponiveis_from_cadeiras_table.php` com `php artisan migrate`.
 
-### Criando um usuário MySQL
+### Criando um usuário PostgreSQL
 
-Para evitar usar a conta `root`, você pode criar um usuário e um banco exclusivos para o Dentix. Abra o terminal do Laragon e execute:
+Para evitar usar a conta padrão `postgres`, você pode criar um usuário e um banco exclusivos para o Dentix. No terminal do PostgreSQL, execute:
 
 ```sql
-CREATE USER 'dentix'@'localhost' IDENTIFIED BY 'senha';
-CREATE DATABASE dentix CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-GRANT ALL PRIVILEGES ON dentix.* TO 'dentix'@'localhost';
-FLUSH PRIVILEGES;
+CREATE USER dentix WITH PASSWORD 'senha';
+CREATE DATABASE dentix OWNER dentix;
+GRANT ALL PRIVILEGES ON DATABASE dentix TO dentix;
 ```
 
-Depois, atualize o arquivo `.env` com as credenciais escolhidas:
+Em seguida, atualize o arquivo `.env` com as credenciais escolhidas:
 
 ```bash
 DB_DATABASE=dentix
