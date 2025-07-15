@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div x-data="{ activeTab: 'dados', menor: false }" class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
+<div x-data="{ activeTab: 'dados', menor: false }" class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Novo Paciente</h1>
 
     <ul class="flex border-b mb-6">
