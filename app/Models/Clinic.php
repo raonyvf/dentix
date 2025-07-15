@@ -3,16 +3,28 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Plano;
+use App\Models\Horario;
+use App\Models\Cadeira;
 class Clinic extends Model
 {
 
     protected $fillable = [
-        'nome', 'cnpj', 'responsavel', 'plano_id'
+        'nome',
+        'cnpj',
+        'responsavel',
+        'endereco',
+        'cidade',
+        'estado',
+        'contato',
     ];
 
-    public function plano()
+    public function horarios()
     {
-        return $this->belongsTo(Plano::class);
+        return $this->hasMany(Horario::class);
+    }
+
+    public function cadeiras()
+    {
+        return $this->hasMany(Cadeira::class);
     }
 }

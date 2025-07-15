@@ -40,7 +40,6 @@
             </button>
             <div x-show="open && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-12" x-cloak>
                 <a href="{{ route('clinicas.index') }}" class="block py-1 hover:underline">Clínicas</a>
-                <a href="{{ route('unidades.index') }}" class="block py-1 hover:underline">Unidades</a>
                 <a href="{{ route('cadeiras.index') }}" class="block py-1 hover:underline">Cadeiras</a>
             </div>
         </div>

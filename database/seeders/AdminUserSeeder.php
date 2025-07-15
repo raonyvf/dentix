@@ -33,7 +33,6 @@ class AdminUserSeeder extends Seeder
             'Estoque',
             'Financeiro',
             'Clínicas',
-            'Unidades',
             'Cadeiras',
             'Usuários',
             'Perfis',

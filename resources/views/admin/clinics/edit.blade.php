@@ -28,13 +28,45 @@
             <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel" value="{{ old('responsavel', $clinic->responsavel) }}" required />
         </div>
         <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Plano</label>
-            <select name="plano_id" required class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
-                <option value="">Selecione</option>
-                @foreach ($planos as $plano)
-                    <option value="{{ $plano->id }}" @selected(old('plano_id', $clinic->plano_id) == $plano->id)>{{ $plano->nome }}</option>
-                @endforeach
-            </select>
+            <label class="mb-2 block text-sm font-medium text-gray-700">Endereço</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco" value="{{ old('endereco', $clinic->endereco) }}" required />
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">Cidade</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" value="{{ old('cidade', $clinic->cidade) }}" required />
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">Estado</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado', $clinic->estado) }}" required />
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">Contato</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="contato" value="{{ old('contato', $clinic->contato) }}" required />
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">Horários de Funcionamento</label>
+            @php
+                $diasSemana = [
+                    'segunda' => 'Segunda-feira',
+                    'terca' => 'Terça-feira',
+                    'quarta' => 'Quarta-feira',
+                    'quinta' => 'Quinta-feira',
+                    'sexta' => 'Sexta-feira',
+                    'sabado' => 'Sábado',
+                    'domingo' => 'Domingo',
+                ];
+            @endphp
+            @foreach ($diasSemana as $diaKey => $diaLabel)
+                @php
+                    $abertura = old('horarios.' . $diaKey . '.abertura', $horarios[$diaKey]['abertura'] ?? '');
+                    $fechamento = old('horarios.' . $diaKey . '.fechamento', $horarios[$diaKey]['fechamento'] ?? '');
+                @endphp
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="w-32 text-sm">{{ $diaLabel }}</span>
+                    <input type="time" name="horarios[{{ $diaKey }}][abertura]" value="{{ $abertura }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="time" name="horarios[{{ $diaKey }}][fechamento]" value="{{ $fechamento }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+            @endforeach
         </div>
         <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
     </form>

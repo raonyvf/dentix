@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cadeira;
-use App\Models\Unidade;
+use App\Models\Clinic;
 use Illuminate\Http\Request;
 
 class CadeiraController extends Controller
@@ -17,23 +17,18 @@ class CadeiraController extends Controller
 
     public function create()
     {
-        $unidades = Unidade::all();
-        return view('admin.cadeiras.create', compact('unidades'));
+        $clinics = Clinic::all();
+        return view('admin.cadeiras.create', compact('clinics')); 
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'unidade_id' => 'required|exists:unidades,id',
+            'clinic_id' => 'required|exists:clinics,id',
             'nome' => 'required',
             'especialidade' => 'required',
             'status' => 'required',
         ]);
-
-        $unidade = Unidade::find($data['unidade_id']);
-        if ($unidade) {
-            $data['clinic_id'] = $unidade->clinic_id;
-        }
 
         Cadeira::create($data);
 
@@ -42,14 +37,14 @@ class CadeiraController extends Controller
 
     public function edit(Cadeira $cadeira)
     {
-        $unidades = Unidade::all();
-        return view('admin.cadeiras.edit', compact('cadeira', 'unidades'));
+        $clinics = Clinic::all();
+        return view('admin.cadeiras.edit', compact('cadeira', 'clinics'));
     }
 
     public function update(Request $request, Cadeira $cadeira)
     {
         $data = $request->validate([
-            'unidade_id' => 'required|exists:unidades,id',
+            'clinic_id' => 'required|exists:clinics,id',
             'nome' => 'required',
             'especialidade' => 'required',
             'status' => 'required',
