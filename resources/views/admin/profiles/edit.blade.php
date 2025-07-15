@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow">
+<div class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Editar Perfil</h1>
     <form method="POST" action="{{ route('perfis.update', $perfil) }}" class="space-y-4">
         @csrf
