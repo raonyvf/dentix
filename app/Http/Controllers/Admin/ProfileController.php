@@ -75,7 +75,6 @@ class ProfileController extends Controller
             'Estoque',
             'Financeiro',
             'Clínicas',
-            'Unidades',
             'Cadeiras',
             'Usuários',
         ];

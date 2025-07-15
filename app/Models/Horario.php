@@ -11,14 +11,13 @@ class Horario extends Model
 
     protected $fillable = [
         'clinic_id',
-        'unidade_id',
         'dia_semana',
         'hora_inicio',
         'hora_fim',
     ];
 
-    public function unidade()
+    public function clinic()
     {
-        return $this->belongsTo(Unidade::class);
+        return $this->belongsTo(Clinic::class);
     }
 }

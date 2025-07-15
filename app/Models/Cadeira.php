@@ -10,11 +10,14 @@ class Cadeira extends Model
     use BelongsToClinic;
 
     protected $fillable = [
-        'unidade_id', 'nome', 'especialidade', 'status'
+        'clinic_id',
+        'nome',
+        'especialidade',
+        'status',
     ];
 
-    public function unidade()
+    public function clinic()
     {
-        return $this->belongsTo(Unidade::class);
+        return $this->belongsTo(Clinic::class);
     }
 }
