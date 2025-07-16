@@ -47,7 +47,7 @@ class OrganizationController extends Controller
             'logo_url' => $data['logo_url'] ?? null,
             'status' => $data['status'] ?? 'ativo',
         ]);
-
+     
         $profile = Profile::create([
             'organization_id' => $organization->id,
             'nome' => 'Administrador',
