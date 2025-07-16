@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\Profile;
 use App\Models\User;
+use App\Notifications\NewAdminPasswordNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -53,7 +54,7 @@ class OrganizationController extends Controller
             'nome' => 'Administrador',
         ]);
 
-        $password = '123mudar';
+        $password = Str::random(10);
 
         $user = User::create([
             'name' => $data['responsavel'],
@@ -63,6 +64,8 @@ class OrganizationController extends Controller
             'password' => Hash::make($password),
             'must_change_password' => true,
         ]);
+
+        $user->notify(new NewAdminPasswordNotification($password));
 
         return redirect()->route('organizacoes.index')
             ->with('success', 'Organização criada com sucesso.');
