@@ -11,7 +11,6 @@ class Profile extends Model
     use BelongsToOrganization;
 
     protected $fillable = [
-        'clinic_id',
         'organization_id',
         'nome',
     ];
