@@ -26,13 +26,28 @@ class OrganizationController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nome' => 'required',
-            'responsavel' => 'required',
+            'nome_fantasia' => 'required',
+            'razao_social' => 'nullable',
+            'cnpj' => 'required',
             'email' => 'required|email|unique:users,email',
+            'telefone' => 'nullable',
+            'endereco_faturamento' => 'nullable',
+            'logo_url' => 'nullable',
+            'status' => 'in:ativo,inativo,suspenso',
+            'responsavel' => 'required',
         ]);
 
-        $organization = Organization::create(['nome' => $data['nome']]);
-
+        $organization = Organization::create([
+            'nome_fantasia' => $data['nome_fantasia'],
+            'razao_social' => $data['razao_social'] ?? null,
+            'cnpj' => $data['cnpj'],
+            'email' => $data['email'],
+            'telefone' => $data['telefone'] ?? null,
+            'endereco_faturamento' => $data['endereco_faturamento'] ?? null,
+            'logo_url' => $data['logo_url'] ?? null,
+            'status' => $data['status'] ?? 'ativo',
+        ]);
+     
         $profile = Profile::create([
             'organization_id' => $organization->id,
             'nome' => 'Administrador',

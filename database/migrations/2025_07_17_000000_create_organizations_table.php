@@ -10,7 +10,14 @@ return new class extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
+            $table->string('nome_fantasia');
+            $table->string('razao_social')->nullable();
+            $table->string('cnpj');
+            $table->string('email')->nullable();
+            $table->string('telefone')->nullable();
+            $table->json('endereco_faturamento')->nullable();
+            $table->string('logo_url')->nullable();
+            $table->enum('status', ['ativo', 'inativo', 'suspenso'])->default('ativo');
             $table->timestamps();
         });
     }
