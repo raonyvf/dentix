@@ -22,4 +22,5 @@ fi
 composer install --no-dev --optimize-autoloader
 npm install
 npm run build
+
 php artisan migrate --force
