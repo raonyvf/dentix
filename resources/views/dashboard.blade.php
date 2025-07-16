@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+@include('partials.breadcrumbs', ['crumbs' => [
+    ['label' => 'Dashboard']
+]])
 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
     <div class="p-4 bg-white rounded-lg shadow">
         <p class="text-sm text-gray-500">Pacientes</p>
