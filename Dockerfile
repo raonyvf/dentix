@@ -1,10 +1,12 @@
-FROM composer:2.7 AS build
+FROM php:8.3-cli-bullseye AS build
 
-# Install Node.js 22
+# Install required packages, Node.js 22 and Composer
 RUN apt-get update \
+    && apt-get install -y git unzip libpq-dev curl gnupg \
     && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm@latest \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -16,7 +18,7 @@ RUN composer install --no-dev --optimize-autoloader \
     && npm run build \
     && rm -rf node_modules
 
-FROM php:8.3-cli
+FROM php:8.3-cli-bullseye
 
 # Install system packages and PHP extensions
 RUN apt-get update \
@@ -25,7 +27,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=build /usr/bin/composer /usr/local/bin/composer
+COPY --from=build /usr/local/bin/composer /usr/local/bin/composer
 WORKDIR /app
 COPY --from=build /app /app
 
