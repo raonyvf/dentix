@@ -87,3 +87,36 @@ Esse seeder também cria o perfil **Administrador** com todas as permissões e o
 associa automaticamente a esse usuário para que você já possa gerenciar novos
 perfis e usuários.
 
+## Deploy no Render
+
+Para hospedar o Dentix no [Render](https://render.com), crie um novo **Web Service** apontando para este repositório.
+Use os comandos abaixo para build e start do serviço.
+
+### Comando de build
+```bash
+composer install --no-dev --optimize-autoloader
+npm install && npm run build
+php artisan migrate --force
+```
+
+### Comando de start
+```bash
+php artisan serve --host 0.0.0.0 --port $PORT
+```
+
+### Variáveis de ambiente
+Configure no painel do Render valores como:
+```bash
+APP_ENV=production
+APP_URL=https://seu-servico.onrender.com
+APP_KEY= # gerar localmente
+DB_CONNECTION=pgsql
+DB_HOST=<host do banco>
+DB_PORT=<porta>
+DB_DATABASE=<nome do banco>
+DB_USERNAME=<usuario>
+DB_PASSWORD=<senha>
+```
+Gere a chave de aplicação com
+`php artisan key:generate --show` e copie o resultado
+para a variável `APP_KEY` antes de criar o deploy.
