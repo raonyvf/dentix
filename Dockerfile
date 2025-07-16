@@ -16,6 +16,7 @@ COPY . .
 RUN mkdir -p bootstrap/cache storage
 
 # Install PHP dependencies and build front-end assets
+ENV NODE_ENV=production
 RUN composer install --no-dev --optimize-autoloader \
     && npm install \
     && npm run build \

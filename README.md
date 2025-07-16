@@ -93,11 +93,20 @@ Para hospedar o Dentix no [Render](https://render.com), crie um novo **Web Servi
 Use os comandos abaixo para build e start do serviço.
 
 ### Comando de build
+Se o ambiente não tiver PHP ou Composer instalados, execute primeiro:
 ```bash
-composer install --no-dev --optimize-autoloader
-npm install && npm run build
-php artisan migrate --force
+apt-get update && \
+apt-get install -y php-cli unzip curl && \
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 ```
+
+Em seguida rode o script `render-build.sh`:
+```bash
+bash render-build.sh
+```
+
+Esse script roda `composer install`, faz o build do front-end com
+`npm run build` e aplica as migrações.
 
 ### Comando de start
 ```bash
@@ -120,3 +129,20 @@ DB_PASSWORD=<senha>
 Gere a chave de aplicação com
 `php artisan key:generate --show` e copie o resultado
 para a variável `APP_KEY` antes de criar o deploy.
+
+### Deploy usando Docker
+
+Se preferir, também é possível criar um serviço do tipo **Docker** no Render.
+O Dockerfile presente neste repositório já instala o Node.js, o Composer e
+executa `npm run build` para gerar os arquivos do Vite. Basta apontar o
+repositório para o Render e deixar que ele construa a imagem automaticamente.
+
+No painel do Render informe apenas as variáveis de ambiente descritas acima e
+mantenha o comando de start padrão do Dockerfile:
+
+```bash
+php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT
+```
+
+Dessa forma o layout será carregado corretamente, pois o CSS e o JavaScript
+estarão pré-compilados dentro da imagem Docker.
