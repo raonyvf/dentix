@@ -30,6 +30,10 @@ class CadeiraController extends Controller
             'status' => 'required',
         ]);
 
+        if ($data['clinic_id'] != auth()->user()->clinic_id) {
+            abort(403);
+        }
+
         Cadeira::create($data);
 
         return redirect()->route('cadeiras.index')->with('success', 'Cadeira salva com sucesso.');
@@ -49,6 +53,10 @@ class CadeiraController extends Controller
             'especialidade' => 'required',
             'status' => 'required',
         ]);
+
+        if ($cadeira->clinic_id != auth()->user()->clinic_id || $data['clinic_id'] != auth()->user()->clinic_id) {
+            abort(403);
+        }
 
         $cadeira->update($data);
 
