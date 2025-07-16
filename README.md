@@ -94,9 +94,13 @@ Use os comandos abaixo para build e start do serviço.
 
 ### Comando de build
 ```bash
-composer install --no-dev --optimize-autoloader
-npm install && npm run build
-php artisan migrate --force
+# Se o ambiente não possuir PHP e Composer pré-instalados,
+# adicione a instalação no início do comando de build
+apt-get update && apt-get install -y php-cli unzip curl \
+  && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+  && composer install --no-dev --optimize-autoloader \
+  && npm install && npm run build \
+  && php artisan migrate --force
 ```
 
 ### Comando de start
