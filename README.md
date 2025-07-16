@@ -93,9 +93,7 @@ Para hospedar o Dentix no [Render](https://render.com), crie um novo **Web Servi
 Use os comandos abaixo para build e start do serviço.
 
 ### Comando de build
-```bash
-bash render-build.sh
-```
+
 
 O script `render-build.sh` instala PHP e Composer caso não estejam
 presentes no ambiente, executa `composer install`, faz o build do
