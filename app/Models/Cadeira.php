@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\BelongsToClinic;
+use App\Traits\BelongsToOrganization;
+use App\Models\Organization;
 
 class Cadeira extends Model
 {
-    use BelongsToClinic;
+    use BelongsToOrganization;
 
     protected $fillable = [
         'clinic_id',
+        'organization_id',
         'nome',
         'especialidade',
         'status',
@@ -19,5 +21,10 @@ class Cadeira extends Model
     public function clinic()
     {
         return $this->belongsTo(Clinic::class);
+    }
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
     }
 }
