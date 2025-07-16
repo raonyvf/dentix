@@ -23,6 +23,11 @@ RUN composer install --no-dev --optimize-autoloader \
 
 FROM php:8.3-cli-bullseye
 
+
+# Ensure the application runs in production mode
+ENV APP_ENV=production \
+    APP_DEBUG=false
+
 # Install system packages and PHP extensions
 RUN apt-get update \
     && apt-get install -y git unzip libpq-dev \
