@@ -23,6 +23,7 @@ class User extends Authenticatable
         'clinic_id',
         'organization_id',
         'profile_id',
+        'must_change_password',
     ];
 
     protected $hidden = [
@@ -31,6 +32,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'must_change_password' => 'boolean',
     ];
 
     public function clinic()

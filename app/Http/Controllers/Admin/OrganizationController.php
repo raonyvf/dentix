@@ -15,12 +15,12 @@ class OrganizationController extends Controller
     public function index()
     {
         $organizations = Organization::all();
-        return view('admin.organizations.index', compact('organizations'));
+        return view('backend.organizations.index', compact('organizations'));
     }
 
     public function create()
     {
-        return view('admin.organizations.create');
+        return view('backend.organizations.create');
     }
 
     public function store(Request $request)
@@ -53,7 +53,7 @@ class OrganizationController extends Controller
             'nome' => 'Administrador',
         ]);
 
-        $password = Str::random(10);
+        $password = '123mudar';
 
         $user = User::create([
             'name' => $data['responsavel'],
@@ -61,6 +61,7 @@ class OrganizationController extends Controller
             'organization_id' => $organization->id,
             'profile_id' => $profile->id,
             'password' => Hash::make($password),
+            'must_change_password' => true,
         ]);
 
         return redirect()->route('organizacoes.index')
