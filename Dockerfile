@@ -12,6 +12,9 @@ RUN apt-get update \
 WORKDIR /app
 COPY . .
 
+# Ensure Laravel directories exist for Composer scripts
+RUN mkdir -p bootstrap/cache storage
+
 # Install PHP dependencies and build front-end assets
 RUN composer install --no-dev --optimize-autoloader \
     && npm install \
@@ -31,8 +34,9 @@ COPY --from=build /usr/local/bin/composer /usr/local/bin/composer
 WORKDIR /app
 COPY --from=build /app /app
 
-# Ensure necessary permissions
-RUN chmod -R ug+w storage bootstrap/cache
+# Ensure writable directories for runtime
+RUN mkdir -p storage bootstrap/cache \
+    && chmod -R ug+w storage bootstrap/cache
 
 EXPOSE 8080
 
