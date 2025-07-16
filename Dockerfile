@@ -19,7 +19,7 @@ RUN mkdir -p bootstrap/cache storage
 ENV NODE_ENV=production
 RUN composer install --no-dev --optimize-autoloader \
     && npm install \
-    && npm run build \
+    && NODE_ENV=production npm run build \
     && rm -rf node_modules
 
 FROM php:8.3-cli-bullseye
