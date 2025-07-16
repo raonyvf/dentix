@@ -94,10 +94,12 @@ Use os comandos abaixo para build e start do serviço.
 
 ### Comando de build
 ```bash
-composer install --no-dev --optimize-autoloader
-npm install && npm run build
-php artisan migrate --force
+bash render-build.sh
 ```
+
+O script `render-build.sh` instala PHP e Composer caso não estejam
+presentes no ambiente, executa `composer install`, faz o build do
+front-end com `npm run build` e aplica as migrações.
 
 ### Comando de start
 ```bash
