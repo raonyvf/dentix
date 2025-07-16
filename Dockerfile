@@ -18,7 +18,7 @@ RUN mkdir -p bootstrap/cache storage
 # Install PHP dependencies and build front-end assets
 RUN composer install --no-dev --optimize-autoloader \
     && npm install \
-    && npm run build \
+    && NODE_ENV=production npm run build \
     && rm -rf node_modules
 
 FROM php:8.3-cli-bullseye
