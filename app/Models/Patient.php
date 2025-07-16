@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\BelongsToClinic;
+use App\Traits\BelongsToOrganization;
+use App\Models\Organization;
 
 class Patient extends Model
 {
-    use BelongsToClinic;
+    use BelongsToOrganization;
 
     protected $fillable = [
         'clinic_id',
+        'organization_id',
         'nome',
         'responsavel',
         'idade',
@@ -23,4 +25,9 @@ class Patient extends Model
         'ultima_consulta',
         'proxima_consulta',
     ];
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
 }

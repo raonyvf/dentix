@@ -6,12 +6,13 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Traits\BelongsToClinic;
+use App\Traits\BelongsToOrganization;
 use App\Models\Profile;
+use App\Models\Organization;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, BelongsToClinic;
+    use HasFactory, Notifiable, BelongsToOrganization;
 
     protected $fillable = [
         'name',
@@ -20,6 +21,7 @@ class User extends Authenticatable
         'photo_path',
         'password',
         'clinic_id',
+        'organization_id',
         'profile_id',
     ];
 
@@ -34,6 +36,11 @@ class User extends Authenticatable
     public function clinic()
     {
         return $this->belongsTo(Clinic::class);
+    }
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
     }
 
     public function profile()
