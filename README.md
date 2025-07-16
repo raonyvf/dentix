@@ -93,11 +93,20 @@ Para hospedar o Dentix no [Render](https://render.com), crie um novo **Web Servi
 Use os comandos abaixo para build e start do serviço.
 
 ### Comando de build
+Se o ambiente não tiver PHP ou Composer instalados, execute primeiro:
 ```bash
-composer install --no-dev --optimize-autoloader
-npm install && npm run build
-php artisan migrate --force
+apt-get update && \
+apt-get install -y php-cli unzip curl && \
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 ```
+
+Em seguida rode o script `render-build.sh`:
+```bash
+bash render-build.sh
+```
+
+Esse script roda `composer install`, faz o build do front-end com
+`npm run build` e aplica as migrações.
 
 ### Comando de start
 ```bash
