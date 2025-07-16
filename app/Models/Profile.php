@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\BelongsToClinic;
+use App\Traits\BelongsToOrganization;
+use App\Models\Organization;
 
 class Profile extends Model
 {
-    use BelongsToClinic;
+    use BelongsToOrganization;
 
     protected $fillable = [
         'clinic_id',
+        'organization_id',
         'nome',
     ];
 
@@ -22,5 +24,10 @@ class Profile extends Model
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
     }
 }
