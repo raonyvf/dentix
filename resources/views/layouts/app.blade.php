@@ -8,13 +8,17 @@
 </head>
 <body class="flex h-full bg-gray-100">
     @auth
-        <aside :class="sidebarCollapsed ? 'w-20' : 'w-64'" class="h-full bg-white border-r shadow transition-all duration-300">
-            @include('partials.sidebar')
-        </aside>
+        @unless(isset($hideNav) && $hideNav)
+            <aside :class="sidebarCollapsed ? 'w-20' : 'w-64'" class="h-full bg-white border-r shadow transition-all duration-300">
+                @include('partials.sidebar')
+            </aside>
+        @endunless
     @endauth
     <div class="flex flex-col flex-1 min-h-screen">
         @auth
-            @include('partials.topbar')
+            @unless(isset($hideNav) && $hideNav)
+                @include('partials.topbar')
+            @endunless
         @endauth
         <main class="flex-1 p-6 overflow-y-auto">
             @if (session('success'))

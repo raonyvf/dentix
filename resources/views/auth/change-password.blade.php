@@ -1,8 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.app', ['hideNav' => true])
 
 @section('content')
 <div class="flex items-center justify-center min-h-screen py-10">
     <div class="w-full max-w-md bg-white shadow-lg rounded-xl overflow-hidden p-8">
+        <p class="mb-4 text-center text-sm text-gray-600">Seja bem vindo a Dentix. Como é seu primeiro acesso, poderia mudar a sua senha?</p>
         <h1 class="text-xl font-semibold mb-4">Alterar Senha</h1>
         @if ($errors->any())
             <div class="mb-4">

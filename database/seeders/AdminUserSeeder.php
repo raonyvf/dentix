@@ -22,7 +22,7 @@ class AdminUserSeeder extends Seeder
 
         $profile = Profile::firstOrCreate([
             'nome' => 'Super Administrador',
-            'clinic_id' => null,
+            'organization_id' => null,
         ]);
 
         $modules = [
