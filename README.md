@@ -146,3 +146,8 @@ php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT
 
 Dessa forma o layout será carregado corretamente, pois o CSS e o JavaScript
 estarão pré-compilados dentro da imagem Docker.
+
+> **Nota**: caso tenha rodado `npm run dev` antes de construir a imagem,
+> remova o arquivo `public/hot`. Esse arquivo faz o Laravel Vite apontar para o
+> servidor de desenvolvimento e impedirá o carregamento do CSS compilado em
+> produção.
