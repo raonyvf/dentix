@@ -67,7 +67,7 @@
                     $fechamento = old('horarios.' . $diaKey . '.fechamento', $horarios[$diaKey]['fechamento'] ?? '');
                 @endphp
                 <div class="flex items-center space-x-2 mb-2">
-                    <span class="w-32 text-sm">{{ $diaLabel }}</span>
+                    <span class="text-sm whitespace-nowrap min-w-max">{{ $diaLabel }}</span>
                     <input type="time" name="horarios[{{ $diaKey }}][abertura]" value="{{ $abertura }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm text-black focus:border-primary focus:outline-none" />
                     <input type="time" name="horarios[{{ $diaKey }}][fechamento]" value="{{ $fechamento }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
