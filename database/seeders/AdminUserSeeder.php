@@ -21,21 +21,12 @@ class AdminUserSeeder extends Seeder
         );
 
         $profile = Profile::firstOrCreate([
-            'nome' => 'Administrador',
+            'nome' => 'Super Administrador',
             'clinic_id' => null,
         ]);
 
         $modules = [
-            'Pacientes',
-            'Agenda',
-            'Prontuários',
-            'Profissionais',
-            'Estoque',
-            'Financeiro',
-            'Clínicas',
-            'Cadeiras',
-            'Usuários',
-            'Perfis',
+            'Backend',
         ];
 
         foreach ($modules as $module) {

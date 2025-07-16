@@ -3,7 +3,14 @@
         <span class="text-xl font-bold" x-show="!sidebarCollapsed">Dentix</span>
         <span x-show="sidebarCollapsed" class="text-xl font-bold">DX</span>
     </div>
+    @php $isSuperAdmin = Auth::user() && optional(Auth::user()->profile)->nome === 'Super Administrador'; @endphp
     <nav class="flex-1 overflow-y-auto py-4">
+        @if($isSuperAdmin)
+        <a href="{{ route('backend.index') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Backend' : ''">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            <span class="ml-3" x-show="!sidebarCollapsed">Backend</span>
+        </a>
+        @else
         <a href="{{ route('admin.index') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Dashboard' : ''">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" /></svg>
             <span class="ml-3" x-show="!sidebarCollapsed">Dashboard</span>
@@ -55,5 +62,6 @@
                 <a href="{{ route('perfis.index') }}" class="block py-1 hover:underline">Perfis</a>
             </div>
         </div>
+        @endif
     </nav>
 </div>

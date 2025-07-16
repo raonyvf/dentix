@@ -51,5 +51,7 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'forcepasswordchange' => \App\Http\Middleware\ForcePasswordChange::class,
+        'superadmin' => \App\Http\Middleware\EnsureSuperAdmin::class,
     ];
 }
