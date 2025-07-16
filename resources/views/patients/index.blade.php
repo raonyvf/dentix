@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+@include('partials.breadcrumbs', ['crumbs' => [
+    ['label' => 'Dashboard', 'url' => route('admin.index')],
+    ['label' => 'Pacientes']
+]])
 <div class="mb-4 flex justify-between items-center">
     <h1 class="text-xl font-semibold">Pacientes</h1>
     <div class="flex gap-2 items-center">

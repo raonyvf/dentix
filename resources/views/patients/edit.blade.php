@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+@include('partials.breadcrumbs', ['crumbs' => [
+    ['label' => 'Dashboard', 'url' => route('admin.index')],
+    ['label' => 'Pacientes', 'url' => route('pacientes.index')],
+    ['label' => 'Editar']
+]])
 <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Editar Paciente</h1>
     @if ($errors->any())

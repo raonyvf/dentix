@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+@include('partials.breadcrumbs', ['crumbs' => [
+    ['label' => 'Dashboard', 'url' => route('admin.index')],
+    ['label' => 'Cadeiras', 'url' => route('cadeiras.index')],
+    ['label' => 'Criar']
+]])
 <div class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Criar Cadeira</h1>
     <form method="POST" action="{{ route('cadeiras.store') }}" class="space-y-4">
