@@ -29,7 +29,7 @@ class ProfileController extends Controller
 
         $profile = Profile::create([
             'nome' => $data['nome'],
-            'clinic_id' => auth()->user()->clinic_id,
+            'organization_id' => auth()->user()->organization_id,
         ]);
 
         $this->syncPermissions($profile, $data['permissions'] ?? []);

@@ -7,6 +7,7 @@ use App\Models\Horario;
 use App\Models\Cadeira;
 use App\Traits\BelongsToOrganization;
 use App\Models\Organization;
+use App\Models\ClinicUser;
 
 class Clinic extends Model
 {
@@ -37,5 +38,13 @@ class Clinic extends Model
     public function organization()
     {
         return $this->belongsTo(Organization::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)
+            ->using(ClinicUser::class)
+            ->withPivot('profile_id')
+            ->withTimestamps();
     }
 }

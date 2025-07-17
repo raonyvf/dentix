@@ -9,15 +9,16 @@ trait BelongsToClinic
 {
     protected static function bootBelongsToClinic()
     {
-        if (! auth()->check() || is_null(auth()->user()->clinic_id)) {
+        $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
+        if (! auth()->check() || is_null($clinicId)) {
             return;
         }
 
         $instance = new static;
 
         if (Schema::hasColumn($instance->getTable(), 'clinic_id')) {
-            static::addGlobalScope('clinic', function (Builder $builder) use ($instance) {
-                $builder->where($instance->getTable() . '.clinic_id', auth()->user()->clinic_id);
+            static::addGlobalScope('clinic', function (Builder $builder) use ($instance, $clinicId) {
+                $builder->where($instance->getTable() . '.clinic_id', $clinicId);
             });
         }
     }

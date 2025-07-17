@@ -10,7 +10,12 @@ class SetClinicContext
     public function handle($request, Closure $next)
     {
         if ($user = Auth::user()) {
-            app()->instance('clinic_id', $user->clinic_id);
+            $clinicId = session('clinic_id');
+            if (!$clinicId) {
+                $clinicId = $user->clinics()->first()->id ?? null;
+                session(['clinic_id' => $clinicId]);
+            }
+            app()->instance('clinic_id', $clinicId);
         }
         return $next($request);
     }

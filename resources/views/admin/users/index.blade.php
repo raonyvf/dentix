@@ -16,7 +16,7 @@
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nome</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Telefone</th>
-                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Perfil</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Perfis/Clínicas</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -25,7 +25,12 @@
                     <td class="px-4 py-2 whitespace-nowrap">{{ $user->name }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $user->email }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $user->phone }}</td>
-                    <td class="px-4 py-2 whitespace-nowrap">{{ optional($user->profile)->nome }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">
+                        @foreach ($user->clinics as $clinic)
+                            @php $p = \App\Models\Profile::find($clinic->pivot->profile_id); @endphp
+                            <div>{{ $clinic->nome }} - {{ optional($p)->nome }}</div>
+                        @endforeach
+                    </td>
                 </tr>
             @empty
                 <tr>

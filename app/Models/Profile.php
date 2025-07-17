@@ -22,7 +22,7 @@ class Profile extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class, 'clinic_user')->withPivot('clinic_id')->withTimestamps();
     }
 
     public function organization()

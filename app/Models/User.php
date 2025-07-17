@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Traits\BelongsToOrganization;
 use App\Models\Profile;
 use App\Models\Organization;
+use App\Models\ClinicUser;
 
 class User extends Authenticatable
 {
@@ -20,9 +21,7 @@ class User extends Authenticatable
         'phone',
         'photo_path',
         'password',
-        'clinic_id',
         'organization_id',
-        'profile_id',
         'must_change_password',
     ];
 
@@ -35,19 +34,30 @@ class User extends Authenticatable
         'must_change_password' => 'boolean',
     ];
 
-    public function clinic()
-    {
-        return $this->belongsTo(Clinic::class);
-    }
-
     public function organization()
     {
         return $this->belongsTo(Organization::class);
     }
 
-    public function profile()
+    public function clinics()
     {
-        return $this->belongsTo(Profile::class);
+        return $this->belongsToMany(Clinic::class)
+            ->using(ClinicUser::class)
+            ->withPivot('profile_id')
+            ->withTimestamps();
+    }
+
+    public function profiles()
+    {
+        return $this->belongsToMany(Profile::class, 'clinic_user')
+            ->using(ClinicUser::class)
+            ->withPivot('clinic_id')
+            ->withTimestamps();
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->profiles()->where('nome', 'Super Administrador')->exists();
     }
 }
 

@@ -30,7 +30,8 @@ class CadeiraController extends Controller
             'status' => 'required',
         ]);
 
-        if ($data['clinic_id'] != auth()->user()->clinic_id) {
+        $currentClinic = app('clinic_id');
+        if ($data['clinic_id'] != $currentClinic) {
             abort(403);
         }
 
@@ -54,7 +55,8 @@ class CadeiraController extends Controller
             'status' => 'required',
         ]);
 
-        if ($cadeira->clinic_id != auth()->user()->clinic_id || $data['clinic_id'] != auth()->user()->clinic_id) {
+        $currentClinic = app('clinic_id');
+        if ($cadeira->clinic_id != $currentClinic || $data['clinic_id'] != $currentClinic) {
             abort(403);
         }
 
