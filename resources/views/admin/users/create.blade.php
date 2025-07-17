@@ -23,6 +23,20 @@
             <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" />
         </div>
         <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">Endereço</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco" />
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" />
+        </div>
+        <div x-data="{ dentista: false }">
+            <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
+                <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" /> Dentista
+            </label>
+            <input x-bind:required="dentista" x-show="dentista" x-cloak class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" />
+        </div>
+        <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Foto</label>
             <input type="file" name="photo" class="w-full text-sm" />
         </div>
