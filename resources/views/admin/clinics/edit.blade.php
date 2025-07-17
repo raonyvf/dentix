@@ -45,6 +45,10 @@
             <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado', $clinic->estado) }}" required />
         </div>
         <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">CEP</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep', $clinic->cep) }}" required />
+        </div>
+        <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Contato</label>
             <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="contato" value="{{ old('contato', $clinic->contato) }}" required />
         </div>

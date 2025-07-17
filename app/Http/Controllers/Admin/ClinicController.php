@@ -29,6 +29,7 @@ class ClinicController extends Controller
             'endereco' => 'required',
             'cidade' => 'required',
             'estado' => 'required',
+            'cep' => 'required',
             'contato' => 'required',
             'horarios' => 'required|array',
         ]);
@@ -74,6 +75,7 @@ class ClinicController extends Controller
             'endereco' => 'required',
             'cidade' => 'required',
             'estado' => 'required',
+            'cep' => 'required',
             'contato' => 'required',
             'horarios' => 'required|array',
         ]);
