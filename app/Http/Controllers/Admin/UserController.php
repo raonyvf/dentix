@@ -31,8 +31,9 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'phone' => 'nullable',
-            'profile_id' => 'required|exists:profiles,id',
-            'clinic_id' => 'required|exists:clinics,id',
+            'profiles' => 'required|array|min:1',
+            'profiles.*.profile_id' => 'required|exists:profiles,id',
+            'profiles.*.clinic_id' => 'required|exists:clinics,id',
             'photo' => 'nullable|image',
         ]);
 
@@ -51,7 +52,10 @@ class UserController extends Controller
         }
 
         $user->save();
-        $user->clinics()->attach($data['clinic_id'], ['profile_id' => $data['profile_id']]);
+
+        foreach ($data['profiles'] as $pair) {
+            $user->clinics()->attach($pair['clinic_id'], ['profile_id' => $pair['profile_id']]);
+        }
 
         Password::sendResetLink(['email' => $user->email]);
 
