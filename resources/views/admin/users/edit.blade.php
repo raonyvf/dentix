@@ -4,37 +4,47 @@
 @include('partials.breadcrumbs', ['crumbs' => [
     ['label' => 'Dashboard', 'url' => route('admin.index')],
     ['label' => 'Usuários', 'url' => route('usuarios.index')],
-    ['label' => 'Criar']
+    ['label' => 'Editar']
 ]])
-<div class="w-full bg-white p-6 rounded-lg shadow">
-    <h1 class="text-xl font-semibold mb-4">Criar Usuário</h1>
-    <form method="POST" action="{{ route('usuarios.store') }}" enctype="multipart/form-data" class="space-y-4">
+<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ dentista: {{ old('dentista', $usuario->dentista) ? 'true' : 'false' }} }">
+    <h1 class="text-xl font-semibold mb-4">Editar Usuário</h1>
+    @if ($errors->any())
+        <div class="mb-4">
+            <ul class="list-disc list-inside text-sm text-red-600">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    <form method="POST" action="{{ route('usuarios.update', $usuario) }}" enctype="multipart/form-data" class="space-y-4">
         @csrf
+        @method('PUT')
         <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="name" required />
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="name" value="{{ old('name', $usuario->name) }}" required />
         </div>
         <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Email</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" required />
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email', $usuario->email) }}" required />
         </div>
         <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" />
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" value="{{ old('phone', $usuario->phone) }}" />
         </div>
         <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Endereço</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco" />
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco" value="{{ old('endereco', $usuario->endereco) }}" />
         </div>
         <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" />
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf', $usuario->cpf) }}" />
         </div>
-        <div x-data="{ dentista: false }">
+        <div>
             <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
-                <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" /> Dentista
+                <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista', $usuario->dentista)) /> Dentista
             </label>
-            <input x-bind:required="dentista" x-show="dentista" x-cloak class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" />
+            <input x-bind:required="dentista" x-show="dentista" x-cloak class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro', $usuario->cro) }}" />
         </div>
         <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Foto</label>
@@ -78,15 +88,20 @@
             const template = document.getElementById('profile-clinic-template').innerHTML;
             let index = 0;
 
-            function addRow() {
+            function addRow(profile = '', clinic = '') {
                 const html = template.replace(/__index__/g, index);
                 container.insertAdjacentHTML('beforeend', html);
+                const row = container.lastElementChild;
+                row.querySelector('select[name="profiles['+index+'][profile_id]"]').value = profile;
+                row.querySelector('select[name="profiles['+index+'][clinic_id]"]').value = clinic;
                 index++;
             }
 
-            document.getElementById('add-profile').addEventListener('click', addRow);
+            document.getElementById('add-profile').addEventListener('click', () => addRow());
 
-            addRow();
+            @foreach ($usuario->clinics as $clinic)
+                addRow('{{ $clinic->pivot->profile_id }}', '{{ $clinic->id }}');
+            @endforeach
         });
     </script>
 @endpush

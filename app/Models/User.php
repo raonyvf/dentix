@@ -19,6 +19,10 @@ class User extends Authenticatable
         'name',
         'email',
         'phone',
+        'endereco',
+        'cpf',
+        'dentista',
+        'cro',
         'photo_path',
         'password',
         'organization_id',
@@ -32,6 +36,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'must_change_password' => 'boolean',
+        'dentista' => 'boolean',
     ];
 
     public function organization()
