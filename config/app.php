@@ -33,6 +33,7 @@ return [
         Illuminate\Encryption\EncryptionServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
         Illuminate\Queue\QueueServiceProvider::class,
+        Illuminate\Notifications\NotificationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Laravel\Breeze\BreezeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
