@@ -58,7 +58,13 @@ class PatientController extends Controller
             'proxima_consulta' => 'nullable|date',
         ]);
 
-        Patient::create($data);
+        Patient::create(array_merge(
+            $data,
+            [
+                'clinic_id' => auth()->user()->clinic_id,
+                'organization_id' => auth()->user()->organization_id,
+            ]
+        ));
 
         return redirect()->route('pacientes.index')->with('success', 'Paciente salvo com sucesso.');
     }
