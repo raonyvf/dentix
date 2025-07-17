@@ -32,6 +32,9 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'nullable',
             'endereco' => 'nullable',
+            'cep' => 'nullable',
+            'cidade' => 'nullable',
+            'estado' => 'nullable',
             'cpf' => 'nullable',
             'dentista' => 'nullable|boolean',
             'cro' => 'required_if:dentista,1|nullable',
@@ -48,6 +51,9 @@ class UserController extends Controller
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
         $user->endereco = $data['endereco'] ?? null;
+        $user->cep = $data['cep'] ?? null;
+        $user->cidade = $data['cidade'] ?? null;
+        $user->estado = $data['estado'] ?? null;
         $user->cpf = $data['cpf'] ?? null;
         $user->dentista = $data['dentista'] ?? false;
         $user->cro = $data['cro'] ?? null;
@@ -84,6 +90,9 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $usuario->id,
             'phone' => 'nullable',
             'endereco' => 'nullable',
+            'cep' => 'nullable',
+            'cidade' => 'nullable',
+            'estado' => 'nullable',
             'cpf' => 'nullable',
             'dentista' => 'nullable|boolean',
             'cro' => 'required_if:dentista,1|nullable',
@@ -97,6 +106,9 @@ class UserController extends Controller
         $usuario->email = $data['email'];
         $usuario->phone = $data['phone'] ?? null;
         $usuario->endereco = $data['endereco'] ?? null;
+        $usuario->cep = $data['cep'] ?? null;
+        $usuario->cidade = $data['cidade'] ?? null;
+        $usuario->estado = $data['estado'] ?? null;
         $usuario->cpf = $data['cpf'] ?? null;
         $usuario->dentista = $data['dentista'] ?? false;
         $usuario->cro = $data['cro'] ?? null;
