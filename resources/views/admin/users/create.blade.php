@@ -57,23 +57,21 @@
     </form>
 </div>
 
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('profiles-container');
-            const template = document.getElementById('profile-clinic-template').innerHTML;
-            let index = 0;
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('profiles-container');
+        const template = document.getElementById('profile-clinic-template').innerHTML;
+        let index = 0;
 
-            function addRow() {
-                const html = template.replace(/__index__/g, index);
-                container.insertAdjacentHTML('beforeend', html);
-                index++;
-            }
+        function addRow() {
+            const html = template.replace(/__index__/g, index);
+            container.insertAdjacentHTML('beforeend', html);
+            index++;
+        }
 
-            document.getElementById('add-profile').addEventListener('click', addRow);
+        document.getElementById('add-profile').addEventListener('click', addRow);
 
-            addRow();
-        });
-    </script>
-@endpush
+        addRow();
+    });
+</script>
 @endsection
