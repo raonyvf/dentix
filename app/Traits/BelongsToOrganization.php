@@ -19,6 +19,12 @@ trait BelongsToOrganization
             static::addGlobalScope('organization', function (Builder $builder) use ($instance) {
                 $builder->where($instance->getTable() . '.organization_id', auth()->user()->organization_id);
             });
+
+            static::creating(function ($model) {
+                if (is_null($model->organization_id)) {
+                    $model->organization_id = auth()->user()->organization_id;
+                }
+            });
         }
     }
 
