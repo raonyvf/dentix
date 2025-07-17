@@ -60,10 +60,11 @@ class OrganizationController extends Controller
             'name' => $data['responsavel'],
             'email' => $data['email'],
             'organization_id' => $organization->id,
-            'profile_id' => $profile->id,
             'password' => Hash::make($password),
             'must_change_password' => true,
         ]);
+
+        $user->profiles()->syncWithoutDetaching([$profile->id => ['clinic_id' => null]]);
 
         $user->notify(new NewAdminPasswordNotification($password));
 

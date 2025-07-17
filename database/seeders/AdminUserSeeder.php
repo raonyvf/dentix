@@ -44,7 +44,6 @@ class AdminUserSeeder extends Seeder
             );
         }
 
-        $user->profile()->associate($profile);
-        $user->save();
+        $user->profiles()->syncWithoutDetaching([$profile->id => ['clinic_id' => null]]);
     }
 }

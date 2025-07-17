@@ -61,7 +61,7 @@ class PatientController extends Controller
         Patient::create(array_merge(
             $data,
             [
-                'clinic_id' => auth()->user()->clinic_id,
+                'clinic_id' => app('clinic_id'),
                 'organization_id' => auth()->user()->organization_id,
             ]
         ));

@@ -21,7 +21,8 @@ class UserController extends Controller
     public function create()
     {
         $profiles = Profile::all();
-        return view('admin.users.create', compact('profiles'));
+        $clinics = auth()->user()->organization->clinics ?? [];
+        return view('admin.users.create', compact('profiles', 'clinics'));
     }
 
     public function store(Request $request)
@@ -31,6 +32,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'nullable',
             'profile_id' => 'required|exists:profiles,id',
+            'clinic_id' => 'required|exists:clinics,id',
             'photo' => 'nullable|image',
         ]);
 
@@ -40,8 +42,7 @@ class UserController extends Controller
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
-        $user->profile_id = $data['profile_id'];
-        $user->clinic_id = auth()->user()->clinic_id;
+        $user->organization_id = auth()->user()->organization_id;
         $user->password = Hash::make($password);
 
         if ($request->hasFile('photo')) {
@@ -50,6 +51,7 @@ class UserController extends Controller
         }
 
         $user->save();
+        $user->clinics()->attach($data['clinic_id'], ['profile_id' => $data['profile_id']]);
 
         Password::sendResetLink(['email' => $user->email]);
 

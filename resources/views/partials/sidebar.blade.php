@@ -3,7 +3,7 @@
         <span class="text-xl font-bold" x-show="!sidebarCollapsed">Dentix</span>
         <span x-show="sidebarCollapsed" class="text-xl font-bold">DX</span>
     </div>
-    @php $isSuperAdmin = Auth::user() && optional(Auth::user()->profile)->nome === 'Super Administrador'; @endphp
+    @php $isSuperAdmin = Auth::user() && Auth::user()->isSuperAdmin(); @endphp
     <nav class="flex-1 overflow-y-auto py-4">
         @if($isSuperAdmin)
         <a href="{{ route('backend.index') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Backend' : ''">

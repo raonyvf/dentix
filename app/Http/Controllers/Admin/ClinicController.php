@@ -50,6 +50,15 @@ class ClinicController extends Controller
             }
         }
 
+        $adminProfile = \App\Models\Profile::where('organization_id', $clinic->organization_id)
+            ->where('nome', 'Administrador')
+            ->first();
+        if ($adminProfile) {
+            foreach ($adminProfile->users as $admin) {
+                $admin->clinics()->syncWithoutDetaching([$clinic->id => ['profile_id' => $adminProfile->id]]);
+            }
+        }
+
         return redirect()->route('clinicas.index')->with('success', 'Clínica salva com sucesso.');
     }
 
