@@ -8,7 +8,7 @@ class EnsureSuperAdmin
 {
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && optional(Auth::user()->profile)->nome === 'Super Administrador') {
+        if (Auth::check() && Auth::user()->isSuperAdmin()) {
             return $next($request);
         }
 
