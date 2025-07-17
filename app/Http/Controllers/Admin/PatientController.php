@@ -48,9 +48,12 @@ class PatientController extends Controller
     {
         $data = $request->validate([
             'nome' => 'required',
+            'cpf' => 'required',
             'responsavel' => 'nullable',
             'idade' => 'nullable|integer',
             'telefone' => 'nullable',
+            'menor_idade' => 'nullable|boolean',
+            'responsavel_cpf' => 'required_if:menor_idade,1',
             'ultima_consulta' => 'nullable|date',
             'proxima_consulta' => 'nullable|date',
         ]);
@@ -69,9 +72,12 @@ class PatientController extends Controller
     {
         $data = $request->validate([
             'nome' => 'required',
+            'cpf' => 'required',
             'responsavel' => 'nullable',
             'idade' => 'nullable|integer',
             'telefone' => 'nullable',
+            'menor_idade' => 'nullable|boolean',
+            'responsavel_cpf' => 'required_if:menor_idade,1',
             'ultima_consulta' => 'nullable|date',
             'proxima_consulta' => 'nullable|date',
         ]);
