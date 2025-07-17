@@ -38,6 +38,8 @@ class ClinicController extends Controller
         $horarios = $data['horarios'];
         unset($data['horarios']);
 
+        $data['organization_id'] = auth()->user()->organization_id;
+
         $clinic = Clinic::create($data);
 
         foreach ($horarios as $dia => $horario) {
