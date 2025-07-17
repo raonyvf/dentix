@@ -58,10 +58,12 @@ class PatientController extends Controller
             'proxima_consulta' => 'nullable|date',
         ]);
 
+        $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
+
         Patient::create(array_merge(
             $data,
             [
-                'clinic_id' => app('clinic_id'),
+                'clinic_id' => $clinicId,
                 'organization_id' => auth()->user()->organization_id,
             ]
         ));

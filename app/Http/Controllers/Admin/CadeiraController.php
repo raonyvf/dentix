@@ -30,8 +30,8 @@ class CadeiraController extends Controller
             'status' => 'required',
         ]);
 
-        $currentClinic = app('clinic_id');
-        if ($data['clinic_id'] != $currentClinic) {
+        $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
+        if (is_null($currentClinic) || $data['clinic_id'] != $currentClinic) {
             abort(403);
         }
 
@@ -55,8 +55,8 @@ class CadeiraController extends Controller
             'status' => 'required',
         ]);
 
-        $currentClinic = app('clinic_id');
-        if ($cadeira->clinic_id != $currentClinic || $data['clinic_id'] != $currentClinic) {
+        $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
+        if (is_null($currentClinic) || $cadeira->clinic_id != $currentClinic || $data['clinic_id'] != $currentClinic) {
             abort(403);
         }
 
