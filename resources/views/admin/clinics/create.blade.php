@@ -28,8 +28,12 @@
             <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cnpj" value="{{ old('cnpj') }}" required />
         </div>
         <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Responsável</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel" value="{{ old('responsavel') }}" required />
+            <label class="mb-2 block text-sm font-medium text-gray-700">Responsável Técnico</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_tecnico" value="{{ old('responsavel_tecnico') }}" required />
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">CRO</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" value="{{ old('cro') }}" required />
         </div>
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
@@ -53,8 +57,12 @@
             </div>
         </div>
         <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Contato</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="contato" value="{{ old('contato') }}" required />
+            <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="telefone" value="{{ old('telefone') }}" required />
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">E-mail</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email') }}" required />
         </div>
         <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Horários de Funcionamento</label>

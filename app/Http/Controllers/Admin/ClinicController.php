@@ -25,12 +25,13 @@ class ClinicController extends Controller
         $data = $request->validate([
             'nome' => 'required',
             'cnpj' => ['required', new Cnpj],
-            'responsavel' => 'required',
+            'responsavel_tecnico' => 'required',
+            'cro' => 'required',
             'endereco' => 'required',
             'cidade' => 'required',
             'estado' => 'required',
-            'cep' => 'required',
-            'contato' => 'required',
+            'telefone' => 'required',
+            'email' => 'required|email',
             'horarios' => 'required|array',
         ]);
 
@@ -71,12 +72,13 @@ class ClinicController extends Controller
         $data = $request->validate([
             'nome' => 'required',
             'cnpj' => ['required', new Cnpj],
-            'responsavel' => 'required',
+            'responsavel_tecnico' => 'required',
+            'cro' => 'required',
             'endereco' => 'required',
             'cidade' => 'required',
             'estado' => 'required',
-            'cep' => 'required',
-            'contato' => 'required',
+            'telefone' => 'required',
+            'email' => 'required|email',
             'horarios' => 'required|array',
         ]);
 

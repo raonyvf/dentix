@@ -15,12 +15,13 @@ class Clinic extends Model
     protected $fillable = [
         'nome',
         'cnpj',
-        'responsavel',
+        'responsavel_tecnico',
+        'cro',
         'endereco',
         'cidade',
         'estado',
-        'cep',
-        'contato',
+        'telefone',
+        'email',
     ];
 
     public function horarios()

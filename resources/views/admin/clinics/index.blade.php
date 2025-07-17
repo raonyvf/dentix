@@ -15,7 +15,10 @@
             <tr>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nome</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">CNPJ</th>
-                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Responsável</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Responsável Técnico</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">CRO</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Telefone</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">E-mail</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
             </tr>
         </thead>
@@ -24,14 +27,17 @@
                 <tr>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->nome }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->cnpj }}</td>
-                    <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->responsavel }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->responsavel_tecnico }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->cro }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->telefone }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->email }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">
                         <a href="{{ route('clinicas.edit', $clinic) }}" class="text-blue-600 hover:underline">Editar</a>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" class="px-4 py-2 text-center">Nenhuma clínica cadastrada.</td>
+                    <td colspan="7" class="px-4 py-2 text-center">Nenhuma clínica cadastrada.</td>
                 </tr>
             @endforelse
         </tbody>
