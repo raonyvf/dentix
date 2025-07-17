@@ -17,6 +17,7 @@
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Telefone</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Perfis/Clínicas</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -31,10 +32,13 @@
                             <div>{{ $clinic->nome }} - {{ optional($p)->nome }}</div>
                         @endforeach
                     </td>
+                    <td class="px-4 py-2 whitespace-nowrap">
+                        <a href="{{ route('usuarios.edit', $user) }}" class="text-blue-600 hover:underline">Editar</a>
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" class="px-4 py-2 text-center">Nenhum usuário cadastrado.</td>
+                    <td colspan="5" class="px-4 py-2 text-center">Nenhum usuário cadastrado.</td>
                 </tr>
             @endforelse
         </tbody>
