@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -30,6 +29,7 @@ class UserController extends Controller
         $data = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
+            'password' => 'nullable|min:8',
             'phone' => 'nullable',
             'endereco' => 'nullable',
             'cep' => 'nullable',
@@ -44,7 +44,7 @@ class UserController extends Controller
             'photo' => 'nullable|image',
         ]);
 
-        $password = Str::random(10);
+        $password = $data['password'] ?? Str::random(10);
 
         $user = new User();
         $user->name = $data['name'];
@@ -59,6 +59,7 @@ class UserController extends Controller
         $user->cro = $data['cro'] ?? null;
         $user->organization_id = auth()->user()->organization_id;
         $user->password = Hash::make($password);
+        $user->must_change_password = true;
 
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('users', 'public');
@@ -70,8 +71,6 @@ class UserController extends Controller
         foreach ($data['profiles'] as $pair) {
             $user->clinics()->attach($pair['clinic_id'], ['profile_id' => $pair['profile_id']]);
         }
-
-        Password::sendResetLink(['email' => $user->email]);
 
         return redirect()->route('usuarios.index')->with('success', 'Usuário salvo com sucesso.');
     }

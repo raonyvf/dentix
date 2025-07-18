@@ -21,6 +21,10 @@
                     <label class="mb-2 block text-sm font-medium text-gray-700">Email</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" required />
                 </div>
+                <div class="sm:col-span-2">
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Senha (opcional)</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="password" name="password" />
+                </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" />
