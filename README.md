@@ -18,6 +18,13 @@ arquivo `.env` e execute `php artisan migrate`. As migrations das tabelas
 `jobs` e `failed_jobs` já fazem parte do repositório. Caso não queira usar
 filas, mantenha `QUEUE_CONNECTION=sync`.
 
+Caso apareça o erro **"relation 'jobs' already exists"** ao rodar as
+migrações, verifique se não há migrations duplicadas geradas com
+`php artisan queue:table` ou `php artisan queue:failed-table`. Remova esses
+arquivos, apague manualmente as tabelas `jobs` e `failed_jobs` e rode
+`php artisan migrate` novamente.
+
+
 Depois de executar `php artisan serve`, abra o navegador em
 [`http://localhost:8000`](http://localhost:8000) para visualizar a aplicação.
 
