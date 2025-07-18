@@ -62,7 +62,7 @@ class OrganizationController extends Controller
             'email' => $data['email'],
             'organization_id' => $organization->id,
             'password' => Hash::make($password),
-            'must_change_password' => empty($data['password']),
+            'must_change_password' => true,
         ]);
 
         $user->profiles()->syncWithoutDetaching([$profile->id => ['clinic_id' => null]]);
