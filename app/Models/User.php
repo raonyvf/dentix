@@ -10,6 +10,7 @@ use App\Traits\BelongsToOrganization;
 use App\Models\Profile;
 use App\Models\Organization;
 use App\Models\ClinicUser;
+use App\Models\Permission;
 
 class User extends Authenticatable
 {
@@ -66,6 +67,35 @@ class User extends Authenticatable
     public function isSuperAdmin(): bool
     {
         return $this->profiles()->where('nome', 'Super Administrador')->exists();
+    }
+
+    public function hasAnyModulePermission(string $module): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
+        if (! $clinicId) {
+            return false;
+        }
+
+        $profileIds = $this->clinics()
+            ->where('clinic_id', $clinicId)
+            ->pluck('profile_id');
+
+        if ($profileIds->isEmpty()) {
+            return false;
+        }
+
+        return Permission::whereIn('profile_id', $profileIds)
+            ->where('modulo', $module)
+            ->where(function ($q) {
+                $q->where('leitura', true)
+                    ->orWhere('escrita', true)
+                    ->orWhere('atualizacao', true)
+                    ->orWhere('exclusao', true);
+            })->exists();
     }
 }
 
