@@ -32,6 +32,8 @@ return [
         Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Encryption\EncryptionServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
+        Illuminate\Bus\BusServiceProvider::class,
+        Illuminate\Pipeline\PipelineServiceProvider::class,
         Illuminate\Queue\QueueServiceProvider::class,
         Illuminate\Notifications\NotificationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
