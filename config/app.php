@@ -37,6 +37,7 @@ return [
         Illuminate\Queue\QueueServiceProvider::class,
         Illuminate\Notifications\NotificationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
+        Illuminate\Mail\MailServiceProvider::class,
         Laravel\Breeze\BreezeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
@@ -49,5 +50,6 @@ return [
         'Cache' => Illuminate\Support\Facades\Cache::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
+        'Mail' => Illuminate\Support\Facades\Mail::class,
     ],
 ];
