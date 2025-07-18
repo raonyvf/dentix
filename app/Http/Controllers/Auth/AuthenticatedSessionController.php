@@ -23,6 +23,13 @@ class AuthenticatedSessionController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $user = Auth::user();
+            if ($user->organization && $user->organization->status !== 'ativo') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => __('Organização desativada.')
+                ]);
+            }
             return redirect()->intended(RouteServiceProvider::HOME);
         }
 

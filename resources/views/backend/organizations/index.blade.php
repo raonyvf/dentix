@@ -16,6 +16,8 @@
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nome Fantasia</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">CNPJ</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Responsável</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -24,10 +26,14 @@
                     <td class="px-4 py-2 whitespace-nowrap">{{ $organization->nome_fantasia }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $organization->cnpj }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $organization->email }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">{{ $organization->status }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">
+                        <a href="{{ route('organizacoes.edit', $organization) }}" class="text-blue-600 hover:underline">Editar</a>
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="3" class="px-4 py-2 text-center">Nenhuma organização cadastrada.</td>
+                    <td colspan="5" class="px-4 py-2 text-center">Nenhuma organização cadastrada.</td>
                 </tr>
             @endforelse
         </tbody>

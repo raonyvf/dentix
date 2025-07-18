@@ -72,4 +72,37 @@ class OrganizationController extends Controller
         return redirect()->route('organizacoes.index')
             ->with('success', 'Organização criada com sucesso.');
     }
+
+    public function edit(Organization $organization)
+    {
+        return view('backend.organizations.edit', compact('organization'));
+    }
+
+    public function update(Request $request, Organization $organization)
+    {
+        $data = $request->validate([
+            'nome_fantasia' => 'required',
+            'razao_social' => 'nullable',
+            'cnpj' => 'required',
+            'email' => 'required|email',
+            'telefone' => 'nullable',
+            'endereco_faturamento' => 'nullable',
+            'logo_url' => 'nullable',
+            'status' => 'in:ativo,inativo,suspenso',
+        ]);
+
+        $organization->update([
+            'nome_fantasia' => $data['nome_fantasia'],
+            'razao_social' => $data['razao_social'] ?? null,
+            'cnpj' => $data['cnpj'],
+            'email' => $data['email'],
+            'telefone' => $data['telefone'] ?? null,
+            'endereco_faturamento' => $data['endereco_faturamento'] ?? null,
+            'logo_url' => $data['logo_url'] ?? null,
+            'status' => $data['status'] ?? $organization->status,
+        ]);
+
+        return redirect()->route('organizacoes.index')
+            ->with('success', 'Organização atualizada com sucesso.');
+    }
 }
