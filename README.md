@@ -24,6 +24,7 @@ migrações, verifique se não há migrations duplicadas geradas com
 arquivos, apague manualmente as tabelas `jobs` e `failed_jobs` e rode
 `php artisan migrate` novamente.
 
+
 Depois de executar `php artisan serve`, abra o navegador em
 [`http://localhost:8000`](http://localhost:8000) para visualizar a aplicação.
 
