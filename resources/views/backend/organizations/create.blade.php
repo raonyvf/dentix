@@ -40,6 +40,13 @@
             <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="telefone" value="{{ old('telefone') }}" />
         </div>
         <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">Status</label>
+            <select name="status" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                <option value="ativo" @selected(old('status') === 'ativo')>Ativa</option>
+                <option value="inativo" @selected(old('status') === 'inativo')>Inativa</option>
+            </select>
+        </div>
+        <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Responsável</label>
             <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel" value="{{ old('responsavel') }}" required />
         </div>
