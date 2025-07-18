@@ -8,6 +8,15 @@
 ]])
 <div class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Criar Usuário</h1>
+    @if ($errors->any())
+        <div class="mb-4">
+            <ul class="list-disc list-inside text-sm text-red-600">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <form method="POST" action="{{ route('usuarios.store') }}" enctype="multipart/form-data" class="space-y-6">
         @csrf
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
@@ -15,11 +24,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-2">
                     <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="name" required />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="name" value="{{ old('name') }}" required />
                 </div>
                 <div class="sm:col-span-2">
                     <label class="mb-2 block text-sm font-medium text-gray-700">Email</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" required />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email') }}" required />
                 </div>
                 <div class="sm:col-span-2">
                     <label class="mb-2 block text-sm font-medium text-gray-700">Senha (opcional)</label>
@@ -27,17 +36,17 @@
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" value="{{ old('phone') }}" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf') }}" />
                 </div>
-                <div class="sm:col-span-2" x-data="{ dentista: false }">
+                <div class="sm:col-span-2" x-data="{ dentista: {{ old('dentista') ? 'true' : 'false' }} }">
                     <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
-                        <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" /> Dentista
+                        <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista')) /> Dentista
                     </label>
-                    <input x-bind:required="dentista" x-show="dentista" x-cloak class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" />
+                    <input x-bind:required="dentista" x-show="dentista" x-cloak class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro') }}" />
                 </div>
             </div>
         </div>
@@ -46,19 +55,19 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-2">
                     <label class="mb-2 block text-sm font-medium text-gray-700">Logradouro</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco" value="{{ old('endereco') }}" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Cidade</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" value="{{ old('cidade') }}" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Estado</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado') }}" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">CEP</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep') }}" />
                 </div>
             </div>
         </div>
@@ -70,7 +79,7 @@
             <h2 class="mb-4 text-sm font-medium text-gray-700">Perfis</h2>
             <div id="profiles-container" class="space-y-4"></div>
             <button type="button" id="add-profile" class="py-2 px-4 bg-gray-200 rounded hover:bg-gray-300 text-sm">Adicionar perfil</button>
-            <div id="profile-clinic-template" class="hidden">
+            <template id="profile-clinic-template">
                 <div class="profile-clinic-row rounded-sm border border-stroke bg-gray-50 p-4 space-y-4">
                     <div class="flex justify-between items-center">
                         <h3 class="font-medium text-sm profile-number">Perfil __number__</h3>
@@ -101,7 +110,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </template>
         </div>
         <div class="flex justify-end pt-4">
             <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
@@ -137,7 +146,12 @@
 
         document.getElementById('add-profile').addEventListener('click', () => addRow());
 
-        addRow();
+        const oldProfiles = @json(old('profiles', []));
+        if (oldProfiles.length) {
+            oldProfiles.forEach(p => addRow(p.profile_id ?? '', p.clinic_id ?? ''));
+        } else {
+            addRow();
+        }
     });
 </script>
 @endsection
