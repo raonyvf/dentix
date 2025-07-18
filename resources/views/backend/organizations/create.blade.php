@@ -43,6 +43,11 @@
             <label class="mb-2 block text-sm font-medium text-gray-700">Responsável</label>
             <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel" value="{{ old('responsavel') }}" required />
         </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">Senha (opcional)</label>
+            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="password" name="password" />
+            <p class="text-xs text-gray-500 mt-1">Se deixado em branco, uma senha aleatória será criada e enviada por e-mail.</p>
+        </div>
         <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
     </form>
 </div>

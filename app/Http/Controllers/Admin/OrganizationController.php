@@ -36,6 +36,7 @@ class OrganizationController extends Controller
             'logo_url' => 'nullable',
             'status' => 'in:ativo,inativo,suspenso',
             'responsavel' => 'required',
+            'password' => 'nullable|string|min:8',
         ]);
 
         $organization = Organization::create([
@@ -54,14 +55,14 @@ class OrganizationController extends Controller
             'nome' => 'Administrador',
         ]);
 
-        $password = Str::random(10);
+        $password = $data['password'] ?? Str::random(10);
 
         $user = User::create([
             'name' => $data['responsavel'],
             'email' => $data['email'],
             'organization_id' => $organization->id,
             'password' => Hash::make($password),
-            'must_change_password' => true,
+            'must_change_password' => empty($data['password']),
         ]);
 
         $user->profiles()->syncWithoutDetaching([$profile->id => ['clinic_id' => null]]);
