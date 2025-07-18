@@ -76,7 +76,7 @@
             <h2 class="mb-4 text-sm font-medium text-gray-700">Perfis</h2>
             <div id="profiles-container" class="space-y-4"></div>
             <button type="button" id="add-profile" class="py-2 px-4 bg-gray-200 rounded hover:bg-gray-300 text-sm">Adicionar perfil</button>
-            <div id="profile-clinic-template" class="hidden">
+            <template id="profile-clinic-template">
                 <div class="profile-clinic-row rounded-sm border border-stroke bg-gray-50 p-4 space-y-4">
                     <div class="flex justify-between items-center">
                         <h3 class="font-medium text-sm profile-number">Perfil __number__</h3>
@@ -107,7 +107,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </template>
         </div>
         <div class="flex justify-end gap-2 pt-4">
             <a href="{{ route('usuarios.index') }}" class="py-2 px-4 rounded border border-stroke text-gray-700">Cancelar</a>
