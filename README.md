@@ -13,10 +13,10 @@ npm install && npm run dev
 php artisan serve
 ```
 
-Se optar por usar filas no banco de dados, gere as tabelas com
-`php artisan queue:table` e `php artisan queue:failed-table` e depois rode
-`php artisan migrate`. Caso contrário, defina `QUEUE_CONNECTION=sync` no arquivo
-`.env`.
+Se optar por usar filas no banco de dados, defina `QUEUE_CONNECTION=database` no
+arquivo `.env` e execute `php artisan migrate`. As migrations das tabelas
+`jobs` e `failed_jobs` já fazem parte do repositório. Caso não queira usar
+filas, mantenha `QUEUE_CONNECTION=sync`.
 
 Depois de executar `php artisan serve`, abra o navegador em
 [`http://localhost:8000`](http://localhost:8000) para visualizar a aplicação.
