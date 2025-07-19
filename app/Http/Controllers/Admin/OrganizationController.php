@@ -35,11 +35,27 @@ class OrganizationController extends Controller
             'cnpj' => 'required',
             'email' => 'required|email|unique:users,email',
             'telefone' => 'nullable',
-            'endereco_faturamento' => 'nullable',
+            'cep' => 'nullable',
+            'endereco_rua' => 'nullable',
+            'numero' => 'nullable',
+            'complemento' => 'nullable',
+            'bairro' => 'nullable',
+            'cidade' => 'nullable',
+            'estado' => 'nullable',
             'logo_url' => 'nullable',
             'status' => 'in:ativo,inativo,suspenso',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
+
+        $billingAddress = [
+            'cep' => $data['cep'] ?? null,
+            'logradouro' => $data['endereco_rua'] ?? null,
+            'numero' => $data['numero'] ?? null,
+            'complemento' => $data['complemento'] ?? null,
+            'bairro' => $data['bairro'] ?? null,
+            'cidade' => $data['cidade'] ?? null,
+            'estado' => $data['estado'] ?? null,
+        ];
 
         $organization = Organization::create([
             'nome_fantasia' => $data['nome_fantasia'],
@@ -47,7 +63,7 @@ class OrganizationController extends Controller
             'cnpj' => $data['cnpj'],
             'email' => $data['email'],
             'telefone' => $data['telefone'] ?? null,
-            'endereco_faturamento' => $data['endereco_faturamento'] ?? null,
+            'endereco_faturamento' => $billingAddress,
             'logo_url' => $data['logo_url'] ?? null,
             'status' => $data['status'] ?? 'ativo',
         ]);
@@ -115,11 +131,27 @@ class OrganizationController extends Controller
             'cnpj' => 'required',
             'email' => 'required|email',
             'telefone' => 'nullable',
-            'endereco_faturamento' => 'nullable',
+            'cep' => 'nullable',
+            'endereco_rua' => 'nullable',
+            'numero' => 'nullable',
+            'complemento' => 'nullable',
+            'bairro' => 'nullable',
+            'cidade' => 'nullable',
+            'estado' => 'nullable',
             'logo_url' => 'nullable',
             'status' => 'in:ativo,inativo,suspenso',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
+
+        $billingAddress = [
+            'cep' => $data['cep'] ?? null,
+            'logradouro' => $data['endereco_rua'] ?? null,
+            'numero' => $data['numero'] ?? null,
+            'complemento' => $data['complemento'] ?? null,
+            'bairro' => $data['bairro'] ?? null,
+            'cidade' => $data['cidade'] ?? null,
+            'estado' => $data['estado'] ?? null,
+        ];
 
         $organization->update([
             'nome_fantasia' => $data['nome_fantasia'],
@@ -127,7 +159,7 @@ class OrganizationController extends Controller
             'cnpj' => $data['cnpj'],
             'email' => $data['email'],
             'telefone' => $data['telefone'] ?? null,
-            'endereco_faturamento' => $data['endereco_faturamento'] ?? null,
+            'endereco_faturamento' => $billingAddress,
             'logo_url' => $data['logo_url'] ?? null,
             'status' => $data['status'] ?? $organization->status,
         ]);
