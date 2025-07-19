@@ -31,7 +31,6 @@ class CadeiraController extends Controller
         $data = $request->validate([
             'clinic_id' => 'required|exists:clinics,id',
             'nome' => 'required',
-            'especialidade' => 'required',
             'status' => 'required',
         ]);
 
@@ -69,7 +68,6 @@ class CadeiraController extends Controller
         $data = $request->validate([
             'clinic_id' => 'required|exists:clinics,id',
             'nome' => 'required',
-            'especialidade' => 'required',
             'status' => 'required',
         ]);
 

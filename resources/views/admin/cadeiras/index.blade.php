@@ -14,7 +14,6 @@
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nome</th>
-                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Especialidade</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
             </tr>
@@ -23,7 +22,6 @@
             @forelse ($cadeiras as $cadeira)
                 <tr>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $cadeira->nome }}</td>
-                    <td class="px-4 py-2 whitespace-nowrap">{{ $cadeira->especialidade }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $cadeira->status }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">
                         <a href="{{ route('cadeiras.edit', $cadeira) }}" class="text-blue-600 hover:underline">Editar</a>

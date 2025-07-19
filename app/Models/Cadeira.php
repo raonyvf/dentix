@@ -15,7 +15,6 @@ class Cadeira extends Model
         'clinic_id',
         'organization_id',
         'nome',
-        'especialidade',
         'status',
     ];
 
