@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToOrganization;
+use App\Traits\BelongsToClinic;
 use App\Models\Organization;
 
 class Patient extends Model
 {
-    use BelongsToOrganization;
+    use BelongsToOrganization, BelongsToClinic;
 
     protected $fillable = [
         'clinic_id',

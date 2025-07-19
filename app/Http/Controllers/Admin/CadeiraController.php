@@ -17,8 +17,13 @@ class CadeiraController extends Controller
 
     public function create()
     {
-        $clinics = Clinic::all();
-        return view('admin.cadeiras.create', compact('clinics')); 
+        $user = auth()->user();
+        if ($user->isOrganizationAdmin()) {
+            $clinics = Clinic::all();
+        } else {
+            $clinics = $user->clinics()->get();
+        }
+        return view('admin.cadeiras.create', compact('clinics'));
     }
 
     public function store(Request $request)
@@ -31,8 +36,11 @@ class CadeiraController extends Controller
         ]);
 
         $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
-        if (is_null($currentClinic) || $data['clinic_id'] != $currentClinic) {
-            abort(403);
+        $user = auth()->user();
+        if (! $user->isOrganizationAdmin() && ! $user->isSuperAdmin()) {
+            if (is_null($currentClinic) || $data['clinic_id'] != $currentClinic || ! $user->clinics->contains($currentClinic)) {
+                abort(403);
+            }
         }
 
         Cadeira::create($data);
@@ -42,7 +50,16 @@ class CadeiraController extends Controller
 
     public function edit(Cadeira $cadeira)
     {
-        $clinics = Clinic::all();
+        $user = auth()->user();
+        if (! $user->isOrganizationAdmin() && $cadeira->clinic_id != (app()->bound('clinic_id') ? app('clinic_id') : null)) {
+            abort(403);
+        }
+
+        if ($user->isOrganizationAdmin()) {
+            $clinics = Clinic::all();
+        } else {
+            $clinics = $user->clinics()->get();
+        }
         return view('admin.cadeiras.edit', compact('cadeira', 'clinics'));
     }
 
@@ -56,8 +73,11 @@ class CadeiraController extends Controller
         ]);
 
         $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
-        if (is_null($currentClinic) || $cadeira->clinic_id != $currentClinic || $data['clinic_id'] != $currentClinic) {
-            abort(403);
+        $user = auth()->user();
+        if (! $user->isOrganizationAdmin() && ! $user->isSuperAdmin()) {
+            if (is_null($currentClinic) || $cadeira->clinic_id != $currentClinic || $data['clinic_id'] != $currentClinic || ! $user->clinics->contains($currentClinic)) {
+                abort(403);
+            }
         }
 
         $cadeira->update($data);
