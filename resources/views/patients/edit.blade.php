@@ -7,15 +7,13 @@
     ['label' => 'Editar']
 ]])
 @php
-    $nameParts = preg_split('/\s+/', $paciente->nome);
-    $primeiroNome = array_shift($nameParts);
-    $ultimoNome = array_pop($nameParts);
-    $nomeMeio = implode(' ', $nameParts);
+    $primeiroNome = $paciente->first_name ?? '';
+    $nomeMeio = $paciente->middle_name ?? '';
+    $ultimoNome = $paciente->last_name ?? '';
 
-    $respParts = $paciente->responsavel ? preg_split('/\s+/', $paciente->responsavel) : [];
-    $respPrimeiro = array_shift($respParts);
-    $respUltimo = array_pop($respParts);
-    $respMeio = implode(' ', $respParts);
+    $respPrimeiro = $paciente->responsavel_first_name ?? '';
+    $respMeio = $paciente->responsavel_middle_name ?? '';
+    $respUltimo = $paciente->responsavel_last_name ?? '';
 @endphp
 <div x-data="{ menor: {{ old('menor_idade', $paciente->menor_idade) }}, tab: 'dados' }" class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Editar Paciente</h1>
@@ -100,7 +98,7 @@
                     </div>
                     <div class="sm:col-span-2">
                         <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
-                        <input type="text" name="responsavel_cpf" value="{{ old('responsavel_cpf') }}" x-bind:required="menor == 1" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                        <input type="text" name="responsavel_cpf" value="{{ old('responsavel_cpf', $paciente->responsavel_cpf) }}" x-bind:required="menor == 1" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                     </div>
                 </div>
             </div>

@@ -23,6 +23,17 @@ class Patient extends Model
         'responsavel_first_name',
         'responsavel_middle_name',
         'responsavel_last_name',
+        'cpf',
+        'menor_idade',
+        'responsavel_cpf',
+        'email',
+        'cep',
+        'endereco_rua',
+        'numero',
+        'complemento',
+        'bairro',
+        'cidade',
+        'estado',
         'data_nascimento',
         'idade',
         'telefone',
@@ -34,6 +45,10 @@ class Patient extends Model
         'data_nascimento',
         'ultima_consulta',
         'proxima_consulta',
+    ];
+
+    protected $casts = [
+        'menor_idade' => 'boolean',
     ];
 
     public function organization()
