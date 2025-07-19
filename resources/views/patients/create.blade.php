@@ -61,7 +61,7 @@
                 </div>
             </div>
 
-            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4 mb-4">
                 <h2 class="mb-4 text-sm font-medium text-gray-700">Contato</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -72,6 +72,12 @@
                         <label class="mb-2 block text-sm font-medium text-gray-700">E-mail</label>
                         <input type="email" name="email" value="{{ old('email') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                     </div>
+                </div>
+            </div>
+
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">CEP</label>
                         <input type="text" name="cep" value="{{ old('cep') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
