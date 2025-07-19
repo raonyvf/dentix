@@ -32,6 +32,8 @@ class UserController extends Controller
             'password' => 'nullable|min:8',
             'phone' => 'nullable',
             'endereco' => 'nullable',
+            'numero' => 'nullable',
+            'complemento' => 'nullable',
             'cep' => 'nullable',
             'cidade' => 'nullable',
             'estado' => 'nullable',
@@ -51,6 +53,8 @@ class UserController extends Controller
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
         $user->endereco = $data['endereco'] ?? null;
+        $user->numero = $data['numero'] ?? null;
+        $user->complemento = $data['complemento'] ?? null;
         $user->cep = $data['cep'] ?? null;
         $user->cidade = $data['cidade'] ?? null;
         $user->estado = $data['estado'] ?? null;
@@ -89,6 +93,8 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $usuario->id,
             'phone' => 'nullable',
             'endereco' => 'nullable',
+            'numero' => 'nullable',
+            'complemento' => 'nullable',
             'cep' => 'nullable',
             'cidade' => 'nullable',
             'estado' => 'nullable',
@@ -105,6 +111,8 @@ class UserController extends Controller
         $usuario->email = $data['email'];
         $usuario->phone = $data['phone'] ?? null;
         $usuario->endereco = $data['endereco'] ?? null;
+        $usuario->numero = $data['numero'] ?? null;
+        $usuario->complemento = $data['complemento'] ?? null;
         $usuario->cep = $data['cep'] ?? null;
         $usuario->cidade = $data['cidade'] ?? null;
         $usuario->estado = $data['estado'] ?? null;

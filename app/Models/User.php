@@ -21,6 +21,8 @@ class User extends Authenticatable
         'email',
         'phone',
         'endereco',
+        'numero',
+        'complemento',
         'cep',
         'cidade',
         'estado',
