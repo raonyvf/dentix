@@ -17,6 +17,10 @@ class Organization extends Model
         'status',
     ];
 
+    protected $casts = [
+        'endereco_faturamento' => 'array',
+    ];
+
     public function clinics()
     {
         return $this->hasMany(Clinic::class);
