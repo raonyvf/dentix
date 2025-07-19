@@ -17,34 +17,84 @@
             </ul>
         </div>
     @endif
-    <form method="POST" action="{{ route('pacientes.update', $paciente) }}" class="space-y-4">
+    <form method="POST" action="{{ route('pacientes.update', $paciente) }}" class="space-y-6">
         @csrf
         @method('PUT')
+
         <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome" value="{{ old('nome', $paciente->nome) }}" required />
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4 mb-4">
+                <h2 class="mb-4 text-sm font-medium text-gray-700">Informações Básicas</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="sm:col-span-2">
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome" value="{{ old('nome', $paciente->nome) }}" required />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Responsável</label>
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel" value="{{ old('responsavel', $paciente->responsavel) }}" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Idade</label>
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="number" name="idade" value="{{ old('idade', $paciente->idade) }}" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="telefone" value="{{ old('telefone', $paciente->telefone) }}" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Última Consulta</label>
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="date" name="ultima_consulta" value="{{ old('ultima_consulta', optional($paciente->ultima_consulta)->format('Y-m-d')) }}" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Próxima Consulta</label>
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="date" name="proxima_consulta" value="{{ old('proxima_consulta', optional($paciente->proxima_consulta)->format('Y-m-d')) }}" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <h2 class="mb-4 text-sm font-medium text-gray-700">Contato</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">E-mail</label>
+                        <input type="email" name="email" value="{{ old('email', $paciente->email) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">CEP</label>
+                        <input type="text" name="cep" value="{{ old('cep', $paciente->cep) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Rua</label>
+                        <input type="text" name="endereco_rua" value="{{ old('endereco_rua', $paciente->endereco_rua) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Número</label>
+                        <input type="text" name="numero" value="{{ old('numero', $paciente->numero) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Complemento</label>
+                        <input type="text" name="complemento" value="{{ old('complemento', $paciente->complemento) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Bairro</label>
+                        <input type="text" name="bairro" value="{{ old('bairro', $paciente->bairro) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Cidade</label>
+                        <input type="text" name="cidade" value="{{ old('cidade', $paciente->cidade) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Estado</label>
+                        <input type="text" name="estado" value="{{ old('estado', $paciente->estado) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Responsável</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel" value="{{ old('responsavel', $paciente->responsavel) }}" />
+
+        <div class="flex justify-end gap-2 pt-4">
+            <a href="{{ route('pacientes.index') }}" class="py-2 px-4 rounded border border-stroke text-gray-700">Cancelar</a>
+            <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
         </div>
-        <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Idade</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="number" name="idade" value="{{ old('idade', $paciente->idade) }}" />
-        </div>
-        <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="telefone" value="{{ old('telefone', $paciente->telefone) }}" />
-        </div>
-        <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Última Consulta</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="date" name="ultima_consulta" value="{{ old('ultima_consulta', optional($paciente->ultima_consulta)->format('Y-m-d')) }}" />
-        </div>
-        <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Próxima Consulta</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="date" name="proxima_consulta" value="{{ old('proxima_consulta', optional($paciente->proxima_consulta)->format('Y-m-d')) }}" />
-        </div>
-        <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
     </form>
 </div>
 @endsection
