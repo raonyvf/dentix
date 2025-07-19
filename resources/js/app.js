@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.erro) return;
                     const form = e.target.closest('form');
                     if (!form) return;
-                    const logradouro = form.querySelector('input[name="endereco"]') ||
+                    const logradouro = form.querySelector('input[name="logradouro"]') ||
                         form.querySelector('input[name="endereco_rua"]');
                     if (logradouro && data.logradouro) logradouro.value = data.logradouro;
                     const bairro = form.querySelector('input[name="bairro"]');

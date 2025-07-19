@@ -24,7 +24,7 @@ class Patient extends Model
         'telefone',
         'email',
         'cep',
-        'rua',
+        'logradouro',
         'numero',
         'complemento',
         'bairro',

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('telefone')->nullable();
             $table->string('email')->nullable();
             $table->string('cep')->nullable();
-            $table->string('rua')->nullable();
+            $table->string('logradouro')->nullable();
             $table->string('numero')->nullable();
             $table->string('complemento')->nullable();
             $table->string('bairro')->nullable();
