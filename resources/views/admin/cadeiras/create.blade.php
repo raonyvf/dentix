@@ -24,10 +24,6 @@
             <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome" required />
         </div>
         <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Especialidade</label>
-            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="especialidade" required />
-        </div>
-        <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Status</label>
             <select name="status" required class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
                 <option value="Ativa" @selected(old('status') === 'Ativa')>Ativa</option>
