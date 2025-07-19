@@ -54,17 +54,27 @@
                             <option value="1">Sim</option>
                         </select>
                     </div>
-                    <div class="sm:col-span-2" x-show="menor == 1" x-cloak>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="mb-2 block text-sm font-medium text-gray-700">Nome do responsável</label>
-                                <input type="text" name="responsavel_nome" value="{{ old('responsavel_nome') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
-                            </div>
-                            <div>
-                                <label class="mb-2 block text-sm font-medium text-gray-700">CPF do responsável</label>
-                                <input type="text" name="responsavel_cpf" value="{{ old('responsavel_cpf') }}" x-bind:required="menor == 1" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
-                            </div>
-                        </div>
+                </div>
+            </div>
+
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4 mb-4" x-show="menor == 1" x-cloak>
+                <h2 class="mb-4 text-sm font-medium text-gray-700">Responsável</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
+                        <input type="text" name="responsavel_primeiro_nome" value="{{ old('responsavel_primeiro_nome') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Nome do meio</label>
+                        <input type="text" name="responsavel_nome_meio" value="{{ old('responsavel_nome_meio') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Último nome</label>
+                        <input type="text" name="responsavel_ultimo_nome" value="{{ old('responsavel_ultimo_nome') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
+                        <input type="text" name="responsavel_cpf" value="{{ old('responsavel_cpf') }}" x-bind:required="menor == 1" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                     </div>
                 </div>
             </div>
