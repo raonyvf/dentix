@@ -15,7 +15,7 @@
                 @csrf
                 <div>
                     <label for="email" class="mb-2 block text-sm font-medium text-gray-700">Email</label>
-                    <input id="email" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" required autofocus />
+                    <input id="email" value="{{ old('email') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" required autofocus />
                 </div>
                 <div>
                     <label for="password" class="mb-2 block text-sm font-medium text-gray-700">Senha</label>

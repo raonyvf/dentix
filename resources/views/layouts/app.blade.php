@@ -21,6 +21,9 @@
             @endunless
         @endauth
         <main class="flex-1 p-6 overflow-y-auto">
+            @if ($errors->any())
+                @include('components.alert-error', ['slot' => $errors->first()])
+            @endif
             @if (session('success'))
                 @include('components.alert-success', ['slot' => session('success')])
             @endif
