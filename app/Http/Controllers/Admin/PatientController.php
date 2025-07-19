@@ -41,6 +41,10 @@ class PatientController extends Controller
 
     public function create()
     {
+        if (! auth()->user()->clinics->contains(app()->bound('clinic_id') ? app('clinic_id') : null)) {
+            abort(403);
+        }
+
         return view('patients.create');
     }
 
@@ -59,6 +63,9 @@ class PatientController extends Controller
         ]);
 
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
+        if (! auth()->user()->clinics->contains($clinicId)) {
+            abort(403);
+        }
 
         Patient::create(array_merge(
             $data,
@@ -73,6 +80,11 @@ class PatientController extends Controller
 
     public function edit(Patient $paciente)
     {
+        $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
+        if (! auth()->user()->isOrganizationAdmin() && $paciente->clinic_id != $currentClinic) {
+            abort(403);
+        }
+
         return view('patients.edit', compact('paciente'));
     }
 
@@ -90,6 +102,11 @@ class PatientController extends Controller
             'proxima_consulta' => 'nullable|date',
         ]);
 
+        $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
+        if (! auth()->user()->isOrganizationAdmin() && $paciente->clinic_id != $currentClinic) {
+            abort(403);
+        }
+
         $paciente->update($data);
 
         return redirect()->route('pacientes.index')->with('success', 'Paciente atualizado com sucesso.');
@@ -97,6 +114,11 @@ class PatientController extends Controller
 
     public function destroy(Patient $paciente)
     {
+        $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
+        if (! auth()->user()->isOrganizationAdmin() && $paciente->clinic_id != $currentClinic) {
+            abort(403);
+        }
+
         $paciente->delete();
 
         return redirect()->route('pacientes.index')->with('success', 'Paciente removido com sucesso.');

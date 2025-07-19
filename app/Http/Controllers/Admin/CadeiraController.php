@@ -17,8 +17,13 @@ class CadeiraController extends Controller
 
     public function create()
     {
-        $clinics = Clinic::all();
-        return view('admin.cadeiras.create', compact('clinics')); 
+        $user = auth()->user();
+        if ($user->isOrganizationAdmin()) {
+            $clinics = Clinic::all();
+        } else {
+            $clinics = $user->clinics()->get();
+        }
+        return view('admin.cadeiras.create', compact('clinics'));
     }
 
     public function store(Request $request)
@@ -31,7 +36,7 @@ class CadeiraController extends Controller
         ]);
 
         $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
-        if (is_null($currentClinic) || $data['clinic_id'] != $currentClinic) {
+        if (is_null($currentClinic) || $data['clinic_id'] != $currentClinic || !auth()->user()->clinics->contains($currentClinic)) {
             abort(403);
         }
 
@@ -42,7 +47,16 @@ class CadeiraController extends Controller
 
     public function edit(Cadeira $cadeira)
     {
-        $clinics = Clinic::all();
+        $user = auth()->user();
+        if (! $user->isOrganizationAdmin() && $cadeira->clinic_id != (app()->bound('clinic_id') ? app('clinic_id') : null)) {
+            abort(403);
+        }
+
+        if ($user->isOrganizationAdmin()) {
+            $clinics = Clinic::all();
+        } else {
+            $clinics = $user->clinics()->get();
+        }
         return view('admin.cadeiras.edit', compact('cadeira', 'clinics'));
     }
 
@@ -56,7 +70,7 @@ class CadeiraController extends Controller
         ]);
 
         $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
-        if (is_null($currentClinic) || $cadeira->clinic_id != $currentClinic || $data['clinic_id'] != $currentClinic) {
+        if (is_null($currentClinic) || $cadeira->clinic_id != $currentClinic || $data['clinic_id'] != $currentClinic || !auth()->user()->clinics->contains($currentClinic)) {
             abort(403);
         }
 

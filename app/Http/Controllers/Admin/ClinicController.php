@@ -11,17 +11,33 @@ class ClinicController extends Controller
 {
     public function index()
     {
-        $clinics = Clinic::all();
+        $user = auth()->user();
+
+        if ($user->isOrganizationAdmin()) {
+            $clinics = Clinic::all();
+        } else {
+            $clinics = $user->clinics()->get();
+        }
+
         return view('admin.clinics.index', compact('clinics'));
     }
 
     public function create()
     {
+        if (! auth()->user()->isOrganizationAdmin()) {
+            abort(403);
+        }
+
         return view('admin.clinics.create');
     }
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+        if (! $user->isOrganizationAdmin()) {
+            abort(403);
+        }
+
         $data = $request->validate([
             'nome' => 'required',
             'cnpj' => ['required', new Cnpj],
@@ -67,6 +83,11 @@ class ClinicController extends Controller
 
     public function edit(Clinic $clinic)
     {
+        $user = auth()->user();
+        if (! $user->isOrganizationAdmin() && ! $user->clinics->contains($clinic->id)) {
+            abort(403);
+        }
+
         $horarios = $clinic->horarios
             ->mapWithKeys(fn($h) => [
                 $h->dia_semana => [
@@ -80,6 +101,11 @@ class ClinicController extends Controller
 
     public function update(Request $request, Clinic $clinic)
     {
+        $user = auth()->user();
+        if (! $user->isOrganizationAdmin() && ! $user->clinics->contains($clinic->id)) {
+            abort(403);
+        }
+
         $data = $request->validate([
             'nome' => 'required',
             'cnpj' => ['required', new Cnpj],

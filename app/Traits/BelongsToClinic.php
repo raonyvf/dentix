@@ -10,7 +10,8 @@ trait BelongsToClinic
     protected static function bootBelongsToClinic()
     {
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
-        if (! auth()->check() || is_null($clinicId)) {
+        $user = auth()->user();
+        if (! $user || is_null($clinicId) || $user->isOrganizationAdmin() || $user->isSuperAdmin()) {
             return;
         }
 
