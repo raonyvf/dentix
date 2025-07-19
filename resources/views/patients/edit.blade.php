@@ -17,8 +17,24 @@
     $respUltimo = array_pop($respParts);
     $respMeio = implode(' ', $respParts);
 @endphp
-<div x-data="{ menor: {{ old('menor_idade', 0) }} }" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow">
+<div x-data="{ menor: {{ old('menor_idade', 0) }}, tab: 'dados' }" class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Editar Paciente</h1>
+    <nav class="mb-4">
+        <ul class="flex border-b">
+            <li class="mr-1">
+                <button type="button" @click="tab = 'dados'" :class="tab === 'dados' ? 'border-b-2 border-primary text-primary px-3 py-2' : 'px-3 py-2'">Dados</button>
+            </li>
+            <li class="mr-1">
+                <button type="button" @click="tab = 'anamnese'" :class="tab === 'anamnese' ? 'border-b-2 border-primary text-primary px-3 py-2' : 'px-3 py-2'">Anamnese</button>
+            </li>
+            <li class="mr-1">
+                <button type="button" @click="tab = 'odontograma'" :class="tab === 'odontograma' ? 'border-b-2 border-primary text-primary px-3 py-2' : 'px-3 py-2'">Odontograma</button>
+            </li>
+            <li>
+                <button type="button" @click="tab = 'documentos'" :class="tab === 'documentos' ? 'border-b-2 border-primary text-primary px-3 py-2' : 'px-3 py-2'">Documentos</button>
+            </li>
+        </ul>
+    </nav>
     @if ($errors->any())
         <div class="mb-4">
             <ul class="list-disc list-inside text-sm text-red-600">
@@ -28,6 +44,7 @@
             </ul>
         </div>
     @endif
+    <div x-show="tab === 'dados'">
     <form method="POST" action="{{ route('pacientes.update', $paciente) }}" class="space-y-6">
         @csrf
         @method('PUT')
@@ -146,5 +163,18 @@
             <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
         </div>
     </form>
+    </div>
+    <div x-show="tab === 'anamnese'" x-cloak>
+        <h2 class="text-lg font-medium mb-4">Anamnese</h2>
+        <p class="text-sm text-gray-600">Funcionalidade em desenvolvimento.</p>
+    </div>
+    <div x-show="tab === 'odontograma'" x-cloak>
+        <h2 class="text-lg font-medium mb-4">Odontograma</h2>
+        <p class="text-sm text-gray-600">Funcionalidade em desenvolvimento.</p>
+    </div>
+    <div x-show="tab === 'documentos'" x-cloak>
+        <h2 class="text-lg font-medium mb-4">Documentos</h2>
+        <p class="text-sm text-gray-600">Funcionalidade em desenvolvimento.</p>
+    </div>
 </div>
 @endsection
