@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Resposta extends Model
 {
-    protected $fillable = ['paciente_id','formulario_id','pergunta_id','resposta'];
+    protected $fillable = ['formulario_id','pergunta_id','resposta'];
 
     public function formulario()
     {
@@ -17,8 +17,4 @@ class Resposta extends Model
         return $this->belongsTo(Pergunta::class);
     }
 
-    public function paciente()
-    {
-        return $this->belongsTo(Patient::class, 'paciente_id');
-    }
 }
