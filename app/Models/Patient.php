@@ -47,6 +47,10 @@ class Patient extends Model
         'proxima_consulta',
     ];
 
+    protected $casts = [
+        'menor_idade' => 'boolean',
+    ];
+
     public function organization()
     {
         return $this->belongsTo(Organization::class);

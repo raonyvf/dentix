@@ -98,7 +98,7 @@
                     </div>
                     <div class="sm:col-span-2">
                         <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
-                        <input type="text" name="responsavel_cpf" value="{{ old('responsavel_cpf') }}" x-bind:required="menor == 1" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                        <input type="text" name="responsavel_cpf" value="{{ old('responsavel_cpf', $paciente->responsavel_cpf) }}" x-bind:required="menor == 1" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                     </div>
                 </div>
             </div>
