@@ -41,8 +41,12 @@ class PatientController extends Controller
 
     public function create()
     {
-        if (! auth()->user()->clinics->contains(app()->bound('clinic_id') ? app('clinic_id') : null)) {
-            abort(403);
+        $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
+        $user = auth()->user();
+        if (! $user->isOrganizationAdmin() && ! $user->isSuperAdmin()) {
+            if (! $user->clinics->contains($currentClinic)) {
+                abort(403);
+            }
         }
 
         return view('patients.create');
@@ -63,8 +67,11 @@ class PatientController extends Controller
         ]);
 
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
-        if (! auth()->user()->clinics->contains($clinicId)) {
-            abort(403);
+        $user = auth()->user();
+        if (! $user->isOrganizationAdmin() && ! $user->isSuperAdmin()) {
+            if (! $user->clinics->contains($clinicId)) {
+                abort(403);
+            }
         }
 
         Patient::create(array_merge(

@@ -36,8 +36,12 @@ class CadeiraController extends Controller
         ]);
 
         $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
-        if (is_null($currentClinic) || $data['clinic_id'] != $currentClinic || !auth()->user()->clinics->contains($currentClinic)) {
-            abort(403);
+        $user = auth()->user();
+        if (! $user->isOrganizationAdmin() && ! $user->isSuperAdmin()) {
+            if (is_null($currentClinic) || $data['clinic_id'] != $currentClinic || ! $user->clinics->contains($currentClinic)) {
+                abort(403);
+            }
+
         }
 
         Cadeira::create($data);
@@ -70,8 +74,12 @@ class CadeiraController extends Controller
         ]);
 
         $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
-        if (is_null($currentClinic) || $cadeira->clinic_id != $currentClinic || $data['clinic_id'] != $currentClinic || !auth()->user()->clinics->contains($currentClinic)) {
-            abort(403);
+        $user = auth()->user();
+        if (! $user->isOrganizationAdmin() && ! $user->isSuperAdmin()) {
+            if (is_null($currentClinic) || $cadeira->clinic_id != $currentClinic || $data['clinic_id'] != $currentClinic || ! $user->clinics->contains($currentClinic)) {
+                abort(403);
+            }
+
         }
 
         $cadeira->update($data);
