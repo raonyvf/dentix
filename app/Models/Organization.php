@@ -16,7 +16,7 @@ class Organization extends Model
         'responsavel_nome_meio',
         'responsavel_ultimo_nome',
         'cep',
-        'rua',
+        'logradouro',
         'numero',
         'complemento',
         'bairro',

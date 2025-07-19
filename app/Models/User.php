@@ -23,7 +23,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'phone',
-        'endereco',
+        'logradouro',
         'numero',
         'complemento',
         'bairro',

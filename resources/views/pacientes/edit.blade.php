@@ -94,8 +94,8 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep', $paciente->cep) }}" />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Rua</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="rua" value="{{ old('rua', $paciente->rua) }}" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Logradouro</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="logradouro" value="{{ old('logradouro', $paciente->logradouro) }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Número</label>
