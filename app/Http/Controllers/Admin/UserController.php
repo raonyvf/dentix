@@ -27,7 +27,9 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required',
+            'first_name' => 'required',
+            'middle_name' => 'nullable',
+            'last_name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'nullable|min:8',
             'phone' => 'nullable',
@@ -49,7 +51,10 @@ class UserController extends Controller
         $password = $data['password'] ?? Str::random(10);
 
         $user = new User();
-        $user->name = $data['name'];
+        $user->first_name = $data['first_name'];
+        $user->middle_name = $data['middle_name'] ?? null;
+        $user->last_name = $data['last_name'];
+        $user->name = trim($data['first_name'] . ' ' . ($data['middle_name'] ?? '') . ' ' . $data['last_name']);
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
         $user->endereco = $data['endereco'] ?? null;
@@ -89,7 +94,9 @@ class UserController extends Controller
     public function update(Request $request, User $usuario)
     {
         $data = $request->validate([
-            'name' => 'required',
+            'first_name' => 'required',
+            'middle_name' => 'nullable',
+            'last_name' => 'required',
             'email' => 'required|email|unique:users,email,' . $usuario->id,
             'phone' => 'nullable',
             'endereco' => 'nullable',
@@ -107,7 +114,10 @@ class UserController extends Controller
             'photo' => 'nullable|image',
         ]);
 
-        $usuario->name = $data['name'];
+        $usuario->first_name = $data['first_name'];
+        $usuario->middle_name = $data['middle_name'] ?? null;
+        $usuario->last_name = $data['last_name'];
+        $usuario->name = trim($data['first_name'] . ' ' . ($data['middle_name'] ?? '') . ' ' . $data['last_name']);
         $usuario->email = $data['email'];
         $usuario->phone = $data['phone'] ?? null;
         $usuario->endereco = $data['endereco'] ?? null;
