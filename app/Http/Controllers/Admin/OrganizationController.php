@@ -55,6 +55,28 @@ class OrganizationController extends Controller
             'nome' => 'Administrador',
         ]);
 
+        $modules = [
+            'Pacientes',
+            'Agenda',
+            'Prontuários',
+            'Profissionais',
+            'Estoque',
+            'Financeiro',
+            'Clínicas',
+            'Cadeiras',
+            'Usuários',
+        ];
+
+        foreach ($modules as $module) {
+            $profile->permissions()->create([
+                'modulo' => $module,
+                'leitura' => true,
+                'escrita' => true,
+                'atualizacao' => true,
+                'exclusao' => true,
+            ]);
+        }
+
         $password = $data['password'] ?? Str::random(10);
 
         $user = User::create([
