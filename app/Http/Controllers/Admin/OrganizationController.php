@@ -27,6 +27,9 @@ class OrganizationController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'nome' => 'required',
+            'nome_meio' => 'nullable',
+            'sobrenome' => 'required',
             'nome_fantasia' => 'required',
             'razao_social' => 'nullable',
             'cnpj' => 'required',
@@ -35,8 +38,7 @@ class OrganizationController extends Controller
             'endereco_faturamento' => 'nullable',
             'logo_url' => 'nullable',
             'status' => 'in:ativo,inativo,suspenso',
-            'responsavel' => 'required',
-            'password' => 'nullable|string|min:8',
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $organization = Organization::create([
@@ -79,8 +81,10 @@ class OrganizationController extends Controller
 
         $password = $data['password'] ?? Str::random(10);
 
+        $nomeCompleto = trim($data['nome'] . ' ' . ($data['nome_meio'] ? $data['nome_meio'] . ' ' : '') . $data['sobrenome']);
+
         $user = User::create([
-            'name' => $data['responsavel'],
+            'name' => $nomeCompleto,
             'email' => $data['email'],
             'organization_id' => $organization->id,
             'password' => Hash::make($password),
@@ -103,6 +107,9 @@ class OrganizationController extends Controller
     public function update(Request $request, Organization $organization)
     {
         $data = $request->validate([
+            'nome' => 'sometimes',
+            'nome_meio' => 'nullable',
+            'sobrenome' => 'sometimes',
             'nome_fantasia' => 'required',
             'razao_social' => 'nullable',
             'cnpj' => 'required',
@@ -111,6 +118,7 @@ class OrganizationController extends Controller
             'endereco_faturamento' => 'nullable',
             'logo_url' => 'nullable',
             'status' => 'in:ativo,inativo,suspenso',
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $organization->update([
@@ -123,6 +131,18 @@ class OrganizationController extends Controller
             'logo_url' => $data['logo_url'] ?? null,
             'status' => $data['status'] ?? $organization->status,
         ]);
+
+        $usuario = User::where('organization_id', $organization->id)->first();
+        if ($usuario) {
+            if ($request->filled('nome') || $request->filled('nome_meio') || $request->filled('sobrenome')) {
+                $usuario->name = trim($request->input('nome') . ' ' . ($request->input('nome_meio') ? $request->input('nome_meio') . ' ' : '') . $request->input('sobrenome'));
+            }
+            if ($request->filled('password')) {
+                $usuario->password = Hash::make($request->input('password'));
+                $usuario->must_change_password = true;
+            }
+            $usuario->save();
+        }
 
         return redirect()->route('organizacoes.index')
             ->with('success', 'Organização atualizada com sucesso.');
