@@ -31,7 +31,7 @@ class UserController extends Controller
             'middle_name' => 'nullable',
             'last_name' => 'required',
             'email' => 'required|email|unique:users,email',
-            'password' => 'nullable|min:8',
+            'password' => 'nullable|string|min:8|confirmed',
             'phone' => 'nullable',
             'endereco' => 'nullable',
             'numero' => 'nullable',
@@ -99,6 +99,7 @@ class UserController extends Controller
             'last_name' => 'required',
             'email' => 'required|email|unique:users,email,' . $usuario->id,
             'phone' => 'nullable',
+            'password' => 'nullable|string|min:8|confirmed',
             'endereco' => 'nullable',
             'numero' => 'nullable',
             'complemento' => 'nullable',
@@ -129,6 +130,11 @@ class UserController extends Controller
         $usuario->cpf = $data['cpf'] ?? null;
         $usuario->dentista = $data['dentista'] ?? false;
         $usuario->cro = $data['cro'] ?? null;
+
+        if ($request->filled('password')) {
+            $usuario->password = Hash::make($data['password']);
+            $usuario->must_change_password = true;
+        }
 
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('users', 'public');
