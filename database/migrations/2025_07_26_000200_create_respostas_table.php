@@ -9,7 +9,6 @@ return new class extends Migration
     {
         Schema::create('respostas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('paciente_id')->constrained('patients')->cascadeOnDelete();
             $table->foreignId('formulario_id')->constrained('formularios')->cascadeOnDelete();
             $table->foreignId('pergunta_id')->constrained('perguntas')->cascadeOnDelete();
             $table->text('resposta')->nullable();

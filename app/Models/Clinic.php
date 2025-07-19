@@ -24,6 +24,7 @@ class Clinic extends Model
         'endereco',
         'numero',
         'complemento',
+        'bairro',
         'cidade',
         'estado',
         'cep',

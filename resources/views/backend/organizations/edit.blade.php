@@ -7,6 +7,7 @@
     ['label' => 'Editar']
 ]])
 @php
+
     $billing = $organization->endereco_faturamento ?? [];
 @endphp
 <div class="w-full bg-white p-6 rounded-lg shadow">
