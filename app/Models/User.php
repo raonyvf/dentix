@@ -26,6 +26,7 @@ class User extends Authenticatable
         'endereco',
         'numero',
         'complemento',
+        'bairro',
         'cep',
         'cidade',
         'estado',
