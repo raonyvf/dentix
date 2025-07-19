@@ -36,6 +36,7 @@ class UserController extends Controller
             'endereco' => 'nullable',
             'numero' => 'nullable',
             'complemento' => 'nullable',
+            'bairro' => 'nullable',
             'cep' => 'nullable',
             'cidade' => 'nullable',
             'estado' => 'nullable',
@@ -60,6 +61,7 @@ class UserController extends Controller
         $user->endereco = $data['endereco'] ?? null;
         $user->numero = $data['numero'] ?? null;
         $user->complemento = $data['complemento'] ?? null;
+        $user->bairro = $data['bairro'] ?? null;
         $user->cep = $data['cep'] ?? null;
         $user->cidade = $data['cidade'] ?? null;
         $user->estado = $data['estado'] ?? null;
@@ -103,6 +105,7 @@ class UserController extends Controller
             'endereco' => 'nullable',
             'numero' => 'nullable',
             'complemento' => 'nullable',
+            'bairro' => 'nullable',
             'cep' => 'nullable',
             'cidade' => 'nullable',
             'estado' => 'nullable',
@@ -124,6 +127,7 @@ class UserController extends Controller
         $usuario->endereco = $data['endereco'] ?? null;
         $usuario->numero = $data['numero'] ?? null;
         $usuario->complemento = $data['complemento'] ?? null;
+        $usuario->bairro = $data['bairro'] ?? null;
         $usuario->cep = $data['cep'] ?? null;
         $usuario->cidade = $data['cidade'] ?? null;
         $usuario->estado = $data['estado'] ?? null;
