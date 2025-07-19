@@ -19,8 +19,11 @@ class Clinic extends Model
         'responsavel_tecnico',
         'cro',
         'endereco',
+        'numero',
+        'complemento',
         'cidade',
         'estado',
+        'cep',
         'telefone',
         'email',
     ];
