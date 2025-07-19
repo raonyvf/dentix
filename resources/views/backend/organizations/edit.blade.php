@@ -7,7 +7,8 @@
     ['label' => 'Editar']
 ]])
 @php
-    $billing = $organization->endereco_faturamento ? json_decode($organization->endereco_faturamento, true) : [];
+
+    $billing = $organization->endereco_faturamento ?? [];
 @endphp
 <div class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Editar Organização</h1>
