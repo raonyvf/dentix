@@ -35,14 +35,6 @@
                     <label class="mb-2 block text-sm font-medium text-gray-700">Último nome</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="last_name" value="{{ old('last_name', $usuario->last_name) }}" required />
                 </div>
-                <div class="sm:col-span-2">
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Email</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email', $usuario->email) }}" required />
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" value="{{ old('phone', $usuario->phone) }}" />
-                </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf', $usuario->cpf) }}" />
@@ -54,6 +46,33 @@
                     <input x-bind:required="dentista" x-show="dentista" x-cloak class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro', $usuario->cro) }}" />
                 </div>
             </div>
+        </div>
+        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+            <h2 class="mb-4 text-sm font-medium text-gray-700">Contato</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Email</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email', $usuario->email) }}" required />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" value="{{ old('phone', $usuario->phone) }}" />
+                </div>
+            </div>
+        </div>
+        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+            <h2 class="mb-4 text-sm font-medium text-gray-700">Senha</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Senha (opcional)</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="password" name="password" />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Confirmar Senha</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="password" name="password_confirmation" />
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Se deixado em branco, a senha permanecerá inalterada.</p>
         </div>
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
