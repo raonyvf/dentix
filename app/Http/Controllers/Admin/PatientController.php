@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class PatientController extends Controller
 {
@@ -62,6 +63,7 @@ class PatientController extends Controller
             'responsavel_primeiro_nome' => 'nullable|required_if:menor_idade,1',
             'responsavel_nome_meio' => 'nullable',
             'responsavel_ultimo_nome' => 'nullable|required_if:menor_idade,1',
+            'data_nascimento' => 'nullable|date',
             'idade' => 'nullable|integer',
             'telefone' => 'nullable',
             'menor_idade' => 'nullable|boolean',
@@ -77,6 +79,10 @@ class PatientController extends Controller
             $data['responsavel'] = trim(($data['responsavel_primeiro_nome'] ?? '').' '.(($data['responsavel_nome_meio'] ?? '') ? $data['responsavel_nome_meio'].' ' : '').($data['responsavel_ultimo_nome'] ?? ''));
         }
         unset($data['responsavel_primeiro_nome'], $data['responsavel_nome_meio'], $data['responsavel_ultimo_nome']);
+
+        if (! empty($data['data_nascimento'])) {
+            $data['idade'] = Carbon::parse($data['data_nascimento'])->age;
+        }
 
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
         $user = auth()->user();
@@ -117,6 +123,7 @@ class PatientController extends Controller
             'responsavel_primeiro_nome' => 'nullable|required_if:menor_idade,1',
             'responsavel_nome_meio' => 'nullable',
             'responsavel_ultimo_nome' => 'nullable|required_if:menor_idade,1',
+            'data_nascimento' => 'nullable|date',
             'idade' => 'nullable|integer',
             'telefone' => 'nullable',
             'menor_idade' => 'nullable|boolean',
@@ -132,6 +139,9 @@ class PatientController extends Controller
             $data['responsavel'] = trim(($data['responsavel_primeiro_nome'] ?? '').' '.(($data['responsavel_nome_meio'] ?? '') ? $data['responsavel_nome_meio'].' ' : '').($data['responsavel_ultimo_nome'] ?? ''));
         }
         unset($data['responsavel_primeiro_nome'], $data['responsavel_nome_meio'], $data['responsavel_ultimo_nome']);
+        if (! empty($data["data_nascimento"])) {
+            $data["idade"] = Carbon::parse($data["data_nascimento"])->age;
+        }
 
         $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
         if (! auth()->user()->isOrganizationAdmin() && $paciente->clinic_id != $currentClinic) {

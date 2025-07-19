@@ -50,7 +50,7 @@
                     </div>
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">Data de nascimento</label>
-                        <input type="date" name="data_nascimento" lang="pt-BR" value="{{ old('data_nascimento', $paciente->data_nascimento) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="date" name="data_nascimento" value="{{ old('data_nascimento', optional($paciente->data_nascimento)->format('Y-m-d')) }}" />
                     </div>
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
