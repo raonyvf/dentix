@@ -53,8 +53,8 @@
                         <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="date" name="data_nascimento" value="{{ old('data_nascimento', optional($paciente->data_nascimento)->format('Y-m-d')) }}" />
                     </div>
                     <div>
-                        <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
-                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="telefone" value="{{ old('telefone', $paciente->telefone) }}" />
+                        <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
+                        <input type="text" name="cpf" value="{{ old('cpf', $paciente->cpf) }}" x-bind:required="menor != 1" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                     </div>
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">Menor de idade?</label>
@@ -62,14 +62,6 @@
                             <option value="0">Não</option>
                             <option value="1">Sim</option>
                         </select>
-                    </div>
-                    <div>
-                        <label class="mb-2 block text-sm font-medium text-gray-700">Última Consulta</label>
-                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="date" name="ultima_consulta" value="{{ old('ultima_consulta', optional($paciente->ultima_consulta)->format('Y-m-d')) }}" />
-                    </div>
-                    <div>
-                        <label class="mb-2 block text-sm font-medium text-gray-700">Próxima Consulta</label>
-                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="date" name="proxima_consulta" value="{{ old('proxima_consulta', optional($paciente->proxima_consulta)->format('Y-m-d')) }}" />
                     </div>
                 </div>
             </div>
@@ -99,6 +91,10 @@
             <div class="rounded-sm border border-stroke bg-gray-50 p-4 mb-4">
                 <h2 class="mb-4 text-sm font-medium text-gray-700">Contato</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
+                        <input type="text" name="telefone" value="{{ old('telefone', $paciente->telefone) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">E-mail</label>
                         <input type="email" name="email" value="{{ old('email', $paciente->email) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
