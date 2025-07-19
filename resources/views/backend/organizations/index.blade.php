@@ -25,7 +25,9 @@
                 <tr>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $organization->nome_fantasia }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $organization->cnpj }}</td>
-                    <td class="px-4 py-2 whitespace-nowrap">{{ $organization->email }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">
+                        {{ trim($organization->responsavel_nome . ' ' . ($organization->responsavel_nome_meio ? $organization->responsavel_nome_meio . ' ' : '') . $organization->responsavel_ultimo_nome) }}
+                    </td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $organization->status }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">
                         <a href="{{ route('organizacoes.edit', $organization) }}" class="text-blue-600 hover:underline">Editar</a>
