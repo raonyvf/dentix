@@ -31,15 +31,37 @@
                     <label class="mb-2 block text-sm font-medium text-gray-700">CNPJ</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cnpj" value="{{ old('cnpj', $clinic->cnpj) }}" required />
                 </div>
+            </div>
+        </div>
+
+        @php
+            $nomeResp = old('responsavel_tecnico', $clinic->responsavel_tecnico);
+            $parts = $nomeResp ? preg_split('/\s+/', trim($nomeResp)) : [];
+            $respFirst = $parts[0] ?? '';
+            $respLast = count($parts) > 1 ? array_pop($parts) : '';
+            $respMiddle = $parts ? implode(' ', array_slice($parts, 1)) : '';
+        @endphp
+        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+            <h2 class="mb-4 text-sm font-medium text-gray-700">Responsável Técnico</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Responsável Técnico</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_tecnico" value="{{ old('responsavel_tecnico', $clinic->responsavel_tecnico) }}" required />
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_first" value="{{ $respFirst }}" />
                 </div>
                 <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome do Meio</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_middle" value="{{ $respMiddle }}" />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Último</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_last" value="{{ $respLast }}" />
+                </div>
+                <div class="sm:col-span-3">
                     <label class="mb-2 block text-sm font-medium text-gray-700">CRO</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" value="{{ old('cro', $clinic->cro) }}" required />
                 </div>
             </div>
+            <input type="hidden" name="responsavel_tecnico" id="responsavel_tecnico" value="{{ old('responsavel_tecnico', $clinic->responsavel_tecnico) }}" />
         </div>
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
@@ -114,4 +136,20 @@
         </div>
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const first = document.querySelector('input[name="responsavel_first"]');
+        const middle = document.querySelector('input[name="responsavel_middle"]');
+        const last = document.querySelector('input[name="responsavel_last"]');
+        const hidden = document.getElementById('responsavel_tecnico');
+        function updateHidden() {
+            hidden.value = [first.value.trim(), middle.value.trim(), last.value.trim()]
+                .filter(Boolean)
+                .join(' ');
+        }
+        [first, middle, last].forEach(el => el.addEventListener('input', updateHidden));
+        updateHidden();
+    });
+</script>
 @endsection
