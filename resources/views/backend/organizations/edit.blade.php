@@ -6,6 +6,9 @@
     ['label' => 'Organizações', 'url' => route('organizacoes.index')],
     ['label' => 'Editar']
 ]])
+@php
+    $billing = $organization->endereco_faturamento ? json_decode($organization->endereco_faturamento, true) : [];
+@endphp
 <div class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Editar Organização</h1>
     @if ($errors->any())
@@ -59,6 +62,39 @@
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="telefone" value="{{ old('telefone', $organization->telefone) }}" />
+                </div>
+            </div>
+        </div>
+        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+            <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço de Faturamento</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">CEP</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep', $billing['cep'] ?? '') }}" />
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Logradouro</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco_rua" value="{{ old('endereco_rua', $billing['logradouro'] ?? '') }}" />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Número</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="numero" value="{{ old('numero', $billing['numero'] ?? '') }}" />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Complemento</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="complemento" value="{{ old('complemento', $billing['complemento'] ?? '') }}" />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Bairro</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="bairro" value="{{ old('bairro', $billing['bairro'] ?? '') }}" />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Cidade</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" value="{{ old('cidade', $billing['cidade'] ?? '') }}" />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Estado</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado', $billing['estado'] ?? '') }}" />
                 </div>
             </div>
         </div>
