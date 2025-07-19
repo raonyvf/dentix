@@ -49,10 +49,22 @@
         </div>
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">CEP</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep', $usuario->cep) }}" />
+                </div>
                 <div class="sm:col-span-2">
                     <label class="mb-2 block text-sm font-medium text-gray-700">Logradouro</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco" value="{{ old('endereco', $usuario->endereco) }}" placeholder="Número e complemento" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco" value="{{ old('endereco', $usuario->endereco) }}" />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Número</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="numero" value="{{ old('numero', $usuario->numero) }}" />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Complemento</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="complemento" value="{{ old('complemento', $usuario->complemento) }}" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Cidade</label>
@@ -61,10 +73,6 @@
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Estado</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado', $usuario->estado) }}" />
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">CEP</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep', $usuario->cep) }}" />
                 </div>
             </div>
         </div>
