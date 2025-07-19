@@ -6,6 +6,12 @@
     ['label' => 'Pacientes', 'url' => route('pacientes.index')],
     ['label' => 'Editar']
 ]])
+@php
+    $nameParts = preg_split('/\s+/', $paciente->nome);
+    $primeiroNome = array_shift($nameParts);
+    $ultimoNome = array_pop($nameParts);
+    $nomeMeio = implode(' ', $nameParts);
+@endphp
 <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Editar Paciente</h1>
     @if ($errors->any())
@@ -25,9 +31,17 @@
             <div class="rounded-sm border border-stroke bg-gray-50 p-4 mb-4">
                 <h2 class="mb-4 text-sm font-medium text-gray-700">Informações Básicas</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="sm:col-span-2">
+                    <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
-                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome" value="{{ old('nome', $paciente->nome) }}" required />
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="primeiro_nome" value="{{ old('primeiro_nome', $primeiroNome) }}" required />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Nome do meio</label>
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome_meio" value="{{ old('nome_meio', $nomeMeio) }}" />
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Último nome</label>
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="ultimo_nome" value="{{ old('ultimo_nome', $ultimoNome) }}" required />
                     </div>
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">Responsável</label>

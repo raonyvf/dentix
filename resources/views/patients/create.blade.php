@@ -27,9 +27,17 @@
             <div class="rounded-sm border border-stroke bg-gray-50 p-4 mb-4">
                 <h2 class="mb-4 text-sm font-medium text-gray-700">Informações Básicas</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
+                        <input type="text" name="primeiro_nome" value="{{ old('primeiro_nome') }}" required class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Nome do meio</label>
+                        <input type="text" name="nome_meio" value="{{ old('nome_meio') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
                     <div class="sm:col-span-2">
-                        <label class="mb-2 block text-sm font-medium text-gray-700">Nome completo</label>
-                        <input type="text" name="nome" value="{{ old('nome') }}" required class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Último nome</label>
+                        <input type="text" name="ultimo_nome" value="{{ old('ultimo_nome') }}" required class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                     </div>
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">Data de nascimento</label>

@@ -55,7 +55,9 @@ class PatientController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nome' => 'required',
+            'primeiro_nome' => 'required',
+            'nome_meio' => 'nullable',
+            'ultimo_nome' => 'required',
             'cpf' => 'required',
             'responsavel' => 'nullable',
             'idade' => 'nullable|integer',
@@ -65,6 +67,9 @@ class PatientController extends Controller
             'ultima_consulta' => 'nullable|date',
             'proxima_consulta' => 'nullable|date',
         ]);
+
+        $data['nome'] = trim($data['primeiro_nome'].' '.($data['nome_meio'] ? $data['nome_meio'].' ' : '').$data['ultimo_nome']);
+        unset($data['primeiro_nome'], $data['nome_meio'], $data['ultimo_nome']);
 
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
         $user = auth()->user();
@@ -98,7 +103,9 @@ class PatientController extends Controller
     public function update(Request $request, Patient $paciente)
     {
         $data = $request->validate([
-            'nome' => 'required',
+            'primeiro_nome' => 'required',
+            'nome_meio' => 'nullable',
+            'ultimo_nome' => 'required',
             'cpf' => 'required',
             'responsavel' => 'nullable',
             'idade' => 'nullable|integer',
@@ -108,6 +115,9 @@ class PatientController extends Controller
             'ultima_consulta' => 'nullable|date',
             'proxima_consulta' => 'nullable|date',
         ]);
+
+        $data['nome'] = trim($data['primeiro_nome'].' '.($data['nome_meio'] ? $data['nome_meio'].' ' : '').$data['ultimo_nome']);
+        unset($data['primeiro_nome'], $data['nome_meio'], $data['ultimo_nome']);
 
         $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
         if (! auth()->user()->isOrganizationAdmin() && $paciente->clinic_id != $currentClinic) {
