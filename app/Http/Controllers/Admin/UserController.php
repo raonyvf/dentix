@@ -33,7 +33,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'nullable|string|min:8|confirmed',
             'phone' => 'nullable',
-            'endereco' => 'nullable',
+            'logradouro' => 'nullable',
             'numero' => 'nullable',
             'complemento' => 'nullable',
             'bairro' => 'nullable',
@@ -58,7 +58,7 @@ class UserController extends Controller
         $user->name = trim($data['first_name'] . ' ' . ($data['middle_name'] ?? '') . ' ' . $data['last_name']);
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
-        $user->endereco = $data['endereco'] ?? null;
+        $user->logradouro = $data['logradouro'] ?? null;
         $user->numero = $data['numero'] ?? null;
         $user->complemento = $data['complemento'] ?? null;
         $user->bairro = $data['bairro'] ?? null;
@@ -102,7 +102,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $usuario->id,
             'phone' => 'nullable',
             'password' => 'nullable|string|min:8|confirmed',
-            'endereco' => 'nullable',
+            'logradouro' => 'nullable',
             'numero' => 'nullable',
             'complemento' => 'nullable',
             'bairro' => 'nullable',
@@ -124,7 +124,7 @@ class UserController extends Controller
         $usuario->name = trim($data['first_name'] . ' ' . ($data['middle_name'] ?? '') . ' ' . $data['last_name']);
         $usuario->email = $data['email'];
         $usuario->phone = $data['phone'] ?? null;
-        $usuario->endereco = $data['endereco'] ?? null;
+        $usuario->logradouro = $data['logradouro'] ?? null;
         $usuario->numero = $data['numero'] ?? null;
         $usuario->complemento = $data['complemento'] ?? null;
         $usuario->bairro = $data['bairro'] ?? null;

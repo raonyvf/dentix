@@ -13,8 +13,8 @@ return new class extends Migration
                 $table->dropForeign(['plano_id']);
                 $table->dropColumn('plano_id');
             }
-            if (!Schema::hasColumn('clinics', 'endereco')) {
-                $table->string('endereco')->nullable();
+            if (!Schema::hasColumn('clinics', 'logradouro')) {
+                $table->string('logradouro')->nullable();
             }
             if (!Schema::hasColumn('clinics', 'cidade')) {
                 $table->string('cidade')->nullable();
@@ -67,7 +67,7 @@ return new class extends Migration
 
         Schema::table('clinics', function (Blueprint $table) {
             $table->foreignId('plano_id')->nullable()->constrained('planos');
-            $table->dropColumn(['endereco', 'cidade', 'estado', 'contato']);
+            $table->dropColumn(['logradouro', 'cidade', 'estado', 'contato']);
         });
     }
 };

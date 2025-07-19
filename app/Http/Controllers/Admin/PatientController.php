@@ -56,7 +56,7 @@ class PatientController extends Controller
             'telefone' => 'nullable',
             'email' => 'nullable|email',
             'cep' => 'nullable',
-            'rua' => 'nullable',
+            'logradouro' => 'nullable',
             'numero' => 'nullable',
             'complemento' => 'nullable',
             'bairro' => 'nullable',
