@@ -11,9 +11,9 @@ Route::get('/', function () {
     return view('dashboard');
 })->name('admin.index');
 
-Route::resource('clinicas', ClinicController::class)->middleware('module:Clínicas')
+Route::resource('clinicas', ClinicController::class)
     ->parameters(['clinicas' => 'clinic']);
-Route::resource('cadeiras', CadeiraController::class)->middleware('module:Cadeiras');
-Route::resource('perfis', ProfileController::class)->middleware('module:Usuários')->parameters(['perfis' => 'perfil']);
-Route::resource('usuarios', UserController::class)->middleware('module:Usuários');
-Route::resource('pacientes', PatientController::class)->middleware('module:Pacientes')->parameters(['pacientes' => 'paciente']);
+Route::resource('cadeiras', CadeiraController::class);
+Route::resource('perfis', ProfileController::class)->parameters(['perfis' => 'perfil']);
+Route::resource('usuarios', UserController::class);
+Route::resource('pacientes', PatientController::class)->parameters(['pacientes' => 'paciente']);
