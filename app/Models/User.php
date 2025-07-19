@@ -71,7 +71,9 @@ class User extends Authenticatable
 
     public function isOrganizationAdmin(): bool
     {
-        return $this->profiles()->where('nome', 'Administrador')->exists();
+        return $this->profiles()
+            ->where('nome', 'Administrador')
+            ->exists();
     }
 
     public function hasAnyModulePermission(string $module): bool
@@ -80,22 +82,20 @@ class User extends Authenticatable
             return true;
         }
 
-        if ($this->isOrganizationAdmin()) {
-            $profileIds = $this->profiles()->pluck('profiles.id');
-        } else {
+        $profileQuery = $this->profiles();
+
+        if (! $this->isOrganizationAdmin()) {
             $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
 
             if ($clinicId) {
-                $profileIds = $this->profiles()
-                    ->where(function ($query) use ($clinicId) {
-                        $query->where('clinic_user.clinic_id', $clinicId)
-                            ->orWhereNull('clinic_user.clinic_id');
-                    })
-                    ->pluck('profiles.id');
-            } else {
-                $profileIds = $this->profiles()->pluck('profiles.id');
+                $profileQuery->where(function ($query) use ($clinicId) {
+                    $query->where('clinic_user.clinic_id', $clinicId)
+                        ->orWhereNull('clinic_user.clinic_id');
+                });
             }
         }
+
+        $profileIds = $profileQuery->pluck('profiles.id');
 
         if ($profileIds->isEmpty()) {
             return false;
@@ -111,4 +111,3 @@ class User extends Authenticatable
             })->exists();
     }
 }
-
