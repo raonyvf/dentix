@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        foreach (['patients', 'cadeiras', 'horarios'] as $table) {
+        foreach (['cadeiras', 'horarios'] as $table) {
             Schema::table($table, function (Blueprint $table) {
                 $table->foreignId('organization_id')->nullable()->after('clinic_id')->constrained('organizations');
             });
@@ -17,7 +17,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        foreach (['patients', 'cadeiras', 'horarios'] as $table) {
+        foreach (['cadeiras', 'horarios'] as $table) {
             Schema::table($table, function (Blueprint $table) {
                 $table->dropForeign(['organization_id']);
                 $table->dropColumn('organization_id');
