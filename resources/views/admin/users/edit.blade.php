@@ -52,7 +52,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-2">
                     <label class="mb-2 block text-sm font-medium text-gray-700">Logradouro</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco" value="{{ old('endereco', $usuario->endereco) }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="endereco" value="{{ old('endereco', $usuario->endereco) }}" placeholder="Número e complemento" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Cidade</label>

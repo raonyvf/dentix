@@ -49,5 +49,28 @@ document.addEventListener('DOMContentLoaded', () => {
             v = v.replace(/(\d{5})(\d)/, '$1-$2');
             e.target.value = v;
         });
+
+        input.addEventListener('blur', e => {
+            const cep = e.target.value.replace(/\D/g, '');
+            if (cep.length !== 8) return;
+
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(resp => resp.json())
+                .then(data => {
+                    if (data.erro) return;
+                    const form = e.target.closest('form');
+                    if (!form) return;
+                    const logradouro = form.querySelector('input[name="endereco"]') ||
+                        form.querySelector('input[name="endereco_rua"]');
+                    if (logradouro && data.logradouro) logradouro.value = data.logradouro;
+                    const bairro = form.querySelector('input[name="bairro"]');
+                    if (bairro && data.bairro) bairro.value = data.bairro;
+                    const cidade = form.querySelector('input[name="cidade"]');
+                    if (cidade && data.localidade) cidade.value = data.localidade;
+                    const estado = form.querySelector('input[name="estado"]');
+                    if (estado && data.uf) estado.value = data.uf;
+                })
+                .catch(() => {});
+        });
     });
 });
