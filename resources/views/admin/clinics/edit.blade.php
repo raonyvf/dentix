@@ -83,6 +83,10 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="complemento" value="{{ old('complemento', $clinic->complemento) }}" />
                 </div>
                 <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Bairro</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="bairro" value="{{ old('bairro', $clinic->bairro) }}" />
+                </div>
+                <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Cidade</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" value="{{ old('cidade', $clinic->cidade) }}" required />
                 </div>
