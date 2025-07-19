@@ -80,11 +80,18 @@ class PatientController extends Controller
             'proxima_consulta' => 'nullable|date',
         ]);
 
-        $data['nome'] = trim($data['primeiro_nome'].' '.($data['nome_meio'] ? $data['nome_meio'].' ' : '').$data['ultimo_nome']);
+        // Preserve the separated name parts and also build the full name
+        $data['first_name'] = $data['primeiro_nome'];
+        $data['middle_name'] = $data['nome_meio'];
+        $data['last_name'] = $data['ultimo_nome'];
+        $data['nome'] = trim($data['first_name'].' '.($data['middle_name'] ? $data['middle_name'].' ' : '').$data['last_name']);
         unset($data['primeiro_nome'], $data['nome_meio'], $data['ultimo_nome']);
 
         if ($request->filled('responsavel_primeiro_nome') || $request->filled('responsavel_nome_meio') || $request->filled('responsavel_ultimo_nome')) {
-            $data['responsavel'] = trim(($data['responsavel_primeiro_nome'] ?? '').' '.(($data['responsavel_nome_meio'] ?? '') ? $data['responsavel_nome_meio'].' ' : '').($data['responsavel_ultimo_nome'] ?? ''));
+            $data['responsavel_first_name'] = $data['responsavel_primeiro_nome'];
+            $data['responsavel_middle_name'] = $data['responsavel_nome_meio'];
+            $data['responsavel_last_name'] = $data['responsavel_ultimo_nome'];
+            $data['responsavel'] = trim(($data['responsavel_first_name'] ?? '').' '.(($data['responsavel_middle_name'] ?? '') ? $data['responsavel_middle_name'].' ' : '').($data['responsavel_last_name'] ?? ''));
         }
         unset($data['responsavel_primeiro_nome'], $data['responsavel_nome_meio'], $data['responsavel_ultimo_nome']);
 
@@ -148,11 +155,17 @@ class PatientController extends Controller
             'proxima_consulta' => 'nullable|date',
         ]);
 
-        $data['nome'] = trim($data['primeiro_nome'].' '.($data['nome_meio'] ? $data['nome_meio'].' ' : '').$data['ultimo_nome']);
+        $data['first_name'] = $data['primeiro_nome'];
+        $data['middle_name'] = $data['nome_meio'];
+        $data['last_name'] = $data['ultimo_nome'];
+        $data['nome'] = trim($data['first_name'].' '.($data['middle_name'] ? $data['middle_name'].' ' : '').$data['last_name']);
         unset($data['primeiro_nome'], $data['nome_meio'], $data['ultimo_nome']);
 
         if ($request->filled('responsavel_primeiro_nome') || $request->filled('responsavel_nome_meio') || $request->filled('responsavel_ultimo_nome')) {
-            $data['responsavel'] = trim(($data['responsavel_primeiro_nome'] ?? '').' '.(($data['responsavel_nome_meio'] ?? '') ? $data['responsavel_nome_meio'].' ' : '').($data['responsavel_ultimo_nome'] ?? ''));
+            $data['responsavel_first_name'] = $data['responsavel_primeiro_nome'];
+            $data['responsavel_middle_name'] = $data['responsavel_nome_meio'];
+            $data['responsavel_last_name'] = $data['responsavel_ultimo_nome'];
+            $data['responsavel'] = trim(($data['responsavel_first_name'] ?? '').' '.(($data['responsavel_middle_name'] ?? '') ? $data['responsavel_middle_name'].' ' : '').($data['responsavel_last_name'] ?? ''));
         }
         unset($data['responsavel_primeiro_nome'], $data['responsavel_nome_meio'], $data['responsavel_ultimo_nome']);
         if (! empty($data["data_nascimento"])) {
