@@ -17,7 +17,7 @@
     $respUltimo = array_pop($respParts);
     $respMeio = implode(' ', $respParts);
 @endphp
-<div x-data="{ menor: {{ old('menor_idade', 0) }}, tab: 'dados' }" class="w-full bg-white p-6 rounded-lg shadow">
+<div x-data="{ menor: {{ old('menor_idade', $paciente->menor_idade) }}, tab: 'dados' }" class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Editar Paciente</h1>
     <nav class="mb-4">
         <ul class="flex border-b">
