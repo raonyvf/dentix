@@ -59,7 +59,9 @@ class PatientController extends Controller
             'nome_meio' => 'nullable',
             'ultimo_nome' => 'required',
             'cpf' => 'required',
-            'responsavel' => 'nullable',
+            'responsavel_primeiro_nome' => 'nullable|required_if:menor_idade,1',
+            'responsavel_nome_meio' => 'nullable',
+            'responsavel_ultimo_nome' => 'nullable|required_if:menor_idade,1',
             'idade' => 'nullable|integer',
             'telefone' => 'nullable',
             'menor_idade' => 'nullable|boolean',
@@ -70,6 +72,11 @@ class PatientController extends Controller
 
         $data['nome'] = trim($data['primeiro_nome'].' '.($data['nome_meio'] ? $data['nome_meio'].' ' : '').$data['ultimo_nome']);
         unset($data['primeiro_nome'], $data['nome_meio'], $data['ultimo_nome']);
+
+        if ($request->filled('responsavel_primeiro_nome') || $request->filled('responsavel_nome_meio') || $request->filled('responsavel_ultimo_nome')) {
+            $data['responsavel'] = trim(($data['responsavel_primeiro_nome'] ?? '').' '.(($data['responsavel_nome_meio'] ?? '') ? $data['responsavel_nome_meio'].' ' : '').($data['responsavel_ultimo_nome'] ?? ''));
+        }
+        unset($data['responsavel_primeiro_nome'], $data['responsavel_nome_meio'], $data['responsavel_ultimo_nome']);
 
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
         $user = auth()->user();
@@ -107,7 +114,9 @@ class PatientController extends Controller
             'nome_meio' => 'nullable',
             'ultimo_nome' => 'required',
             'cpf' => 'required',
-            'responsavel' => 'nullable',
+            'responsavel_primeiro_nome' => 'nullable|required_if:menor_idade,1',
+            'responsavel_nome_meio' => 'nullable',
+            'responsavel_ultimo_nome' => 'nullable|required_if:menor_idade,1',
             'idade' => 'nullable|integer',
             'telefone' => 'nullable',
             'menor_idade' => 'nullable|boolean',
@@ -118,6 +127,11 @@ class PatientController extends Controller
 
         $data['nome'] = trim($data['primeiro_nome'].' '.($data['nome_meio'] ? $data['nome_meio'].' ' : '').$data['ultimo_nome']);
         unset($data['primeiro_nome'], $data['nome_meio'], $data['ultimo_nome']);
+
+        if ($request->filled('responsavel_primeiro_nome') || $request->filled('responsavel_nome_meio') || $request->filled('responsavel_ultimo_nome')) {
+            $data['responsavel'] = trim(($data['responsavel_primeiro_nome'] ?? '').' '.(($data['responsavel_nome_meio'] ?? '') ? $data['responsavel_nome_meio'].' ' : '').($data['responsavel_ultimo_nome'] ?? ''));
+        }
+        unset($data['responsavel_primeiro_nome'], $data['responsavel_nome_meio'], $data['responsavel_ultimo_nome']);
 
         $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
         if (! auth()->user()->isOrganizationAdmin() && $paciente->clinic_id != $currentClinic) {
