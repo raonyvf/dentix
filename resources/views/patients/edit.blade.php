@@ -7,15 +7,13 @@
     ['label' => 'Editar']
 ]])
 @php
-    $nameParts = preg_split('/\s+/', $paciente->nome);
-    $primeiroNome = array_shift($nameParts);
-    $ultimoNome = array_pop($nameParts);
-    $nomeMeio = implode(' ', $nameParts);
+    $primeiroNome = $paciente->first_name ?? '';
+    $nomeMeio = $paciente->middle_name ?? '';
+    $ultimoNome = $paciente->last_name ?? '';
 
-    $respParts = $paciente->responsavel ? preg_split('/\s+/', $paciente->responsavel) : [];
-    $respPrimeiro = array_shift($respParts);
-    $respUltimo = array_pop($respParts);
-    $respMeio = implode(' ', $respParts);
+    $respPrimeiro = $paciente->responsavel_first_name ?? '';
+    $respMeio = $paciente->responsavel_middle_name ?? '';
+    $respUltimo = $paciente->responsavel_last_name ?? '';
 @endphp
 <div x-data="{ menor: {{ old('menor_idade', $paciente->menor_idade) }}, tab: 'dados' }" class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Editar Paciente</h1>
