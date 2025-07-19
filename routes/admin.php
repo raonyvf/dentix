@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CadeiraController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\FormularioController;
+use App\Http\Controllers\Admin\PatientController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -20,4 +21,6 @@ Route::resource('perfis', ProfileController::class)->parameters(['perfis' => 'pe
 Route::resource('usuarios', UserController::class);
 
 Route::resource('formularios', FormularioController::class);
+Route::resource('pacientes', PatientController::class)
+    ->parameters(['pacientes' => 'paciente']);
 
