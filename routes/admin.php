@@ -11,6 +11,8 @@ Route::get('/', function () {
     return view('dashboard');
 })->name('admin.index');
 
+Route::view('agenda', 'agenda')->name('agenda.index');
+
 Route::resource('clinicas', ClinicController::class)
     ->parameters(['clinicas' => 'clinic']);
 Route::resource('cadeiras', CadeiraController::class);
