@@ -69,23 +69,32 @@ class User extends Authenticatable
         return $this->profiles()->where('nome', 'Super Administrador')->exists();
     }
 
+    public function isOrganizationAdmin(): bool
+    {
+        return $this->profiles()->where('nome', 'Administrador')->exists();
+    }
+
     public function hasAnyModulePermission(string $module): bool
     {
         if ($this->isSuperAdmin()) {
             return true;
         }
 
-        $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
-
-        if ($clinicId) {
-            $profileIds = $this->profiles()
-                ->where(function ($query) use ($clinicId) {
-                    $query->where('clinic_user.clinic_id', $clinicId)
-                        ->orWhereNull('clinic_user.clinic_id');
-                })
-                ->pluck('profiles.id');
-        } else {
+        if ($this->isOrganizationAdmin()) {
             $profileIds = $this->profiles()->pluck('profiles.id');
+        } else {
+            $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
+
+            if ($clinicId) {
+                $profileIds = $this->profiles()
+                    ->where(function ($query) use ($clinicId) {
+                        $query->where('clinic_user.clinic_id', $clinicId)
+                            ->orWhereNull('clinic_user.clinic_id');
+                    })
+                    ->pluck('profiles.id');
+            } else {
+                $profileIds = $this->profiles()->pluck('profiles.id');
+            }
         }
 
         if ($profileIds->isEmpty()) {
