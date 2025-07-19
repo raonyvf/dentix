@@ -76,13 +76,17 @@ class User extends Authenticatable
         }
 
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
-        if (! $clinicId) {
-            return false;
-        }
 
-        $profileIds = $this->clinics()
-            ->where('clinic_id', $clinicId)
-            ->pluck('profile_id');
+        if ($clinicId) {
+            $profileIds = $this->profiles()
+                ->where(function ($query) use ($clinicId) {
+                    $query->where('clinic_user.clinic_id', $clinicId)
+                        ->orWhereNull('clinic_user.clinic_id');
+                })
+                ->pluck('profiles.id');
+        } else {
+            $profileIds = $this->profiles()->pluck('profiles.id');
+        }
 
         if ($profileIds->isEmpty()) {
             return false;
