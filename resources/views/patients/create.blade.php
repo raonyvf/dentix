@@ -78,7 +78,7 @@
                     </div>
                     <div class="sm:col-span-2">
                         <label class="mb-2 block text-sm font-medium text-gray-700">Rua</label>
-                        <input type="text" name="endereco_rua" value="{{ old('endereco_rua') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                        <input type="text" name="endereco_rua" value="{{ old('endereco_rua') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" placeholder="Número e complemento" />
                     </div>
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">Bairro</label>
