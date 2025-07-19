@@ -7,11 +7,20 @@
     <nav class="flex-1 overflow-y-auto py-4">
         @if($isSuperAdmin)
         <a href="{{ route('backend.index') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Backend' : ''">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4c-4.418 0-8 1.79-8 4v8c0 2.21 3.582 4 8 4s8-1.79 8-4V8c0-2.21-3.582-4-8-4z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8c0 2.21 3.582 4 8 4s8-1.79 8-4" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16c0 2.21 3.582 4 8 4s8-1.79 8-4" />
+            </svg>
             <span class="ml-3" x-show="!sidebarCollapsed">Backend</span>
         </a>
         <a href="{{ route('usuarios-admin.index') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Usuários Admin' : ''">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-4-4h-1" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20H2v-2a4 4 0 014-4h1" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 8a4 4 0 10-8 0 4 4 0 008 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
             <span class="ml-3" x-show="!sidebarCollapsed">Usuários Admin</span>
         </a>
         @else
@@ -32,7 +41,10 @@
             <span class="ml-3" x-show="!sidebarCollapsed">Prontuários</span>
         </a>
         <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Profissionais' : ''">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 7h12a2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" />
+            </svg>
             <span class="ml-3" x-show="!sidebarCollapsed">Profissionais</span>
         </a>
         <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Estoque' : ''">
@@ -40,7 +52,9 @@
             <span class="ml-3" x-show="!sidebarCollapsed">Estoque</span>
         </a>
         <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Financeiro' : ''">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3-1.343-3-3s1.343-3 3-3 3 1.343 3 3-1.343 3-3 3zm0 5a5 5 0 00-5 5v3h10v-3a5 5 0 00-5-5z" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 20h18M9 20V10m6 10V6m6 14V14" />
+            </svg>
             <span class="ml-3" x-show="!sidebarCollapsed">Financeiro</span>
         </a>
         <div class="mt-2" x-data="{ open: false }">
@@ -56,7 +70,10 @@
         </div>
         <div class="mt-2" x-data="{ openAccess: false }">
             <button @click="openAccess = !openAccess" class="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Gestão de Acessos' : ''">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a2 2 0 100-4 2 2 0 00-2 2m-6 0a2 2 0 11-4 0 2 2 0 004 0zm0 6h6m2 0a2 2 0 100-4 2 2 0 00-2 2m-6 0a2 2 0 11-4 0 2 2 0 004 0z" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 11V7a6 6 0 1112 0v4" />
+                <rect width="14" height="10" x="5" y="11" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
                 <span class="ml-3" x-show="!sidebarCollapsed">Gestão de Acessos</span>
                 <svg x-show="!sidebarCollapsed" :class="{'rotate-90': openAccess}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
             </button>
