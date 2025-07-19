@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         return back()->withErrors([
-            'email' => __('auth.failed'),
+            'email' => 'Senha errada ou usuário não existente.',
         ]);
     }
 
