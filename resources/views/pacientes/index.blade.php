@@ -52,12 +52,12 @@
             <tbody class="divide-y divide-gray-200">
                 @foreach ($pacientes as $paciente)
                     <tr>
-                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente['nome'] }}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente['responsavel'] ?? '-' }}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente['idade'] }}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente['telefone'] }}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente['ultima_consulta'] }}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente['proxima_consulta'] }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->nome }} {{ $paciente->ultimo_nome }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->responsavel_nome ?? '-' }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">{{ \Carbon\Carbon::parse($paciente->data_nascimento)->age }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->telefone }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">-</td>
+                        <td class="px-4 py-2 whitespace-nowrap">-</td>
                         <td class="px-4 py-2 whitespace-nowrap text-center">
                             <a href="#" class="text-blue-600 hover:underline" title="Ver Prontuário">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
