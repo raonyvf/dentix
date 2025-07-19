@@ -11,7 +11,7 @@ class CadeiraController extends Controller
 {
     public function index()
     {
-        $cadeiras = Cadeira::all();
+        $cadeiras = Cadeira::with("clinic")->get();
         return view('admin.cadeiras.index', compact('cadeiras'));
     }
 
