@@ -35,13 +35,13 @@
                         <label class="mb-2 block text-sm font-medium text-gray-700">Nome do meio</label>
                         <input type="text" name="nome_meio" value="{{ old('nome_meio') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                     </div>
-                    <div class="sm:col-span-2">
+                    <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">Último nome</label>
                         <input type="text" name="ultimo_nome" value="{{ old('ultimo_nome') }}" required class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                     </div>
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">Data de nascimento</label>
-                        <input type="date" name="data_nascimento" value="{{ old('data_nascimento') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                        <input type="date" name="data_nascimento" lang="pt-BR" value="{{ old('data_nascimento') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                     </div>
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
