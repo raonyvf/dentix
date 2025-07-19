@@ -41,6 +41,7 @@ class CadeiraController extends Controller
             if (is_null($currentClinic) || $data['clinic_id'] != $currentClinic || ! $user->clinics->contains($currentClinic)) {
                 abort(403);
             }
+
         }
 
         Cadeira::create($data);
@@ -78,6 +79,7 @@ class CadeiraController extends Controller
             if (is_null($currentClinic) || $cadeira->clinic_id != $currentClinic || $data['clinic_id'] != $currentClinic || ! $user->clinics->contains($currentClinic)) {
                 abort(403);
             }
+
         }
 
         $cadeira->update($data);
