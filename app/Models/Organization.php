@@ -12,14 +12,20 @@ class Organization extends Model
         'cnpj',
         'email',
         'telefone',
-        'endereco_faturamento',
+        'responsavel_nome',
+        'responsavel_nome_meio',
+        'responsavel_ultimo_nome',
+        'cep',
+        'rua',
+        'numero',
+        'complemento',
+        'bairro',
+        'cidade',
+        'estado',
         'logo_url',
         'status',
     ];
 
-    protected $casts = [
-        'endereco_faturamento' => 'array',
-    ];
 
     public function clinics()
     {

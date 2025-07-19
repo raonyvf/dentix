@@ -47,23 +47,22 @@ class OrganizationController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        $billingAddress = [
-            'cep' => $data['cep'] ?? null,
-            'logradouro' => $data['endereco_rua'] ?? null,
-            'numero' => $data['numero'] ?? null,
-            'complemento' => $data['complemento'] ?? null,
-            'bairro' => $data['bairro'] ?? null,
-            'cidade' => $data['cidade'] ?? null,
-            'estado' => $data['estado'] ?? null,
-        ];
-
         $organization = Organization::create([
             'nome_fantasia' => $data['nome_fantasia'],
             'razao_social' => $data['razao_social'] ?? null,
             'cnpj' => $data['cnpj'],
             'email' => $data['email'],
             'telefone' => $data['telefone'] ?? null,
-            'endereco_faturamento' => $billingAddress,
+            'responsavel_nome' => $data['nome'],
+            'responsavel_nome_meio' => $data['nome_meio'] ?? null,
+            'responsavel_ultimo_nome' => $data['sobrenome'],
+            'cep' => $data['cep'] ?? null,
+            'rua' => $data['endereco_rua'] ?? null,
+            'numero' => $data['numero'] ?? null,
+            'complemento' => $data['complemento'] ?? null,
+            'bairro' => $data['bairro'] ?? null,
+            'cidade' => $data['cidade'] ?? null,
+            'estado' => $data['estado'] ?? null,
             'logo_url' => $data['logo_url'] ?? null,
             'status' => $data['status'] ?? 'ativo',
         ]);
@@ -143,23 +142,22 @@ class OrganizationController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        $billingAddress = [
-            'cep' => $data['cep'] ?? null,
-            'logradouro' => $data['endereco_rua'] ?? null,
-            'numero' => $data['numero'] ?? null,
-            'complemento' => $data['complemento'] ?? null,
-            'bairro' => $data['bairro'] ?? null,
-            'cidade' => $data['cidade'] ?? null,
-            'estado' => $data['estado'] ?? null,
-        ];
-
         $organization->update([
             'nome_fantasia' => $data['nome_fantasia'],
             'razao_social' => $data['razao_social'] ?? null,
             'cnpj' => $data['cnpj'],
             'email' => $data['email'],
             'telefone' => $data['telefone'] ?? null,
-            'endereco_faturamento' => $billingAddress,
+            'responsavel_nome' => $data['nome'] ?? $organization->responsavel_nome,
+            'responsavel_nome_meio' => $data['nome_meio'] ?? $organization->responsavel_nome_meio,
+            'responsavel_ultimo_nome' => $data['sobrenome'] ?? $organization->responsavel_ultimo_nome,
+            'cep' => $data['cep'] ?? null,
+            'rua' => $data['endereco_rua'] ?? null,
+            'numero' => $data['numero'] ?? null,
+            'complemento' => $data['complemento'] ?? null,
+            'bairro' => $data['bairro'] ?? null,
+            'cidade' => $data['cidade'] ?? null,
+            'estado' => $data['estado'] ?? null,
             'logo_url' => $data['logo_url'] ?? null,
             'status' => $data['status'] ?? $organization->status,
         ]);
