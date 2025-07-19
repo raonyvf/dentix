@@ -68,7 +68,7 @@
                         <label class="mb-2 block text-sm font-medium text-gray-700">Nome do meio</label>
                         <input type="text" name="responsavel_nome_meio" value="{{ old('responsavel_nome_meio') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                     </div>
-                    <div class="sm:col-span-2">
+                    <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">Último nome</label>
                         <input type="text" name="responsavel_ultimo_nome" value="{{ old('responsavel_ultimo_nome') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                     </div>
