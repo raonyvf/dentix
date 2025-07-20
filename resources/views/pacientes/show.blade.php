@@ -51,7 +51,113 @@
         </nav>
     </div>
     <section x-show="activeTab === 'dados'">
-        <p class="text-gray-700">Conteúdo de Dados Pessoais</p>
+        <div class="space-y-6">
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <h2 class="mb-4 text-sm font-medium text-gray-700">Informações Básicas</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Nome</span>
+                        <p class="text-gray-900">{{ $paciente->nome }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</span>
+                        <p class="text-gray-900">{{ $paciente->nome_meio ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Último nome</span>
+                        <p class="text-gray-900">{{ $paciente->ultimo_nome }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento</span>
+                        <p class="text-gray-900">{{ $paciente->data_nascimento?->format('d/m/Y') }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">CPF</span>
+                        <p class="text-gray-900">{{ $paciente->cpf ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Menor de idade?</span>
+                        <p class="text-gray-900">{{ $paciente->menor_idade ? 'Sim' : 'Não' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            @if ($paciente->menor_idade)
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <h2 class="mb-4 text-sm font-medium text-gray-700">Dados do Responsável</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Nome do responsável</span>
+                        <p class="text-gray-900">{{ $paciente->responsavel_nome }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</span>
+                        <p class="text-gray-900">{{ $paciente->responsavel_nome_meio ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Último nome</span>
+                        <p class="text-gray-900">{{ $paciente->responsavel_ultimo_nome ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">CPF do responsável</span>
+                        <p class="text-gray-900">{{ $paciente->responsavel_cpf }}</p>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <h2 class="mb-4 text-sm font-medium text-gray-700">Contato</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Telefone</span>
+                        <p class="text-gray-900">{{ $paciente->telefone ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Whatsapp</span>
+                        <p class="text-gray-900">{{ $paciente->whatsapp ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">E-mail</span>
+                        <p class="text-gray-900">{{ $paciente->email ?: '-' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">CEP</span>
+                        <p class="text-gray-900">{{ $paciente->cep ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Logradouro</span>
+                        <p class="text-gray-900">{{ $paciente->logradouro ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Número</span>
+                        <p class="text-gray-900">{{ $paciente->numero ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Complemento</span>
+                        <p class="text-gray-900">{{ $paciente->complemento ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Bairro</span>
+                        <p class="text-gray-900">{{ $paciente->bairro ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Cidade</span>
+                        <p class="text-gray-900">{{ $paciente->cidade ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Estado</span>
+                        <p class="text-gray-900">{{ $paciente->estado ?: '-' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
     <section x-show="activeTab === 'documentos'" x-cloak>
         <p class="text-gray-700">Conteúdo de Documentos</p>
