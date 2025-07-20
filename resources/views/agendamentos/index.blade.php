@@ -80,7 +80,7 @@
     @endforeach
 </div>
 <div class="flex space-x-6 border-b mb-4 text-sm">
-    <button class="pb-2 border-b-2 border-primary text-primary">Por Consult\xC3\xB3rio</button>
+    <button class="pb-2 border-b-2 border-primary text-primary">Por Consult\xC3\xB3rio, Jo\xC3\xA3o</button>
     <button class="pb-2 text-gray-600">Fila de Espera</button>
     <button class="pb-2 text-gray-600">Filtrar</button>
 </div>
