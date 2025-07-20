@@ -166,7 +166,7 @@
         <p class="text-gray-700">Conteúdo de Documentos</p>
     </section>
     <section x-show="activeTab === 'financeiro'" x-cloak>
-        <p class="text-gray-700">Conteúdo de Financeiro</p>
+        @include('pacientes.financeiro')
     </section>
     <section x-show="activeTab === 'orcamentos'" x-cloak>
         <div class="mb-4">
