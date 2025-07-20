@@ -10,7 +10,7 @@
         {{ $header ?? '' }}
     </div>
     <div class="h-64">
-        <canvas id="{{ $id }}"></canvas>
+        <canvas id="{{ $id }}" class="w-full h-full"></canvas>
     </div>
     {{ $slot ?? '' }}
 </div>
