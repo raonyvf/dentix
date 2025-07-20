@@ -34,7 +34,7 @@
 <div class="bg-white rounded-lg shadow">
     <div class="flex items-center justify-between px-4 pt-4">
         <h2 class="text-lg font-semibold">Lista de Pacientes</h2>
-        <input type="text" placeholder="Buscar paciente..." class="border rounded-lg px-3 py-2 text-sm" />
+        <input type="text" placeholder="Buscar paciente..." class="border rounded-lg px-3 py-2 text-sm w-72" />
     </div>
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
