@@ -10,7 +10,7 @@
         <h1 class="text-2xl font-bold">Pacientes</h1>
         <p class="text-gray-600">Gerencie todos os pacientes da clínica</p>
     </div>
-    <a href="/pacientes/create" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center">
+    <a href="{{ route('pacientes.create') }}" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center">
         + Novo Paciente
     </a>
 </div>
