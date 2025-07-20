@@ -53,7 +53,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
         </button>
-        <div class="flex gap-2">
+        <div class="flex gap-2 flex-1">
             @foreach($days as $day)
                 <x-agenda.dia :label="$day['label']" :numero="$day['number']" :mes="$day['month']" :active="$day['active']" :past="$day['past']" />
             @endforeach
