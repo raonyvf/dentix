@@ -19,6 +19,11 @@ class PatientController extends Controller
         return view('pacientes.create');
     }
 
+    public function show(Patient $paciente)
+    {
+        return view('pacientes.show', compact('paciente'));
+    }
+
     public function store(Request $request)
     {
         $data = $this->validateData($request);
