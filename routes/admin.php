@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\FormularioController;
 use App\Http\Controllers\Admin\PatientController;
+use App\Http\Controllers\Admin\AgendaController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -14,6 +15,7 @@ Route::get('/', function () {
 
 Route::view('agenda', 'agenda')->name('agenda.index');
 Route::view('agendamentos', 'agendamentos.index')->name('agendamentos.index');
+
 
 Route::resource('clinicas', ClinicController::class)
     ->parameters(['clinicas' => 'clinic']);

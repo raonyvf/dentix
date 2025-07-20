@@ -25,7 +25,11 @@
     <div class="space-y-4">
         <div class="bg-white rounded-lg shadow p-4">
             <div class="flex items-center justify-between mb-2">
-                <h2 class="font-semibold">Julho 2025</h2>
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('agenda.index', ['year' => $prevDate->year, 'month' => $prevDate->month]) }}" class="p-1" title="Mês anterior">&lt;</a>
+                    <h2 class="font-semibold">{{ $currentDate->translatedFormat('F Y') }}</h2>
+                    <a href="{{ route('agenda.index', ['year' => $nextDate->year, 'month' => $nextDate->month]) }}" class="p-1" title="Próximo mês">&gt;</a>
+                </div>
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
@@ -38,8 +42,14 @@
                 <span class="font-semibold text-gray-600">Q</span>
                 <span class="font-semibold text-gray-600">S</span>
                 <span class="font-semibold text-gray-600">S</span>
-                @for($i = 1; $i <= 31; $i++)
-                    <span class="p-1 rounded {{ $i == 19 ? 'bg-blue-500 text-white' : '' }}">{{ $i }}</span>
+                @for($i = 1; $i < $firstDayOfWeek; $i++)
+                    <span></span>
+                @endfor
+                @for($day = 1; $day <= $daysInMonth; $day++)
+                    @php
+                        $isToday = $today->year == $currentDate->year && $today->month == $currentDate->month && $today->day == $day;
+                    @endphp
+                    <span class="p-1 rounded {{ $isToday ? 'bg-blue-500 text-white' : '' }}">{{ $day }}</span>
                 @endfor
             </div>
         </div>
@@ -65,7 +75,7 @@
     <div class="lg:col-span-1 space-y-4 lg:col-span-2">
         <div class="bg-white rounded-lg shadow p-4">
             <div class="flex justify-between items-start mb-4">
-                <h2 class="text-lg font-bold">Consultas do Dia <span class="text-gray-500 font-normal">19/07/2025</span></h2>
+                <h2 class="text-lg font-bold">Consultas do Dia <span class="text-gray-500 font-normal">{{ $today->format('d/m/Y') }}</span></h2>
                 <a href="#" class="py-2 px-3 bg-red-600 text-white text-sm rounded hover:bg-red-700">Bloquear Horário</a>
             </div>
             <div class="overflow-x-auto">
