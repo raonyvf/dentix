@@ -59,6 +59,9 @@
                         <td class="px-4 py-2 whitespace-nowrap">-</td>
                         <td class="px-4 py-2 whitespace-nowrap">-</td>
                         <td class="px-4 py-2 whitespace-nowrap text-center">
+                            <a href="{{ route('pacientes.edit', $paciente) }}" class="text-blue-600 hover:underline mr-2" title="Editar">
+                                Editar
+                            </a>
                             <a href="#" class="text-blue-600 hover:underline" title="Ver Prontuário">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.105 0-2 .895-2 2s.895 2 2 2 2-.895 2-2-.895-2-2-2z" />
