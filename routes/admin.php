@@ -24,5 +24,6 @@ Route::resource('formularios', FormularioController::class);
 Route::resource('pacientes', PatientController::class)
     ->parameters(['pacientes' => 'paciente']);
 
+Route::view('orcamentos', 'orcamentos.index')->name('orcamentos.index');
 Route::view('orcamentos/assinar', 'orcamentos.assinar')->name('orcamentos.assinar');
 

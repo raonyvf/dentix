@@ -57,6 +57,13 @@
             </svg>
             <span class="ml-3" x-show="!sidebarCollapsed">Financeiro</span>
         </a>
+        <a href="{{ route('orcamentos.index') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Orçamentos' : ''">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16" />
+            </svg>
+            <span class="ml-3" x-show="!sidebarCollapsed">Orçamentos</span>
+        </a>
         <div class="mt-2" x-data="{ open: false }">
             <button @click="open = !open" class="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Administração' : ''">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V5a2 2 0 00-2-2H6a2 2 0 00-2 2v8m16 0v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6m16 0H4" /></svg>
