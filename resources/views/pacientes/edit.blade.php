@@ -15,15 +15,15 @@
                 class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                 Dados pessoais
             </button>
-            <button type="button" @click="activeTab = 'anamnese'"
-                :class="activeTab === 'anamnese' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+            <button type="button" @click="activeTab = 'agendamentos'"
+                :class="activeTab === 'agendamentos' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                 class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                Anamnese
+                Agendamentos
             </button>
-            <button type="button" @click="activeTab = 'odontograma'"
-                :class="activeTab === 'odontograma' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+            <button type="button" @click="activeTab = 'plano_tratamento'"
+                :class="activeTab === 'plano_tratamento' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                 class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                Odontograma
+                Plano de Tratamento
             </button>
             <button type="button" @click="activeTab = 'documentos'"
                 :class="activeTab === 'documentos' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
@@ -159,17 +159,17 @@
         </div>
         </form>
     </div>
-    <div x-show="activeTab === 'anamnese'" x-cloak>
-        <p class="text-gray-700">Formulário de anamnese aqui.</p>
-    </div>
-    <div x-show="activeTab === 'odontograma'" x-cloak>
-        <p class="text-gray-700">Odontograma em desenvolvimento.</p>
-    </div>
     <div x-show="activeTab === 'documentos'" x-cloak>
         <p class="text-gray-700">Seção de documentos.</p>
     </div>
     <div x-show="activeTab === 'financeiro'" x-cloak>
         <p class="text-gray-700">Informações financeiras.</p>
+    </div>
+    <div x-show="activeTab === 'agendamentos'" x-cloak>
+        <p class="text-gray-700">Agenda do paciente.</p>
+    </div>
+    <div x-show="activeTab === 'plano_tratamento'" x-cloak>
+        <p class="text-gray-700">Plano de tratamento.</p>
     </div>
 </div>
 @endsection
