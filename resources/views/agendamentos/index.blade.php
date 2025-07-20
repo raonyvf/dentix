@@ -47,7 +47,7 @@
     ];
 @endphp
 <div class="flex items-center justify-between mb-4">
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 flex-1">
         <button class="p-1 border rounded bg-white">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -88,7 +88,7 @@
     <table class="min-w-full text-sm">
         <thead>
             <tr>
-                <th class="p-2 bg-gray-50"></th>
+                <th class="p-2 bg-gray-50 w-20"></th>
                 @foreach($professionals as $prof)
                     <th class="p-2 bg-gray-50 text-left whitespace-nowrap">{{ $prof['name'] }}</th>
                 @endforeach
@@ -97,7 +97,7 @@
         <tbody>
             @foreach($horarios as $hora)
                 <tr class="border-t">
-                    <td class="bg-gray-50"><x-agenda.horario :time="$hora" /></td>
+                    <td class="bg-gray-50 w-20"><x-agenda.horario :time="$hora" /></td>
                     @foreach($professionals as $prof)
                         <td class="w-40 h-16">
                             @isset($agenda[$prof['id']][$hora])
