@@ -44,6 +44,7 @@
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Responsável</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Idade</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Telefone</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Whatsapp</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Última Consulta</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Próxima Consulta</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
@@ -56,6 +57,7 @@
                         <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->responsavel_nome ?? '-' }}</td>
                         <td class="px-4 py-2 whitespace-nowrap">{{ \Carbon\Carbon::parse($paciente->data_nascimento)->age }}</td>
                         <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->telefone }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->whatsapp }}</td>
                         <td class="px-4 py-2 whitespace-nowrap">-</td>
                         <td class="px-4 py-2 whitespace-nowrap">-</td>
                         <td class="px-4 py-2 whitespace-nowrap text-center">
