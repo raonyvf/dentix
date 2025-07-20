@@ -143,6 +143,7 @@ function drawBarChart(ctx, labels, data, color) {
     });
 }
 
+
 function drawLineChart(ctx, labels, data, color) {
     const { width, height } = ctx.canvas;
     const max = Math.max(...data) || 1;
@@ -181,4 +182,3 @@ function roundRect(ctx, x, y, w, h, r) {
     ctx.arcTo(x, y, x + w, y, r);
     ctx.closePath();
 }
-
