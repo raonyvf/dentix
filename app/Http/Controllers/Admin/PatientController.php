@@ -45,6 +45,12 @@ class PatientController extends Controller
         return redirect()->route('pacientes.index')->with('success', 'Paciente atualizado com sucesso.');
     }
 
+    public function destroy(Patient $paciente)
+    {
+        $paciente->delete();
+        return redirect()->route('pacientes.index')->with('success', 'Paciente removido com sucesso.');
+    }
+
     private function validateData(Request $request): array
     {
         $rules = [
