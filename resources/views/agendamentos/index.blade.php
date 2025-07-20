@@ -27,7 +27,7 @@
         ];
     }
     $professionals = [
-        ['id'=>1,'name'=>'Dr. Jo\xC3\xA3o'],
+        ['id'=>1,'name'=>'Dr. Raony'],
         ['id'=>2,'name'=>'Dra. Ana'],
         ['id'=>3,'name'=>'Dr. Pedro'],
     ];
@@ -35,7 +35,7 @@
     $agenda = [
         1 => [
             '08:00' => ['paciente'=>'Maria','tipo'=>'Consulta','contato'=>'(11) 91234-5678','status'=>'confirmado'],
-            '15:00' => ['paciente'=>'Jo\xC3\xA3o','tipo'=>'Retorno','contato'=>'(11) 99876-5432','status'=>'cancelado'],
+            '15:00' => ['paciente'=>'Raony','tipo'=>'Retorno','contato'=>'(11) 99876-5432','status'=>'cancelado'],
         ],
         2 => [
             '09:00' => ['paciente'=>'Ana','tipo'=>'Consulta','contato'=>'(11) 95555-4444','status'=>'confirmado'],
@@ -80,7 +80,7 @@
     @endforeach
 </div>
 <div class="flex space-x-6 border-b mb-4 text-sm">
-    <button class="pb-2 border-b-2 border-primary text-primary">Por Consult\xC3\xB3rio</button>
+    <button class="pb-2 border-b-2 border-primary text-primary">Por Consultório, Raony</button>
     <button class="pb-2 text-gray-600">Fila de Espera</button>
     <button class="pb-2 text-gray-600">Filtrar</button>
 </div>
