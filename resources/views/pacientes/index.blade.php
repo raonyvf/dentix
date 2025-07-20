@@ -63,10 +63,7 @@
                                 Editar
                             </a>
                             <a href="#" class="text-blue-600 hover:underline" title="Ver Prontuário">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.105 0-2 .895-2 2s.895 2 2 2 2-.895 2-2-.895-2-2-2z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14c-4.418 0-8 2.239-8 5v3h16v-3c0-2.761-3.582-5-8-5z" />
-                                </svg>
+                                Ver Prontuário
                             </a>
                         </td>
                     </tr>
