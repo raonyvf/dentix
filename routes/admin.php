@@ -13,6 +13,7 @@ Route::get('/', function () {
 })->name('admin.index');
 
 Route::view('agenda', 'agenda')->name('agenda.index');
+Route::view('agendamentos', 'agendamentos.index')->name('agendamentos.index');
 
 Route::resource('clinicas', ClinicController::class)
     ->parameters(['clinicas' => 'clinic']);
