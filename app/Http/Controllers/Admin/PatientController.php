@@ -54,6 +54,7 @@ class PatientController extends Controller
             'responsavel_ultimo_nome' => 'nullable',
             'responsavel_cpf' => 'nullable',
             'telefone' => 'nullable',
+            'whatsapp' => 'nullable',
             'email' => 'nullable|email',
             'cep' => 'nullable',
             'logradouro' => 'nullable',

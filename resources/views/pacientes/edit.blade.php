@@ -111,6 +111,10 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="telefone" value="{{ old('telefone', $paciente->telefone) }}" />
                 </div>
                 <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Whatsapp</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="whatsapp" value="{{ old('whatsapp', $paciente->whatsapp) }}" />
+                </div>
+                <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">E-mail</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email', $paciente->email) }}" />
                 </div>

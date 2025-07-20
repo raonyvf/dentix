@@ -22,6 +22,7 @@ class Patient extends Model
         'responsavel_ultimo_nome',
         'responsavel_cpf',
         'telefone',
+        'whatsapp',
         'email',
         'cep',
         'logradouro',
