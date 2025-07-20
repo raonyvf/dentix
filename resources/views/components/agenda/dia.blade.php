@@ -1,6 +1,6 @@
 @props(['label', 'numero', 'mes', 'active' => false, 'past' => false])
 @php
-    $classes = 'flex flex-col items-center p-2 rounded cursor-pointer text-xs';
+    $classes = 'flex flex-col items-center p-2 rounded cursor-pointer text-xs flex-1 text-center';
     if ($active) {
         $classes .= ' bg-black text-white';
     } elseif ($past) {
