@@ -8,10 +8,9 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\FormularioController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\AgendaController;
+use App\Http\Controllers\Admin\DashboardController;
 
-Route::get('/', function () {
-    return view('dashboard');
-})->name('admin.index');
+Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
 
 Route::get('agenda', [AgendaController::class, 'index'])->name('agenda.index');
 Route::view('agendamentos', 'agendamentos.index')->name('agendamentos.index');
