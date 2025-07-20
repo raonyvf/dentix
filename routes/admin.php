@@ -13,7 +13,7 @@ Route::get('/', function () {
     return view('dashboard');
 })->name('admin.index');
 
-Route::view('agenda', 'agenda')->name('agenda.index');
+Route::get('agenda', [AgendaController::class, 'index'])->name('agenda.index');
 Route::view('agendamentos', 'agendamentos.index')->name('agendamentos.index');
 
 
