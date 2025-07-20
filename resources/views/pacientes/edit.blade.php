@@ -6,8 +6,37 @@
     ['label' => 'Pacientes', 'url' => route('pacientes.index')],
     ['label' => 'Editar']
 ]])
-<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ menorIdade: '{{ old('menor_idade', $paciente->menor_idade) }}' }">
+<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ activeTab: 'dados', menorIdade: '{{ old('menor_idade', $paciente->menor_idade) }}' }">
     <h1 class="text-xl font-semibold mb-4">Editar Paciente</h1>
+    <div class="border-b mb-6">
+        <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+            <button type="button" @click="activeTab = 'dados'"
+                :class="activeTab === 'dados' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                Dados pessoais
+            </button>
+            <button type="button" @click="activeTab = 'anamnese'"
+                :class="activeTab === 'anamnese' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                Anamnese
+            </button>
+            <button type="button" @click="activeTab = 'odontograma'"
+                :class="activeTab === 'odontograma' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                Odontograma
+            </button>
+            <button type="button" @click="activeTab = 'documentos'"
+                :class="activeTab === 'documentos' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                Documentos
+            </button>
+            <button type="button" @click="activeTab = 'financeiro'"
+                :class="activeTab === 'financeiro' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                Financeiro
+            </button>
+        </nav>
+    </div>
     @if ($errors->any())
         <div class="mb-4">
             <ul class="list-disc list-inside text-sm text-red-600">
@@ -17,6 +46,7 @@
             </ul>
         </div>
     @endif
+    <div x-show="activeTab === 'dados'">
     <form method="POST" action="{{ route('pacientes.update', $paciente) }}" class="space-y-6">
         @csrf
         @method('PUT')
@@ -123,6 +153,19 @@
             <a href="{{ route('pacientes.index') }}" class="py-2 px-4 rounded border border-stroke text-gray-700">Cancelar</a>
             <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar Paciente</button>
         </div>
-    </form>
+        </form>
+    </div>
+    <div x-show="activeTab === 'anamnese'" x-cloak>
+        <p class="text-gray-700">Formulário de anamnese aqui.</p>
+    </div>
+    <div x-show="activeTab === 'odontograma'" x-cloak>
+        <p class="text-gray-700">Odontograma em desenvolvimento.</p>
+    </div>
+    <div x-show="activeTab === 'documentos'" x-cloak>
+        <p class="text-gray-700">Seção de documentos.</p>
+    </div>
+    <div x-show="activeTab === 'financeiro'" x-cloak>
+        <p class="text-gray-700">Informações financeiras.</p>
+    </div>
 </div>
 @endsection
