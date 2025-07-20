@@ -42,6 +42,9 @@
             <button type="button" @click="activeTab = 'financeiro'" :class="activeTab === 'financeiro' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                 Financeiro
             </button>
+            <button type="button" @click="activeTab = 'orcamentos'" :class="activeTab === 'orcamentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                Orçamentos
+            </button>
             <button type="button" @click="activeTab = 'agendamentos'" :class="activeTab === 'agendamentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                 Agendamentos
             </button>
@@ -164,6 +167,27 @@
     </section>
     <section x-show="activeTab === 'financeiro'" x-cloak>
         <p class="text-gray-700">Conteúdo de Financeiro</p>
+    </section>
+    <section x-show="activeTab === 'orcamentos'" x-cloak>
+        <div class="mb-4">
+            <h2 class="text-xl font-semibold text-gray-700">Orçamentos</h2>
+            <p class="text-sm text-gray-500">Propostas de tratamento e valores</p>
+        </div>
+        <a href="#" class="mb-4 inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-3.314 0-6 1.343-6 3s2.686 3 6 3 6-1.343 6-3-2.686-3-6-3z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 11v5c0 1.657 2.686 3 6 3s6-1.343 6-3v-5" />
+            </svg>
+            Gerar Novo Orçamento
+        </a>
+        @include('components.orcamento-card', [
+            'titulo' => 'Orçamento – Tratamento Ortodôntico',
+            'dataGeracao' => '22/03/2024',
+            'validade' => '30 dias',
+            'valorTotal' => 'R$ 8.500,00',
+            'desconto' => '-R$ 850,00',
+            'valorFinal' => 'R$ 7.650,00'
+        ])
     </section>
     <section x-show="activeTab === 'agendamentos'" x-cloak>
         <p class="text-gray-700">Conteúdo de Agendamentos</p>
