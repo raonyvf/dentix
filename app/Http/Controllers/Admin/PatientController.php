@@ -48,7 +48,7 @@ class PatientController extends Controller
             'ultimo_nome' => 'required',
             'data_nascimento' => 'required|date',
             'cpf' => 'nullable',
-            'menor_idade' => 'required|in:Sim,N\u00e3o',
+            'menor_idade' => 'required|in:Sim,Não',
             'responsavel_nome' => 'nullable',
             'responsavel_nome_meio' => 'nullable',
             'responsavel_ultimo_nome' => 'nullable',

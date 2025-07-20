@@ -39,13 +39,13 @@ class FormularioController extends Controller
             ]);
         }
 
-        return redirect()->route('formularios.index')->with('success', 'Formul\u00e1rio salvo com sucesso.');
+        return redirect()->route('formularios.index')->with('success', 'Formulário salvo com sucesso.');
     }
 
     public function edit(Formulario $formulario)
     {
         if ($formulario->respostas()->exists()) {
-            return redirect()->route('formularios.index')->with('error', 'Formul\u00e1rio j\u00e1 respondido e n\u00e3o pode ser editado.');
+            return redirect()->route('formularios.index')->with('error', 'Formulário já respondido e não pode ser editado.');
         }
 
         $formulario->load('perguntas');
@@ -55,7 +55,7 @@ class FormularioController extends Controller
     public function update(Request $request, Formulario $formulario)
     {
         if ($formulario->respostas()->exists()) {
-            return redirect()->route('formularios.index')->with('error', 'Formul\u00e1rio j\u00e1 respondido e n\u00e3o pode ser editado.');
+            return redirect()->route('formularios.index')->with('error', 'Formulário já respondido e não pode ser editado.');
         }
 
         $data = $request->validate([
@@ -78,15 +78,15 @@ class FormularioController extends Controller
             ]);
         }
 
-        return redirect()->route('formularios.index')->with('success', 'Formul\u00e1rio atualizado com sucesso.');
+        return redirect()->route('formularios.index')->with('success', 'Formulário atualizado com sucesso.');
     }
 
     public function destroy(Formulario $formulario)
     {
         if ($formulario->respostas()->exists()) {
-            return redirect()->route('formularios.index')->with('error', 'Formul\u00e1rio n\u00e3o pode ser removido pois possui respostas.');
+            return redirect()->route('formularios.index')->with('error', 'Formulário não pode ser removido pois possui respostas.');
         }
         $formulario->delete();
-        return redirect()->route('formularios.index')->with('success', 'Formul\u00e1rio removido com sucesso.');
+        return redirect()->route('formularios.index')->with('success', 'Formulário removido com sucesso.');
     }
 }
