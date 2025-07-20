@@ -1,9 +1,4 @@
 @php
-    $orcamentos = [
-        ['id' => 101, 'data' => '01/04/2024', 'valor' => 'R$ 7.650,00', 'status' => 'Aprovado', 'profissional' => 'Dr. Paulo'],
-        ['id' => 102, 'data' => '15/05/2024', 'valor' => 'R$ 3.200,00', 'status' => 'Pendente', 'profissional' => 'Dra. Ana'],
-        ['id' => 103, 'data' => '20/05/2024', 'valor' => 'R$ 4.500,00', 'status' => 'Recusado', 'profissional' => 'Dr. João'],
-    ];
 
     $pagamentos = [
         ['data' => '05/04/2024', 'valor' => 'R$ 2.000,00', 'forma' => 'Cartão', 'parcela' => '1/3', 'status' => 'Pago'],
@@ -51,46 +46,6 @@
             value="R$ 3.650,00"
             color="bg-red-500"
             icon="<svg xmlns='http://www.w3.org/2000/svg' class='w-6 h-6' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 8c-3.314 0-6 1.343-6 3s2.686 3 6 3 6-1.343 6-3-2.686-3-6-3z'/><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 11v5c0 1.657 2.686 3 6 3s6-1.343 6-3v-5'/></svg>" />
-    </div>
-    <div class="space-y-4">
-        <div>
-            <h3 class="text-lg font-semibold text-gray-700">Orçamentos</h3>
-            <div class="flex flex-col sm:flex-row sm:items-end gap-4 mt-2">
-                <select class="w-full sm:w-40 rounded border-stroke bg-gray-2 py-2 px-3 text-sm text-black focus:border-primary focus:outline-none">
-                    <option value="">Todos</option>
-                    <option value="Aprovado">Aprovado</option>
-                    <option value="Pendente">Pendente</option>
-                    <option value="Recusado">Recusado</option>
-                </select>
-                <input type="date" class="rounded border-stroke bg-gray-2 py-2 px-3 text-sm text-black focus:border-primary focus:outline-none" />
-            </div>
-        </div>
-        <x-financeiro.table :headings="['ID', 'Data', 'Valor total', 'Status', 'Profissional', 'Ações']">
-            @foreach ($orcamentos as $orcamento)
-                <tr>
-                    <td class="px-4 py-2">{{ $orcamento['id'] }}</td>
-                    <td class="px-4 py-2">{{ $orcamento['data'] }}</td>
-                    <td class="px-4 py-2">{{ $orcamento['valor'] }}</td>
-                    <td class="px-4 py-2">
-                        <span class="px-2 py-1 rounded-full text-xs {{ $statusColors[$orcamento['status']] ?? '' }}">{{ $orcamento['status'] }}</span>
-                    </td>
-                    <td class="px-4 py-2">{{ $orcamento['profissional'] }}</td>
-                    <td class="px-4 py-2 space-x-2">
-                        <a href="#" class="text-gray-600 hover:text-blue-600" title="Ver">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-600 hover:text-blue-600" title="Editar">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m0 0a2.5 2.5 0 01-3.536 3.536L9 20.036l-4 1 1-4 6.232-6.232a2.5 2.5 0 013.536-3.536z" />
-                            </svg>
-                        </a>
-                    </td>
-                </tr>
-            @endforeach
-        </x-financeiro.table>
     </div>
     <div class="space-y-4">
         <div class="flex items-center justify-between">
