@@ -3,18 +3,18 @@
 @section('content')
 @include('partials.breadcrumbs', ['crumbs' => [
     ['label' => 'Dashboard', 'url' => route('admin.index')],
-    ['label' => 'Formul\u00e1rios', 'url' => route('formularios.index')],
+    ['label' => 'Formulários', 'url' => route('formularios.index')],
     ['label' => 'Novo']
 ]])
 <div x-data="questionsForm()" class="w-full bg-white p-6 rounded-lg shadow">
-    <h1 class="text-xl font-semibold mb-4">Novo Formul\u00e1rio</h1>
+    <h1 class="text-xl font-semibold mb-4">Novo Formulário</h1>
     @if ($errors->any())
         <x-alert-error>{{ implode(', ', $errors->all()) }}</x-alert-error>
     @endif
     <form method="POST" action="{{ route('formularios.store') }}" class="space-y-4">
         @csrf
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Nome do formul\u00e1rio</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Nome do formulário</label>
             <input type="text" name="nome" value="{{ old('nome') }}" required class="w-full rounded border border-stroke py-2 px-3" />
         </div>
         <template x-for="(q, index) in questions" :key="index">
@@ -38,7 +38,7 @@
                         </select>
                     </div>
                     <div x-show="['select','checkbox','radio'].includes(q.tipo)">
-                        <label class="block text-sm">Op\u00e7\u00f5es (separadas por v\u00edrgula)</label>
+                        <label class="block text-sm">Opções (separadas por vírgula)</label>
                         <input type="text" :name="`perguntas[`+index+`][opcoes]`" x-model="q.opcoes" class="w-full rounded border border-stroke py-2 px-3" />
                     </div>
                 </div>
