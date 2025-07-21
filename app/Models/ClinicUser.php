@@ -12,4 +12,9 @@ class ClinicUser extends Pivot
     {
         return $this->belongsTo(Profile::class);
     }
+
+    public function employeeContracts()
+    {
+        return $this->hasMany(EmployeeContract::class);
+    }
 }

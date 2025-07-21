@@ -42,4 +42,9 @@ class Patient extends Model
     {
         return $this->belongsTo(Organization::class);
     }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
 }

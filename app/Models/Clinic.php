@@ -42,6 +42,16 @@ class Clinic extends Model
         return $this->hasMany(Cadeira::class);
     }
 
+    public function workSchedules()
+    {
+        return $this->hasMany(WorkSchedule::class);
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
     public function organization()
     {
         return $this->belongsTo(Organization::class);
