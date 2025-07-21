@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Profile;
-use App\Models\Clinic;
 use App\Models\ClinicaProfissional;
 use App\Models\HorarioProfissional;
 use App\Models\Horario;
@@ -23,9 +21,8 @@ class ProfessionalController extends Controller
 
     public function create()
     {
-        $profiles = Profile::all();
         $clinics = auth()->user()->organization->clinics ?? [];
-        return view('admin.professionals.create', compact('profiles', 'clinics'));
+        return view('admin.professionals.create', compact('clinics'));
     }
 
     public function store(Request $request)
@@ -49,9 +46,6 @@ class ProfessionalController extends Controller
             'cro' => 'required_if:dentista,1|nullable',
             'cargo' => 'nullable',
             'especialidade' => 'nullable',
-            'profiles' => 'required|array|min:1',
-            'profiles.*.profile_id' => 'required|exists:profiles,id',
-            'profiles.*.clinic_id' => 'required|exists:clinics,id',
             'photo' => 'nullable|image',
             'clinicas' => 'nullable|array',
             'clinicas.*.comissao' => 'nullable|numeric',
@@ -105,9 +99,6 @@ class ProfessionalController extends Controller
 
         $user->save();
 
-        foreach ($data['profiles'] as $pair) {
-            $user->clinics()->attach($pair['clinic_id'], ['profile_id' => $pair['profile_id']]);
-        }
 
         if (!empty($data['clinicas'])) {
             foreach ($data['clinicas'] as $clinicId => $info) {
@@ -154,9 +145,8 @@ class ProfessionalController extends Controller
 
     public function edit(User $profissional)
     {
-        $profiles = Profile::all();
         $clinics = auth()->user()->organization->clinics ?? [];
-        return view('admin.professionals.edit', compact('profissional', 'profiles', 'clinics'));
+        return view('admin.professionals.edit', compact('profissional', 'clinics'));
     }
 
     public function update(Request $request, User $profissional)
@@ -180,9 +170,6 @@ class ProfessionalController extends Controller
             'cro' => 'required_if:dentista,1|nullable',
             'cargo' => 'nullable',
             'especialidade' => 'nullable',
-            'profiles' => 'required|array|min:1',
-            'profiles.*.profile_id' => 'required|exists:profiles,id',
-            'profiles.*.clinic_id' => 'required|exists:clinics,id',
             'photo' => 'nullable|image',
             'clinicas' => 'nullable|array',
             'clinicas.*.comissao' => 'nullable|numeric',
@@ -235,10 +222,6 @@ class ProfessionalController extends Controller
 
         $profissional->save();
 
-        $profissional->clinics()->detach();
-        foreach ($data['profiles'] as $pair) {
-            $profissional->clinics()->attach($pair['clinic_id'], ['profile_id' => $pair['profile_id']]);
-        }
 
         ClinicaProfissional::where('profissional_id', $profissional->id)->delete();
         HorarioProfissional::where('profissional_id', $profissional->id)->delete();
