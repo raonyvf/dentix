@@ -70,6 +70,16 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function workSchedules()
+    {
+        return $this->hasMany(WorkSchedule::class);
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
     public function isSuperAdmin(): bool
     {
         return $this->profiles()->where('nome', 'Super Administrador')->exists();
