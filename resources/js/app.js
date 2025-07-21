@@ -106,79 +106,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     charts.forEach(cfg => {
         const canvas = document.getElementById(cfg.id);
-        if (!canvas) return;
+        if (!canvas || typeof Chart === 'undefined') return;
 
-        const parent = canvas.parentElement;
-        if (parent) {
-            canvas.width = parent.clientWidth;
-            canvas.height = parent.clientHeight;
-        }
-
-        const ctx = canvas.getContext('2d');
-        if (cfg.type === 'bar') {
-            drawBarChart(ctx, cfg.labels, cfg.data, cfg.color);
-        } else {
-            drawLineChart(ctx, cfg.labels, cfg.data, cfg.color);
-        }
+        new Chart(canvas, {
+            type: cfg.type,
+            data: {
+                labels: cfg.labels,
+                datasets: [
+                    {
+                        data: cfg.data,
+                        backgroundColor: cfg.type === 'bar' ? cfg.color : 'rgba(0,0,0,0)',
+                        borderColor: cfg.color,
+                        borderWidth: 2,
+                        fill: cfg.type !== 'bar',
+                        tension: 0.4,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#374151', font: { size: 12 } },
+                        grid: { display: false },
+                    },
+                    y: {
+                        ticks: { display: false },
+                        grid: {
+                            color: '#E5E7EB',
+                            drawBorder: false,
+                        },
+                    },
+                },
+            },
+        });
     });
 });
 
-function drawBarChart(ctx, labels, data, color) {
-    const { width, height } = ctx.canvas;
-    const max = Math.max(...data) || 1;
-    const barWidth = width / data.length;
-    const radius = 6;
-    ctx.clearRect(0, 0, width, height);
-    ctx.font = '12px sans-serif';
-    ctx.textAlign = 'center';
-    data.forEach((val, i) => {
-        const h = (val / max) * (height - 24);
-        const x = i * barWidth + barWidth * 0.05;
-        const y = height - h - 12;
-        ctx.fillStyle = color;
-        roundRect(ctx, x, y, barWidth * 0.9, h, radius);
-        ctx.fill();
-        ctx.fillStyle = '#374151';
-        ctx.fillText(labels[i], i * barWidth + barWidth / 2, height - 2);
-    });
-}
-
-
-function drawLineChart(ctx, labels, data, color) {
-    const { width, height } = ctx.canvas;
-    const max = Math.max(...data) || 1;
-    const stepX = width / (data.length - 1);
-    ctx.clearRect(0, 0, width, height);
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    data.forEach((val, i) => {
-        const x = i * stepX;
-        const y = height - (val / max) * (height - 24) - 12;
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-    });
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 3;
-    ctx.stroke();
-    ctx.fillStyle = color;
-    data.forEach((val, i) => {
-        const x = i * stepX;
-        const y = height - (val / max) * (height - 24) - 12;
-        ctx.beginPath();
-        ctx.arc(x, y, 4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#374151';
-        ctx.fillText(labels[i], x, height - 2);
-    });
-}
-
-function roundRect(ctx, x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.arcTo(x + w, y, x + w, y + h, r);
-    ctx.arcTo(x + w, y + h, x, y + h, r);
-    ctx.arcTo(x, y + h, x, y, r);
-    ctx.arcTo(x, y, x + w, y, r);
-    ctx.closePath();
-}
