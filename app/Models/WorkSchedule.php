@@ -5,17 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToOrganization;
 use App\Traits\BelongsToClinic;
-use App\Models\Organization;
 
-class Cadeira extends Model
+class WorkSchedule extends Model
 {
     use BelongsToOrganization, BelongsToClinic;
 
     protected $fillable = [
-        'clinic_id',
         'organization_id',
-        'nome',
-        'status',
+        'clinic_id',
+        'user_id',
+        'dia_semana',
+        'hora_inicio',
+        'hora_fim',
     ];
 
     public function clinic()
@@ -23,13 +24,13 @@ class Cadeira extends Model
         return $this->belongsTo(Clinic::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function organization()
     {
         return $this->belongsTo(Organization::class);
-    }
-
-    public function appointments()
-    {
-        return $this->hasMany(Appointment::class);
     }
 }
