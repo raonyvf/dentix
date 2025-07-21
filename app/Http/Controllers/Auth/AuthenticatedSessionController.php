@@ -30,6 +30,10 @@ class AuthenticatedSessionController extends Controller
                     'email' => __('Organização desativada.')
                 ]);
             }
+            if ($user->profiles()->where('nome', 'Paciente')->exists()) {
+                return redirect()->intended('/portal');
+            }
+
             return redirect()->intended(RouteServiceProvider::HOME);
         }
 

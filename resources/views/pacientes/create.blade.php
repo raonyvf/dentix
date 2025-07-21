@@ -122,6 +122,13 @@
                 </div>
             </div>
         </div>
+        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+            <h2 class="mb-4 text-sm font-medium text-gray-700">Portal do Paciente</h2>
+            <label class="inline-flex items-center space-x-2">
+                <input type="checkbox" name="create_user" value="1" class="rounded border-stroke">
+                <span class="text-sm text-gray-700">Criar usuário para acesso</span>
+            </label>
+        </div>
         <div class="flex justify-between pt-4">
             <a href="{{ route('pacientes.index') }}" class="py-2 px-4 rounded border border-stroke text-gray-700">Cancelar</a>
             <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar Paciente</button>
