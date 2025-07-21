@@ -12,6 +12,8 @@ use App\Models\Organization;
 use App\Models\ClinicUser;
 use App\Models\Permission;
 use App\Models\Patient;
+use App\Models\ClinicaProfissional;
+use App\Models\HorarioProfissional;
 
 class User extends Authenticatable
 {
@@ -74,6 +76,16 @@ class User extends Authenticatable
     public function patient()
     {
         return $this->hasOne(Patient::class);
+    }
+
+    public function clinicasProfissional()
+    {
+        return $this->hasMany(ClinicaProfissional::class, 'profissional_id');
+    }
+
+    public function horariosProfissional()
+    {
+        return $this->hasMany(HorarioProfissional::class, 'profissional_id');
     }
 
     public function isSuperAdmin(): bool
