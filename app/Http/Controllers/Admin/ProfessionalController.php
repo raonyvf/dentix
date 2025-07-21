@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Profile;
+use App\Models\Clinic;
+use App\Models\ClinicaProfissional;
+use App\Models\HorarioProfissional;
+use App\Models\Horario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -47,6 +51,12 @@ class ProfessionalController extends Controller
             'profiles.*.profile_id' => 'required|exists:profiles,id',
             'profiles.*.clinic_id' => 'required|exists:clinics,id',
             'photo' => 'nullable|image',
+            'clinicas' => 'nullable|array',
+            'clinicas.*.comissao' => 'nullable|numeric',
+            'clinicas.*.status' => 'nullable|in:Ativo,Inativo',
+            'horarios' => 'nullable|array',
+            'horarios.*.*.hora_inicio' => 'nullable|date_format:H:i',
+            'horarios.*.*.hora_fim' => 'nullable|date_format:H:i',
             'schedule' => 'nullable|array',
             'document' => 'nullable|file',
             'contract_file' => 'nullable|file',
@@ -95,6 +105,46 @@ class ProfessionalController extends Controller
             $user->clinics()->attach($pair['clinic_id'], ['profile_id' => $pair['profile_id']]);
         }
 
+        if (!empty($data['clinicas'])) {
+            foreach ($data['clinicas'] as $clinicId => $info) {
+                if (!empty($info['selected'])) {
+                    ClinicaProfissional::create([
+                        'clinica_id' => $clinicId,
+                        'profissional_id' => $user->id,
+                        'status' => $info['status'] ?? 'Ativo',
+                        'comissao' => $info['comissao'] ?? null,
+                    ]);
+                }
+            }
+        }
+
+        if (!empty($data['horarios'])) {
+            foreach ($data['horarios'] as $clinicId => $dias) {
+                foreach ($dias as $dia => $hor) {
+                    if (!empty($hor['ativo']) && ($hor['hora_inicio'] ?? false) && ($hor['hora_fim'] ?? false)) {
+                        if ($hor['hora_fim'] <= $hor['hora_inicio']) {
+                            return back()->withErrors('Horário final deve ser maior que o inicial.')->withInput();
+                        }
+
+                        $clinicHorario = Horario::where('clinic_id', $clinicId)
+                            ->where('dia_semana', $dia)
+                            ->first();
+                        if ($clinicHorario && ($hor['hora_inicio'] < $clinicHorario->hora_inicio || $hor['hora_fim'] > $clinicHorario->hora_fim)) {
+                            return back()->withErrors('Horário de trabalho fora do horário de funcionamento da clínica.')->withInput();
+                        }
+
+                        HorarioProfissional::create([
+                            'clinica_id' => $clinicId,
+                            'profissional_id' => $user->id,
+                            'dia_semana' => $dia,
+                            'hora_inicio' => $hor['hora_inicio'],
+                            'hora_fim' => $hor['hora_fim'],
+                        ]);
+                    }
+                }
+            }
+        }
+
         return redirect()->route('profissionais.index')->with('success', 'Profissional salvo com sucesso.');
     }
 
@@ -128,6 +178,12 @@ class ProfessionalController extends Controller
             'profiles.*.profile_id' => 'required|exists:profiles,id',
             'profiles.*.clinic_id' => 'required|exists:clinics,id',
             'photo' => 'nullable|image',
+            'clinicas' => 'nullable|array',
+            'clinicas.*.comissao' => 'nullable|numeric',
+            'clinicas.*.status' => 'nullable|in:Ativo,Inativo',
+            'horarios' => 'nullable|array',
+            'horarios.*.*.hora_inicio' => 'nullable|date_format:H:i',
+            'horarios.*.*.hora_fim' => 'nullable|date_format:H:i',
             'schedule' => 'nullable|array',
             'document' => 'nullable|file',
             'contract_file' => 'nullable|file',
@@ -174,6 +230,49 @@ class ProfessionalController extends Controller
         $profissional->clinics()->detach();
         foreach ($data['profiles'] as $pair) {
             $profissional->clinics()->attach($pair['clinic_id'], ['profile_id' => $pair['profile_id']]);
+        }
+
+        ClinicaProfissional::where('profissional_id', $profissional->id)->delete();
+        HorarioProfissional::where('profissional_id', $profissional->id)->delete();
+
+        if (!empty($data['clinicas'])) {
+            foreach ($data['clinicas'] as $clinicId => $info) {
+                if (!empty($info['selected'])) {
+                    ClinicaProfissional::create([
+                        'clinica_id' => $clinicId,
+                        'profissional_id' => $profissional->id,
+                        'status' => $info['status'] ?? 'Ativo',
+                        'comissao' => $info['comissao'] ?? null,
+                    ]);
+                }
+            }
+        }
+
+        if (!empty($data['horarios'])) {
+            foreach ($data['horarios'] as $clinicId => $dias) {
+                foreach ($dias as $dia => $hor) {
+                    if (!empty($hor['ativo']) && ($hor['hora_inicio'] ?? false) && ($hor['hora_fim'] ?? false)) {
+                        if ($hor['hora_fim'] <= $hor['hora_inicio']) {
+                            return back()->withErrors('Horário final deve ser maior que o inicial.')->withInput();
+                        }
+
+                        $clinicHorario = Horario::where('clinic_id', $clinicId)
+                            ->where('dia_semana', $dia)
+                            ->first();
+                        if ($clinicHorario && ($hor['hora_inicio'] < $clinicHorario->hora_inicio || $hor['hora_fim'] > $clinicHorario->hora_fim)) {
+                            return back()->withErrors('Horário de trabalho fora do horário de funcionamento da clínica.')->withInput();
+                        }
+
+                        HorarioProfissional::create([
+                            'clinica_id' => $clinicId,
+                            'profissional_id' => $profissional->id,
+                            'dia_semana' => $dia,
+                            'hora_inicio' => $hor['hora_inicio'],
+                            'hora_fim' => $hor['hora_fim'],
+                        ]);
+                    }
+                }
+            }
         }
 
         return redirect()->route('profissionais.index')->with('success', 'Profissional atualizado com sucesso.');
