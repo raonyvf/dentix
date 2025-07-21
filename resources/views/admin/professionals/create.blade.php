@@ -20,7 +20,8 @@
     <form method="POST" action="{{ route('profissionais.store') }}" enctype="multipart/form-data" class="space-y-6" x-data="{ tab: 'dados', horarioClinic: '' }">
         @csrf
         <div class="mb-4 border-b flex gap-4">
-            <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados</button>
+            <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados pessoais</button>
+            <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados Profissionais</button>
             <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Clínicas</button>
             <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Horários</button>
         </div>
@@ -44,12 +45,6 @@
                     <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf') }}" />
                 </div>
-                <div class="sm:col-span-2" x-data="{ dentista: {{ old('dentista') ? 'true' : 'false' }} }">
-                    <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
-                        <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista')) /> Dentista
-                    </label>
-                    <input x-bind:required="dentista" x-show="dentista" x-cloak class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro') }}" />
-                </div>
             </div>
         </div>
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
@@ -64,20 +59,6 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" value="{{ old('phone') }}" />
                 </div>
             </div>
-        </div>
-        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-            <h2 class="mb-4 text-sm font-medium text-gray-700">Senha</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Senha (opcional)</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="password" name="password" />
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Confirmar Senha</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="password" name="password_confirmation" />
-                </div>
-            </div>
-            <p class="text-xs text-gray-500 mt-1">Se deixado em branco, uma senha aleatória será criada e enviada por e-mail.</p>
         </div>
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
@@ -115,6 +96,20 @@
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <h2 class="mb-4 text-sm font-medium text-gray-700">Foto</h2>
             <input type="file" name="photo" class="w-full text-sm" />
+        </div>
+        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+            <h2 class="mb-4 text-sm font-medium text-gray-700">Senha</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Senha (opcional)</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="password" name="password" />
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Confirmar Senha</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="password" name="password_confirmation" />
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Se deixado em branco, uma senha aleatória será criada e enviada por e-mail.</p>
         </div>
         <div>
             <h2 class="mb-4 text-sm font-medium text-gray-700">Perfis</h2>
@@ -154,6 +149,19 @@
             </template>
         </div>
         </div> <!-- end dados tab -->
+        <div x-show="tab==='profissionais'" class="space-y-6" x-cloak>
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <h2 class="mb-4 text-sm font-medium text-gray-700">Dados Profissionais</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="sm:col-span-2" x-data="{ dentista: {{ old('dentista') ? 'true' : 'false' }} }">
+                        <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
+                            <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista')) /> Dentista
+                        </label>
+                        <input x-bind:required="dentista" x-show="dentista" x-cloak class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro') }}" />
+                    </div>
+                </div>
+            </div>
+        </div>
         <div x-show="tab==='clinicas'" class="space-y-4">
             @foreach ($clinics as $clinic)
                 <div class="border rounded p-4 space-y-2">
