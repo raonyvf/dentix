@@ -3,11 +3,11 @@
 @section('content')
 @include('partials.breadcrumbs', ['crumbs' => [
     ['label' => 'Dashboard', 'url' => route('admin.index')],
-    ['label' => 'Usuários', 'url' => route('usuarios.index')],
-    ['label' => 'Criar']
+    ['label' => 'Profissionais', 'url' => route('profissionais.index')],
+    ['label' => 'Editar']
 ]])
-<div class="w-full bg-white p-6 rounded-lg shadow">
-    <h1 class="text-xl font-semibold mb-4">Criar Usuário</h1>
+<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ dentista: {{ old('dentista', $profissional->dentista) ? 'true' : 'false' }} }">
+    <h1 class="text-xl font-semibold mb-4">Editar Profissional</h1>
     @if ($errors->any())
         <div class="mb-4">
             <ul class="list-disc list-inside text-sm text-red-600">
@@ -17,32 +17,33 @@
             </ul>
         </div>
     @endif
-    <form method="POST" action="{{ route('usuarios.store') }}" enctype="multipart/form-data" class="space-y-6">
+    <form method="POST" action="{{ route('profissionais.update', $profissional) }}" enctype="multipart/form-data" class="space-y-6">
         @csrf
+        @method('PUT')
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-            <h2 class="mb-4 text-sm font-medium text-gray-700">Dados do Usuário</h2>
+            <h2 class="mb-4 text-sm font-medium text-gray-700">Dados do Profissional</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="first_name" value="{{ old('first_name') }}" required />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="first_name" value="{{ old('first_name', $profissional->first_name) }}" required />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Nome do meio</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="middle_name" value="{{ old('middle_name') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="middle_name" value="{{ old('middle_name', $profissional->middle_name) }}" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Último nome</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="last_name" value="{{ old('last_name') }}" required />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="last_name" value="{{ old('last_name', $profissional->last_name) }}" required />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf', $profissional->cpf) }}" />
                 </div>
-                <div class="sm:col-span-2" x-data="{ dentista: {{ old('dentista') ? 'true' : 'false' }} }">
+                <div class="sm:col-span-2">
                     <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
-                        <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista')) /> Dentista
+                        <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista', $profissional->dentista)) /> Dentista
                     </label>
-                    <input x-bind:required="dentista" x-show="dentista" x-cloak class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro') }}" />
+                    <input x-bind:required="dentista" x-show="dentista" x-cloak class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro', $profissional->cro) }}" />
                 </div>
             </div>
         </div>
@@ -51,11 +52,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Email</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email') }}" required />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email', $profissional->email) }}" required />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" value="{{ old('phone') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" value="{{ old('phone', $profissional->phone) }}" />
                 </div>
             </div>
         </div>
@@ -71,38 +72,38 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="password" name="password_confirmation" />
                 </div>
             </div>
-            <p class="text-xs text-gray-500 mt-1">Se deixado em branco, uma senha aleatória será criada e enviada por e-mail.</p>
+            <p class="text-xs text-gray-500 mt-1">Se deixado em branco, a senha permanecerá inalterada.</p>
         </div>
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">CEP</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep', $profissional->cep) }}" />
                 </div>
                 <div class="sm:col-span-2">
                     <label class="mb-2 block text-sm font-medium text-gray-700">Logradouro</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="logradouro" value="{{ old('logradouro') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="logradouro" value="{{ old('logradouro', $profissional->logradouro) }}" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Número</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="numero" value="{{ old('numero') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="numero" value="{{ old('numero', $profissional->numero) }}" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Complemento</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="complemento" value="{{ old('complemento') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="complemento" value="{{ old('complemento', $profissional->complemento) }}" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Bairro</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="bairro" value="{{ old('bairro') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="bairro" value="{{ old('bairro', $profissional->bairro) }}" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Cidade</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" value="{{ old('cidade') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" value="{{ old('cidade', $profissional->cidade) }}" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Estado</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado', $profissional->estado) }}" />
                 </div>
             </div>
         </div>
@@ -147,12 +148,14 @@
                 </div>
             </template>
         </div>
-        <div class="flex justify-end pt-4">
+        <div class="flex justify-end gap-2 pt-4">
+            <a href="{{ route('profissionais.index') }}" class="py-2 px-4 rounded border border-stroke text-gray-700">Cancelar</a>
             <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
         </div>
     </form>
 </div>
 
+@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('profiles-container');
@@ -173,20 +176,18 @@
                 row.remove();
                 updateTitles();
             });
-            if (profile) row.querySelector(`select[name="profiles[${index}][profile_id]"]`).value = profile;
-            if (clinic) row.querySelector(`select[name="profiles[${index}][clinic_id]"]`).value = clinic;
+            row.querySelector(`select[name="profiles[${index}][profile_id]"]`).value = profile;
+            row.querySelector(`select[name="profiles[${index}][clinic_id]"]`).value = clinic;
             index++;
             updateTitles();
         }
 
         document.getElementById('add-profile').addEventListener('click', () => addRow());
 
-        const oldProfiles = @json(old('profiles', []));
-        if (oldProfiles.length) {
-            oldProfiles.forEach(p => addRow(p.profile_id ?? '', p.clinic_id ?? ''));
-        } else {
-            addRow();
-        }
+        @foreach ($profissional->clinics as $clinic)
+            addRow('{{ $clinic->pivot->profile_id }}', '{{ $clinic->id }}');
+        @endforeach
     });
 </script>
+@endpush
 @endsection
