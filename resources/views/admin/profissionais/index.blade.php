@@ -33,14 +33,52 @@
     </div>
 </div>
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-    <x-dashboard.stats-card
-        title="Total de Profissionais"
-        :value="$total"
-        :comparison="$dentistas . ' Dentistas | ' . $auxiliares . ' Auxiliares'"
-        :icon="'<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-8a4 4 0 110 8 4 4 0 010-8z" /></svg>'"
-    />
-    <x-dashboard.stats-card :title="'Atendimentos (último mês)'" :value="$atendimentosMes ?? 0" :comparison="$variacaoAtendimentos ?? null" :icon="'<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z\" /></svg>'" />
-    <x-dashboard.stats-card :title="'Comissões (total do mês)'" :value="isset($totalComissoes) ? 'R$ '.number_format($totalComissoes, 2, ',', '.') : 'R$ 0,00'" :comparison="isset($mediaComissao) ? 'Média por profissional: R$ '.number_format($mediaComissao, 2, ',', '.') : null" :icon="'<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3 1.343 3 3-1.343 3-3 3m0-12V4m0 16v-4m0 4c1.657 0 3-1.343 3-3s-1.343-3-3-3-3-1.343-3-3 1.343-3 3-3\" /></svg>'" />
+    <div class="rounded-sm border border-stroke bg-white p-5 shadow">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500">Total de Profissionais</p>
+                <p class="mt-1 text-xl font-bold text-black">{{ $total }}</p>
+            </div>
+            <div class="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-8a4 4 0 110 8 4 4 0 010-8z" />
+                </svg>
+            </div>
+        </div>
+        <p class="mt-2 text-xs text-gray-500">{{ $dentistas . ' Dentistas | ' . $auxiliares . ' Auxiliares' }}</p>
+    </div>
+    <div class="rounded-sm border border-stroke bg-white p-5 shadow">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500">Atendimentos (último mês)</p>
+                <p class="mt-1 text-xl font-bold text-black">{{ $atendimentosMes ?? 0 }}</p>
+            </div>
+            <div class="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
+        </div>
+        @if($variacaoAtendimentos ?? null)
+            <p class="mt-2 text-xs text-gray-500">{{ $variacaoAtendimentos }}</p>
+        @endif
+    </div>
+    <div class="rounded-sm border border-stroke bg-white p-5 shadow">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500">Comissões (total do mês)</p>
+                <p class="mt-1 text-xl font-bold text-black">{{ isset($totalComissoes) ? 'R$ '.number_format($totalComissoes, 2, ',', '.') : 'R$ 0,00' }}</p>
+            </div>
+            <div class="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3 1.343 3 3-1.343 3-3 3m0-12V4m0 16v-4m0 4c1.657 0 3-1.343 3-3s-1.343-3-3-3-3-1.343-3-3 1.343-3 3-3" />
+                </svg>
+            </div>
+        </div>
+        @if(isset($mediaComissao))
+            <p class="mt-2 text-xs text-gray-500">Média por profissional: R$ {{ number_format($mediaComissao, 2, ',', '.') }}</p>
+        @endif
+    </div>
 </div>
 <form method="GET" class="mb-4">
     <select name="clinica_id" onchange="this.form.submit()" class="border rounded px-3 py-2 text-sm">
