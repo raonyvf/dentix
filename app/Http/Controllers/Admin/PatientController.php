@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
+use App\Models\User;
+use App\Models\Profile;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
@@ -28,7 +32,29 @@ class PatientController extends Controller
     {
         $data = $this->validateData($request);
         $data['menor_idade'] = $request->menor_idade === 'Sim';
-        Patient::create($data);
+        $paciente = Patient::create($data);
+
+        if ($request->boolean('create_user') && $paciente->email) {
+            $profile = Profile::firstOrCreate([
+                'nome' => 'Paciente',
+                'organization_id' => auth()->user()->organization_id,
+            ]);
+
+            $password = Str::random(8);
+            $user = User::create([
+                'name' => $paciente->nome.' '.$paciente->ultimo_nome,
+                'email' => $paciente->email,
+                'organization_id' => auth()->user()->organization_id,
+                'password' => Hash::make($password),
+                'must_change_password' => true,
+            ]);
+
+            $user->profiles()->syncWithoutDetaching([$profile->id => ['clinic_id' => null]]);
+
+            $paciente->user_id = $user->id;
+            $paciente->save();
+        }
+
         return redirect()->route('pacientes.index')->with('success', 'Paciente salvo com sucesso.');
     }
 

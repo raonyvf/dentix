@@ -11,6 +11,7 @@ use App\Models\Profile;
 use App\Models\Organization;
 use App\Models\ClinicUser;
 use App\Models\Permission;
+use App\Models\Patient;
 
 class User extends Authenticatable
 {
@@ -68,6 +69,11 @@ class User extends Authenticatable
             ->using(ClinicUser::class)
             ->withPivot('clinic_id')
             ->withTimestamps();
+    }
+
+    public function patient()
+    {
+        return $this->hasOne(Patient::class);
     }
 
     public function isSuperAdmin(): bool
