@@ -73,6 +73,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    const modal = document.getElementById('schedule-modal');
+    const patientSelect = document.getElementById('schedule-patient');
+    const cancelBtn = document.getElementById('schedule-cancel');
+    const saveBtn = document.getElementById('schedule-save');
+    let targetCell = null;
+
+    if (modal) {
+        document.querySelectorAll('td[data-professional]').forEach(td => {
+            td.addEventListener('click', () => {
+                targetCell = td;
+                patientSelect.value = '';
+                modal.classList.remove('hidden');
+            });
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        saveBtn.addEventListener('click', () => {
+            const name = patientSelect.value;
+            if (!name || !targetCell) return;
+            targetCell.innerHTML =
+                `<div class="rounded p-2 text-xs bg-green-100 text-green-700"><div class="font-semibold">${name}</div><div>Consulta</div></div>`;
+            modal.classList.add('hidden');
+        });
+    }
+
     const charts = [
         {
             id: 'consultas-do-dia',
