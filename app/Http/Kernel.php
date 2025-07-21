@@ -53,5 +53,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'forcepasswordchange' => \App\Http\Middleware\ForcePasswordChange::class,
         'superadmin' => \App\Http\Middleware\EnsureSuperAdmin::class,
+        'paciente' => \App\Http\Middleware\EnsurePatientProfile::class,
     ];
 }
