@@ -31,6 +31,7 @@
         ['id'=>2,'name'=>'Dra. Ana'],
         ['id'=>3,'name'=>'Dr. Pedro'],
     ];
+    $patients = ['João','Maria','Pedro','Ana','Carlos'];
     $horarios = ['08:00','09:00','10:00','11:00','14:00','15:00','16:00'];
     $agenda = [
         1 => [
@@ -99,7 +100,7 @@
                 <tr class="border-t">
                     <td class="bg-gray-50 w-20"><x-agenda.horario :time="$hora" /></td>
                     @foreach($professionals as $prof)
-                        <td class="w-40 h-16">
+                        <td class="w-40 h-16 cursor-pointer" data-professional="{{ $prof['id'] }}" data-time="{{ $hora }}">
                             @isset($agenda[$prof['id']][$hora])
                                 @php $item = $agenda[$prof['id']][$hora]; @endphp
                                 <x-agenda.agendamento :paciente="$item['paciente']" :tipo="$item['tipo']" :contato="$item['contato']" :status="$item['status']" />
@@ -110,5 +111,23 @@
             @endforeach
         </tbody>
     </table>
+</div>
+<div id="schedule-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded p-4 w-80">
+        <h2 class="text-lg font-semibold mb-4">Agendar Horário</h2>
+        <label class="block mb-4">
+            <span class="text-sm">Paciente</span>
+            <select id="schedule-patient" class="mt-1 w-full border rounded p-1">
+                <option value="">Selecione...</option>
+                @foreach($patients as $patient)
+                    <option value="{{ $patient }}">{{ $patient }}</option>
+                @endforeach
+            </select>
+        </label>
+        <div class="flex justify-end gap-2">
+            <button id="schedule-cancel" class="px-3 py-1 border rounded">Cancelar</button>
+            <button id="schedule-save" class="px-3 py-1 bg-primary text-white rounded">Salvar</button>
+        </div>
+    </div>
 </div>
 @endsection
