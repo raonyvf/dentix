@@ -18,7 +18,7 @@ class ProfessionalController extends Controller
     public function index()
     {
         $users = User::where('dentista', true)->get();
-        return view('admin.professionals.index', compact('users'));
+        return view('admin.profissionais.index', compact('users'));
     }
 
     public function create()
