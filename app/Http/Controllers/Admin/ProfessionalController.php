@@ -47,6 +47,8 @@ class ProfessionalController extends Controller
             'cpf' => 'nullable',
             'dentista' => 'nullable|boolean',
             'cro' => 'required_if:dentista,1|nullable',
+            'cargo' => 'nullable',
+            'especialidade' => 'nullable',
             'profiles' => 'required|array|min:1',
             'profiles.*.profile_id' => 'required|exists:profiles,id',
             'profiles.*.clinic_id' => 'required|exists:clinics,id',
@@ -83,6 +85,8 @@ class ProfessionalController extends Controller
         $user->cpf = $data['cpf'] ?? null;
         $user->dentista = $data['dentista'] ?? true;
         $user->cro = $data['cro'] ?? null;
+        $user->cargo = $data['cargo'] ?? null;
+        $user->especialidade = $data['especialidade'] ?? null;
         $user->organization_id = auth()->user()->organization_id;
         $user->password = Hash::make($password);
         $user->must_change_password = true;
@@ -174,6 +178,8 @@ class ProfessionalController extends Controller
             'cpf' => 'nullable',
             'dentista' => 'nullable|boolean',
             'cro' => 'required_if:dentista,1|nullable',
+            'cargo' => 'nullable',
+            'especialidade' => 'nullable',
             'profiles' => 'required|array|min:1',
             'profiles.*.profile_id' => 'required|exists:profiles,id',
             'profiles.*.clinic_id' => 'required|exists:clinics,id',
@@ -207,6 +213,8 @@ class ProfessionalController extends Controller
         $profissional->cpf = $data['cpf'] ?? null;
         $profissional->dentista = $data['dentista'] ?? true;
         $profissional->cro = $data['cro'] ?? null;
+        $profissional->cargo = $data['cargo'] ?? null;
+        $profissional->especialidade = $data['especialidade'] ?? null;
 
         if ($request->filled('password')) {
             $profissional->password = Hash::make($data['password']);

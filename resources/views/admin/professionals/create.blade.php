@@ -153,11 +153,18 @@
             <div class="rounded-sm border border-stroke bg-gray-50 p-4">
                 <h2 class="mb-4 text-sm font-medium text-gray-700">Dados Profissionais</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="sm:col-span-2">
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Cargo</label>
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cargo" value="{{ old('cargo') }}" />
+                    </div>
                     <div class="sm:col-span-2" x-data="{ dentista: {{ old('dentista') ? 'true' : 'false' }} }">
                         <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
                             <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista')) /> Dentista
                         </label>
-                        <input x-bind:required="dentista" x-show="dentista" x-cloak class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro') }}" />
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="dentista" x-cloak>
+                            <input x-bind:required="dentista" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro') }}" />
+                            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="especialidade" placeholder="Especialidade" value="{{ old('especialidade') }}" />
+                        </div>
                     </div>
                 </div>
             </div>

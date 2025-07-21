@@ -36,6 +36,8 @@ class User extends Authenticatable
         'cpf',
         'dentista',
         'cro',
+        'cargo',
+        'especialidade',
         'photo_path',
         'password',
         'organization_id',
