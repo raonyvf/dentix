@@ -6,7 +6,7 @@
     ['label' => 'Usuários', 'url' => route('usuarios.index')],
     ['label' => 'Editar']
 ]])
-<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ dentista: {{ old('dentista', $usuario->dentista) ? 'true' : 'false' }} }">
+<div class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Editar Usuário</h1>
     @if ($errors->any())
         <div class="mb-4">
@@ -17,99 +17,22 @@
             </ul>
         </div>
     @endif
-    <form method="POST" action="{{ route('usuarios.update', $usuario) }}" enctype="multipart/form-data" class="space-y-6">
+    <form method="POST" action="{{ route('usuarios.update', $usuario) }}" class="space-y-6">
         @csrf
         @method('PUT')
-        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-            <h2 class="mb-4 text-sm font-medium text-gray-700">Dados do Usuário</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="first_name" value="{{ old('first_name', $usuario->first_name) }}" required />
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome do meio</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="middle_name" value="{{ old('middle_name', $usuario->middle_name) }}" />
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Último nome</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="last_name" value="{{ old('last_name', $usuario->last_name) }}" required />
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">CPF</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf', $usuario->cpf) }}" />
-                </div>
-                <div class="sm:col-span-2">
-                    <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
-                        <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista', $usuario->dentista)) /> Dentista
-                    </label>
-                    <input x-bind:required="dentista" x-show="dentista" x-cloak class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro', $usuario->cro) }}" />
-                </div>
-            </div>
-        </div>
-        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-            <h2 class="mb-4 text-sm font-medium text-gray-700">Contato</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Email</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email', $usuario->email) }}" required />
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" value="{{ old('phone', $usuario->phone) }}" />
-                </div>
-            </div>
-        </div>
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <h2 class="mb-4 text-sm font-medium text-gray-700">Senha</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Senha (opcional)</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="password" name="password" />
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Nova Senha</label>
+                    <input type="password" name="password" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Confirmar Senha</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="password" name="password_confirmation" />
+                    <input type="password" name="password_confirmation" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
             </div>
             <p class="text-xs text-gray-500 mt-1">Se deixado em branco, a senha permanecerá inalterada.</p>
-        </div>
-        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-            <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">CEP</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep', $usuario->cep) }}" />
-                </div>
-                <div class="sm:col-span-2">
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Logradouro</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="logradouro" value="{{ old('logradouro', $usuario->logradouro) }}" />
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Número</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="numero" value="{{ old('numero', $usuario->numero) }}" />
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Complemento</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="complemento" value="{{ old('complemento', $usuario->complemento) }}" />
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Bairro</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="bairro" value="{{ old('bairro', $usuario->bairro) }}" />
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Cidade</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" value="{{ old('cidade', $usuario->cidade) }}" />
-                </div>
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Estado</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado', $usuario->estado) }}" />
-                </div>
-            </div>
-        </div>
-        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-            <h2 class="mb-4 text-sm font-medium text-gray-700">Foto</h2>
-            <input type="file" name="photo" class="w-full text-sm" />
         </div>
         <div>
             <h2 class="mb-4 text-sm font-medium text-gray-700">Perfis</h2>

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ClinicController;
 use App\Http\Controllers\Admin\CadeiraController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ProfessionalController;
 use App\Http\Controllers\Admin\FormularioController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\AgendaController;
@@ -20,7 +21,8 @@ Route::resource('clinicas', ClinicController::class)
     ->parameters(['clinicas' => 'clinic']);
 Route::resource('cadeiras', CadeiraController::class);
 Route::resource('perfis', ProfileController::class)->parameters(['perfis' => 'perfil']);
-Route::resource('usuarios', UserController::class);
+Route::resource('usuarios', UserController::class)->only(['index','edit','update']);
+Route::resource('profissionais', ProfessionalController::class);
 
 Route::resource('formularios', FormularioController::class);
 Route::resource('pacientes', PatientController::class)
