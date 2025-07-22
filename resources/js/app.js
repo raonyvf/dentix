@@ -196,7 +196,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function agendaCalendar() {
+
+// expose agendaCalendar to Alpine in Blade templates
+window.agendaCalendar = function agendaCalendar() {
     const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
     const week = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM'];
     const today = new Date();
