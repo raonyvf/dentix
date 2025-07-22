@@ -6,7 +6,7 @@
     ['label' => 'Profissionais', 'url' => route('profissionais.index')],
     ['label' => 'Editar']
 ]])
-<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ tab: 'dados', dentista: {{ old('dentista', $profissional->dentista) ? 'true' : 'false' }} }">
+<div class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Editar Profissional</h1>
     @if ($errors->any())
         <div class="mb-4">
@@ -17,13 +17,15 @@
             </ul>
         </div>
     @endif
-    <form method="POST" action="{{ route('profissionais.update', $profissional) }}" enctype="multipart/form-data" class="space-y-6">
+    <form method="POST" action="{{ route('profissionais.update', $profissional) }}" enctype="multipart/form-data" class="space-y-6" x-data="{ tab: 'dados', horarioClinic: '' }">
         @csrf
         @method('PUT')
         <div class="mb-4 border-b flex gap-4">
             <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados pessoais</button>
             <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados Profissionais</button>
             <button type="button" @click="tab='contato'" :class="tab==='contato' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Contato</button>
+            <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Clínicas</button>
+            <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Horários</button>
         </div>
         <div x-show="tab==='dados'" class="space-y-6">
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
@@ -47,28 +49,29 @@
                 </div>
             </div>
         </div>
-        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-            <h2 class="mb-4 text-sm font-medium text-gray-700">Dados Profissionais</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="sm:col-span-2">
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Cargo</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cargo" value="{{ old('cargo', $profissional->cargo) }}" />
-                </div>
-                <div class="sm:col-span-2" x-data="{ dentista: {{ old('dentista', $profissional->dentista) ? 'true' : 'false' }} }">
-                    <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
-                        <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista', $profissional->dentista)) /> Dentista
-                    </label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="dentista" x-cloak>
-
-                        <div>
-                            <label class="mb-2 block text-sm font-medium text-gray-700">CRO</label>
-                            <input x-bind:required="dentista" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro', $profissional->cro) }}" />
+        </div>
+        <div x-show="tab==='profissionais'" class="space-y-6" x-cloak>
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <h2 class="mb-4 text-sm font-medium text-gray-700">Dados Profissionais</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="sm:col-span-2">
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Cargo</label>
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cargo" value="{{ old('cargo', $profissional->cargo) }}" />
+                    </div>
+                    <div class="sm:col-span-2" x-data="{ dentista: {{ old('dentista', $profissional->dentista) ? 'true' : 'false' }} }">
+                        <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
+                            <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista', $profissional->dentista)) /> Dentista
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="dentista" x-cloak>
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-gray-700">CRO</label>
+                                <input x-bind:required="dentista" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro', $profissional->cro) }}" />
+                            </div>
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-gray-700">Especialidade</label>
+                                <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="especialidade" placeholder="Especialidade" value="{{ old('especialidade', $profissional->especialidade) }}" />
+                            </div>
                         </div>
-                        <div>
-                            <label class="mb-2 block text-sm font-medium text-gray-700">Especialidade</label>
-                            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="especialidade" placeholder="Especialidade" value="{{ old('especialidade', $profissional->especialidade) }}" />
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -125,6 +128,75 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div x-show="tab==='clinicas'" class="space-y-4" x-cloak>
+            @foreach ($clinics as $clinic)
+                @php $cp = $profissional->clinicasProfissional->firstWhere('clinica_id', $clinic->id); @endphp
+                <div class="border rounded p-4 space-y-2">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" name="clinicas[{{ $clinic->id }}][selected]" value="1" class="rounded" @checked(old('clinicas.' . $clinic->id . '.selected', $cp ? 1 : 0))>
+                        <span class="font-medium text-sm">{{ $clinic->nome }}</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-sm block mb-1">Comissão (%)</label>
+                            <input type="number" step="0.01" name="clinicas[{{ $clinic->id }}][comissao]" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm" value="{{ old('clinicas.' . $clinic->id . '.comissao', $cp?->comissao) }}">
+                        </div>
+                        <div>
+                            <label class="text-sm block mb-1">Status</label>
+                            <select name="clinicas[{{ $clinic->id }}][status]" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm">
+                                <option value="Ativo" @selected(old('clinicas.' . $clinic->id . '.status', $cp?->status ?? 'Ativo') == 'Ativo')>Ativo</option>
+                                <option value="Inativo" @selected(old('clinicas.' . $clinic->id . '.status', $cp?->status ?? 'Ativo') == 'Inativo')>Inativo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+            <div class="space-y-2">
+                <label class="inline-flex items-center text-sm">
+                    <input type="checkbox" name="compartilhar_agenda" value="1" class="rounded mr-2" @checked(old('compartilhar_agenda'))> Compartilhar agenda entre clínicas
+                </label>
+                <label class="inline-flex items-center text-sm">
+                    <input type="checkbox" name="comissao_unica" value="1" class="rounded mr-2" @checked(old('comissao_unica'))> Usar a mesma comissão em todas as clínicas
+                </label>
+            </div>
+        </div>
+
+        <div x-show="tab==='horarios'" class="space-y-4" x-cloak>
+            <div>
+                <label class="mb-2 block text-sm font-medium text-gray-700">Clínica</label>
+                <select x-model="horarioClinic" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm">
+                    <option value="">Selecione</option>
+                    @foreach ($clinics as $clinic)
+                        <option value="{{ $clinic->id }}">{{ $clinic->nome }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @php
+                $diasSemana = [
+                    'segunda' => 'Segunda',
+                    'terca' => 'Terça',
+                    'quarta' => 'Quarta',
+                    'quinta' => 'Quinta',
+                    'sexta' => 'Sexta',
+                    'sabado' => 'Sábado',
+                    'domingo' => 'Domingo',
+                ];
+            @endphp
+            @foreach ($clinics as $clinic)
+                @php $hs = $profissional->horariosProfissional->where('clinica_id', $clinic->id)->keyBy('dia_semana'); @endphp
+                <div x-show="horarioClinic == '{{ $clinic->id }}'" x-cloak class="space-y-2">
+                    @foreach ($diasSemana as $diaKey => $diaLabel)
+                        @php $h = $hs->get($diaKey); @endphp
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][ativo]" value="1" class="rounded" @checked(old('horarios.' . $clinic->id . '.' . $diaKey . '.ativo', $h ? 1 : 0))>
+                            <span class="w-28 text-sm">{{ $diaLabel }}</span>
+                            <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_inicio]" class="border rounded px-2 py-1 text-sm" value="{{ old('horarios.' . $clinic->id . '.' . $diaKey . '.hora_inicio', $h?->hora_inicio) }}">
+                            <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_fim]" class="border rounded px-2 py-1 text-sm" value="{{ old('horarios.' . $clinic->id . '.' . $diaKey . '.hora_fim', $h?->hora_fim) }}">
+                        </div>
+                    @endforeach
+                </div>
+            @endforeach
         </div>
         <div class="flex justify-end gap-2 pt-4">
             <a href="{{ route('profissionais.index') }}" class="py-2 px-4 rounded border border-stroke text-gray-700">Cancelar</a>
