@@ -77,11 +77,16 @@
                 <div><span class="font-medium">Nome do meio</span><p>{{ $profissional->middle_name ?: '-' }}</p></div>
                 <div><span class="font-medium">Último nome</span><p>{{ $profissional->last_name }}</p></div>
                 <div><span class="font-medium">CPF</span><p>{{ $profissional->cpf ?: '-' }}</p></div>
+                <div class="sm:col-span-2">
+                    <span class="font-medium block">Foto</span>
+                    <img src="{{ $profissional->photo_path ? asset('storage/'.$profissional->photo_path) : 'https://via.placeholder.com/80' }}" class="w-20 h-20 rounded-full object-cover mt-1" alt="Foto">
+                </div>
             </div>
         </div>
         <div x-show="tab==='profissionais'" class="space-y-4" x-cloak>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div class="sm:col-span-2"><span class="font-medium">Cargo</span><p>{{ $profissional->cargo ?: '-' }}</p></div>
+                <div><span class="font-medium">Dentista</span><p>{{ $profissional->dentista ? 'Sim' : 'Não' }}</p></div>
                 @if($profissional->dentista)
                     <div><span class="font-medium">CRO</span><p>{{ $profissional->cro ?: '-' }}</p></div>
                     <div><span class="font-medium">Especialidade</span><p>{{ $profissional->especialidade ?: '-' }}</p></div>
@@ -92,7 +97,13 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div><span class="font-medium">Email</span><p>{{ $profissional->email }}</p></div>
                 <div><span class="font-medium">Telefone</span><p>{{ $profissional->phone ?: '-' }}</p></div>
-                <div class="sm:col-span-2"><span class="font-medium">Endereço</span><p>{{ trim($profissional->logradouro.' '.$profissional->numero.' '.$profissional->complemento) }} - {{ $profissional->bairro }}, {{ $profissional->cidade }} - {{ $profissional->estado }}, {{ $profissional->cep }}</p></div>
+                <div><span class="font-medium">CEP</span><p>{{ $profissional->cep ?: '-' }}</p></div>
+                <div class="sm:col-span-2"><span class="font-medium">Logradouro</span><p>{{ $profissional->logradouro ?: '-' }}</p></div>
+                <div><span class="font-medium">Número</span><p>{{ $profissional->numero ?: '-' }}</p></div>
+                <div><span class="font-medium">Complemento</span><p>{{ $profissional->complemento ?: '-' }}</p></div>
+                <div><span class="font-medium">Bairro</span><p>{{ $profissional->bairro ?: '-' }}</p></div>
+                <div><span class="font-medium">Cidade</span><p>{{ $profissional->cidade ?: '-' }}</p></div>
+                <div><span class="font-medium">Estado</span><p>{{ $profissional->estado ?: '-' }}</p></div>
             </div>
         </div>
         <div x-show="tab==='clinicas'" class="space-y-4" x-cloak>
