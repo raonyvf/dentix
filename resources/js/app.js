@@ -113,14 +113,6 @@ window.updateScheduleTable = function(openTimes, start, end, closed) {
     if (closedMsg) closedMsg.classList.add('hidden');
     if (table) table.classList.remove('hidden');
 
-    document.querySelectorAll('tr[data-row]').forEach(tr => {
-        const time = tr.dataset.row;
-        if (!start || !end || time < start || time > end) {
-            tr.classList.add('hidden');
-        } else {
-            tr.classList.remove('hidden');
-        }
-    });
 
     document.querySelectorAll('td[data-professional]').forEach(td => {
         const time = td.dataset.time;
