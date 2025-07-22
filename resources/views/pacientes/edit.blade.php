@@ -6,7 +6,7 @@
     ['label' => 'Pacientes', 'url' => route('pacientes.index')],
     ['label' => 'Editar']
 ]])
-<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ activeTab: 'dados', menorIdade: '{{ old('menor_idade', $paciente->menor_idade) }}' }">
+<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ activeTab: 'dados', menorIdade: '{{ old('menor_idade', $paciente->menor_idade ? 'Sim' : 'Não') }}' }">
     <h1 class="text-xl font-semibold mb-4">Editar Paciente</h1>
     <div class="border-b mb-6">
         <nav class="-mb-px flex space-x-4" aria-label="Tabs">
