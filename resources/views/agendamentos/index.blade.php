@@ -96,8 +96,9 @@
     <button class="pb-2 text-gray-600">Fila de Espera</button>
     <button class="pb-2 text-gray-600">Filtrar</button>
 </div>
-<div class="overflow-auto">
-    <table class="min-w-full text-sm">
+<div class="overflow-auto" id="schedule-container">
+    <div id="schedule-closed" class="hidden text-center py-4 text-gray-500">Clínica fechada</div>
+    <table id="schedule-table" class="min-w-full text-sm">
         <thead>
             <tr>
                 <th class="p-2 bg-gray-50 w-20"></th>

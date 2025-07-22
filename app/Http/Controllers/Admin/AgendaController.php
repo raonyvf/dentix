@@ -68,8 +68,8 @@ class AgendaController extends Controller
             }
             $start = Carbon::createFromTimeString($int->hora_inicio);
             $end = Carbon::createFromTimeString($int->hora_fim);
-            $startTimes[] = $int->hora_inicio;
-            $endTimes[] = $int->hora_fim;
+            $startTimes[] = $start->format('H:i');
+            $endTimes[] = $end->format('H:i');
             for ($time = $start->copy(); $time <= $end; $time->addMinutes(30)) {
                 $horarios[] = $time->format('H:i');
             }
