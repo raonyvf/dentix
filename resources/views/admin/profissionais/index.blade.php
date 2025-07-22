@@ -133,7 +133,7 @@
                         <td class="px-4 py-2 text-center">{{ $profissional->atendimentos_mes ?? 0 }}</td>
                         <td class="px-4 py-2">
                             <div class="flex items-center justify-center space-x-2">
-                                <a href="#" class="text-gray-600 hover:text-blue-600" title="Ver Perfil">
+                                <a href="{{ route('profissionais.show', $profissional) }}" class="text-gray-600 hover:text-blue-600" title="Ver Perfil">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.33 0 4.5.533 6.879 1.532M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
