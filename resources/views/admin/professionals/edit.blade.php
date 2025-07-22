@@ -48,6 +48,10 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf', $profissional->cpf) }}" />
                 </div>
             </div>
+            </div>
+        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+            <h2 class="mb-4 text-sm font-medium text-gray-700">Foto</h2>
+            <input type="file" name="photo" class="w-full text-sm" />
         </div>
         </div>
         <div x-show="tab==='profissionais'" class="space-y-6" x-cloak>
@@ -75,11 +79,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-            <h2 class="mb-4 text-sm font-medium text-gray-700">Foto</h2>
-            <input type="file" name="photo" class="w-full text-sm" />
-        </div>
         </div>
         <div x-show="tab==='contato'" class="space-y-6" x-cloak>
             <div class="rounded-sm border border-stroke bg-gray-50 p-4">
