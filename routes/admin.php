@@ -16,6 +16,7 @@ Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
 
 Route::get('agenda', [AgendaController::class, 'index'])->name('agenda.index');
 Route::view('agendamentos', 'agendamentos.index')->name('agendamentos.index');
+Route::get('agendamentos/horarios', [AgendaController::class, 'horarios'])->name('agendamentos.horarios');
 
 
 Route::resource('clinicas', ClinicController::class)

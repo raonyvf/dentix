@@ -24,13 +24,14 @@ window.agendaCalendar = function agendaCalendar() {
         return date.getTime() === today.getTime();
     }
 
-    function buildDays() {
+    function buildDays(selected) {
         const arr = [];
         for (let i = 0; i < 7; i++) {
             const d = new Date(start);
             d.setDate(start.getDate() + i);
+            const iso = d.toISOString().slice(0, 10);
             let classes = 'flex flex-col items-center p-2 rounded cursor-pointer text-xs flex-1 text-center';
-            if (isToday(d)) {
+            if (iso === selected) {
                 classes += ' bg-black text-white';
             } else if (d < today) {
                 classes += ' text-gray-400';
@@ -38,7 +39,7 @@ window.agendaCalendar = function agendaCalendar() {
                 classes += ' text-gray-700';
             }
             arr.push({
-                date: d.toISOString().slice(0, 10),
+                date: iso,
                 label: week[i],
                 number: d.getDate(),
                 month: months[d.getMonth()],
@@ -50,16 +51,20 @@ window.agendaCalendar = function agendaCalendar() {
 
     return {
         days: [],
+        selectedDate: null,
         init() {
-            this.days = buildDays();
+            this.horariosUrl = this.$root.dataset.horariosUrl;
+            this.selectedDate = today.toISOString().slice(0, 10);
+            this.days = buildDays(this.selectedDate);
+            this.fetchHorarios(this.selectedDate);
         },
         prevWeek() {
             start.setDate(start.getDate() - 7);
-            this.days = buildDays();
+            this.days = buildDays(this.selectedDate);
         },
         nextWeek() {
             start.setDate(start.getDate() + 7);
-            this.days = buildDays();
+            this.days = buildDays(this.selectedDate);
         },
         openDatePicker() {
             this.$refs.picker.showPicker();
@@ -68,11 +73,44 @@ window.agendaCalendar = function agendaCalendar() {
             const d = new Date(val);
             if (!isNaN(d)) {
                 start = getMonday(d);
-                this.days = buildDays();
+                this.selectDay(val);
             }
+        },
+        selectDay(date) {
+            this.selectedDate = date;
+            this.days = buildDays(this.selectedDate);
+            this.fetchHorarios(date);
+        },
+        fetchHorarios(date) {
+            if (!this.horariosUrl) return;
+            fetch(`${this.horariosUrl}?date=${date}`)
+                .then(r => r.json())
+                .then(data => {
+                    window.updateScheduleTable(data.closed ? [] : data.horarios);
+                });
         },
     };
 }
+
+window.updateScheduleTable = function(openTimes) {
+    document.querySelectorAll('td[data-professional]').forEach(td => {
+        const time = td.dataset.time;
+        if (openTimes.includes(time)) {
+            td.classList.remove('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
+            td.classList.add('cursor-pointer');
+        } else {
+            td.classList.add('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
+        }
+    });
+    document.querySelectorAll('td[data-slot]').forEach(td => {
+        const time = td.dataset.slot;
+        if (openTimes.includes(time)) {
+            td.classList.remove('text-gray-400');
+        } else {
+            td.classList.add('text-gray-400');
+        }
+    });
+};
 
 Alpine.start();
 
@@ -175,6 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modal) {
         document.querySelectorAll('td[data-professional]').forEach(td => {
             td.addEventListener('click', () => {
+                if (td.classList.contains('cursor-not-allowed')) return;
                 targetCell = td;
                 patientInput.value = '';
                 modal.classList.remove('hidden');
