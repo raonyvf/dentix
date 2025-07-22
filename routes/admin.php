@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ProfessionalController;
 use App\Http\Controllers\Admin\FormularioController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\AgendaController;
+use App\Http\Controllers\Admin\ClinicContextController;
 use App\Http\Controllers\Admin\DashboardController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
@@ -31,4 +32,6 @@ Route::resource('pacientes', PatientController::class)
 Route::get('pacientes/buscar', [PatientController::class, 'search'])->name('pacientes.search');
 
 Route::view('orcamentos/assinar', 'orcamentos.assinar')->name('orcamentos.assinar');
+
+Route::post('selecionar-clinica', [ClinicContextController::class, 'update'])->name('clinicas.selecionar');
 
