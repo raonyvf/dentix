@@ -33,14 +33,9 @@
     ];
     $patients = ['João','Maria','Pedro','Ana','Carlos'];
     $horarios = [];
-    $morningStart = Carbon::createFromTime(8, 0);
-    $morningEnd = Carbon::createFromTime(11, 30);
-    for ($time = $morningStart->copy(); $time <= $morningEnd; $time->addMinutes(30)) {
-        $horarios[] = $time->format('H:i');
-    }
-    $afternoonStart = Carbon::createFromTime(14, 0);
-    $afternoonEnd = Carbon::createFromTime(16, 30);
-    for ($time = $afternoonStart->copy(); $time <= $afternoonEnd; $time->addMinutes(30)) {
+    $startTime = Carbon::createFromTime(7, 0);
+    $endTime = Carbon::createFromTime(19, 0);
+    for ($time = $startTime->copy(); $time <= $endTime; $time->addMinutes(30)) {
         $horarios[] = $time->format('H:i');
     }
     $agenda = [

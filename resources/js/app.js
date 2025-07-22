@@ -100,6 +100,7 @@ window.updateScheduleTable = function(openTimes) {
             td.classList.remove('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
             td.classList.add('cursor-pointer');
         } else {
+            td.classList.remove('cursor-pointer');
             td.classList.add('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
         }
     });
