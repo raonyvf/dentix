@@ -10,6 +10,7 @@ window.agendaCalendar = function agendaCalendar() {
     today.setHours(0, 0, 0, 0);
 
     let start = getMonday(new Date());
+    let selectedDate = null;
 
     function getMonday(date) {
         const d = new Date(date);
