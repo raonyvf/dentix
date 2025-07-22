@@ -57,7 +57,7 @@
         ],
     ];
 @endphp
-<div x-data="agendaCalendar()" x-init="init()">
+<div x-data="agendaCalendar()" x-init="init()" data-horarios-url="{{ route('agendamentos.horarios') }}">
     <div class="flex justify-end mb-2 relative">
         <button @click="openDatePicker" class="p-2 border rounded bg-white">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -76,7 +76,7 @@
             </button>
             <div class="flex gap-2 flex-1">
                 <template x-for="day in days" :key="day.date">
-                    <div :class="day.classes">
+                    <div :class="day.classes" @click="selectDay(day.date)">
                         <span class="uppercase" x-text="day.label"></span>
                         <span class="font-semibold" x-text="day.number"></span>
                         <span x-text="day.month"></span>
@@ -114,7 +114,7 @@
         <tbody>
             @foreach($horarios as $hora)
                 <tr class="border-t">
-                    <td class="bg-gray-50 w-20"><x-agenda.horario :time="$hora" /></td>
+                    <td class="bg-gray-50 w-20" data-slot="{{ $hora }}"><x-agenda.horario :time="$hora" /></td>
                     @foreach($professionals as $prof)
                         <td class="w-40 h-16 cursor-pointer" data-professional="{{ $prof['id'] }}" data-time="{{ $hora }}">
                             @isset($agenda[$prof['id']][$hora])
