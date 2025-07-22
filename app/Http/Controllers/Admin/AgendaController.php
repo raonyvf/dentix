@@ -37,4 +37,37 @@ class AgendaController extends Controller
             'today'
         ));
     }
+
+    public function horarios(Request $request)
+    {
+        $date = Carbon::parse($request->query('date'));
+
+        $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
+        if (! $clinicId) {
+            return response()->json(['closed' => true]);
+        }
+
+        $dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo'];
+        $dia = $dias[$date->dayOfWeekIso - 1];
+
+        $intervalos = \App\Models\Horario::where('clinic_id', $clinicId)
+            ->where('dia_semana', $dia)
+            ->orderBy('hora_inicio')
+            ->get();
+
+        if ($intervalos->isEmpty()) {
+            return response()->json(['closed' => true]);
+        }
+
+        $horarios = [];
+        foreach ($intervalos as $int) {
+            $start = Carbon::createFromTimeString($int->hora_inicio);
+            $end = Carbon::createFromTimeString($int->hora_fim);
+            for ($time = $start->copy(); $time <= $end; $time->addMinutes(30)) {
+                $horarios[] = $time->format('H:i');
+            }
+        }
+
+        return response()->json(['closed' => false, 'horarios' => $horarios]);
+    }
 }
