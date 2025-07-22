@@ -98,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.value = v;
         });
     });
-});
 
     document.querySelectorAll('input[name="telefone"], input[name="phone"]').forEach(input => {
         input.addEventListener('input', e => {
