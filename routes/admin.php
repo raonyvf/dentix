@@ -22,7 +22,8 @@ Route::resource('clinicas', ClinicController::class)
 Route::resource('cadeiras', CadeiraController::class);
 Route::resource('perfis', ProfileController::class)->parameters(['perfis' => 'perfil']);
 Route::resource('usuarios', UserController::class)->only(['index','edit','update']);
-Route::resource('profissionais', ProfessionalController::class);
+Route::resource('profissionais', ProfessionalController::class)
+    ->parameters(['profissionais' => 'profissional']);
 
 Route::resource('formularios', FormularioController::class);
 Route::resource('pacientes', PatientController::class)
