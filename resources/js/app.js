@@ -2,6 +2,78 @@ import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 
+// expose agendaCalendar to Alpine in Blade templates before Alpine.start()
+window.agendaCalendar = function agendaCalendar() {
+    const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    const week = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM'];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let start = getMonday(new Date());
+
+    function getMonday(date) {
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = day === 0 ? -6 : 1 - day;
+        d.setDate(d.getDate() + diff);
+        d.setHours(0, 0, 0, 0);
+        return d;
+    }
+
+    function isToday(date) {
+        return date.getTime() === today.getTime();
+    }
+
+    function buildDays() {
+        const arr = [];
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(start);
+            d.setDate(start.getDate() + i);
+            let classes = 'flex flex-col items-center p-2 rounded cursor-pointer text-xs flex-1 text-center';
+            if (isToday(d)) {
+                classes += ' bg-black text-white';
+            } else if (d < today) {
+                classes += ' text-gray-400';
+            } else {
+                classes += ' text-gray-700';
+            }
+            arr.push({
+                date: d.toISOString().slice(0, 10),
+                label: week[i],
+                number: d.getDate(),
+                month: months[d.getMonth()],
+                classes,
+            });
+        }
+        return arr;
+    }
+
+    return {
+        days: [],
+        init() {
+            this.days = buildDays();
+        },
+        prevWeek() {
+            start.setDate(start.getDate() - 7);
+            this.days = buildDays();
+        },
+        nextWeek() {
+            start.setDate(start.getDate() + 7);
+            this.days = buildDays();
+        },
+        openDatePicker() {
+            this.$refs.picker.showPicker();
+        },
+        onDateSelected(val) {
+            const d = new Date(val);
+            if (!isNaN(d)) {
+                start = getMonday(d);
+                this.days = buildDays();
+            }
+        },
+    };
+}
+
 Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -26,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.value = v;
         });
     });
+});
 
     document.querySelectorAll('input[name="telefone"], input[name="phone"]').forEach(input => {
         input.addEventListener('input', e => {
@@ -195,4 +268,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
