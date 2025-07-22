@@ -278,4 +278,12 @@ class ProfessionalController extends Controller
 
         return redirect()->route('profissionais.index')->with('success', 'Profissional atualizado com sucesso.');
     }
+
+    public function destroy(User $profissional)
+    {
+        $profissional->delete();
+
+        return redirect()->route('profissionais.index')
+            ->with('success', 'Profissional removido com sucesso.');
+    }
 }
