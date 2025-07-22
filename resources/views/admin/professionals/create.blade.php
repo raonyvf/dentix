@@ -184,7 +184,7 @@
                 <div x-show="horarioClinic == '{{ $clinic->id }}'" x-cloak class="space-y-2">
                     @foreach ($diasSemana as $diaKey => $diaLabel)
                         <div class="flex items-center gap-2">
-                            <input type="checkbox" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][ativo]" class="rounded">
+                            <input type="checkbox" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][ativo]" value="1" class="rounded">
                             <span class="w-28 text-sm">{{ $diaLabel }}</span>
                             <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_inicio]" class="border rounded px-2 py-1 text-sm">
                             <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_fim]" class="border rounded px-2 py-1 text-sm">
