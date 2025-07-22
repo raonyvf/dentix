@@ -74,16 +74,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const modal = document.getElementById('schedule-modal');
-    const patientSelect = document.getElementById('schedule-patient');
+    const patientInput = document.getElementById('schedule-patient');
+    const patientList = document.getElementById('schedule-patient-list');
     const cancelBtn = document.getElementById('schedule-cancel');
     const saveBtn = document.getElementById('schedule-save');
     let targetCell = null;
+
+    if (patientInput) {
+        patientInput.addEventListener('input', () => {
+            const q = patientInput.value.trim();
+            if (q.length < 2) {
+                patientList.innerHTML = '';
+                return;
+            }
+            fetch(`/admin/pacientes/buscar?q=${encodeURIComponent(q)}`)
+                .then(r => r.json())
+                .then(data => {
+                    patientList.innerHTML = '';
+                    data.forEach(name => {
+                        const opt = document.createElement('option');
+                        opt.value = name;
+                        patientList.appendChild(opt);
+                    });
+                });
+        });
+    }
 
     if (modal) {
         document.querySelectorAll('td[data-professional]').forEach(td => {
             td.addEventListener('click', () => {
                 targetCell = td;
-                patientSelect.value = '';
+                patientInput.value = '';
                 modal.classList.remove('hidden');
             });
         });
@@ -93,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         saveBtn.addEventListener('click', () => {
-            const name = patientSelect.value;
+            const name = patientInput.value;
             if (!name || !targetCell) return;
             targetCell.innerHTML =
                 `<div class="rounded p-2 text-xs bg-green-100 text-green-700"><div class="font-semibold">${name}</div><div>Consulta</div></div>`;
