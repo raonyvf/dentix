@@ -25,14 +25,14 @@ window.agendaCalendar = function agendaCalendar() {
         return date.getTime() === today.getTime();
     }
 
-    function buildDays() {
+    function buildDays(selected) {
         const arr = [];
         for (let i = 0; i < 7; i++) {
             const d = new Date(start);
             d.setDate(start.getDate() + i);
             const iso = d.toISOString().slice(0, 10);
             let classes = 'flex flex-col items-center p-2 rounded cursor-pointer text-xs flex-1 text-center';
-            if (iso === selectedDate) {
+            if (iso === selected) {
                 classes += ' bg-black text-white';
             } else if (d < today) {
                 classes += ' text-gray-400';
@@ -56,16 +56,16 @@ window.agendaCalendar = function agendaCalendar() {
         init() {
             this.horariosUrl = this.$root.dataset.horariosUrl;
             this.selectedDate = today.toISOString().slice(0, 10);
-            this.days = buildDays();
+            this.days = buildDays(this.selectedDate);
             this.fetchHorarios(this.selectedDate);
         },
         prevWeek() {
             start.setDate(start.getDate() - 7);
-            this.days = buildDays();
+            this.days = buildDays(this.selectedDate);
         },
         nextWeek() {
             start.setDate(start.getDate() + 7);
-            this.days = buildDays();
+            this.days = buildDays(this.selectedDate);
         },
         openDatePicker() {
             this.$refs.picker.showPicker();
@@ -74,13 +74,12 @@ window.agendaCalendar = function agendaCalendar() {
             const d = new Date(val);
             if (!isNaN(d)) {
                 start = getMonday(d);
-                this.days = buildDays();
                 this.selectDay(val);
             }
         },
         selectDay(date) {
             this.selectedDate = date;
-            this.days = buildDays();
+            this.days = buildDays(this.selectedDate);
             this.fetchHorarios(date);
         },
         fetchHorarios(date) {
