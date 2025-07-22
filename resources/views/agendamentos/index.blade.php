@@ -33,8 +33,8 @@
     ];
     $patients = ['João','Maria','Pedro','Ana','Carlos'];
     $horarios = [];
-    $startTime = Carbon::createFromTime(7, 0);
-    $endTime = Carbon::createFromTime(19, 0);
+    $startTime = Carbon::createFromTime(0, 0);
+    $endTime = Carbon::createFromTime(23, 30);
     for ($time = $startTime->copy(); $time <= $endTime; $time->addMinutes(30)) {
         $horarios[] = $time->format('H:i');
     }
@@ -97,7 +97,7 @@
     <button class="pb-2 text-gray-600">Filtrar</button>
 </div>
 <div class="overflow-auto" id="schedule-container">
-    <div id="schedule-closed" class="hidden text-center py-4 text-gray-500">Clínica fechada</div>
+    <div id="schedule-closed" class="hidden text-center py-4 text-gray-500">A clínica está fechada neste dia.</div>
     <table id="schedule-table" class="min-w-full text-sm">
         <thead>
             <tr>
