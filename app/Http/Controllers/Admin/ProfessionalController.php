@@ -19,6 +19,12 @@ class ProfessionalController extends Controller
         return view('admin.profissionais.index', compact('users'));
     }
 
+    public function show(User $profissional)
+    {
+        $profissional->load(['clinicasProfissional.clinic', 'horariosProfissional']);
+        return view('admin.profissionais.show', compact('profissional'));
+    }
+
     public function create()
     {
         $clinics = auth()->user()->organization->clinics ?? [];
