@@ -61,11 +61,18 @@ class AgendaController extends Controller
 
         $horarios = [];
         foreach ($intervalos as $int) {
+            if (!$int->hora_inicio || !$int->hora_fim) {
+                continue;
+            }
             $start = Carbon::createFromTimeString($int->hora_inicio);
             $end = Carbon::createFromTimeString($int->hora_fim);
             for ($time = $start->copy(); $time <= $end; $time->addMinutes(30)) {
                 $horarios[] = $time->format('H:i');
             }
+        }
+
+        if (empty($horarios)) {
+            return response()->json(['closed' => true]);
         }
 
         return response()->json(['closed' => false, 'horarios' => $horarios]);
