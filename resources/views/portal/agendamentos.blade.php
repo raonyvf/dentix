@@ -23,7 +23,17 @@
         ['id'=>2,'name'=>'Dra. Ana'],
         ['id'=>3,'name'=>'Dr. Pedro'],
     ];
-    $horarios = ['08:00','09:00','10:00','11:00','14:00','15:00','16:00'];
+    $horarios = [];
+    $morningStart = Carbon::createFromTime(8, 0);
+    $morningEnd = Carbon::createFromTime(11, 30);
+    for ($time = $morningStart->copy(); $time <= $morningEnd; $time->addMinutes(30)) {
+        $horarios[] = $time->format('H:i');
+    }
+    $afternoonStart = Carbon::createFromTime(14, 0);
+    $afternoonEnd = Carbon::createFromTime(16, 30);
+    for ($time = $afternoonStart->copy(); $time <= $afternoonEnd; $time->addMinutes(30)) {
+        $horarios[] = $time->format('H:i');
+    }
     $agenda = [
         1 => [
             '08:00' => ['paciente'=>'Maria','tipo'=>'Consulta','contato'=>'(11) 91234-5678','status'=>'confirmado'],
