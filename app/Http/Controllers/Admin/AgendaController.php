@@ -60,12 +60,16 @@ class AgendaController extends Controller
         }
 
         $horarios = [];
+        $startTimes = [];
+        $endTimes = [];
         foreach ($intervalos as $int) {
             if (!$int->hora_inicio || !$int->hora_fim) {
                 continue;
             }
             $start = Carbon::createFromTimeString($int->hora_inicio);
             $end = Carbon::createFromTimeString($int->hora_fim);
+            $startTimes[] = $int->hora_inicio;
+            $endTimes[] = $int->hora_fim;
             for ($time = $start->copy(); $time <= $end; $time->addMinutes(30)) {
                 $horarios[] = $time->format('H:i');
             }
@@ -74,7 +78,14 @@ class AgendaController extends Controller
         if (empty($horarios)) {
             return response()->json(['closed' => true]);
         }
+        $startTime = min($startTimes);
+        $endTime = max($endTimes);
 
-        return response()->json(['closed' => false, 'horarios' => $horarios]);
+        return response()->json([
+            'closed' => false,
+            'horarios' => $horarios,
+            'start' => $startTime,
+            'end' => $endTime,
+        ]);
     }
 }

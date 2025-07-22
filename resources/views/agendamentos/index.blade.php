@@ -108,7 +108,7 @@
         </thead>
         <tbody>
             @foreach($horarios as $hora)
-                <tr class="border-t">
+                <tr class="border-t" data-row="{{ $hora }}">
                     <td class="bg-gray-50 w-20" data-slot="{{ $hora }}"><x-agenda.horario :time="$hora" /></td>
                     @foreach($professionals as $prof)
                         <td class="w-40 h-16 cursor-pointer" data-professional="{{ $prof['id'] }}" data-time="{{ $hora }}">
