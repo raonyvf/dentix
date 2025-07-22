@@ -57,33 +57,39 @@
         ],
     ];
 @endphp
-<div class="flex items-center justify-between mb-4">
-    <div class="flex items-center gap-2 flex-1">
-        <button class="p-1 border rounded bg-white">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-        </button>
-        <div class="flex gap-2 flex-1">
-            @foreach($days as $day)
-                <x-agenda.dia :label="$day['label']" :numero="$day['number']" :mes="$day['month']" :active="$day['active']" :past="$day['past']" />
-            @endforeach
-        </div>
-        <button class="p-1 border rounded bg-white">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-        </button>
-    </div>
-    <div class="relative">
-        <button class="p-2 border rounded bg-white">
+<div x-data="agendaCalendar()" x-init="init()">
+    <div class="flex justify-end mb-2 relative">
+        <button @click="openDatePicker" class="p-2 border rounded bg-white">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
         </button>
+        <input x-ref="picker" type="date" class="hidden" @change="onDateSelected($event.target.value)" />
         <span class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] rounded-full px-1">23</span>
     </div>
-</div>
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2 flex-1">
+            <button @click="prevWeek" class="p-1 border rounded bg-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <div class="flex gap-2 flex-1">
+                <template x-for="day in days" :key="day.date">
+                    <div :class="day.classes">
+                        <span class="uppercase" x-text="day.label"></span>
+                        <span class="font-semibold" x-text="day.number"></span>
+                        <span x-text="day.month"></span>
+                    </div>
+                </template>
+            </div>
+            <button @click="nextWeek" class="p-1 border rounded bg-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+    </div>
 <div class="flex items-center gap-2 overflow-x-auto mb-4">
     <x-agenda.profissional name="Todos os Profissionais" active />
     @foreach($professionals as $prof)
@@ -134,6 +140,7 @@
             <button id="schedule-cancel" class="px-3 py-1 border rounded">Cancelar</button>
             <button id="schedule-save" class="px-3 py-1 bg-primary text-white rounded">Salvar</button>
         </div>
-    </div>
+</div>
+</div>
 </div>
 @endsection
