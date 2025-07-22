@@ -77,6 +77,22 @@ class PatientController extends Controller
         return redirect()->route('pacientes.index')->with('success', 'Paciente removido com sucesso.');
     }
 
+    public function search(Request $request)
+    {
+        $term = $request->get('q', '');
+        $results = Patient::where('nome', 'like', "%{$term}%")
+            ->orWhere('ultimo_nome', 'like', "%{$term}%")
+            ->orWhere('telefone', 'like', "%{$term}%")
+            ->orWhere('whatsapp', 'like', "%{$term}%")
+            ->orWhere('email', 'like', "%{$term}%")
+            ->orWhere('cpf', 'like', "%{$term}%")
+            ->orderBy('nome')
+            ->limit(10)
+            ->pluck('nome');
+
+        return response()->json($results);
+    }
+
     private function validateData(Request $request): array
     {
         $rules = [
