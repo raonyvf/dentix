@@ -303,6 +303,7 @@
 
 @endsection
 
+
 @push('scripts')
 <script>
     function professionalForm() {
@@ -339,4 +340,3 @@
     }
 </script>
 @endpush
-
