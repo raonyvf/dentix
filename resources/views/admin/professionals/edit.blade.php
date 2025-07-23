@@ -22,7 +22,7 @@
         @method('PUT')
         <div class="mb-4 border-b flex gap-4">
             <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados cadastrais</button>
-            <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados Profissionais</button>
+            <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados adminissionais</button>
             <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Remuneração</button>
             <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Horário de trabalho</button>
         </div>
@@ -149,7 +149,7 @@
         </div>
         <div x-show="tab==='profissionais'" class="space-y-6" x-cloak>
             <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-                <h2 class="mb-4 text-sm font-medium text-gray-700">Dados Profissionais</h2>
+                <h2 class="mb-4 text-sm font-medium text-gray-700">Dados adminissionais</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="sm:col-span-2">
                         <label class="mb-2 block text-sm font-medium text-gray-700">Cargo</label>
