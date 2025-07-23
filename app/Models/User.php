@@ -24,6 +24,7 @@ class User extends Authenticatable
         'first_name',
         'middle_name',
         'last_name',
+        'data_nascimento',
         'email',
         'phone',
         'logradouro',
@@ -53,6 +54,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'must_change_password' => 'boolean',
         'dentista' => 'boolean',
+        'data_nascimento' => 'date',
     ];
 
     public function organization()
