@@ -20,7 +20,7 @@
     <form method="POST" action="{{ route('profissionais.store') }}" enctype="multipart/form-data" class="space-y-6" x-data="professionalForm()">
         @csrf
         <div class="mb-4 border-b flex gap-4">
-            <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados pessoais</button>
+            <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados cadastrais</button>
             <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados Profissionais</button>
             <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Remuneração</button>
             <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Horário de trabalho</button>
@@ -28,7 +28,7 @@
         <div x-show="tab==='dados'" class="space-y-6">
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <button type="button" @click="dadosAccordion = !dadosAccordion" class="flex items-center w-full">
-                <h2 class="text-sm font-medium text-gray-700">Dados pessoais</h2>
+                <h2 class="text-sm font-medium text-gray-700">Dados cadastrais</h2>
                 <svg :class="{'rotate-90': dadosAccordion}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
             </button>
             <div x-show="dadosAccordion" x-collapse class="mt-4 space-y-6">
