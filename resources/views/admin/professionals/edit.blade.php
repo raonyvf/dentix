@@ -17,7 +17,7 @@
             </ul>
         </div>
     @endif
-    <form method="POST" action="{{ route('profissionais.update', $profissional) }}" enctype="multipart/form-data" class="space-y-6" x-data="{ tab: 'dados', horarioClinic: '' }">
+    <form method="POST" action="{{ route('profissionais.update', ['profissional' => $profissional->id]) }}" enctype="multipart/form-data" class="space-y-6" x-data="{ tab: 'dados', horarioClinic: '' }">
         @csrf
         @method('PUT')
         <div class="mb-4 border-b flex gap-4">
