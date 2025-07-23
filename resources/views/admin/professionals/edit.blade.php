@@ -17,7 +17,7 @@
             </ul>
         </div>
     @endif
-    <form method="POST" action="{{ route('profissionais.update', ['profissional' => $profissional->id]) }}" enctype="multipart/form-data" class="space-y-6" x-data="{ tab: 'dados', horarioClinic: '' }">
+    <form method="POST" action="{{ route('profissionais.update', ['profissional' => $profissional->id]) }}" enctype="multipart/form-data" class="space-y-6" x-data="professionalForm()">
         @csrf
         @method('PUT')
         <div class="mb-4 border-b flex gap-4">
@@ -25,7 +25,7 @@
             <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados Profissionais</button>
             <button type="button" @click="tab='contato'" :class="tab==='contato' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Contato</button>
             <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Clínicas</button>
-            <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Comissao</button>
+            <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Horário de trabalho</button>
         </div>
         <div x-show="tab==='dados'" class="space-y-6">
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
@@ -184,7 +184,7 @@
             @endphp
             @foreach ($clinics as $clinic)
                 @php $hs = $profissional->horariosProfissional->where('clinica_id', $clinic->id)->keyBy('dia_semana'); @endphp
-                <div x-show="horarioClinic == '{{ $clinic->id }}'" x-cloak class="space-y-2">
+                <div x-show="horarioClinic == '{{ $clinic->id }}'" x-cloak class="space-y-2" x-ref="clinic{{ $clinic->id }}">
                     @foreach ($diasSemana as $diaKey => $diaLabel)
                         @php $h = $hs->get($diaKey); @endphp
                         <div class="flex items-center gap-2">
@@ -194,6 +194,7 @@
                             <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_fim]" class="border rounded px-2 py-1 text-sm" value="{{ old('horarios.' . $clinic->id . '.' . $diaKey . '.hora_fim', $h ? substr($h->hora_fim, 0, 5) : null) }}">
                         </div>
                     @endforeach
+                    <button type="button" class="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded" @click="aplicarHorarios({{ $clinic->id }})">Aplicar para os selecionados</button>
                 </div>
             @endforeach
         </div>
@@ -205,3 +206,30 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+    function professionalForm() {
+        return {
+            tab: 'dados',
+            horarioClinic: '',
+            aplicarHorarios(clinicId) {
+                const dias = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
+                const container = this.$refs['clinic' + clinicId];
+                if (!container) return;
+                const inicioBase = container.querySelector(`input[name="horarios[${clinicId}][segunda][hora_inicio]"]`).value;
+                const fimBase = container.querySelector(`input[name="horarios[${clinicId}][segunda][hora_fim]"]`).value;
+                dias.slice(1).forEach(dia => {
+                    const cb = container.querySelector(`input[name="horarios[${clinicId}][${dia}][ativo]"]`);
+                    if (cb && cb.checked) {
+                        const inicio = container.querySelector(`input[name="horarios[${clinicId}][${dia}][hora_inicio]"]`);
+                        const fim = container.querySelector(`input[name="horarios[${clinicId}][${dia}][hora_fim]"]`);
+                        if (inicio) inicio.value = inicioBase;
+                        if (fim) fim.value = fimBase;
+                    }
+                });
+            }
+        }
+    }
+</script>
+@endpush
