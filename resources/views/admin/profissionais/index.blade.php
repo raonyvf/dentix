@@ -107,7 +107,7 @@
                     <tr>
                         <td class="px-4 py-2">
                             <div class="flex items-center space-x-2">
-                                <img src="{{ $profissional->photo_path ? asset('storage/'.$profissional->photo_path) : 'https://via.placeholder.com/40' }}" class="w-10 h-10 rounded-full object-cover" alt="Foto">
+                                <img src="{{ $profissional->photo_path ? asset('storage/'.$profissional->photo_path) : 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%3E%3Crect%20width%3D%2240%22%20height%3D%2240%22%20fill%3D%22%23ddd%22%2F%3E%3C%2Fsvg%3E' }}" class="w-10 h-10 rounded-full object-cover" alt="Foto">
                                 <div>
                                     <div class="font-medium text-gray-700">{{ $profissional->name }}</div>
                                     @if($profissional->especialidade)
