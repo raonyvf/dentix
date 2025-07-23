@@ -163,3 +163,17 @@ estarão pré-compilados dentro da imagem Docker.
 > remova o arquivo `public/hot`. Esse arquivo faz o Laravel Vite apontar para o
 > servidor de desenvolvimento e impedirá o carregamento do CSS compilado em
 > produção.
+
+## Troubleshooting migrations
+
+If migrations are failing or producing unexpected results, try the steps below:
+
+1. **Confirm the active database connection**
+   - Check your `.env` file for the values `DB_CONNECTION`, `DB_HOST`,
+     `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` and `DB_PASSWORD`.
+   - After editing `.env`, run `php artisan config:clear` so the changes take
+     effect.
+
+2. **Verify which migrations have already run**
+   - Look at the `migrations` table in your database or run
+     `php artisan migrate:status` to see a list of executed migrations.
