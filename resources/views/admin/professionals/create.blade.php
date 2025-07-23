@@ -76,6 +76,14 @@
                         <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" value="{{ old('phone') }}" />
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+            <button type="button" @click="enderecoAccordion = !enderecoAccordion" class="flex items-center w-full">
+                <h2 class="text-sm font-medium text-gray-700">Endereço</h2>
+                <svg :class="{'rotate-90': enderecoAccordion}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+            <div x-show="enderecoAccordion" x-collapse class="mt-4 space-y-6">
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">CEP</label>
@@ -222,6 +230,7 @@
             horarioClinic: '',
             dadosAccordion: true,
             contatoAccordion: true,
+            enderecoAccordion: true,
             aplicarHorarios(clinicId) {
                 const dias = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
                 const container = this.$refs['clinic' + clinicId];
