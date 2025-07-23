@@ -47,6 +47,8 @@ class ProfessionalController extends Controller
             'last_name' => 'required',
             'data_nascimento' => 'nullable|date',
             'sexo' => 'nullable|in:M,F',
+            'naturalidade' => 'nullable|string',
+            'nacionalidade' => 'nullable|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'nullable|string|min:8|confirmed',
             'phone' => 'nullable',
@@ -87,6 +89,8 @@ class ProfessionalController extends Controller
         $user->last_name = $data['last_name'];
         $user->data_nascimento = $data['data_nascimento'] ?? null;
         $user->sexo = $data['sexo'] ?? null;
+        $user->naturalidade = $data['naturalidade'] ?? null;
+        $user->nacionalidade = $data['nacionalidade'] ?? null;
         $user->name = trim($data['first_name'] . ' ' . ($data['middle_name'] ?? '') . ' ' . $data['last_name']);
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
@@ -187,6 +191,8 @@ class ProfessionalController extends Controller
             'last_name' => 'required',
             'data_nascimento' => 'nullable|date',
             'sexo' => 'nullable|in:M,F',
+            'naturalidade' => 'nullable|string',
+            'nacionalidade' => 'nullable|string',
             'email' => 'required|email|unique:users,email,' . $profissional->id,
             'phone' => 'nullable',
             'password' => 'nullable|string|min:8|confirmed',
@@ -224,6 +230,8 @@ class ProfessionalController extends Controller
         $profissional->last_name = $data['last_name'];
         $profissional->data_nascimento = $data['data_nascimento'] ?? null;
         $profissional->sexo = $data['sexo'] ?? null;
+        $profissional->naturalidade = $data['naturalidade'] ?? null;
+        $profissional->nacionalidade = $data['nacionalidade'] ?? null;
         $profissional->name = trim($data['first_name'] . ' ' . ($data['middle_name'] ?? '') . ' ' . $data['last_name']);
         $profissional->email = $data['email'];
         $profissional->phone = $data['phone'] ?? null;

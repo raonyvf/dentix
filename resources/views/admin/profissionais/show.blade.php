@@ -91,6 +91,8 @@
                 <div><span class="font-medium">Nome do meio</span><p>{{ $profissional->middle_name ?: '-' }}</p></div>
                 <div><span class="font-medium">Último nome</span><p>{{ $profissional->last_name }}</p></div>
                 <div><span class="font-medium">Data de nascimento</span><p>{{ $profissional->data_nascimento?->format('d/m/Y') ?: '-' }}</p></div>
+                <div><span class="font-medium">Naturalidade</span><p>{{ $profissional->naturalidade ?: '-' }}</p></div>
+                <div><span class="font-medium">Nacionalidade</span><p>{{ $profissional->nacionalidade ?: '-' }}</p></div>
                 <div><span class="font-medium">CPF</span><p>{{ $profissional->cpf ?: '-' }}</p></div>
                 <div class="sm:col-span-2">
                     <span class="font-medium block">Foto</span>
