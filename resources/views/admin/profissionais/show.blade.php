@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="space-x-2">
-        <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Horários</a>
+        <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Comissao</a>
         <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Comissões</a>
     </div>
 </div>
@@ -57,7 +57,7 @@
                                 <span class="ml-1 text-xs px-2 py-0.5 rounded bg-blue-100 text-blue-700">Principal</span>
                             @endif
                         </div>
-                        <a href="#" class="text-blue-600 text-sm hover:underline">Horários</a>
+                        <a href="#" class="text-blue-600 text-sm hover:underline">Comissao</a>
                     </div>
                 @endforeach
             </div>
@@ -69,7 +69,7 @@
             <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados Profissionais</button>
             <button type="button" @click="tab='contato'" :class="tab==='contato' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Contato</button>
             <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Clínicas</button>
-            <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Horários</button>
+            <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Comissao</button>
         </div>
         <div x-show="tab==='dados'" class="space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
