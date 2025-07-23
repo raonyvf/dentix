@@ -7,8 +7,7 @@
     ['label' => 'Detalhes']
 ]])
 <div class="flex items-center justify-between mb-6">
-    <div class="flex items-center space-x-2">
-        <a href="{{ route('profissionais.index') }}" class="text-gray-600 hover:text-gray-800">&larr;</a>
+    <div class="flex items-center">
         <div>
             <h1 class="text-2xl font-bold">Detalhes do Profissional</h1>
             <p class="text-gray-600">Gerencie todas as informações e configurações do profissional</p>
