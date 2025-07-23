@@ -1,5 +1,7 @@
 import Alpine from 'alpinejs';
+import collapse from '@alpinejs/collapse';
 
+Alpine.plugin(collapse);
 window.Alpine = Alpine;
 
 // expose agendaCalendar to Alpine in Blade templates before Alpine.start()
