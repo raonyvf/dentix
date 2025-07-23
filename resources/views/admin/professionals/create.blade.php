@@ -145,6 +145,7 @@
                 </div>
             </div>
         </div>
+
         <div :class="{ 'hidden': tab !== 'profissionais' }" class="space-y-6">
             <div class="rounded-sm border border-stroke bg-gray-50 p-4">
                 <button type="button" @click="atribuicoesAccordion = !atribuicoesAccordion" class="flex items-center w-full">
