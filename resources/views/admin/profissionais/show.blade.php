@@ -18,8 +18,8 @@
         <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Comissões</a>
     </div>
 </div>
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="space-y-4">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="space-y-4 lg:col-span-1">
         <div class="bg-white rounded shadow p-4">
             <div class="flex flex-col items-center text-center space-y-2">
                 @if($profissional->photo_path)
@@ -79,7 +79,7 @@
             </div>
         </div>
     </div>
-    <div class="bg-white rounded shadow p-4" x-data="{ tab: 'dados' }">
+    <div class="bg-white rounded shadow p-4 lg:col-span-2" x-data="{ tab: 'dados' }">
         <div class="mb-4 border-b flex gap-4">
             <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados pessoais</button>
             <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados Profissionais</button>
