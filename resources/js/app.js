@@ -233,9 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         input.addEventListener('input', e => {
-            const pos = e.target.selectionStart;
             e.target.value = format(e.target.value);
-            e.target.setSelectionRange(pos, pos);
+            e.target.setSelectionRange(e.target.value.length, e.target.value.length);
         });
 
         if (form) {
