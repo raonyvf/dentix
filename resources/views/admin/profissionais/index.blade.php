@@ -133,7 +133,7 @@
                         <td class="px-4 py-2 text-center">{{ $profissional->atendimentos_mes ?? 0 }}</td>
                         <td class="px-4 py-2">
                             <div class="flex items-center justify-center space-x-2">
-                                <a href="{{ route('profissionais.show', $profissional) }}" class="text-gray-600 hover:text-blue-600" title="Ver Perfil">
+                                <a href="{{ route('profissionais.show', ['profissional' => $profissional->id]) }}" class="text-gray-600 hover:text-blue-600" title="Ver Perfil">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.33 0 4.5.533 6.879 1.532M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
@@ -148,12 +148,12 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3 1.343 3 3-1.343 3-3 3m0-12V4m0 16v-4m0 4c1.657 0 3-1.343 3-3s-1.343-3-3-3-3-1.343-3-3 1.343-3 3-3" />
                                     </svg>
                                 </a>
-                                <a href="{{ route('profissionais.edit', $profissional) }}" class="text-gray-600 hover:text-blue-600" title="Editar">
+                                <a href="{{ route('profissionais.edit', ['profissional' => $profissional->id]) }}" class="text-gray-600 hover:text-blue-600" title="Editar">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m0 0a2.5 2.5 0 01-3.536 3.536L9 20.036l-4 1 1-4 6.232-6.232a2.5 2.5 0 013.536-3.536z" />
                                     </svg>
                                 </a>
-                                <form action="{{ route('profissionais.destroy', $profissional) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este profissional?');">
+                                <form action="{{ route('profissionais.destroy', ['profissional' => $profissional->id]) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este profissional?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:text-red-800" title="Excluir">

@@ -33,7 +33,7 @@
                         @endforeach
                     </td>
                     <td class="px-4 py-2 whitespace-nowrap">
-                        <a href="{{ route('profissionais.edit', $user) }}" class="text-blue-600 hover:underline">Editar</a>
+                        <a href="{{ route('profissionais.edit', ['profissional' => $user->id]) }}" class="text-blue-600 hover:underline">Editar</a>
                     </td>
                 </tr>
             @empty
