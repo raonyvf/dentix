@@ -146,7 +146,7 @@
                 </div>
             </div>
         </div>
-        <div x-show="tab==='profissionais'" class="space-y-6" x-cloak>
+        <div x-show="tab==='profissionais'" class="space-y-6">
             <div class="rounded-sm border border-stroke bg-gray-50 p-4">
                 <button type="button" @click="atribuicoesAccordion = !atribuicoesAccordion" class="flex items-center w-full">
                     <h2 class="text-sm font-medium text-gray-700">Atribuições</h2>
