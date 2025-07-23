@@ -56,7 +56,6 @@
         <div class="bg-white rounded shadow p-4 space-y-2">
             <div class="flex justify-between items-center mb-2">
                 <h3 class="font-semibold">Clínicas</h3>
-                <a href="#" class="text-sm text-blue-600 hover:underline">Adicionar Nova Clínica</a>
             </div>
             @php
                 $clinicasHorario = $profissional->horariosProfissional
@@ -73,7 +72,6 @@
                                 <span class="ml-1 text-xs px-2 py-0.5 rounded bg-blue-100 text-blue-700">Principal</span>
                             @endif
                         </div>
-                        <a href="#" class="text-blue-600 text-sm hover:underline">Comissao</a>
                     </div>
                 @endforeach
             </div>
