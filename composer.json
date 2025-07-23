@@ -4,7 +4,8 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.0",
-        "laravel/breeze": "^2.0"
+        "laravel/breeze": "^2.0",
+        "doctrine/dbal": "^3.7"
     },
     "autoload": {
         "psr-4": {
