@@ -77,13 +77,12 @@
             </div>
         </div>
     </div>
-    <div class="bg-white rounded shadow p-4 lg:col-span-2" x-data="{ tab: 'dados' }">
+    <div class="bg-white rounded shadow p-4 lg:col-span-2" x-data="{ tab: 'dados', atribuicoesAccordion: false, dadosFuncionaisAccordion: false, horarioAccordion: false }">
         <div class="mb-4 border-b flex gap-4">
             <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados pessoais</button>
-            <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados adminissionais</button>
+            <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados admissionais</button>
             <button type="button" @click="tab='contato'" :class="tab==='contato' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Contato</button>
             <button type="button" @click="tab='comissoes'" :class="tab==='comissoes' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Comissões</button>
-            <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Horário de trabalho</button>
         </div>
         <div x-show="tab==='dados'" class="space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
@@ -101,13 +100,74 @@
             </div>
         </div>
         <div x-show="tab==='profissionais'" class="space-y-4" x-cloak>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                <div class="sm:col-span-2"><span class="font-medium">Cargo</span><p>{{ $profissional->cargo ?: '-' }}</p></div>
-                <div><span class="font-medium">Dentista</span><p>{{ $profissional->dentista ? 'Sim' : 'Não' }}</p></div>
-                @if($profissional->dentista)
-                    <div><span class="font-medium">CRO</span><p>{{ $profissional->cro ?: '-' }}</p></div>
-                    <div><span class="font-medium">Especialidade</span><p>{{ $profissional->especialidade ?: '-' }}</p></div>
-                @endif
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <button type="button" @click="atribuicoesAccordion = !atribuicoesAccordion" class="flex items-center w-full">
+                    <h2 class="text-sm font-medium text-gray-700">Atribuições</h2>
+                    <svg :class="{'rotate-90': atribuicoesAccordion}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+                <div x-show="atribuicoesAccordion" x-collapse class="mt-4 space-y-4">
+                    <p class="text-sm text-gray-700">-</p>
+                </div>
+            </div>
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <button type="button" @click="dadosFuncionaisAccordion = !dadosFuncionaisAccordion" class="flex items-center w-full">
+                    <h2 class="text-sm font-medium text-gray-700">Dados funcionais</h2>
+                    <svg :class="{'rotate-90': dadosFuncionaisAccordion}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+                <div x-show="dadosFuncionaisAccordion" x-collapse class="mt-4 space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                        <div class="sm:col-span-2"><span class="font-medium">Cargo</span><p>{{ $profissional->cargo ?: '-' }}</p></div>
+                        <div><span class="font-medium">Dentista</span><p>{{ $profissional->dentista ? 'Sim' : 'Não' }}</p></div>
+                        @if($profissional->dentista)
+                            <div><span class="font-medium">CRO</span><p>{{ $profissional->cro ?: '-' }}</p></div>
+                            <div><span class="font-medium">Especialidade</span><p>{{ $profissional->especialidade ?: '-' }}</p></div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <button type="button" @click="horarioAccordion = !horarioAccordion" class="flex items-center w-full">
+                    <h2 class="text-sm font-medium text-gray-700">Horário de trabalho</h2>
+                    <svg :class="{'rotate-90': horarioAccordion}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+                <div x-show="horarioAccordion" x-collapse class="mt-4 space-y-4">
+                    @php
+                        $diasSemana = [
+                            'segunda' => 'Segunda',
+                            'terca' => 'Terça',
+                            'quarta' => 'Quarta',
+                            'quinta' => 'Quinta',
+                            'sexta' => 'Sexta',
+                            'sabado' => 'Sábado',
+                            'domingo' => 'Domingo',
+                        ];
+                    @endphp
+                    @foreach($profissional->clinicasProfissional as $clinica)
+                        <div class="border rounded p-2 text-sm">
+                            <h4 class="font-medium mb-2">{{ $clinica->clinic->nome }}</h4>
+                            @php $hs = $profissional->horariosProfissional->where('clinica_id', $clinica->clinica_id)->keyBy('dia_semana'); @endphp
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left p-1">Dia</th>
+                                        <th class="text-left p-1">Início</th>
+                                        <th class="text-left p-1">Fim</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($diasSemana as $diaKey => $diaLabel)
+                                        @php $h = $hs->get($diaKey); @endphp
+                                        <tr>
+                                            <td class="p-1">{{ $diaLabel }}</td>
+                                            <td class="p-1">{{ $h ? substr($h->hora_inicio, 0, 5) : '-' }}</td>
+                                            <td class="p-1">{{ $h ? substr($h->hora_fim, 0, 5) : '-' }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
         <div x-show="tab==='contato'" class="space-y-4" x-cloak>
@@ -131,44 +191,6 @@
                         <span class="ml-1 text-xs">({{ $clinica->status }})</span>
                     </div>
                     <span>{{ $clinica->comissao ? $clinica->comissao.'%' : '-' }}</span>
-                </div>
-            @endforeach
-        </div>
-        <div x-show="tab==='horarios'" class="space-y-4" x-cloak>
-            @php
-                $diasSemana = [
-                    'segunda' => 'Segunda',
-                    'terca' => 'Terça',
-                    'quarta' => 'Quarta',
-                    'quinta' => 'Quinta',
-                    'sexta' => 'Sexta',
-                    'sabado' => 'Sábado',
-                    'domingo' => 'Domingo',
-                ];
-            @endphp
-            @foreach($profissional->clinicasProfissional as $clinica)
-                <div class="border rounded p-2 text-sm">
-                    <h4 class="font-medium mb-2">{{ $clinica->clinic->nome }}</h4>
-                    @php $hs = $profissional->horariosProfissional->where('clinica_id', $clinica->clinica_id)->keyBy('dia_semana'); @endphp
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr>
-                                <th class="text-left p-1">Dia</th>
-                                <th class="text-left p-1">Início</th>
-                                <th class="text-left p-1">Fim</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($diasSemana as $diaKey => $diaLabel)
-                                @php $h = $hs->get($diaKey); @endphp
-                                <tr>
-                                    <td class="p-1">{{ $diaLabel }}</td>
-                                    <td class="p-1">{{ $h ? substr($h->hora_inicio, 0, 5) : '-' }}</td>
-                                    <td class="p-1">{{ $h ? substr($h->hora_fim, 0, 5) : '-' }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
                 </div>
             @endforeach
         </div>
