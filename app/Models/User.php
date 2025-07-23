@@ -38,6 +38,7 @@ class User extends Authenticatable
         'cro',
         'cargo',
         'especialidade',
+        'salario_base',
         'photo_path',
         'password',
         'organization_id',

@@ -24,7 +24,7 @@
             <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados pessoais</button>
             <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados Profissionais</button>
             <button type="button" @click="tab='contato'" :class="tab==='contato' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Contato</button>
-            <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Comissões</button>
+            <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Remuneracao</button>
             <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Horário de trabalho</button>
         </div>
         <div x-show="tab==='dados'" class="space-y-6">
@@ -129,6 +129,10 @@
             </div>
         </div>
         <div x-show="tab==='clinicas'" class="space-y-4" x-cloak>
+            <div>
+                <label class="text-sm block mb-1">Salário base</label>
+                <input type="number" step="0.01" name="salario_base" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm" value="{{ old('salario_base', $profissional->salario_base) }}">
+            </div>
             @foreach ($clinics as $clinic)
                 @php $cp = $profissional->clinicasProfissional->firstWhere('clinica_id', $clinic->id); @endphp
                 <div class="border rounded p-4 space-y-2">
