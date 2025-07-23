@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\ClinicaProfissional;
 use App\Models\HorarioProfissional;
 use App\Models\Horario;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -132,8 +133,16 @@ class ProfessionalController extends Controller
                         $clinicHorario = Horario::where('clinic_id', $clinicId)
                             ->where('dia_semana', $dia)
                             ->first();
-                        if ($clinicHorario && ($hor['hora_inicio'] < $clinicHorario->hora_inicio || $hor['hora_fim'] > $clinicHorario->hora_fim)) {
-                            return back()->withErrors('Horário de trabalho fora do horário de funcionamento da clínica.')->withInput();
+
+                        if ($clinicHorario) {
+                            $inicio = Carbon::parse($hor['hora_inicio']);
+                            $fim = Carbon::parse($hor['hora_fim']);
+                            $abertura = Carbon::parse($clinicHorario->hora_inicio);
+                            $fechamento = Carbon::parse($clinicHorario->hora_fim);
+
+                            if ($inicio->lt($abertura) || $fim->gt($fechamento)) {
+                                return back()->withErrors('Horário de trabalho fora do horário de funcionamento da clínica.')->withInput();
+                            }
                         }
 
                         HorarioProfissional::create([
@@ -260,8 +269,16 @@ class ProfessionalController extends Controller
                         $clinicHorario = Horario::where('clinic_id', $clinicId)
                             ->where('dia_semana', $dia)
                             ->first();
-                        if ($clinicHorario && ($hor['hora_inicio'] < $clinicHorario->hora_inicio || $hor['hora_fim'] > $clinicHorario->hora_fim)) {
-                            return back()->withErrors('Horário de trabalho fora do horário de funcionamento da clínica.')->withInput();
+
+                        if ($clinicHorario) {
+                            $inicio = Carbon::parse($hor['hora_inicio']);
+                            $fim = Carbon::parse($hor['hora_fim']);
+                            $abertura = Carbon::parse($clinicHorario->hora_inicio);
+                            $fechamento = Carbon::parse($clinicHorario->hora_fim);
+
+                            if ($inicio->lt($abertura) || $fim->gt($fechamento)) {
+                                return back()->withErrors('Horário de trabalho fora do horário de funcionamento da clínica.')->withInput();
+                            }
                         }
 
                         HorarioProfissional::create([
