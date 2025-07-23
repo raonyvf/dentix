@@ -48,11 +48,17 @@
                 <h3 class="font-semibold">Clínicas</h3>
                 <a href="#" class="text-sm text-blue-600 hover:underline">Adicionar Nova Clínica</a>
             </div>
+            @php
+                $clinicasHorario = $profissional->horariosProfissional
+                    ->map(fn($h) => $h->clinic)
+                    ->filter()
+                    ->unique('id');
+            @endphp
             <div class="space-y-2">
-                @foreach($profissional->clinicasProfissional as $clinica)
+                @foreach($clinicasHorario as $clinica)
                     <div class="flex justify-between items-center">
                         <div>
-                            <span class="font-medium">{{ $clinica->clinic->nome }}</span>
+                            <span class="font-medium">{{ $clinica->nome }}</span>
                             @if($loop->first)
                                 <span class="ml-1 text-xs px-2 py-0.5 rounded bg-blue-100 text-blue-700">Principal</span>
                             @endif
