@@ -75,7 +75,7 @@
             <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados Profissionais</button>
             <button type="button" @click="tab='contato'" :class="tab==='contato' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Contato</button>
             <button type="button" @click="tab='comissoes'" :class="tab==='comissoes' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Comissões</button>
-            <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Comissao</button>
+            <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Horário de trabalho</button>
         </div>
         <div x-show="tab==='dados'" class="space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
