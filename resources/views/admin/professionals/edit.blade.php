@@ -24,6 +24,7 @@
             <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados cadastrais</button>
             <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados admissionais</button>
             <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Remuneração</button>
+            <button type="button" @click="tab='teste'" :class="tab==='teste' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Teste</button>
         </div>
         <div :class="{ 'hidden': tab !== 'dados' }" class="space-y-6">
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
@@ -266,6 +267,36 @@
             </div>
         </div>
 
+        <div :class="{ 'hidden': tab !== 'teste' }" class="space-y-6">
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <button type="button" @click="testeAccordion1 = !testeAccordion1" class="flex items-center w-full">
+                    <h2 class="text-sm font-medium text-gray-700">Accordion 1</h2>
+                    <svg :class="{'rotate-90': testeAccordion1}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+                <div x-show="testeAccordion1" x-collapse class="mt-4 text-sm">
+                    Conteúdo do accordion 1
+                </div>
+            </div>
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <button type="button" @click="testeAccordion2 = !testeAccordion2" class="flex items-center w-full">
+                    <h2 class="text-sm font-medium text-gray-700">Accordion 2</h2>
+                    <svg :class="{'rotate-90': testeAccordion2}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+                <div x-show="testeAccordion2" x-collapse class="mt-4 text-sm">
+                    Conteúdo do accordion 2
+                </div>
+            </div>
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <button type="button" @click="testeAccordion3 = !testeAccordion3" class="flex items-center w-full">
+                    <h2 class="text-sm font-medium text-gray-700">Accordion 3</h2>
+                    <svg :class="{'rotate-90': testeAccordion3}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+                <div x-show="testeAccordion3" x-collapse class="mt-4 text-sm">
+                    Conteúdo do accordion 3
+                </div>
+            </div>
+        </div>
+
         <div class="flex justify-end gap-2 pt-4">
             <a href="{{ route('profissionais.index') }}" class="py-2 px-4 rounded border border-stroke text-gray-700">Cancelar</a>
             <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
@@ -288,6 +319,9 @@
             atribuicoesAccordion: false,
             dadosFuncionaisAccordion: false,
             horarioAccordion: false,
+            testeAccordion1: false,
+            testeAccordion2: false,
+            testeAccordion3: false,
             aplicarHorarios(clinicId) {
                 const dias = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
                 const container = this.$refs['clinic' + clinicId];
