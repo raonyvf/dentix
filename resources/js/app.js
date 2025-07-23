@@ -219,6 +219,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    document.querySelectorAll('input.currency-brl').forEach(input => {
+        const form = input.closest('form');
+
+        const toNumber = val => val.replace(/[^0-9,]/g, '').replace(',', '.');
+        const format = val => {
+            const num = parseFloat(toNumber(val));
+            return isNaN(num) ? '' : num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        };
+
+        if (input.value) {
+            input.value = format(input.value);
+        }
+
+        input.addEventListener('input', e => {
+            const pos = e.target.selectionStart;
+            e.target.value = format(e.target.value);
+            e.target.setSelectionRange(pos, pos);
+        });
+
+        if (form) {
+            form.addEventListener('submit', () => {
+                input.value = toNumber(input.value);
+            });
+        }
+    });
+
     const modal = document.getElementById('schedule-modal');
     const patientInput = document.getElementById('schedule-patient');
     const patientList = document.getElementById('schedule-patient-list');
