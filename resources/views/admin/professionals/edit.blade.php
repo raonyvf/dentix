@@ -190,8 +190,8 @@
                         <div class="flex items-center gap-2">
                             <input type="checkbox" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][ativo]" value="1" class="rounded" @checked(old('horarios.' . $clinic->id . '.' . $diaKey . '.ativo', $h ? 1 : 0))>
                             <span class="w-28 text-sm">{{ $diaLabel }}</span>
-                            <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_inicio]" class="border rounded px-2 py-1 text-sm" value="{{ old('horarios.' . $clinic->id . '.' . $diaKey . '.hora_inicio', $h?->hora_inicio) }}">
-                            <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_fim]" class="border rounded px-2 py-1 text-sm" value="{{ old('horarios.' . $clinic->id . '.' . $diaKey . '.hora_fim', $h?->hora_fim) }}">
+                            <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_inicio]" class="border rounded px-2 py-1 text-sm" value="{{ old('horarios.' . $clinic->id . '.' . $diaKey . '.hora_inicio', $h ? substr($h->hora_inicio, 0, 5) : null) }}">
+                            <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_fim]" class="border rounded px-2 py-1 text-sm" value="{{ old('horarios.' . $clinic->id . '.' . $diaKey . '.hora_fim', $h ? substr($h->hora_fim, 0, 5) : null) }}">
                         </div>
                     @endforeach
                 </div>
