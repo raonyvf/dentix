@@ -24,7 +24,7 @@
             <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados admissionais</button>
             <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Remuneração</button>
         </div>
-        <div x-show="tab==='dados'" class="space-y-6">
+        <div :class="{ 'hidden': tab !== 'dados' }" class="space-y-6">
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <button type="button" @click="dadosAccordion = !dadosAccordion" class="flex items-center w-full">
                 <h2 class="text-sm font-medium text-gray-700">Dados pessoais</h2>
@@ -145,7 +145,7 @@
                 </div>
             </div>
         </div>
-        <div x-show="tab==='profissionais'" class="space-y-6" x-cloak>
+        <div :class="{ 'hidden': tab !== 'profissionais' }" class="space-y-6">
             <div class="rounded-sm border border-stroke bg-gray-50 p-4">
                 <button type="button" @click="atribuicoesAccordion = !atribuicoesAccordion" class="flex items-center w-full">
                     <h2 class="text-sm font-medium text-gray-700">Atribuições</h2>
@@ -170,7 +170,7 @@
                             <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
                                 <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista')) /> Dentista
                             </label>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="dentista" x-cloak>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="dentista">
                                 <div>
                                     <label class="mb-2 block text-sm font-medium text-gray-700">CRO</label>
                                     <input x-bind:required="dentista" x-bind:disabled="!dentista" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro') }}" />
@@ -211,7 +211,7 @@
                         ];
                     @endphp
                     @foreach ($clinics as $clinic)
-                        <div x-show="horarioClinic == '{{ $clinic->id }}'" x-cloak class="space-y-2" x-ref="clinic{{ $clinic->id }}">
+                        <div x-show="horarioClinic == '{{ $clinic->id }}'" class="space-y-2" x-ref="clinic{{ $clinic->id }}">
                             @foreach ($diasSemana as $diaKey => $diaLabel)
                                 <div class="flex items-center gap-2">
                                     <input type="checkbox" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][ativo]" value="1" class="rounded">
@@ -226,7 +226,7 @@
                 </div>
             </div>
         </div>
-        <div x-show="tab==='clinicas'" class="space-y-4">
+        <div :class="{ 'hidden': tab !== 'clinicas' }" class="space-y-4">
             <div>
                 <label class="text-sm block mb-1">Salário base</label>
                 <input type="text" name="salario_base" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm currency-brl" value="{{ old('salario_base') }}">
