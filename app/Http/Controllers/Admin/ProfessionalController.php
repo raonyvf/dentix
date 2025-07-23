@@ -217,6 +217,7 @@ class ProfessionalController extends Controller
         $profissional->cidade = $data['cidade'] ?? null;
         $profissional->estado = $data['estado'] ?? null;
         $profissional->cpf = $data['cpf'] ?? null;
+
         if ($request->has('dentista')) {
             $profissional->dentista = $request->boolean('dentista');
         }
