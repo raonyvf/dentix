@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CadeiraController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\FormularioController;
+use App\Http\Controllers\Admin\ProfessionalController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\AgendaController;
 use App\Http\Controllers\Admin\ClinicContextController;
@@ -28,6 +29,8 @@ Route::resource('formularios', FormularioController::class);
 Route::resource('pacientes', PatientController::class)
     ->parameters(['pacientes' => 'paciente']);
 Route::get('pacientes/buscar', [PatientController::class, 'search'])->name('pacientes.search');
+
+Route::resource('profissionais', ProfessionalController::class);
 
 Route::view('orcamentos/assinar', 'orcamentos.assinar')->name('orcamentos.assinar');
 
