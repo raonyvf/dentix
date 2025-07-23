@@ -25,7 +25,7 @@
             <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados admissionais</button>
             <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Remuneração</button>
         </div>
-        <div x-show="tab==='dados'" class="space-y-6">
+        <div :class="{ 'hidden': tab !== 'dados' }" class="space-y-6">
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <button type="button" @click="dadosAccordion = !dadosAccordion" class="flex items-center w-full">
                 <h2 class="text-sm font-medium text-gray-700">Dados pessoais</h2>
@@ -146,7 +146,7 @@
                 </div>
             </div>
         </div>
-        <div x-show="tab==='profissionais'" class="space-y-6">
+        <div :class="{ 'hidden': tab !== 'profissionais' }" class="space-y-6">
             <div class="rounded-sm border border-stroke bg-gray-50 p-4">
                 <button type="button" @click="atribuicoesAccordion = !atribuicoesAccordion" class="flex items-center w-full">
                     <h2 class="text-sm font-medium text-gray-700">Atribuições</h2>
@@ -229,7 +229,7 @@
                 </div>
             </div>
         </div>
-        <div x-show="tab==='clinicas'" class="space-y-4">
+        <div :class="{ 'hidden': tab !== 'clinicas' }" class="space-y-4">
             <div>
                 <label class="text-sm block mb-1">Salário base</label>
                 <input type="text" name="salario_base" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm currency-brl" value="{{ old('salario_base', $profissional->salario_base) }}">
