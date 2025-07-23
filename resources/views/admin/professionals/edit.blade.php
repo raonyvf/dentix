@@ -306,39 +306,3 @@
 
 @endsection
 
-@push('scripts')
-<script>
-    function professionalForm() {
-        return {
-            tab: 'dados',
-            horarioClinic: '',
-            dadosAccordion: false,
-            documentosAccordion: false,
-            contatoAccordion: false,
-            enderecoAccordion: false,
-            atribuicoesAccordion: false,
-            dadosFuncionaisAccordion: false,
-            horarioAccordion: false,
-            testeAccordion1: false,
-            testeAccordion2: false,
-            testeAccordion3: false,
-            aplicarHorarios(clinicId) {
-                const dias = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
-                const container = this.$refs['clinic' + clinicId];
-                if (!container) return;
-                const inicioBase = container.querySelector(`input[name="horarios[${clinicId}][segunda][hora_inicio]"]`).value;
-                const fimBase = container.querySelector(`input[name="horarios[${clinicId}][segunda][hora_fim]"]`).value;
-                dias.slice(1).forEach(dia => {
-                    const cb = container.querySelector(`input[name="horarios[${clinicId}][${dia}][ativo]"]`);
-                    if (cb && cb.checked) {
-                        const inicio = container.querySelector(`input[name="horarios[${clinicId}][${dia}][hora_inicio]"]`);
-                        const fim = container.querySelector(`input[name="horarios[${clinicId}][${dia}][hora_fim]"]`);
-                        if (inicio) inicio.value = inicioBase;
-                        if (fim) fim.value = fimBase;
-                    }
-                });
-            }
-        }
-    }
-</script>
-@endpush
