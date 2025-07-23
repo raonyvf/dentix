@@ -21,7 +21,7 @@
         @csrf
         <div class="mb-4 border-b flex gap-4">
             <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados cadastrais</button>
-            <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados adminissionais</button>
+            <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados admissionais</button>
             <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Remuneração</button>
         </div>
         <div x-show="tab==='dados'" class="space-y-6">
