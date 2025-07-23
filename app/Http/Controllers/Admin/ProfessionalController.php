@@ -16,9 +16,9 @@ class ProfessionalController extends Controller
 {
     public function index()
     {
-        $users = User::whereHas('profiles', function ($query) {
-            $query->where('nome', '!=', 'Paciente');
-        })->get();
+        $users = User::whereDoesntHave('patient')
+            ->where('id', '!=', auth()->id())
+            ->get();
 
         return view('admin.profissionais.index', compact('users'));
     }
