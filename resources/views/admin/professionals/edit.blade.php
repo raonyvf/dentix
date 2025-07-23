@@ -24,7 +24,6 @@
             <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados cadastrais</button>
             <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados adminissionais</button>
             <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Remuneração</button>
-            <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Horário de trabalho</button>
         </div>
         <div x-show="tab==='dados'" class="space-y-6">
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
@@ -149,27 +148,84 @@
         </div>
         <div x-show="tab==='profissionais'" class="space-y-6" x-cloak>
             <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-                <h2 class="mb-4 text-sm font-medium text-gray-700">Dados adminissionais</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="sm:col-span-2">
-                        <label class="mb-2 block text-sm font-medium text-gray-700">Cargo</label>
-                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cargo" value="{{ old('cargo', $profissional->cargo) }}" />
-                    </div>
-                    <div class="sm:col-span-2" x-data="{ dentista: {{ old('dentista', $profissional->dentista) ? 'true' : 'false' }} }">
-                        <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
-                            <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista', $profissional->dentista)) /> Dentista
-                        </label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="dentista" x-cloak>
-                            <div>
-                                <label class="mb-2 block text-sm font-medium text-gray-700">CRO</label>
-                                <input x-bind:required="dentista" x-bind:disabled="!dentista" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro', $profissional->cro) }}" />
-                            </div>
-                            <div>
-                                <label class="mb-2 block text-sm font-medium text-gray-700">Especialidade</label>
-                                <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="especialidade" placeholder="Especialidade" value="{{ old('especialidade', $profissional->especialidade) }}" />
+                <button type="button" @click="atribuicoesAccordion = !atribuicoesAccordion" class="flex items-center w-full">
+                    <h2 class="text-sm font-medium text-gray-700">Atribuições</h2>
+                    <svg :class="{'rotate-90': atribuicoesAccordion}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+                <div x-show="atribuicoesAccordion" x-collapse class="mt-4 space-y-4">
+                    <textarea name="atribuicoes" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm"></textarea>
+                </div>
+            </div>
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <button type="button" @click="dadosFuncionaisAccordion = !dadosFuncionaisAccordion" class="flex items-center w-full">
+                    <h2 class="text-sm font-medium text-gray-700">Dados funcionais</h2>
+                    <svg :class="{'rotate-90': dadosFuncionaisAccordion}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+                <div x-show="dadosFuncionaisAccordion" x-collapse class="mt-4 space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="sm:col-span-2">
+                            <label class="mb-2 block text-sm font-medium text-gray-700">Cargo</label>
+                            <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cargo" value="{{ old('cargo', $profissional->cargo) }}" />
+                        </div>
+                        <div class="sm:col-span-2" x-data="{ dentista: {{ old('dentista', $profissional->dentista) ? 'true' : 'false' }} }">
+                            <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
+                                <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista', $profissional->dentista)) /> Dentista
+                            </label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="dentista" x-cloak>
+                                <div>
+                                    <label class="mb-2 block text-sm font-medium text-gray-700">CRO</label>
+                                    <input x-bind:required="dentista" x-bind:disabled="!dentista" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro', $profissional->cro) }}" />
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-sm font-medium text-gray-700">Especialidade</label>
+                                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="especialidade" placeholder="Especialidade" value="{{ old('especialidade', $profissional->especialidade) }}" />
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <button type="button" @click="horarioAccordion = !horarioAccordion" class="flex items-center w-full">
+                    <h2 class="text-sm font-medium text-gray-700">Horário de trabalho</h2>
+                    <svg :class="{'rotate-90': horarioAccordion}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+                <div x-show="horarioAccordion" x-collapse class="mt-4 space-y-4">
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Clínica</label>
+                        <select x-model="horarioClinic" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm">
+                            <option value="">Selecione</option>
+                            @foreach ($clinics as $clinic)
+                                <option value="{{ $clinic->id }}">{{ $clinic->nome }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @php
+                        $diasSemana = [
+                            'segunda' => 'Segunda',
+                            'terca' => 'Terça',
+                            'quarta' => 'Quarta',
+                            'quinta' => 'Quinta',
+                            'sexta' => 'Sexta',
+                            'sabado' => 'Sábado',
+                            'domingo' => 'Domingo',
+                        ];
+                    @endphp
+                    @foreach ($clinics as $clinic)
+                        @php $hs = $profissional->horariosProfissional->where('clinica_id', $clinic->id)->keyBy('dia_semana'); @endphp
+                        <div x-show="horarioClinic == '{{ $clinic->id }}'" x-cloak class="space-y-2" x-ref="clinic{{ $clinic->id }}">
+                            @foreach ($diasSemana as $diaKey => $diaLabel)
+                                @php $h = $hs->get($diaKey); @endphp
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][ativo]" value="1" class="rounded" @checked(old('horarios.' . $clinic->id . '.' . $diaKey . '.ativo', $h ? 1 : 0))>
+                                    <span class="w-28 text-sm">{{ $diaLabel }}</span>
+                                    <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_inicio]" class="border rounded px-2 py-1 text-sm" value="{{ old('horarios.' . $clinic->id . '.' . $diaKey . '.hora_inicio', $h ? substr($h->hora_inicio, 0, 5) : null) }}">
+                                    <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_fim]" class="border rounded px-2 py-1 text-sm" value="{{ old('horarios.' . $clinic->id . '.' . $diaKey . '.hora_fim', $h ? substr($h->hora_fim, 0, 5) : null) }}">
+                                </div>
+                            @endforeach
+                            <button type="button" class="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded" @click="aplicarHorarios({{ $clinic->id }})">Aplicar para os selecionados</button>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -210,43 +266,6 @@
             </div>
         </div>
 
-        <div x-show="tab==='horarios'" class="space-y-4" x-cloak>
-            <div>
-                <label class="mb-2 block text-sm font-medium text-gray-700">Clínica</label>
-                <select x-model="horarioClinic" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm">
-                    <option value="">Selecione</option>
-                    @foreach ($clinics as $clinic)
-                        <option value="{{ $clinic->id }}">{{ $clinic->nome }}</option>
-                    @endforeach
-                </select>
-            </div>
-            @php
-                $diasSemana = [
-                    'segunda' => 'Segunda',
-                    'terca' => 'Terça',
-                    'quarta' => 'Quarta',
-                    'quinta' => 'Quinta',
-                    'sexta' => 'Sexta',
-                    'sabado' => 'Sábado',
-                    'domingo' => 'Domingo',
-                ];
-            @endphp
-            @foreach ($clinics as $clinic)
-                @php $hs = $profissional->horariosProfissional->where('clinica_id', $clinic->id)->keyBy('dia_semana'); @endphp
-                <div x-show="horarioClinic == '{{ $clinic->id }}'" x-cloak class="space-y-2" x-ref="clinic{{ $clinic->id }}">
-                    @foreach ($diasSemana as $diaKey => $diaLabel)
-                        @php $h = $hs->get($diaKey); @endphp
-                        <div class="flex items-center gap-2">
-                            <input type="checkbox" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][ativo]" value="1" class="rounded" @checked(old('horarios.' . $clinic->id . '.' . $diaKey . '.ativo', $h ? 1 : 0))>
-                            <span class="w-28 text-sm">{{ $diaLabel }}</span>
-                            <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_inicio]" class="border rounded px-2 py-1 text-sm" value="{{ old('horarios.' . $clinic->id . '.' . $diaKey . '.hora_inicio', $h ? substr($h->hora_inicio, 0, 5) : null) }}">
-                            <input type="time" name="horarios[{{ $clinic->id }}][{{ $diaKey }}][hora_fim]" class="border rounded px-2 py-1 text-sm" value="{{ old('horarios.' . $clinic->id . '.' . $diaKey . '.hora_fim', $h ? substr($h->hora_fim, 0, 5) : null) }}">
-                        </div>
-                    @endforeach
-                    <button type="button" class="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded" @click="aplicarHorarios({{ $clinic->id }})">Aplicar para os selecionados</button>
-                </div>
-            @endforeach
-        </div>
         <div class="flex justify-end gap-2 pt-4">
             <a href="{{ route('profissionais.index') }}" class="py-2 px-4 rounded border border-stroke text-gray-700">Cancelar</a>
             <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
@@ -266,6 +285,9 @@
             documentosAccordion: false,
             contatoAccordion: false,
             enderecoAccordion: false,
+            atribuicoesAccordion: false,
+            dadosFuncionaisAccordion: false,
+            horarioAccordion: false,
             aplicarHorarios(clinicId) {
                 const dias = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
                 const container = this.$refs['clinic' + clinicId];
