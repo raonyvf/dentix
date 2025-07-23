@@ -97,8 +97,6 @@
                     <th class="px-4 py-2 text-left font-medium text-gray-500 uppercase">Cargo</th>
                     <th class="px-4 py-2 text-left font-medium text-gray-500 uppercase">Clínicas</th>
                     <th class="px-4 py-2 text-left font-medium text-gray-500 uppercase">Contato</th>
-                    <th class="px-4 py-2 text-left font-medium text-gray-500 uppercase">Comissão</th>
-                    <th class="px-4 py-2 text-left font-medium text-gray-500 uppercase">Atendimentos</th>
                     <th class="px-4 py-2 text-center font-medium text-gray-500 uppercase">Ações</th>
                 </tr>
             </thead>
@@ -118,7 +116,13 @@
                         </td>
                         <td class="px-4 py-2">{{ $profissional->cargo ?? ($profissional->dentista ? 'Dentista' : 'Auxiliar') }}</td>
                         <td class="px-4 py-2 space-x-1">
-                            @foreach($profissional->clinics as $c)
+                            @php
+                                $clinicas = $profissional->horariosProfissional
+                                    ->map(fn($h) => $h->clinic)
+                                    ->filter()
+                                    ->unique('id');
+                            @endphp
+                            @foreach($clinicas as $c)
                                 <span class="inline-block px-2 py-1 bg-gray-100 rounded text-xs">{{ $c->nome }}</span>
                             @endforeach
                         </td>
@@ -126,11 +130,6 @@
                             <div>{{ $profissional->email }}</div>
                             <div class="text-xs text-gray-500">{{ $profissional->phone }}</div>
                         </td>
-                        <td class="px-4 py-2">
-                            @php $cp = $profissional->clinicasProfissional->firstWhere('clinica_id', request('clinica_id')); @endphp
-                            {{ $cp?->comissao ? $cp->comissao.'%' : '-' }}
-                        </td>
-                        <td class="px-4 py-2 text-center">{{ $profissional->atendimentos_mes ?? 0 }}</td>
                         <td class="px-4 py-2">
                             <div class="flex items-center justify-center space-x-2">
                                 <a href="{{ route('profissionais.show', ['profissional' => $profissional->id]) }}" class="text-gray-600 hover:text-blue-600" title="Ver Perfil">
@@ -167,7 +166,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-4 py-2 text-center">Nenhum profissional cadastrado.</td>
+                        <td colspan="5" class="px-4 py-2 text-center">Nenhum profissional cadastrado.</td>
                     </tr>
                 @endforelse
             </tbody>

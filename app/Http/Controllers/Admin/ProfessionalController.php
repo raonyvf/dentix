@@ -18,6 +18,7 @@ class ProfessionalController extends Controller
     {
         $users = User::whereDoesntHave('patient')
             ->where('id', '!=', auth()->id())
+            ->with('horariosProfissional.clinic')
             ->get();
 
         return view('admin.profissionais.index', compact('users'));
