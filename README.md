@@ -13,6 +13,8 @@ npm install && npm run dev
 php artisan serve
 ```
 
+Para migrations que utilizam `renameColumn`, o pacote `doctrine/dbal` é necessário e será instalado via Composer.
+
 Se optar por usar filas no banco de dados, defina `QUEUE_CONNECTION=database` no
 arquivo `.env` e execute `php artisan migrate`. As migrations das tabelas
 `jobs` e `failed_jobs` já fazem parte do repositório. Caso não queira usar
