@@ -116,7 +116,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="dentista" x-cloak>
                             <div>
                                 <label class="mb-2 block text-sm font-medium text-gray-700">CRO</label>
-                                <input x-bind:required="dentista" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro') }}" />
+                                <input x-bind:required="dentista" x-bind:disabled="!dentista" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro') }}" />
                             </div>
                             <div>
                                 <label class="mb-2 block text-sm font-medium text-gray-700">Especialidade</label>
