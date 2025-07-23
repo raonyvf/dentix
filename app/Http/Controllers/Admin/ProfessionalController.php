@@ -60,6 +60,7 @@ class ProfessionalController extends Controller
             'cro' => 'required_if:dentista,1|nullable',
             'cargo' => 'nullable',
             'especialidade' => 'nullable',
+            'salario_base' => 'nullable|numeric',
             'photo' => 'nullable|image',
             'clinicas' => 'nullable|array',
             'clinicas.*.selected' => 'nullable|boolean',
@@ -97,6 +98,7 @@ class ProfessionalController extends Controller
         $user->cro = $data['cro'] ?? null;
         $user->cargo = $data['cargo'] ?? null;
         $user->especialidade = $data['especialidade'] ?? null;
+        $user->salario_base = $data['salario_base'] ?? null;
         $user->organization_id = auth()->user()->organization_id;
         $user->password = Hash::make($password);
         $user->must_change_password = true;
@@ -194,6 +196,7 @@ class ProfessionalController extends Controller
             'cro' => 'required_if:dentista,1|nullable',
             'cargo' => 'nullable',
             'especialidade' => 'nullable',
+            'salario_base' => 'nullable|numeric',
             'photo' => 'nullable|image',
             'clinicas' => 'nullable|array',
             'clinicas.*.selected' => 'nullable|boolean',
@@ -229,6 +232,7 @@ class ProfessionalController extends Controller
         $profissional->cro = $data['cro'] ?? null;
         $profissional->cargo = $data['cargo'] ?? null;
         $profissional->especialidade = $data['especialidade'] ?? null;
+        $profissional->salario_base = $data['salario_base'] ?? null;
 
         if ($request->filled('password')) {
             $profissional->password = Hash::make($data['password']);
