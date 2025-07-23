@@ -85,7 +85,7 @@ class ProfessionalController extends Controller
         $user->cidade = $data['cidade'] ?? null;
         $user->estado = $data['estado'] ?? null;
         $user->cpf = $data['cpf'] ?? null;
-        $user->dentista = $data['dentista'] ?? true;
+        $user->dentista = $data['dentista'] ?? false;
         $user->cro = $data['cro'] ?? null;
         $user->cargo = $data['cargo'] ?? null;
         $user->especialidade = $data['especialidade'] ?? null;
@@ -208,7 +208,7 @@ class ProfessionalController extends Controller
         $profissional->cidade = $data['cidade'] ?? null;
         $profissional->estado = $data['estado'] ?? null;
         $profissional->cpf = $data['cpf'] ?? null;
-        $profissional->dentista = $data['dentista'] ?? true;
+        $profissional->dentista = $data['dentista'] ?? false;
         $profissional->cro = $data['cro'] ?? null;
         $profissional->cargo = $data['cargo'] ?? null;
         $profissional->especialidade = $data['especialidade'] ?? null;
