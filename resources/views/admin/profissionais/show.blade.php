@@ -22,12 +22,23 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <div class="space-y-4">
         <div class="bg-white rounded shadow p-4">
-            <div class="flex items-center space-x-4">
-                <img src="{{ $profissional->photo_path ? asset('storage/'.$profissional->photo_path) : 'https://via.placeholder.com/80' }}" class="w-20 h-20 rounded-full object-cover" alt="Foto">
-                <div>
-                    <h2 class="text-lg font-semibold">{{ $profissional->name }}</h2>
-                    <p class="text-sm text-gray-500">{{ $profissional->especialidade }}</p>
-                </div>
+            <div class="flex flex-col items-center text-center space-y-2">
+                @if($profissional->photo_path)
+                    <img src="{{ asset('storage/'.$profissional->photo_path) }}" class="w-20 h-20 rounded-full object-cover" alt="Foto">
+                @else
+                    @php
+                        $initials = collect(explode(' ', $profissional->name))
+                            ->filter()
+                            ->map(fn($part) => strtoupper(substr($part, 0, 1)))
+                            ->take(2)
+                            ->implode('');
+                    @endphp
+                    <div class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-lg font-medium text-gray-700">
+                        {{ $initials }}
+                    </div>
+                @endif
+                <h2 class="text-lg font-semibold">{{ $profissional->name }}</h2>
+                <p class="text-sm text-gray-500">{{ $profissional->especialidade }}</p>
             </div>
             @php $cp = $profissional->clinicasProfissional->first(); @endphp
             <div class="mt-4 space-y-1 text-sm">
