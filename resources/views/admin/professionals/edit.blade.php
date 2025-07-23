@@ -23,13 +23,16 @@
         <div class="mb-4 border-b flex gap-4">
             <button type="button" @click="tab='dados'" :class="tab==='dados' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados pessoais</button>
             <button type="button" @click="tab='profissionais'" :class="tab==='profissionais' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Dados Profissionais</button>
-            <button type="button" @click="tab='contato'" :class="tab==='contato' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Contato</button>
             <button type="button" @click="tab='clinicas'" :class="tab==='clinicas' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Remuneração</button>
             <button type="button" @click="tab='horarios'" :class="tab==='horarios' ? 'border-b-2 border-blue-600' : ''" class="pb-2">Horário de trabalho</button>
         </div>
         <div x-show="tab==='dados'" class="space-y-6">
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-            <h2 class="mb-4 text-sm font-medium text-gray-700">Dados do Profissional</h2>
+            <button type="button" @click="dadosAccordion = !dadosAccordion" class="flex items-center w-full">
+                <h2 class="text-sm font-medium text-gray-700">Dados pessoais</h2>
+                <svg :class="{'rotate-90': dadosAccordion}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+            <div x-show="dadosAccordion" x-collapse class="mt-4 space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
@@ -52,41 +55,18 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf', $profissional->cpf) }}" />
                 </div>
             </div>
-         </div>
-        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-            <h2 class="mb-4 text-sm font-medium text-gray-700">Foto</h2>
-            <input type="file" name="photo" class="w-full text-sm" />
-        </div>
-        </div>
-        <div x-show="tab==='profissionais'" class="space-y-6" x-cloak>
-            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-                <h2 class="mb-4 text-sm font-medium text-gray-700">Dados Profissionais</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="sm:col-span-2">
-                        <label class="mb-2 block text-sm font-medium text-gray-700">Cargo</label>
-                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cargo" value="{{ old('cargo', $profissional->cargo) }}" />
-                    </div>
-                    <div class="sm:col-span-2" x-data="{ dentista: {{ old('dentista', $profissional->dentista) ? 'true' : 'false' }} }">
-                        <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
-                            <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista', $profissional->dentista)) /> Dentista
-                        </label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="dentista" x-cloak>
-                            <div>
-                                <label class="mb-2 block text-sm font-medium text-gray-700">CRO</label>
-                                <input x-bind:required="dentista" x-bind:disabled="!dentista" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro', $profissional->cro) }}" />
-                            </div>
-                            <div>
-                                <label class="mb-2 block text-sm font-medium text-gray-700">Especialidade</label>
-                                <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="especialidade" placeholder="Especialidade" value="{{ old('especialidade', $profissional->especialidade) }}" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4 mt-4">
+                <h3 class="mb-4 text-sm font-medium text-gray-700">Foto</h3>
+                <input type="file" name="photo" class="w-full text-sm" />
+            </div>
             </div>
         </div>
-        <div x-show="tab==='contato'" class="space-y-6" x-cloak>
-            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-                <h2 class="mb-4 text-sm font-medium text-gray-700">Contato</h2>
+        <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+            <button type="button" @click="contatoAccordion = !contatoAccordion" class="flex items-center w-full">
+                <h2 class="text-sm font-medium text-gray-700">Dados de contato</h2>
+                <svg :class="{'rotate-90': contatoAccordion}" class="w-4 h-4 ml-auto transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+            <div x-show="contatoAccordion" x-collapse class="mt-4 space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">Email</label>
@@ -97,9 +77,6 @@
                         <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="phone" value="{{ old('phone', $profissional->phone) }}" />
                     </div>
                 </div>
-            </div>
-            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
-                <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">CEP</label>
@@ -128,6 +105,32 @@
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700">Estado</label>
                         <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado', $profissional->estado) }}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div x-show="tab==='profissionais'" class="space-y-6" x-cloak>
+            <div class="rounded-sm border border-stroke bg-gray-50 p-4">
+                <h2 class="mb-4 text-sm font-medium text-gray-700">Dados Profissionais</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="sm:col-span-2">
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Cargo</label>
+                        <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cargo" value="{{ old('cargo', $profissional->cargo) }}" />
+                    </div>
+                    <div class="sm:col-span-2" x-data="{ dentista: {{ old('dentista', $profissional->dentista) ? 'true' : 'false' }} }">
+                        <label class="inline-flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
+                            <input type="checkbox" name="dentista" x-model="dentista" value="1" class="rounded" @checked(old('dentista', $profissional->dentista)) /> Dentista
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="dentista" x-cloak>
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-gray-700">CRO</label>
+                                <input x-bind:required="dentista" x-bind:disabled="!dentista" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" placeholder="CRO" value="{{ old('cro', $profissional->cro) }}" />
+                            </div>
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-gray-700">Especialidade</label>
+                                <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="especialidade" placeholder="Especialidade" value="{{ old('especialidade', $profissional->especialidade) }}" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -221,6 +224,8 @@
         return {
             tab: 'dados',
             horarioClinic: '',
+            dadosAccordion: true,
+            contatoAccordion: true,
             aplicarHorarios(clinicId) {
                 const dias = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
                 const container = this.$refs['clinic' + clinicId];
