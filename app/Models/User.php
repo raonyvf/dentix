@@ -38,6 +38,7 @@ class User extends Authenticatable
         'cidade',
         'estado',
         'cpf',
+        'rg',
         'dentista',
         'cro',
         'cargo',

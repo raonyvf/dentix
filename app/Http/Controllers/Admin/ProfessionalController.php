@@ -60,6 +60,7 @@ class ProfessionalController extends Controller
             'cidade' => 'nullable',
             'estado' => 'nullable',
             'cpf' => 'nullable',
+            'rg' => 'nullable',
             'dentista' => 'nullable|boolean',
             'cro' => 'required_if:dentista,1|nullable',
             'cargo' => 'nullable',
@@ -102,6 +103,7 @@ class ProfessionalController extends Controller
         $user->cidade = $data['cidade'] ?? null;
         $user->estado = $data['estado'] ?? null;
         $user->cpf = $data['cpf'] ?? null;
+        $user->rg = $data['rg'] ?? null;
         $user->dentista = $data['dentista'] ?? false;
         $user->cro = $data['cro'] ?? null;
         $user->cargo = $data['cargo'] ?? null;
@@ -204,6 +206,7 @@ class ProfessionalController extends Controller
             'cidade' => 'nullable',
             'estado' => 'nullable',
             'cpf' => 'nullable',
+            'rg' => 'nullable',
             'dentista' => 'nullable|boolean',
             'cro' => 'required_if:dentista,1|nullable',
             'cargo' => 'nullable',
@@ -243,6 +246,7 @@ class ProfessionalController extends Controller
         $profissional->cidade = $data['cidade'] ?? null;
         $profissional->estado = $data['estado'] ?? null;
         $profissional->cpf = $data['cpf'] ?? null;
+        $profissional->rg = $data['rg'] ?? null;
 
         $profissional->dentista = $request->boolean('dentista');
         $profissional->cro = $data['cro'] ?? null;
