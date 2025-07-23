@@ -128,16 +128,6 @@ window.updateScheduleTable = function(openTimes, start, end, closed) {
         }
     });
 
-    document.querySelectorAll('td[data-professional]').forEach(td => {
-        const time = td.dataset.time;
-        if (openTimes.includes(time)) {
-            td.classList.remove('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
-            td.classList.add('cursor-pointer');
-        } else {
-            td.classList.remove('cursor-pointer');
-            td.classList.add('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
-        }
-    });
     document.querySelectorAll('td[data-slot]').forEach(td => {
         const time = td.dataset.slot;
         if (openTimes.includes(time)) {
@@ -148,39 +138,6 @@ window.updateScheduleTable = function(openTimes, start, end, closed) {
     });
 };
 
-// form logic for professionals pages
-window.professionalForm = function professionalForm() {
-    return {
-        tab: 'dados',
-        horarioClinic: '',
-        dadosAccordion: false,
-        documentosAccordion: false,
-        contatoAccordion: false,
-        enderecoAccordion: false,
-        atribuicoesAccordion: false,
-        dadosFuncionaisAccordion: false,
-        horarioAccordion: false,
-        testeAccordion1: false,
-        testeAccordion2: false,
-        testeAccordion3: false,
-        aplicarHorarios(clinicId) {
-            const dias = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
-            const container = this.$refs['clinic' + clinicId];
-            if (!container) return;
-            const inicioBase = container.querySelector(`input[name="horarios[${clinicId}][segunda][hora_inicio]"]`).value;
-            const fimBase = container.querySelector(`input[name="horarios[${clinicId}][segunda][hora_fim]"]`).value;
-            dias.slice(1).forEach(dia => {
-                const cb = container.querySelector(`input[name="horarios[${clinicId}][${dia}][ativo]"]`);
-                if (cb && cb.checked) {
-                    const inicio = container.querySelector(`input[name="horarios[${clinicId}][${dia}][hora_inicio]"]`);
-                    const fim = container.querySelector(`input[name="horarios[${clinicId}][${dia}][hora_fim]"]`);
-                    if (inicio) inicio.value = inicioBase;
-                    if (fim) fim.value = fimBase;
-                }
-            });
-        }
-    };
-};
 
 Alpine.start();
 
@@ -278,55 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const modal = document.getElementById('schedule-modal');
-    const patientInput = document.getElementById('schedule-patient');
-    const patientList = document.getElementById('schedule-patient-list');
-    const cancelBtn = document.getElementById('schedule-cancel');
-    const saveBtn = document.getElementById('schedule-save');
-    let targetCell = null;
-
-    if (patientInput) {
-        patientInput.addEventListener('input', () => {
-            const q = patientInput.value.trim();
-            if (q.length < 2) {
-                patientList.innerHTML = '';
-                return;
-            }
-            fetch(`/admin/pacientes/buscar?q=${encodeURIComponent(q)}`)
-                .then(r => r.json())
-                .then(data => {
-                    patientList.innerHTML = '';
-                    data.forEach(name => {
-                        const opt = document.createElement('option');
-                        opt.value = name;
-                        patientList.appendChild(opt);
-                    });
-                });
-        });
-    }
-
-    if (modal) {
-        document.querySelectorAll('td[data-professional]').forEach(td => {
-            td.addEventListener('click', () => {
-                if (td.classList.contains('cursor-not-allowed')) return;
-                targetCell = td;
-                patientInput.value = '';
-                modal.classList.remove('hidden');
-            });
-        });
-
-        cancelBtn.addEventListener('click', () => {
-            modal.classList.add('hidden');
-        });
-
-        saveBtn.addEventListener('click', () => {
-            const name = patientInput.value;
-            if (!name || !targetCell) return;
-            targetCell.innerHTML =
-                `<div class="rounded p-2 text-xs bg-green-100 text-green-700"><div class="font-semibold">${name}</div><div>Consulta</div></div>`;
-            modal.classList.add('hidden');
-        });
-    }
 
     const charts = [
         {

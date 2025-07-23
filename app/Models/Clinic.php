@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Horario;
 use App\Models\Cadeira;
-use App\Models\ClinicaProfissional;
-use App\Models\HorarioProfissional;
 use App\Traits\BelongsToOrganization;
 use App\Models\Organization;
 use App\Models\ClinicUser;
@@ -44,15 +42,6 @@ class Clinic extends Model
         return $this->hasMany(Cadeira::class);
     }
 
-    public function clinicasProfissional()
-    {
-        return $this->hasMany(ClinicaProfissional::class, 'clinica_id');
-    }
-
-    public function horariosProfissional()
-    {
-        return $this->hasMany(HorarioProfissional::class, 'clinica_id');
-    }
 
     public function organization()
     {
