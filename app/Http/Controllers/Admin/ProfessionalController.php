@@ -217,7 +217,9 @@ class ProfessionalController extends Controller
         $profissional->cidade = $data['cidade'] ?? null;
         $profissional->estado = $data['estado'] ?? null;
         $profissional->cpf = $data['cpf'] ?? null;
-        $profissional->dentista = $data['dentista'] ?? false;
+        if (array_key_exists('dentista', $data)) {
+            $profissional->dentista = $data['dentista'];
+        }
         $profissional->cro = $data['cro'] ?? null;
         $profissional->cargo = $data['cargo'] ?? null;
         $profissional->especialidade = $data['especialidade'] ?? null;
