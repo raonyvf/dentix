@@ -45,6 +45,7 @@ class ProfessionalController extends Controller
             'first_name' => 'required',
             'middle_name' => 'nullable',
             'last_name' => 'required',
+            'data_nascimento' => 'nullable|date',
             'email' => 'required|email|unique:users,email',
             'password' => 'nullable|string|min:8|confirmed',
             'phone' => 'nullable',
@@ -83,6 +84,7 @@ class ProfessionalController extends Controller
         $user->first_name = $data['first_name'];
         $user->middle_name = $data['middle_name'] ?? null;
         $user->last_name = $data['last_name'];
+        $user->data_nascimento = $data['data_nascimento'] ?? null;
         $user->name = trim($data['first_name'] . ' ' . ($data['middle_name'] ?? '') . ' ' . $data['last_name']);
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
@@ -181,6 +183,7 @@ class ProfessionalController extends Controller
             'first_name' => 'required',
             'middle_name' => 'nullable',
             'last_name' => 'required',
+            'data_nascimento' => 'nullable|date',
             'email' => 'required|email|unique:users,email,' . $profissional->id,
             'phone' => 'nullable',
             'password' => 'nullable|string|min:8|confirmed',
@@ -216,6 +219,7 @@ class ProfessionalController extends Controller
         $profissional->first_name = $data['first_name'];
         $profissional->middle_name = $data['middle_name'] ?? null;
         $profissional->last_name = $data['last_name'];
+        $profissional->data_nascimento = $data['data_nascimento'] ?? null;
         $profissional->name = trim($data['first_name'] . ' ' . ($data['middle_name'] ?? '') . ' ' . $data['last_name']);
         $profissional->email = $data['email'];
         $profissional->phone = $data['phone'] ?? null;
