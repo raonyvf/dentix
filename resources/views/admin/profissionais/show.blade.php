@@ -134,15 +134,40 @@
             @endforeach
         </div>
         <div x-show="tab==='horarios'" class="space-y-4" x-cloak>
+            @php
+                $diasSemana = [
+                    'segunda' => 'Segunda',
+                    'terca' => 'Terça',
+                    'quarta' => 'Quarta',
+                    'quinta' => 'Quinta',
+                    'sexta' => 'Sexta',
+                    'sabado' => 'Sábado',
+                    'domingo' => 'Domingo',
+                ];
+            @endphp
             @foreach($profissional->clinicasProfissional as $clinica)
                 <div class="border rounded p-2 text-sm">
-                    <h4 class="font-medium mb-1">{{ $clinica->clinic->nome }}</h4>
-                    @php $hs = $profissional->horariosProfissional->where('clinica_id', $clinica->clinica_id); @endphp
-                    @forelse($hs as $h)
-                        <div>{{ ucfirst($h->dia_semana) }}: {{ substr($h->hora_inicio,0,5) }} - {{ substr($h->hora_fim,0,5) }}</div>
-                    @empty
-                        <p class="text-gray-500">Sem horários cadastrados.</p>
-                    @endforelse
+                    <h4 class="font-medium mb-2">{{ $clinica->clinic->nome }}</h4>
+                    @php $hs = $profissional->horariosProfissional->where('clinica_id', $clinica->clinica_id)->keyBy('dia_semana'); @endphp
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-left p-1">Dia</th>
+                                <th class="text-left p-1">Início</th>
+                                <th class="text-left p-1">Fim</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($diasSemana as $diaKey => $diaLabel)
+                                @php $h = $hs->get($diaKey); @endphp
+                                <tr>
+                                    <td class="p-1">{{ $diaLabel }}</td>
+                                    <td class="p-1">{{ $h ? substr($h->hora_inicio, 0, 5) : '-' }}</td>
+                                    <td class="p-1">{{ $h ? substr($h->hora_fim, 0, 5) : '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             @endforeach
         </div>
