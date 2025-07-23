@@ -262,10 +262,10 @@
         return {
             tab: 'dados',
             horarioClinic: '',
-            dadosAccordion: true,
-            documentosAccordion: true,
-            contatoAccordion: true,
-            enderecoAccordion: true,
+            dadosAccordion: false,
+            documentosAccordion: false,
+            contatoAccordion: false,
+            enderecoAccordion: false,
             aplicarHorarios(clinicId) {
                 const dias = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
                 const container = this.$refs['clinic' + clinicId];
