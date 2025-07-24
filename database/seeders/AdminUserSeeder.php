@@ -8,15 +8,24 @@ use App\Models\User;
 use App\Models\Profile;
 use App\Models\Permission;
 use App\Models\Person;
+use App\Models\Organization;
 
 class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
+        $organization = Organization::first();
+        if (! $organization) {
+            $organization = Organization::create([
+                'nome_fantasia' => 'Default Organization',
+                'cnpj' => '00000000000000',
+            ]);
+        }
+
         $person = Person::firstOrCreate(
             [
                 'email' => 'admin@example.com',
-                'organization_id' => 1,
+                'organization_id' => $organization->id,
             ],
             [
                 'first_name' => 'Admin',
@@ -28,7 +37,7 @@ class AdminUserSeeder extends Seeder
             ['email' => 'admin@example.com'],
             [
                 'password' => Hash::make('password'),
-                'organization_id' => $person->organization_id,
+                'organization_id' => $organization->id,
                 'person_id' => $person->id,
             ]
         );
