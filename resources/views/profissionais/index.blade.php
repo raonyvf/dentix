@@ -64,15 +64,25 @@
             <tr>
                 <td class="px-4 py-2 whitespace-nowrap">
                     <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+                        @php
+                            $person = optional($profissional->user)->person ?? $profissional->person;
+                            $initials = strtoupper(substr($person->first_name, 0, 1) . substr($person->last_name, 0, 1));
+                        @endphp
+                        @if($person->photo_path)
+                            <img src="{{ asset('storage/' . $person->photo_path) }}" alt="{{ $person->first_name }}" class="w-8 h-8 rounded-full object-cover" />
+                        @else
+                            <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 uppercase">{{ $initials }}</div>
+                        @endif
                         <div>
                             <div class="font-medium text-gray-700">
                                 {{ optional($profissional->user->person)->first_name ?? $profissional->person->first_name }}
                                 {{ optional($profissional->user->person)->last_name ?? $profissional->person->last_name }}
                             </div>
-                            <div class="text-xs text-gray-500">
-                                {{ optional($profissional->user)->especialidade ?? '-' }}
-                            </div>
+                            @if(optional($profissional->user)->especialidade)
+                                <div class="text-xs text-gray-500">
+                                    {{ optional($profissional->user)->especialidade }}
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </td>
