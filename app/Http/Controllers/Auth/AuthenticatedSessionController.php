@@ -34,6 +34,10 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->intended('/portal');
             }
 
+            if ($user->isSuperAdmin()) {
+                return redirect()->intended('/backend');
+            }
+
             return redirect()->intended(RouteServiceProvider::HOME);
         }
 

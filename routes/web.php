@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
     if (Auth::check()) {
         $user = Auth::user();
+
+        if ($user->isSuperAdmin()) {
+            return redirect()->route('backend.index');
+        }
+
         if ($user->profiles()->where('nome', 'Paciente')->exists()) {
             return redirect()->route('portal.index');
         }
