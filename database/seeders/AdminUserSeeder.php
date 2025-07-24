@@ -14,13 +14,10 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $organization = Organization::first();
-        if (! $organization) {
-            $organization = Organization::create([
-                'nome_fantasia' => 'Default Organization',
-                'cnpj' => '00000000000000',
-            ]);
-        }
+        $organization = Organization::firstOrCreate(
+            ['cnpj' => '00000000000000'],
+            ['nome_fantasia' => 'Default Organization']
+        );
 
         $person = Person::firstOrCreate(
             [
