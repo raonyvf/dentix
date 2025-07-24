@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Profissional;
 use App\Models\Person;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class ProfessionalController extends Controller
 {
     public function index()
     {
-        $profissionais = Profissional::all();
+        $profissionais = Profissional::with('user.person')->get();
         return view('profissionais.index', compact('profissionais'));
     }
 
@@ -27,11 +30,30 @@ class ProfessionalController extends Controller
         if ($request->hasFile('foto')) {
             $personData['photo_path'] = $request->file('foto')->store('profissionais', 'public');
         }
-        $person = Person::create(array_merge(['organization_id' => auth()->user()->organization_id], $personData));
+        $person = Person::create(array_merge([
+            'organization_id' => auth()->user()->organization_id
+        ], $personData));
+
+        $user = null;
+        if ($person->email) {
+            $user = User::firstWhere('email', $person->email);
+            if (!$user) {
+                $user = User::create([
+                    'email' => $person->email,
+                    'organization_id' => auth()->user()->organization_id,
+                    'password' => Hash::make(Str::random(8)),
+                    'must_change_password' => true,
+                    'person_id' => $person->id,
+                ]);
+            } else {
+                $user->update(['person_id' => $person->id]);
+            }
+        }
 
         Profissional::create([
             'organization_id' => auth()->user()->organization_id,
             'person_id' => $person->id,
+            'user_id' => $user?->id,
         ]);
 
         return redirect()->route('profissionais.index')->with('success', 'Profissional salvo com sucesso.');

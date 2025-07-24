@@ -25,9 +25,16 @@
         <tbody class="divide-y divide-gray-200">
             @forelse($profissionais as $profissional)
             <tr>
-                <td class="px-4 py-2 whitespace-nowrap">{{ $profissional->nome }} {{ $profissional->ultimo_nome }}</td>
-                <td class="px-4 py-2 whitespace-nowrap">{{ $profissional->email }}</td>
-                <td class="px-4 py-2 whitespace-nowrap">{{ $profissional->telefone }}</td>
+                <td class="px-4 py-2 whitespace-nowrap">
+                    {{ optional($profissional->user->person)->first_name ?? $profissional->person->first_name }}
+                    {{ optional($profissional->user->person)->last_name ?? $profissional->person->last_name }}
+                </td>
+                <td class="px-4 py-2 whitespace-nowrap">
+                    {{ optional($profissional->user->person)->email ?? $profissional->person->email }}
+                </td>
+                <td class="px-4 py-2 whitespace-nowrap">
+                    {{ optional($profissional->user->person)->phone ?? $profissional->person->phone }}
+                </td>
                 <td class="px-4 py-2 whitespace-nowrap">
                     <a href="{{ route('profissionais.edit', $profissional) }}" class="text-blue-600 hover:underline">Editar</a>
                 </td>
