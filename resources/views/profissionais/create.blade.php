@@ -131,7 +131,7 @@
         </div>
     </form>
     </div>
-    <div x-show="activeTab === 'adm'" x-cloak x-data="{ funcao: '{{ old('funcao') }}' }">
+    <div x-show="activeTab === 'adm'" x-cloak x-data="{ funcao: '{{ old('funcao') }}', tipo_contrato: '{{ old('tipo_contrato') }}' }">
         <x-accordion-section title="Dados funcionais" :open="true">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -149,6 +149,44 @@
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de demissão</label>
                     <input type="date" name="data_demissao" value="{{ old('data_demissao') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+            </div>
+        </x-accordion-section>
+        <x-accordion-section title="Contrato de Trabalho">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Tipo de Contrato</label>
+                    <select name="tipo_contrato" x-model="tipo_contrato" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                        <option value="">Selecione</option>
+                        <option value="CLT" @selected(old('tipo_contrato')==='CLT')>CLT (Contrato com carteira assinada)</option>
+                        <option value="PJ" @selected(old('tipo_contrato')==='PJ')>PJ (Pessoa Jurídica)</option>
+                        <option value="Autônomo" @selected(old('tipo_contrato')==='Autônomo')>Autônomo</option>
+                        <option value="Estágio" @selected(old('tipo_contrato')==='Estágio')>Estágio</option>
+                        <option value="Temporário" @selected(old('tipo_contrato')==='Temporário')>Temporário</option>
+                        <option value="Prestador de serviço" @selected(old('tipo_contrato')==='Prestador de serviço')>Prestador de serviço</option>
+                        <option value="Outro" @selected(old('tipo_contrato')==='Outro')>Outro</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Data de início do contrato</label>
+                    <input type="date" name="data_inicio_contrato" value="{{ old('data_inicio_contrato') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+                <div x-show="tipo_contrato && tipo_contrato !== 'CLT'" x-cloak>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Data de término do contrato</label>
+                    <input type="date" name="data_fim_contrato" value="{{ old('data_fim_contrato') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Carga horária semanal</label>
+                    <input type="number" name="carga_horaria" value="{{ old('carga_horaria') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Regime de trabalho</label>
+                    <select name="regime_trabalho" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                        <option value="">Selecione</option>
+                        <option value="Presencial" @selected(old('regime_trabalho')==='Presencial')>Presencial</option>
+                        <option value="Remoto" @selected(old('regime_trabalho')==='Remoto')>Remoto</option>
+                        <option value="Híbrido" @selected(old('regime_trabalho')==='Híbrido')>Híbrido</option>
+                    </select>
                 </div>
             </div>
         </x-accordion-section>
