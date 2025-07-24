@@ -18,8 +18,21 @@ class ProfessionalController extends Controller
 {
     public function index()
     {
-        $profissionais = Profissional::with('user.person')->get();
-        return view('profissionais.index', compact('profissionais'));
+        $profissionais = Profissional::with(['user.person', 'clinics'])->get();
+
+        $clinicas = Clinic::all();
+
+        $totalProfissionais = $profissionais->count();
+        $dentistas = $profissionais->where('cargo', 'Dentista')->count();
+        $auxiliares = $profissionais->where('cargo', 'Auxiliar')->count();
+
+        return view('profissionais.index', compact(
+            'profissionais',
+            'clinicas',
+            'totalProfissionais',
+            'dentistas',
+            'auxiliares'
+        ));
     }
 
     public function create()
