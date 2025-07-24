@@ -22,6 +22,11 @@ class ProfessionalController extends Controller
         return view('profissionais.create');
     }
 
+    public function show(Profissional $profissional)
+    {
+        return view('profissionais.show', compact('profissional'));
+    }
+
     public function store(Request $request)
     {
         $data = $this->validateData($request);

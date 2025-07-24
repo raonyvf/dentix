@@ -131,8 +131,65 @@
         </div>
     </form>
     </div>
-    <div x-show="activeTab === 'adm'" x-cloak>
-        <p class="text-gray-700">Conteúdo de dados admissionais.</p>
+    <div x-show="activeTab === 'adm'" x-cloak x-data="{ funcao: '{{ old('funcao') }}' }">
+        <x-accordion-section title="Dados funcionais" :open="true">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Número do funcionário</label>
+                    <input type="text" name="numero_funcionario" value="{{ old('numero_funcionario') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">E-mail corporativo</label>
+                    <input type="text" name="email_corporativo" value="{{ old('email_corporativo') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Data de admissão</label>
+                    <input type="date" name="data_admissao" value="{{ old('data_admissao') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Data de demissão</label>
+                    <input type="date" name="data_demissao" value="{{ old('data_demissao') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+            </div>
+        </x-accordion-section>
+        <x-accordion-section title="Atribuição">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Função</label>
+                    <select name="funcao" x-model="funcao" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                        <option value="">Selecione</option>
+                        <option value="Dentista" @selected(old('funcao')==='Dentista')>Dentista</option>
+                        <option value="Assistencial" @selected(old('funcao')==='Assistencial')>Assistencial</option>
+                        <option value="Administrativa" @selected(old('funcao')==='Administrativa')>Administrativa</option>
+                        <option value="Recepcionista" @selected(old('funcao')==='Recepcionista')>Recepcionista</option>
+                        <option value="Financeiro" @selected(old('funcao')==='Financeiro')>Financeiro</option>
+                        <option value="Comercial" @selected(old('funcao')==='Comercial')>Comercial</option>
+                        <option value="Outros" @selected(old('funcao')==='Outros')>Outros</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Cargo</label>
+                    <input type="text" name="cargo" value="{{ old('cargo') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+            </div>
+        </x-accordion-section>
+        <x-accordion-section title="Registros" x-show="funcao === 'Dentista'" x-cloak>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">CRO</label>
+                    <input type="text" name="cro" value="{{ old('cro') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">UF do CRO</label>
+                    <select name="cro_uf" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                        <option value="">Selecione</option>
+                        @foreach(['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'] as $uf)
+                            <option value="{{ $uf }}" @selected(old('cro_uf')===$uf)>{{ $uf }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </x-accordion-section>
     </div>
     <div x-show="activeTab === 'rem'" x-cloak>
         <p class="text-gray-700">Informações de remuneração.</p>
