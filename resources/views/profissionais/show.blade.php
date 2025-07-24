@@ -103,7 +103,7 @@
             @endphp
             @foreach($clinics as $clinic)
                 @php $vals = $horarios[$clinic->id] ?? []; @endphp
-                <div class="mb-4">
+                <div class="mb-4 work-schedule">
                     @if($clinics->count() > 1)
                         <h3 class="mb-2 text-sm font-medium text-gray-700">{{ $clinic->nome }}</h3>
                     @endif

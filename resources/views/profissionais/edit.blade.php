@@ -245,7 +245,7 @@
                 @php
                     $vals = $horarios[$clinic->id] ?? [];
                 @endphp
-                <div class="mb-4">
+                <div class="mb-4 work-schedule">
                     @if($clinics->count() > 1)
                         <h3 class="mb-2 text-sm font-medium text-gray-700">{{ $clinic->nome }}</h3>
                     @endif
@@ -264,13 +264,13 @@
                                     $ini = old('horarios_trabalho.' . $clinic->id . '.' . $diaKey . '.inicio', $vals[$diaKey]['inicio'] ?? '');
                                     $fim = old('horarios_trabalho.' . $clinic->id . '.' . $diaKey . '.fim', $vals[$diaKey]['fim'] ?? '');
                                 @endphp
-                                <tr>
+                                <tr data-dia="{{ $diaKey }}">
                                     <td class="py-1">{{ $diaLabel }}</td>
                                     <td>
-                                        <input type="time" name="horarios_trabalho[{{ $clinic->id }}][{{ $diaKey }}][inicio]" value="{{ $ini }}" @if($ref) min="{{ $ref->hora_inicio }}" max="{{ $ref->hora_fim }}" @endif class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-1 px-2 text-sm text-black focus:border-primary focus:outline-none" />
+                                        <input type="time" data-role="inicio" name="horarios_trabalho[{{ $clinic->id }}][{{ $diaKey }}][inicio]" value="{{ $ini }}" @if($ref) min="{{ $ref->hora_inicio }}" max="{{ $ref->hora_fim }}" @endif class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-1 px-2 text-sm text-black focus:border-primary focus:outline-none" />
                                     </td>
                                     <td>
-                                        <input type="time" name="horarios_trabalho[{{ $clinic->id }}][{{ $diaKey }}][fim]" value="{{ $fim }}" @if($ref) min="{{ $ref->hora_inicio }}" max="{{ $ref->hora_fim }}" @endif class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-1 px-2 text-sm text-black focus:border-primary focus:outline-none" />
+                                        <input type="time" data-role="fim" name="horarios_trabalho[{{ $clinic->id }}][{{ $diaKey }}][fim]" value="{{ $fim }}" @if($ref) min="{{ $ref->hora_inicio }}" max="{{ $ref->hora_fim }}" @endif class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-1 px-2 text-sm text-black focus:border-primary focus:outline-none" />
                                     </td>
                                 </tr>
                             @endforeach
