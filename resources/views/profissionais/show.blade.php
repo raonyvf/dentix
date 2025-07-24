@@ -37,6 +37,32 @@
                 </div>
             </div>
         </x-accordion-section>
+        <x-accordion-section title="Contrato de Trabalho">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <span class="text-sm font-medium text-gray-700 mb-2 block">Tipo de Contrato</span>
+                    <p class="text-gray-900">{{ $profissional->tipo_contrato ?? '-' }}</p>
+                </div>
+                <div>
+                    <span class="text-sm font-medium text-gray-700 mb-2 block">Data de início do contrato</span>
+                    <p class="text-gray-900">{{ optional($profissional->data_inicio_contrato)->format('d/m/Y') ?? '-' }}</p>
+                </div>
+                @if(($profissional->tipo_contrato ?? '') !== 'CLT')
+                <div>
+                    <span class="text-sm font-medium text-gray-700 mb-2 block">Data de término do contrato</span>
+                    <p class="text-gray-900">{{ optional($profissional->data_fim_contrato)->format('d/m/Y') ?? '-' }}</p>
+                </div>
+                @endif
+                <div>
+                    <span class="text-sm font-medium text-gray-700 mb-2 block">Carga horária semanal</span>
+                    <p class="text-gray-900">{{ $profissional->carga_horaria ?? '-' }}</p>
+                </div>
+                <div>
+                    <span class="text-sm font-medium text-gray-700 mb-2 block">Regime de trabalho</span>
+                    <p class="text-gray-900">{{ $profissional->regime_trabalho ?? '-' }}</p>
+                </div>
+            </div>
+        </x-accordion-section>
         <x-accordion-section title="Atribuição">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
