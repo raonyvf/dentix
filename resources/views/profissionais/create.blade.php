@@ -25,9 +25,9 @@
             </ul>
         </div>
     @endif
-    <div x-show="activeTab === 'dados'">
     <form method="POST" action="{{ route('profissionais.store') }}" enctype="multipart/form-data" class="space-y-6">
         @csrf
+        <div x-show="activeTab === 'dados'">
         <x-accordion-section title="Dados pessoais" :open="true">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -125,11 +125,6 @@
                 </div>
             </div>
         </x-accordion-section>
-        <div class="flex justify-between pt-4">
-            <a href="{{ route('profissionais.index') }}" class="py-2 px-4 rounded border border-stroke text-gray-700">Cancelar</a>
-            <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar Profissional</button>
-        </div>
-    </form>
     </div>
     <div x-show="activeTab === 'adm'" x-cloak x-data="{ funcao: '{{ old('funcao') }}', tipo_contrato: '{{ old('tipo_contrato') }}' }" class="space-y-6">
         <x-accordion-section title="Dados funcionais" :open="true">
@@ -280,5 +275,10 @@
     <div x-show="activeTab === 'teste'" x-cloak>
         <p class="text-gray-700">Conteúdo de teste.</p>
     </div>
+        <div class="flex justify-between pt-4">
+            <a href="{{ route('profissionais.index') }}" class="py-2 px-4 rounded border border-stroke text-gray-700">Cancelar</a>
+            <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar Profissional</button>
+        </div>
+    </form>
 </div>
 @endsection
