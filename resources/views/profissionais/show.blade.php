@@ -6,131 +6,76 @@
     ['label' => 'Profissionais', 'url' => route('profissionais.index')],
     ['label' => 'Visualizar']
 ]])
-<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ activeTab: 'adm' }">
+<div class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Detalhes do Profissional</h1>
     <div class="border-b mb-6">
         <nav class="-mb-px flex space-x-4" aria-label="Tabs">
             <a href="{{ route('profissionais.edit', $profissional) }}" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Dados cadastrais</a>
-            <button type="button" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-blue-500 text-blue-600" disabled>Dados admissionais</button>
-            <span class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-500">Remuneração</span>
+            <span class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-500">Dados admissionais</span>
+            <button type="button" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-blue-500 text-blue-600" disabled>Remuneração</button>
             <span class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-500">Teste</span>
         </nav>
     </div>
     <div>
-        <x-accordion-section title="Dados funcionais" :open="true">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">Número do funcionário</span>
-                    <p class="text-gray-900">{{ $profissional->numero_funcionario ?? '-' }}</p>
-                </div>
-                <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">E-mail corporativo</span>
-                    <p class="text-gray-900">{{ $profissional->email_corporativo ?? '-' }}</p>
-                </div>
-                <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">Data de admissão</span>
-                    <p class="text-gray-900">{{ optional($profissional->data_admissao)->format('d/m/Y') ?? '-' }}</p>
-                </div>
-                <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">Data de demissão</span>
-                    <p class="text-gray-900">{{ optional($profissional->data_demissao)->format('d/m/Y') ?? '-' }}</p>
+        <x-accordion-section title="Remuneração e Comissionamento" :open="true">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                <div class="sm:col-span-2 flex space-x-2">
+                    <div class="flex-1">
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Salário fixo</span>
+                        <p class="text-gray-900">{{ $profissional->salario_fixo ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mb-2 block">Período</span>
+                        <p class="text-gray-900">{{ $profissional->salario_periodo ?? '-' }}</p>
+                    </div>
                 </div>
             </div>
-        </x-accordion-section>
-        <x-accordion-section title="Contrato de Trabalho">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">Tipo de Contrato</span>
-                    <p class="text-gray-900">{{ $profissional->tipo_contrato ?? '-' }}</p>
-                </div>
-                <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">Data de início do contrato</span>
-                    <p class="text-gray-900">{{ optional($profissional->data_inicio_contrato)->format('d/m/Y') ?? '-' }}</p>
-                </div>
-                @if(($profissional->tipo_contrato ?? '') !== 'CLT')
-                <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">Data de término do contrato</span>
-                    <p class="text-gray-900">{{ optional($profissional->data_fim_contrato)->format('d/m/Y') ?? '-' }}</p>
-                </div>
-                @endif
-                <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">Carga horária semanal</span>
-                    <p class="text-gray-900">{{ $profissional->carga_horaria ?? '-' }}</p>
-                </div>
-                <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">Regime de trabalho</span>
-                    <p class="text-gray-900">{{ $profissional->regime_trabalho ?? '-' }}</p>
-                </div>
+            <div class="space-y-4">
+                @foreach($clinics as $clinic)
+                    @php $vals = $profissional->comissoes[$clinic->id] ?? []; @endphp
+                    <div class="p-4 bg-gray-50 border rounded">
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">{{ $clinic->nome }}</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <span class="text-sm font-medium text-gray-700 mb-2 block">% de comissão</span>
+                                <p class="text-gray-900">{{ $vals['comissao'] ?? '-' }}</p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-700 mb-2 block">% prótese</span>
+                                <p class="text-gray-900">{{ $vals['protese'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </x-accordion-section>
-        <x-accordion-section title="Atribuição">
+        <x-accordion-section title="Contas">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">Função</span>
-                    <p class="text-gray-900">{{ $profissional->funcao ?? '-' }}</p>
+                    <span class="text-sm font-medium text-gray-700 mb-2 block">Nome do banco</span>
+                    <p class="text-gray-900">{{ $profissional->conta['nome_banco'] ?? '-' }}</p>
                 </div>
                 <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">Cargo</span>
-                    <p class="text-gray-900">{{ $profissional->cargo ?? '-' }}</p>
+                    <span class="text-sm font-medium text-gray-700 mb-2 block">Tipo de conta</span>
+                    <p class="text-gray-900">{{ $profissional->conta['tipo'] ?? '-' }}</p>
+                </div>
+                <div>
+                    <span class="text-sm font-medium text-gray-700 mb-2 block">Agência</span>
+                    <p class="text-gray-900">{{ $profissional->conta['agencia'] ?? '-' }}</p>
+                </div>
+                <div>
+                    <span class="text-sm font-medium text-gray-700 mb-2 block">Número da conta</span>
+                    <p class="text-gray-900">{{ $profissional->conta['numero'] ?? '-' }}</p>
+                </div>
+                <div>
+                    <span class="text-sm font-medium text-gray-700 mb-2 block">CPF/CNPJ do titular</span>
+                    <p class="text-gray-900">{{ $profissional->conta['cpf_cnpj'] ?? '-' }}</p>
+                </div>
+                <div class="sm:col-span-2">
+                    <span class="text-sm font-medium text-gray-700 mb-2 block">Chave PIX</span>
+                    <p class="text-gray-900">{{ $profissional->chave_pix ?? '-' }}</p>
                 </div>
             </div>
-        </x-accordion-section>
-        @if(($profissional->funcao ?? '') === 'Dentista')
-        <x-accordion-section title="Registros" :open="true">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">CRO</span>
-                    <p class="text-gray-900">{{ $profissional->cro ?? '-' }}</p>
-                </div>
-                <div>
-                    <span class="text-sm font-medium text-gray-700 mb-2 block">UF do CRO</span>
-                    <p class="text-gray-900">{{ $profissional->cro_uf ?? '-' }}</p>
-                </div>
-            </div>
-        </x-accordion-section>
-        @endif
-        <x-accordion-section title="Horário de trabalho">
-            @php
-                $diasSemana = [
-                    'segunda' => 'Segunda-feira',
-                    'terca' => 'Terça-feira',
-                    'quarta' => 'Quarta-feira',
-                    'quinta' => 'Quinta-feira',
-                    'sexta' => 'Sexta-feira',
-                    'sabado' => 'Sábado',
-                    'domingo' => 'Domingo',
-                ];
-            @endphp
-            @foreach($clinics as $clinic)
-                @php $vals = $horarios[$clinic->id] ?? []; @endphp
-                <div class="mb-4 work-schedule">
-                    @if($clinics->count() > 1)
-                        <h3 class="mb-2 text-sm font-medium text-gray-700">{{ $clinic->nome }}</h3>
-                    @endif
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr>
-                                <th class="text-left py-1">Dia</th>
-                                <th class="text-left py-1">Início</th>
-                                <th class="text-left py-1">Fim</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($diasSemana as $diaKey => $diaLabel)
-                                @php
-                                    $ini = $vals[$diaKey]['inicio'] ?? null;
-                                    $fim = $vals[$diaKey]['fim'] ?? null;
-                                @endphp
-                                <tr>
-                                    <td class="py-1">{{ $diaLabel }}</td>
-                                    <td>{{ $ini ? substr($ini,0,5) : '-' }}</td>
-                                    <td>{{ $fim ? substr($fim,0,5) : '-' }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endforeach
         </x-accordion-section>
     </div>
 </div>
