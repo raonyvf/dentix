@@ -110,6 +110,9 @@
         </div>
         <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Horários de Funcionamento</label>
+            <div class="mb-2">
+                <button type="button" id="apply-schedule-all" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">Aplicar para todos</button>
+            </div>
             @php
                 $diasSemana = [
                     'segunda' => 'Segunda-feira',
@@ -123,6 +126,7 @@
             @endphp
             @foreach ($diasSemana as $diaKey => $diaLabel)
                 <div class="flex items-center space-x-2 mb-2">
+                    <input type="checkbox" class="day-select" data-dia="{{ $diaKey }}">
                     <span class="w-40 text-sm whitespace-nowrap flex-shrink-0">{{ $diaLabel }}</span>
                     <input type="time" name="horarios[{{ $diaKey }}][abertura]" value="{{ old('horarios.' . $diaKey . '.abertura') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm text-black focus:border-primary focus:outline-none" />
                     <input type="time" name="horarios[{{ $diaKey }}][fechamento]" value="{{ old('horarios.' . $diaKey . '.fechamento') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-2 px-3 text-sm text-black focus:border-primary focus:outline-none" />
@@ -146,6 +150,26 @@
         }
         [first, middle, last].forEach(el => el.addEventListener('input', updateHidden));
         updateHidden();
+
+        const applyBtn = document.getElementById('apply-schedule-all');
+        if (applyBtn) {
+            applyBtn.addEventListener('click', () => {
+                const startVal = document.querySelector('input[name="horarios[segunda][abertura]"]').value;
+                const endVal = document.querySelector('input[name="horarios[segunda][fechamento]"]').value;
+                if (!startVal || !endVal) return;
+                document.querySelectorAll('.day-select').forEach(cb => {
+                    const dia = cb.dataset.dia;
+                    if (dia !== 'segunda' && cb.checked) {
+                        const a = document.querySelector(`input[name="horarios[${dia}][abertura]"]`);
+                        const f = document.querySelector(`input[name="horarios[${dia}][fechamento]"]`);
+                        if (a && f) {
+                            a.value = startVal;
+                            f.value = endVal;
+                        }
+                    }
+                });
+            });
+        }
     });
 </script>
 @endsection
