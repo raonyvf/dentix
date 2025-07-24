@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script>
+        document.addEventListener('alpine:init', () => {
+            console.log('Alpine carregado!');
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM pronto');
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="flex h-full bg-gray-100">
