@@ -189,9 +189,20 @@
                     <select name="regime_trabalho" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
                         <option value="">Selecione</option>
                         <option value="Presencial" @selected(old('regime_trabalho')==='Presencial')>Presencial</option>
-                        <option value="Remoto" @selected(old('regime_trabalho')==='Remoto')>Remoto</option>
+                        <option value="Remoto" @selected(old('regime_trabalho')=='Remoto')>Remoto</option>
                         <option value="Híbrido" @selected(old('regime_trabalho')==='Híbrido')>Híbrido</option>
                     </select>
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Clínicas</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        @foreach($clinics as $clinic)
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="clinics[]" value="{{ $clinic->id }}" @checked(in_array($clinic->id, old('clinics', []))) class="rounded border-stroke" />
+                                <span>{{ $clinic->nome }}</span>
+                            </label>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </x-accordion-section>
