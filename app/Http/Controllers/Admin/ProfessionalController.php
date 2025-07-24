@@ -84,6 +84,8 @@ class ProfessionalController extends Controller
             'user_id' => $user?->id,
         ], $this->extractProfessionalData($data)));
 
+        $profissional->clinics()->sync($request->input('clinics', []));
+
         $this->saveWorkSchedules($profissional, $request->input('horarios_trabalho', []));
 
         return redirect()->route('profissionais.index')->with('success', 'Profissional salvo com sucesso.');
@@ -121,6 +123,7 @@ class ProfessionalController extends Controller
         $profissional->person->update($personData);
 
         $profissional->update($this->extractProfessionalData($data));
+        $profissional->clinics()->sync($request->input('clinics', []));
         $this->saveWorkSchedules($profissional, $request->input('horarios_trabalho', []), true);
         return redirect()->route('profissionais.index')->with('success', 'Profissional atualizado com sucesso.');
     }
@@ -160,7 +163,6 @@ class ProfessionalController extends Controller
             'tipo_contrato' => 'nullable',
             'data_inicio_contrato' => 'nullable|date',
             'data_fim_contrato' => 'nullable|date',
-            'carga_horaria' => 'nullable|integer',
             'total_horas_semanais' => 'nullable|integer',
             'regime_trabalho' => 'nullable',
             'funcao' => 'nullable',
@@ -180,6 +182,8 @@ class ProfessionalController extends Controller
             'comissoes' => 'array',
             'comissoes.*.comissao' => 'nullable|numeric|between:0,100',
             'comissoes.*.protese' => 'nullable|numeric|between:0,100',
+            'clinics' => 'array',
+            'clinics.*' => 'exists:clinics,id',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -253,7 +257,6 @@ class ProfessionalController extends Controller
             'tipo_contrato' => $data['tipo_contrato'] ?? null,
             'data_inicio_contrato' => $data['data_inicio_contrato'] ?? null,
             'data_fim_contrato' => $data['data_fim_contrato'] ?? null,
-            'carga_horaria' => $data['carga_horaria'] ?? null,
             'total_horas_semanais' => $data['total_horas_semanais'] ?? null,
             'regime_trabalho' => $data['regime_trabalho'] ?? null,
             'funcao' => $data['funcao'] ?? null,

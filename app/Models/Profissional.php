@@ -27,7 +27,6 @@ class Profissional extends Model
         'tipo_contrato',
         'data_inicio_contrato',
         'data_fim_contrato',
-        'carga_horaria',
         'total_horas_semanais',
         'regime_trabalho',
         'funcao',
@@ -46,7 +45,6 @@ class Profissional extends Model
         'data_demissao' => 'date',
         'data_inicio_contrato' => 'date',
         'data_fim_contrato' => 'date',
-        'carga_horaria' => 'integer',
         'total_horas_semanais' => 'integer',
         'salario_fixo' => 'decimal:2',
         'comissoes' => 'array',
@@ -71,5 +69,10 @@ class Profissional extends Model
     public function horariosTrabalho()
     {
         return $this->hasMany(ProfissionalHorario::class);
+    }
+
+    public function clinics()
+    {
+        return $this->belongsToMany(Clinic::class, 'clinic_profissional')->withTimestamps();
     }
 }

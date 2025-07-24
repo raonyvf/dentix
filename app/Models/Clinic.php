@@ -8,6 +8,7 @@ use App\Models\Cadeira;
 use App\Traits\BelongsToOrganization;
 use App\Models\Organization;
 use App\Models\ClinicUser;
+use App\Models\Profissional;
 
 class Clinic extends Model
 {
@@ -54,5 +55,10 @@ class Clinic extends Model
             ->using(ClinicUser::class)
             ->withPivot('profile_id')
             ->withTimestamps();
+    }
+
+    public function profissionais()
+    {
+        return $this->belongsToMany(Profissional::class, 'clinic_profissional')->withTimestamps();
     }
 }
