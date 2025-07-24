@@ -154,6 +154,9 @@ class ProfessionalController extends Controller
             'estado' => 'nullable',
             'foto' => 'nullable|image',
             'horarios_trabalho' => 'array',
+            'comissoes' => 'array',
+            'comissoes.*.comissao' => 'nullable|numeric|between:0,100',
+            'comissoes.*.protese' => 'nullable|numeric|between:0,100',
         ];
 
         $validator = Validator::make($request->all(), $rules);
