@@ -31,7 +31,22 @@ class ProfessionalController extends Controller
 
     public function show(Profissional $profissional)
     {
-        return view('profissionais.show', compact('profissional'));
+        $clinics = Clinic::where('organization_id', auth()->user()->organization_id)
+            ->with('horarios')
+            ->get();
+
+        $horarios = $profissional->horariosTrabalho
+            ->groupBy('clinic_id')
+            ->map(function ($items) {
+                return $items->mapWithKeys(fn($h) => [
+                    $h->dia_semana => [
+                        'inicio' => $h->hora_inicio,
+                        'fim' => $h->hora_fim,
+                    ],
+                ]);
+            })->toArray();
+
+        return view('profissionais.show', compact('profissional', 'clinics', 'horarios'));
     }
 
     public function store(Request $request)

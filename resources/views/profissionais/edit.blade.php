@@ -260,16 +260,17 @@
                         <tbody>
                             @foreach($diasSemana as $diaKey => $diaLabel)
                                 @php
+                                    $ref = $clinic->horarios->firstWhere('dia_semana', $diaKey);
                                     $ini = old('horarios_trabalho.' . $clinic->id . '.' . $diaKey . '.inicio', $vals[$diaKey]['inicio'] ?? '');
                                     $fim = old('horarios_trabalho.' . $clinic->id . '.' . $diaKey . '.fim', $vals[$diaKey]['fim'] ?? '');
                                 @endphp
                                 <tr>
                                     <td class="py-1">{{ $diaLabel }}</td>
                                     <td>
-                                        <input type="time" name="horarios_trabalho[{{ $clinic->id }}][{{ $diaKey }}][inicio]" value="{{ $ini }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-1 px-2 text-sm text-black focus:border-primary focus:outline-none" />
+                                        <input type="time" name="horarios_trabalho[{{ $clinic->id }}][{{ $diaKey }}][inicio]" value="{{ $ini }}" @if($ref) min="{{ $ref->hora_inicio }}" max="{{ $ref->hora_fim }}" @endif class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-1 px-2 text-sm text-black focus:border-primary focus:outline-none" />
                                     </td>
                                     <td>
-                                        <input type="time" name="horarios_trabalho[{{ $clinic->id }}][{{ $diaKey }}][fim]" value="{{ $fim }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-1 px-2 text-sm text-black focus:border-primary focus:outline-none" />
+                                        <input type="time" name="horarios_trabalho[{{ $clinic->id }}][{{ $diaKey }}][fim]" value="{{ $fim }}" @if($ref) min="{{ $ref->hora_inicio }}" max="{{ $ref->hora_fim }}" @endif class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-1 px-2 text-sm text-black focus:border-primary focus:outline-none" />
                                     </td>
                                 </tr>
                             @endforeach

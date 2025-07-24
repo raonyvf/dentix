@@ -89,6 +89,49 @@
             </div>
         </x-accordion-section>
         @endif
+        <x-accordion-section title="Horário de trabalho">
+            @php
+                $diasSemana = [
+                    'segunda' => 'Segunda-feira',
+                    'terca' => 'Terça-feira',
+                    'quarta' => 'Quarta-feira',
+                    'quinta' => 'Quinta-feira',
+                    'sexta' => 'Sexta-feira',
+                    'sabado' => 'Sábado',
+                    'domingo' => 'Domingo',
+                ];
+            @endphp
+            @foreach($clinics as $clinic)
+                @php $vals = $horarios[$clinic->id] ?? []; @endphp
+                <div class="mb-4">
+                    @if($clinics->count() > 1)
+                        <h3 class="mb-2 text-sm font-medium text-gray-700">{{ $clinic->nome }}</h3>
+                    @endif
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-left py-1">Dia</th>
+                                <th class="text-left py-1">Início</th>
+                                <th class="text-left py-1">Fim</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($diasSemana as $diaKey => $diaLabel)
+                                @php
+                                    $ini = $vals[$diaKey]['inicio'] ?? null;
+                                    $fim = $vals[$diaKey]['fim'] ?? null;
+                                @endphp
+                                <tr>
+                                    <td class="py-1">{{ $diaLabel }}</td>
+                                    <td>{{ $ini ? substr($ini,0,5) : '-' }}</td>
+                                    <td>{{ $fim ? substr($fim,0,5) : '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endforeach
+        </x-accordion-section>
     </div>
 </div>
 @endsection
