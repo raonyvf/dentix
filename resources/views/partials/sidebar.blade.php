@@ -47,6 +47,12 @@
             </svg>
             <span class="ml-3" x-show="!sidebarCollapsed">Profissionais</span>
         </a>
+        <a href="{{ route('escalas.index') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Escalas de Trabalho' : ''">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="ml-3" x-show="!sidebarCollapsed">Escalas de Trabalho</span>
+        </a>
         <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" :title="sidebarCollapsed ? 'Estoque' : ''">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V8a1 1 0 00-.553-.894l-7-3.5a1 1 0 00-.894 0l-7 3.5A1 1 0 004 8v5m16 0v5a1 1 0 01-.553.894l-7 3.5a1 1 0 01-.894 0l-7-3.5A1 1 0 014 18v-5m16 0L12 7.5M4 13l8-4.5" /></svg>
             <span class="ml-3" x-show="!sidebarCollapsed">Estoque</span>
