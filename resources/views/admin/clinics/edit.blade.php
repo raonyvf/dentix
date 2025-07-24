@@ -112,7 +112,7 @@
         <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Horários de Funcionamento</label>
             <div class="mb-2">
-                <button type="button" id="apply-schedule-all" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">Aplicar para todos</button>
+                <button type="button" id="apply-schedule-all" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">Aplicar para os selecionados</button>
             </div>
             @php
                 $diasSemana = [
