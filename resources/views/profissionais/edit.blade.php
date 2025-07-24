@@ -28,7 +28,7 @@
     <form method="POST" action="{{ route('profissionais.update', $profissional) }}" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PUT')
-        <div x-show="activeTab === 'dados'">
+        <div x-show="activeTab === 'dados'" class="space-y-6">
         <x-accordion-section title="Dados pessoais" :open="true">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
