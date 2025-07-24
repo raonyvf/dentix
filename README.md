@@ -94,12 +94,12 @@ composer dump-autoload
 
 Isso recriará o autoloader do Composer e permitirá que a classe seja encontrada.
 
-Ele gerará ou atualizará a conta `admin@example.com` com a senha `password`.
-Esse usuário pertence à organização padrão "Default Organization" e recebe
-exclusivamente o perfil **Super Administrador**. Sempre que o seeder for
-executado, perfis anteriores desse usuário são removidos, garantindo que ele
-tenha acesso apenas ao módulo **Backend** e à seção de **Usuários Admin**, onde
-é possível definir novas senhas para os responsáveis pelas organizações.
+
+Ele gerará a conta `admin@example.com` com a senha `password`. Esse usuário é criado
+na organização padrão "Default Organization" e recebe o perfil **Super Administrador**.
+Esse perfil possui acesso apenas ao módulo **Backend** e à seção de **Usuários Admin**,
+onde é possível definir novas senhas para os responsáveis pelas organizações.
+
 Após o login com as credenciais padrão, altere a senha conforme necessário.
 
 ## Deploy no Render
