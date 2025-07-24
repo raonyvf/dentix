@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToOrganization;
 use App\Models\Person;
 use App\Models\User;
+use App\Models\ProfissionalHorario;
 
 class Profissional extends Model
 {
@@ -36,5 +37,10 @@ class Profissional extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function horariosTrabalho()
+    {
+        return $this->hasMany(ProfissionalHorario::class);
     }
 }

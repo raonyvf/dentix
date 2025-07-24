@@ -3,10 +3,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Profissional;
+use App\Models\ProfissionalHorario;
 use App\Models\Person;
 use App\Models\User;
+use App\Models\Clinic;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class ProfessionalController extends Controller
@@ -19,7 +22,11 @@ class ProfessionalController extends Controller
 
     public function create()
     {
-        return view('profissionais.create');
+        $clinics = Clinic::where('organization_id', auth()->user()->organization_id)
+            ->with('horarios')
+            ->get();
+
+        return view('profissionais.create', compact('clinics'));
     }
 
     public function show(Profissional $profissional)
@@ -55,18 +62,36 @@ class ProfessionalController extends Controller
             }
         }
 
-        Profissional::create([
+
+        $profissional = Profissional::create([
             'organization_id' => auth()->user()->organization_id,
             'person_id' => $person->id,
             'user_id' => $user?->id,
         ]);
+
+        $this->saveWorkSchedules($profissional, $request->input('horarios_trabalho', []));
 
         return redirect()->route('profissionais.index')->with('success', 'Profissional salvo com sucesso.');
     }
 
     public function edit(Profissional $profissional)
     {
-        return view('profissionais.edit', compact('profissional'));
+        $clinics = Clinic::where('organization_id', auth()->user()->organization_id)
+            ->with('horarios')
+            ->get();
+
+        $horarios = $profissional->horariosTrabalho
+            ->groupBy('clinic_id')
+            ->map(function ($items) {
+                return $items->mapWithKeys(fn($h) => [
+                    $h->dia_semana => [
+                        'inicio' => $h->hora_inicio,
+                        'fim' => $h->hora_fim,
+                    ],
+                ]);
+            })->toArray();
+
+        return view('profissionais.edit', compact('profissional', 'clinics', 'horarios'));
     }
 
     public function update(Request $request, Profissional $profissional)
@@ -81,6 +106,7 @@ class ProfessionalController extends Controller
         $profissional->person->update($personData);
 
         $profissional->save();
+        $this->saveWorkSchedules($profissional, $request->input('horarios_trabalho', []), true);
         return redirect()->route('profissionais.index')->with('success', 'Profissional atualizado com sucesso.');
     }
 
@@ -92,7 +118,7 @@ class ProfessionalController extends Controller
 
     private function validateData(Request $request): array
     {
-        return $request->validate([
+        $rules = [
             'first_name' => 'required',
             'middle_name' => 'nullable',
             'last_name' => 'required',
@@ -112,7 +138,44 @@ class ProfessionalController extends Controller
             'cidade' => 'nullable',
             'estado' => 'nullable',
             'foto' => 'nullable|image',
-        ]);
+            'horarios_trabalho' => 'array',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        $clinics = Clinic::where('organization_id', auth()->user()->organization_id)
+            ->with('horarios')
+            ->get()
+            ->keyBy('id');
+
+        $validator->after(function ($validator) use ($clinics, $request) {
+            foreach ($request->input('horarios_trabalho', []) as $clinicId => $dias) {
+                $clinic = $clinics->get($clinicId);
+                if (!$clinic) {
+                    continue;
+                }
+                foreach ($dias as $dia => $horario) {
+                    $inicio = $horario['inicio'] ?? null;
+                    $fim = $horario['fim'] ?? null;
+                    if (!$inicio && !$fim) {
+                        continue;
+                    }
+                    $ref = $clinic->horarios->firstWhere('dia_semana', $dia);
+                    if (!$ref) {
+                        $validator->errors()->add("horarios_trabalho.$clinicId.$dia.inicio", 'Fora do horário da clínica');
+                        continue;
+                    }
+                    if ($inicio && $inicio < $ref->hora_inicio) {
+                        $validator->errors()->add("horarios_trabalho.$clinicId.$dia.inicio", 'Início antes da abertura');
+                    }
+                    if ($fim && $fim > $ref->hora_fim) {
+                        $validator->errors()->add("horarios_trabalho.$clinicId.$dia.fim", 'Fim após o fechamento');
+                    }
+                }
+            }
+        });
+
+        return $validator->validate();
     }
 
     private function extractPersonData(array $data): array
@@ -137,5 +200,25 @@ class ProfessionalController extends Controller
             'cidade' => $data['cidade'] ?? null,
             'estado' => $data['estado'] ?? null,
         ];
+    }
+
+    private function saveWorkSchedules(Profissional $profissional, array $data, bool $replace = false): void
+    {
+        if ($replace) {
+            $profissional->horariosTrabalho()->delete();
+        }
+
+        foreach ($data as $clinicId => $dias) {
+            foreach ($dias as $dia => $horario) {
+                if (($horario['inicio'] ?? false) && ($horario['fim'] ?? false)) {
+                    $profissional->horariosTrabalho()->create([
+                        'clinic_id' => $clinicId,
+                        'dia_semana' => $dia,
+                        'hora_inicio' => $horario['inicio'],
+                        'hora_fim' => $horario['fim'],
+                    ]);
+                }
+            }
+        }
     }
 }

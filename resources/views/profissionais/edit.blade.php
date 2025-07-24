@@ -191,6 +191,55 @@
                 </div>
             </div>
         </x-accordion-section>
+        <x-accordion-section title="Horário de trabalho">
+            @php
+                $diasSemana = [
+                    'segunda' => 'Segunda-feira',
+                    'terca' => 'Terça-feira',
+                    'quarta' => 'Quarta-feira',
+                    'quinta' => 'Quinta-feira',
+                    'sexta' => 'Sexta-feira',
+                    'sabado' => 'Sábado',
+                    'domingo' => 'Domingo',
+                ];
+            @endphp
+            @foreach($clinics as $clinic)
+                @php
+                    $vals = $horarios[$clinic->id] ?? [];
+                @endphp
+                <div class="mb-4">
+                    @if($clinics->count() > 1)
+                        <h3 class="mb-2 text-sm font-medium text-gray-700">{{ $clinic->nome }}</h3>
+                    @endif
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-left py-1">Dia</th>
+                                <th class="text-left py-1">Início</th>
+                                <th class="text-left py-1">Fim</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($diasSemana as $diaKey => $diaLabel)
+                                @php
+                                    $ini = old('horarios_trabalho.' . $clinic->id . '.' . $diaKey . '.inicio', $vals[$diaKey]['inicio'] ?? '');
+                                    $fim = old('horarios_trabalho.' . $clinic->id . '.' . $diaKey . '.fim', $vals[$diaKey]['fim'] ?? '');
+                                @endphp
+                                <tr>
+                                    <td class="py-1">{{ $diaLabel }}</td>
+                                    <td>
+                                        <input type="time" name="horarios_trabalho[{{ $clinic->id }}][{{ $diaKey }}][inicio]" value="{{ $ini }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-1 px-2 text-sm text-black focus:border-primary focus:outline-none" />
+                                    </td>
+                                    <td>
+                                        <input type="time" name="horarios_trabalho[{{ $clinic->id }}][{{ $diaKey }}][fim]" value="{{ $fim }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-1 px-2 text-sm text-black focus:border-primary focus:outline-none" />
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endforeach
+        </x-accordion-section>
     </div>
     <div x-show="activeTab === 'rem'" x-cloak>
         <p class="text-gray-700">Informações de remuneração.</p>
