@@ -33,36 +33,36 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nome</label>
-                    <input type="text" name="nome" value="{{ old('nome', $profissional->nome) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" name="nome" value="{{ old('nome', $profissional->person->first_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</label>
-                    <input type="text" name="nome_meio" value="{{ old('nome_meio', $profissional->nome_meio) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="nome_meio" value="{{ old('nome_meio', $profissional->person->middle_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome</label>
-                    <input type="text" name="ultimo_nome" value="{{ old('ultimo_nome', $profissional->ultimo_nome) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" name="ultimo_nome" value="{{ old('ultimo_nome', $profissional->person->last_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento</label>
-                    <input type="date" name="data_nascimento" value="{{ old('data_nascimento', optional($profissional->data_nascimento)->format('Y-m-d')) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="date" name="data_nascimento" value="{{ old('data_nascimento', optional($profissional->person->data_nascimento)->format('Y-m-d')) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Sexo</label>
                     <select name="sexo" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
                         <option value="">Selecione</option>
-                        <option value="Masculino" @selected(old('sexo', $profissional->sexo)==='Masculino')>Masculino</option>
-                        <option value="Feminino" @selected(old('sexo', $profissional->sexo)==='Feminino')>Feminino</option>
-                        <option value="Outro" @selected(old('sexo', $profissional->sexo)==='Outro')>Outro</option>
+                        <option value="Masculino" @selected(old('sexo', $profissional->person->sexo)==='Masculino')>Masculino</option>
+                        <option value="Feminino" @selected(old('sexo', $profissional->person->sexo)==='Feminino')>Feminino</option>
+                        <option value="Outro" @selected(old('sexo', $profissional->person->sexo)==='Outro')>Outro</option>
                     </select>
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Naturalidade</label>
-                    <input type="text" name="naturalidade" value="{{ old('naturalidade', $profissional->naturalidade) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="naturalidade" value="{{ old('naturalidade', $profissional->person->naturalidade) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nacionalidade</label>
-                    <input type="text" name="nacionalidade" value="{{ old('nacionalidade', $profissional->nacionalidade) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="nacionalidade" value="{{ old('nacionalidade', $profissional->person->nacionalidade) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div class="sm:col-span-2">
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Foto</label>
@@ -74,11 +74,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">CPF</label>
-                    <input type="text" name="cpf" value="{{ old('cpf', $profissional->cpf) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="cpf" value="{{ old('cpf', $profissional->person->cpf) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">RG</label>
-                    <input type="text" name="rg" value="{{ old('rg', $profissional->rg) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="rg" value="{{ old('rg', $profissional->person->rg) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
             </div>
         </x-accordion-section>
@@ -86,11 +86,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Email</label>
-                    <input type="email" name="email" value="{{ old('email', $profissional->email) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="email" name="email" value="{{ old('email', $profissional->person->email) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Telefone</label>
-                    <input type="text" name="telefone" value="{{ old('telefone', $profissional->telefone) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="telefone" value="{{ old('telefone', $profissional->person->phone) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
             </div>
         </x-accordion-section>
@@ -98,31 +98,31 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">CEP</label>
-                    <input type="text" name="cep" value="{{ old('cep', $profissional->cep) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="cep" value="{{ old('cep', $profissional->person->cep) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Logradouro</label>
-                    <input type="text" name="logradouro" value="{{ old('logradouro', $profissional->logradouro) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="logradouro" value="{{ old('logradouro', $profissional->person->logradouro) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Número</label>
-                    <input type="text" name="numero" value="{{ old('numero', $profissional->numero) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="numero" value="{{ old('numero', $profissional->person->numero) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Complemento</label>
-                    <input type="text" name="complemento" value="{{ old('complemento', $profissional->complemento) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="complemento" value="{{ old('complemento', $profissional->person->complemento) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Bairro</label>
-                    <input type="text" name="bairro" value="{{ old('bairro', $profissional->bairro) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="bairro" value="{{ old('bairro', $profissional->person->bairro) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Cidade</label>
-                    <input type="text" name="cidade" value="{{ old('cidade', $profissional->cidade) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="cidade" value="{{ old('cidade', $profissional->person->cidade) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Estado</label>
-                    <input type="text" name="estado" value="{{ old('estado', $profissional->estado) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="estado" value="{{ old('estado', $profissional->person->estado) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
             </div>
         </x-accordion-section>

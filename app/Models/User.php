@@ -12,40 +12,23 @@ use App\Models\Organization;
 use App\Models\ClinicUser;
 use App\Models\Permission;
 use App\Models\Patient;
+use App\Models\Person;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, BelongsToOrganization;
 
     protected $fillable = [
-        'name',
-        'first_name',
-        'middle_name',
-        'last_name',
-        'data_nascimento',
-        'sexo',
-        'naturalidade',
-        'nacionalidade',
         'email',
-        'phone',
-        'logradouro',
-        'numero',
-        'complemento',
-        'bairro',
-        'cep',
-        'cidade',
-        'estado',
-        'cpf',
-        'rg',
+        'password',
+        'organization_id',
         'dentista',
         'cro',
         'cargo',
         'especialidade',
         'salario_base',
-        'photo_path',
-        'password',
-        'organization_id',
         'must_change_password',
+        'person_id',
     ];
 
     protected $hidden = [
@@ -56,7 +39,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'must_change_password' => 'boolean',
         'dentista' => 'boolean',
-        'data_nascimento' => 'date',
     ];
 
     public function organization()
@@ -83,6 +65,11 @@ class User extends Authenticatable
     public function patient()
     {
         return $this->hasOne(Patient::class);
+    }
+
+    public function person()
+    {
+        return $this->belongsTo(Person::class);
     }
 
 

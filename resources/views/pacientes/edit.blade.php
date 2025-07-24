@@ -55,23 +55,23 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nome</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome" value="{{ old('nome', $paciente->nome) }}" required />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome" value="{{ old('nome', $paciente->person->first_name) }}" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome_meio" value="{{ old('nome_meio', $paciente->nome_meio) }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome_meio" value="{{ old('nome_meio', $paciente->person->middle_name) }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="ultimo_nome" value="{{ old('ultimo_nome', $paciente->ultimo_nome) }}" required />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="ultimo_nome" value="{{ old('ultimo_nome', $paciente->person->last_name) }}" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="date" name="data_nascimento" value="{{ old('data_nascimento', $paciente->data_nascimento?->format('Y-m-d')) }}" required />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="date" name="data_nascimento" value="{{ old('data_nascimento', $paciente->person->data_nascimento?->format('Y-m-d')) }}" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">CPF</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf', $paciente->cpf) }}" x-bind:required="menorIdade !== 'Sim'" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf', $paciente->person->cpf) }}" x-bind:required="menorIdade !== 'Sim'" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Menor de idade?</label>
@@ -108,15 +108,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Telefone</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="telefone" value="{{ old('telefone', $paciente->telefone) }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="telefone" value="{{ old('telefone', $paciente->person->phone) }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Whatsapp</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="whatsapp" value="{{ old('whatsapp', $paciente->whatsapp) }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="whatsapp" value="{{ old('whatsapp', $paciente->person->whatsapp) }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">E-mail</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email', $paciente->email) }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email', $paciente->person->email) }}" />
                 </div>
             </div>
         </div>
@@ -125,31 +125,31 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">CEP</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep', $paciente->cep) }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep', $paciente->person->cep) }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Logradouro</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="logradouro" value="{{ old('logradouro', $paciente->logradouro) }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="logradouro" value="{{ old('logradouro', $paciente->person->logradouro) }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Número</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="numero" value="{{ old('numero', $paciente->numero) }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="numero" value="{{ old('numero', $paciente->person->numero) }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Complemento</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="complemento" value="{{ old('complemento', $paciente->complemento) }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="complemento" value="{{ old('complemento', $paciente->person->complemento) }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Bairro</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="bairro" value="{{ old('bairro', $paciente->bairro) }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="bairro" value="{{ old('bairro', $paciente->person->bairro) }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Cidade</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" value="{{ old('cidade', $paciente->cidade) }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" value="{{ old('cidade', $paciente->person->cidade) }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Estado</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado', $paciente->estado) }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado', $paciente->person->estado) }}" />
                 </div>
             </div>
         </div>

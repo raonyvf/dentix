@@ -3,6 +3,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToOrganization;
+use App\Models\Person;
 
 class Profissional extends Model
 {
@@ -10,33 +11,18 @@ class Profissional extends Model
 
     protected $fillable = [
         'organization_id',
-        'nome',
-        'nome_meio',
-        'ultimo_nome',
-        'data_nascimento',
-        'sexo',
-        'naturalidade',
-        'nacionalidade',
-        'foto_path',
-        'cpf',
-        'rg',
-        'email',
-        'telefone',
-        'cep',
-        'logradouro',
-        'numero',
-        'complemento',
-        'bairro',
-        'cidade',
-        'estado',
+        'person_id',
     ];
 
-    protected $casts = [
-        'data_nascimento' => 'date',
-    ];
+    protected $casts = [];
 
     public function organization()
     {
         return $this->belongsTo(Organization::class);
+    }
+
+    public function person()
+    {
+        return $this->belongsTo(Person::class);
     }
 }
