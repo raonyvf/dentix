@@ -10,6 +10,11 @@ class Profissional extends Model
 {
     use BelongsToOrganization;
 
+    /**
+     * The table associated with the model.
+     */
+    protected $table = 'profissionais';
+
     protected $fillable = [
         'organization_id',
         'person_id',
