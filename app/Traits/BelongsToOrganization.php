@@ -9,7 +9,7 @@ trait BelongsToOrganization
 {
     protected static function bootBelongsToOrganization()
     {
-        if (! auth()->check() || is_null(auth()->user()->organization_id)) {
+        if (! auth()->check() || is_null(auth()->user()->organization_id) || auth()->user()->isSuperAdmin()) {
             return;
         }
 
