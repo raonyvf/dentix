@@ -174,6 +174,10 @@
                     <input type="number" name="carga_horaria" value="{{ old('carga_horaria') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Total de horas semanais</label>
+                    <input type="number" name="total_horas_semanais" value="{{ old('total_horas_semanais') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+                <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Regime de trabalho</label>
                     <select name="regime_trabalho" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
                         <option value="">Selecione</option>
