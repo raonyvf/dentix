@@ -87,9 +87,6 @@ class User extends Authenticatable
 
     public function hasAnyModulePermission(string $module): bool
     {
-        if ($this->isSuperAdmin()) {
-            return true;
-        }
 
         $profileQuery = $this->profiles();
 

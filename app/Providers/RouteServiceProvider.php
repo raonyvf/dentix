@@ -17,7 +17,7 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/web.php'));
 
         Route::prefix('admin')
-            ->middleware(['web', 'auth', 'forcepasswordchange'])
+            ->middleware(['web', 'auth', 'forcepasswordchange', 'deny_superadmin'])
             ->group(base_path('routes/admin.php'));
 
         Route::prefix('backend')
