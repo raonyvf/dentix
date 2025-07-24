@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use App\Rules\Cpf;
+use App\Rules\Cnpj;
 
 class ProfessionalController extends Controller
 {
@@ -144,7 +146,7 @@ class ProfessionalController extends Controller
             'sexo' => 'nullable',
             'naturalidade' => 'nullable',
             'nacionalidade' => 'nullable',
-            'cpf' => 'nullable',
+            'cpf' => ['nullable', new \App\Rules\Cpf],
             'rg' => 'nullable',
             'email' => 'nullable|email',
             'telefone' => 'nullable',
@@ -167,24 +169,32 @@ class ProfessionalController extends Controller
             'regime_trabalho' => 'nullable',
             'funcao' => 'nullable',
             'cargo' => 'nullable',
-            'cro' => 'nullable',
+            'cro' => 'nullable|numeric',
             'cro_uf' => 'nullable',
-            'salario_fixo' => 'nullable|numeric',
+            'salario_fixo' => ['nullable', 'regex:/^\d+(,\d{2})?$/'],
             'salario_periodo' => 'nullable',
             'conta' => 'array',
             'conta.nome_banco' => 'nullable',
             'conta.tipo' => 'nullable',
             'conta.agencia' => 'nullable',
             'conta.numero' => 'nullable',
+            'conta.cpf_cnpj_tipo' => 'nullable|in:cpf,cnpj',
             'conta.cpf_cnpj' => 'nullable',
             'chave_pix' => 'nullable',
             'horarios_trabalho' => 'array',
             'comissoes' => 'array',
-            'comissoes.*.comissao' => 'nullable|numeric|between:0,100',
-            'comissoes.*.protese' => 'nullable|numeric|between:0,100',
+            'comissoes.*.comissao' => 'nullable|digits_between:1,2',
+            'comissoes.*.protese' => 'nullable|digits_between:1,2',
             'clinics' => 'array',
             'clinics.*' => 'exists:clinics,id',
         ];
+
+        $tipoConta = $request->input('conta.cpf_cnpj_tipo');
+        if ($tipoConta === 'cpf') {
+            $rules['conta.cpf_cnpj'][] = new \App\Rules\Cpf;
+        } elseif ($tipoConta === 'cnpj') {
+            $rules['conta.cpf_cnpj'][] = new \App\Rules\Cnpj;
+        }
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -263,7 +273,7 @@ class ProfessionalController extends Controller
             'cargo' => $data['cargo'] ?? null,
             'cro' => $data['cro'] ?? null,
             'cro_uf' => $data['cro_uf'] ?? null,
-            'salario_fixo' => $data['salario_fixo'] ?? null,
+            'salario_fixo' => isset($data['salario_fixo']) ? str_replace(',', '.', str_replace('.', '', $data['salario_fixo'])) : null,
             'salario_periodo' => $data['salario_periodo'] ?? null,
             'comissoes' => $data['comissoes'] ?? null,
             'conta' => $data['conta'] ?? null,

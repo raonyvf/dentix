@@ -232,7 +232,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">CRO</label>
-                    <input type="text" name="cro" value="{{ old('cro', $profissional->cro ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="number" name="cro" value="{{ old('cro', $profissional->cro ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">UF do CRO</label>
@@ -252,7 +252,7 @@
                 <div class="sm:col-span-2 flex space-x-2">
                     <div class="flex-1">
                         <label class="text-sm font-medium text-gray-700 mb-2 block">Salário fixo</label>
-                        <input type="number" step="0.01" name="salario_fixo" value="{{ old('salario_fixo', $profissional->salario_fixo ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                        <input type="text" name="salario_fixo" value="{{ old('salario_fixo', $profissional->salario_fixo ?? '') }}" class="currency-brl w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                     </div>
                     <div>
                         <label class="text-sm font-medium text-gray-700 mb-2 block">&nbsp;</label>
@@ -308,9 +308,19 @@
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Número da conta</label>
                     <input type="text" name="conta[numero]" value="{{ old('conta.numero', $profissional->conta['numero'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
-                <div>
+                <div data-cpf-cnpj-group>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">CPF/CNPJ do titular</label>
-                    <input type="text" name="conta[cpf_cnpj]" value="{{ old('conta.cpf_cnpj', $profissional->conta['cpf_cnpj'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <div class="flex items-center space-x-4 mb-2">
+                        <label class="flex items-center space-x-1">
+                            <input type="radio" name="conta[cpf_cnpj_tipo]" value="cpf" @checked(old('conta.cpf_cnpj_tipo', $profissional->conta['cpf_cnpj_tipo'] ?? 'cpf')==='cpf') />
+                            <span>CPF</span>
+                        </label>
+                        <label class="flex items-center space-x-1">
+                            <input type="radio" name="conta[cpf_cnpj_tipo]" value="cnpj" @checked(old('conta.cpf_cnpj_tipo', $profissional->conta['cpf_cnpj_tipo'] ?? '')==='cnpj') />
+                            <span>CNPJ</span>
+                        </label>
+                    </div>
+                    <input type="text" data-role="cpf_cnpj" name="conta[cpf_cnpj]" value="{{ old('conta.cpf_cnpj', $profissional->conta['cpf_cnpj'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div class="sm:col-span-2">
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Chave PIX</label>
