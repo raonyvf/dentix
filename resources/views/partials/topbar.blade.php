@@ -39,14 +39,40 @@
         </svg>
     </button>
     <div class="relative ml-4" x-data="{ userOpen: false }">
+        @php
+            $user = Auth::user();
+            $displayName = '';
+            $initials = '';
+
+            if ($user->person) {
+                $displayName = trim($user->person->first_name . ' ' . $user->person->last_name);
+                $initials = strtoupper(substr($user->person->first_name, 0, 1) . substr($user->person->last_name, 0, 1));
+                $showEmail = false;
+            } else {
+                if ($user->isSuperAdmin()) {
+                    $displayName = 'Super Administrador';
+                } elseif ($user->isOrganizationAdmin()) {
+                    $displayName = 'Usuário admin';
+                } else {
+                    $displayName = $user->email;
+                }
+                $initials = strtoupper(substr($displayName, 0, 1));
+                $showEmail = true;
+            }
+        @endphp
         <button @click="userOpen = !userOpen" class="flex items-center focus:outline-none">
-            <span class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 uppercase">{{ substr(Auth::user()->name,0,1) }}</span>
+            <span class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 uppercase">{{ $initials }}</span>
             <svg class="w-4 h-4 ml-1 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
         </button>
         <div x-show="userOpen" @click.away="userOpen = false" x-transition class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-md" x-cloak>
-            <div class="px-4 py-2 text-gray-700 border-b">{{ Auth::user()->name }}</div>
+            <div class="px-4 py-2 text-gray-700 border-b">
+                <p>{{ $displayName }}</p>
+                @if($showEmail)
+                    <p class="text-xs text-gray-500">{{ $user->email }}</p>
+                @endif
+            </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Sair</button>
