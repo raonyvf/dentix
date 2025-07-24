@@ -164,6 +164,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    document.querySelectorAll('[data-cpf-cnpj-group]').forEach(group => {
+        const input = group.querySelector('input[data-role="cpf_cnpj"]');
+        if (!input) return;
+        const radios = group.querySelectorAll('input[type="radio"]');
+        const mask = () => {
+            const type = group.querySelector('input[type="radio"]:checked')?.value || 'cpf';
+            let v = input.value.replace(/\D/g, '');
+            if (type === 'cnpj') {
+                v = v.slice(0, 14);
+                v = v.replace(/^(\d{2})(\d)/, '$1.$2');
+                v = v.replace(/^(\d{2}\.\d{3})(\d)/, '$1.$2');
+                v = v.replace(/^(\d{2}\.\d{3}\.\d{3})(\d)/, '$1/$2');
+                v = v.replace(/^(\d{2}\.\d{3}\.\d{3}\/\d{4})(\d)/, '$1-$2');
+            } else {
+                v = v.slice(0, 11);
+                v = v.replace(/(\d{3})(\d)/, '$1.$2');
+                v = v.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+                v = v.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+            }
+            input.value = v;
+        };
+        input.addEventListener('input', mask);
+        radios.forEach(r => r.addEventListener('change', mask));
+        mask();
+    });
+
     document.querySelectorAll('input[name="telefone"], input[name="phone"]').forEach(input => {
         input.addEventListener('input', e => {
             let v = e.target.value.replace(/\D/g, '').slice(0, 11);
