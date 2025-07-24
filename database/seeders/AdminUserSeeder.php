@@ -14,13 +14,10 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $organization = Organization::first();
-        if (! $organization) {
-            $organization = Organization::create([
-                'nome_fantasia' => 'Default Organization',
-                'cnpj' => '00000000000000',
-            ]);
-        }
+        $organization = Organization::firstOrCreate(
+            ['cnpj' => '00000000000000'],
+            ['nome_fantasia' => 'Default Organization']
+        );
 
         $person = Person::firstOrCreate(
             [
@@ -66,6 +63,7 @@ class AdminUserSeeder extends Seeder
             );
         }
 
-        $user->profiles()->syncWithoutDetaching([$profile->id => ['clinic_id' => null]]);
+        // Ensure the admin user only has the Super Administrador profile
+        $user->profiles()->sync([$profile->id => ['clinic_id' => null]]);
     }
 }
