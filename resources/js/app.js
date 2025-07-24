@@ -298,6 +298,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    document.querySelectorAll('form[data-validate]').forEach(form => {
+        const alert = form.querySelector('[data-validation-alert]');
+        form.addEventListener('submit', e => {
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                if (alert) alert.classList.remove('hidden');
+                form.querySelectorAll(':invalid').forEach(el => {
+                    el.classList.add('border-red-500');
+                });
+                const first = form.querySelector(':invalid');
+                if (first) first.focus();
+            }
+        });
+
+        form.querySelectorAll('input, select, textarea').forEach(el => {
+            el.addEventListener('input', () => {
+                if (el.checkValidity()) {
+                    el.classList.remove('border-red-500');
+                }
+                if (alert) alert.classList.add('hidden');
+            });
+        });
+    });
+
 
     const charts = [
         {

@@ -15,7 +15,7 @@
             <button type="button" @click="activeTab = 'rem'" :class="activeTab === 'rem' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Remuneração</button>
         </nav>
     </div>
-    @if ($errors->any())
+@if ($errors->any())
         <div class="mb-4">
             <ul class="list-disc list-inside text-sm text-red-600">
                 @foreach ($errors->all() as $error)
@@ -24,7 +24,13 @@
             </ul>
         </div>
     @endif
-    <form method="POST" action="{{ route('profissionais.update', $profissional) }}" enctype="multipart/form-data" class="space-y-6">
+    <div data-validation-alert class="hidden mb-4 flex items-center rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l1.42 1.42A9 9 0 1121 12h0a9 9 0 11-7.07-7.07L4.93 4.93z" />
+        </svg>
+        <span>Por favor, preencha todos os campos obrigatórios.</span>
+    </div>
+    <form method="POST" action="{{ route('profissionais.update', $profissional) }}" enctype="multipart/form-data" class="space-y-6" data-validate>
         @csrf
         @method('PUT')
         <div x-show="activeTab === 'dados'" class="space-y-6">
