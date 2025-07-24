@@ -271,8 +271,75 @@
             @endforeach
         </x-accordion-section>
     </div>
-    <div x-show="activeTab === 'rem'" x-cloak>
-        <p class="text-gray-700">Informações de remuneração.</p>
+    <div x-show="activeTab === 'rem'" x-cloak class="space-y-6">
+        <x-accordion-section title="Remuneração e Comissionamento" :open="true">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="sm:col-span-2 flex space-x-2">
+                    <div class="flex-1">
+                        <label class="text-sm font-medium text-gray-700 mb-2 block">Salário fixo</label>
+                        <input type="number" step="0.01" name="salario_fixo" value="{{ old('salario_fixo') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700 mb-2 block">&nbsp;</label>
+                        <select name="salario_periodo" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                            <option value="mes" @selected(old('salario_periodo')==='mes')>Por mês</option>
+                            <option value="dia" @selected(old('salario_periodo')==='dia')>Por dia</option>
+                            <option value="hora" @selected(old('salario_periodo')==='hora')>Por hora</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-4 mt-4">
+                @foreach($clinics as $clinic)
+                    <div class="p-4 bg-gray-50 border rounded">
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">{{ $clinic->nome }}</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-700 mb-2 block">% de comissão</label>
+                                <input type="number" step="0.01" min="0" max="100" name="comissoes[{{ $clinic->id }}][comissao]" value="{{ old('comissoes.' . $clinic->id . '.comissao') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-700 mb-2 block">% prótese</label>
+                                <input type="number" step="0.01" min="0" max="100" name="comissoes[{{ $clinic->id }}][protese]" value="{{ old('comissoes.' . $clinic->id . '.protese') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </x-accordion-section>
+        <x-accordion-section title="Contas">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do banco</label>
+                    <input type="text" name="conta[nome_banco]" value="{{ old('conta.nome_banco') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Tipo de conta</label>
+                    <select name="conta[tipo]" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                        <option value="">Selecione</option>
+                        <option value="Corrente" @selected(old('conta.tipo')==='Corrente')>Corrente</option>
+                        <option value="Poupança" @selected(old('conta.tipo')==='Poupança')>Poupança</option>
+                        <option value="Pagamento" @selected(old('conta.tipo')==='Pagamento')>Pagamento</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Agência</label>
+                    <input type="text" name="conta[agencia]" value="{{ old('conta.agencia') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Número da conta</label>
+                    <input type="text" name="conta[numero]" value="{{ old('conta.numero') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF/CNPJ do titular</label>
+                    <input type="text" name="conta[cpf_cnpj]" value="{{ old('conta.cpf_cnpj') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Chave PIX</label>
+                    <input type="text" name="chave_pix" value="{{ old('chave_pix') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                </div>
+            </div>
+        </x-accordion-section>
     </div>
     <div x-show="activeTab === 'teste'" x-cloak>
         <p class="text-gray-700">Conteúdo de teste.</p>
