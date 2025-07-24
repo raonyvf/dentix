@@ -63,6 +63,7 @@ class AdminUserSeeder extends Seeder
             );
         }
 
-        $user->profiles()->syncWithoutDetaching([$profile->id => ['clinic_id' => null]]);
+        // Ensure the admin user only has the Super Administrador profile
+        $user->profiles()->sync([$profile->id => ['clinic_id' => null]]);
     }
 }
