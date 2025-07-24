@@ -10,18 +10,18 @@
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6">
         <div class="flex items-start space-x-4">
             <span class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-semibold">
-                {{ strtoupper(substr($paciente->nome,0,1) . substr($paciente->ultimo_nome,0,1)) }}
+                {{ strtoupper(substr($paciente->person->first_name,0,1) . substr($paciente->person->last_name,0,1)) }}
             </span>
             <div>
-                <h1 class="text-2xl font-semibold text-gray-700">{{ $paciente->nome }} {{ $paciente->ultimo_nome }}</h1>
+                <h1 class="text-2xl font-semibold text-gray-700">{{ $paciente->person->first_name }} {{ $paciente->person->last_name }}</h1>
                 <p class="text-sm text-gray-500">
-                    {{ $paciente->data_nascimento?->format('d/m/Y') }}
+                    {{ $paciente->person->data_nascimento?->format('d/m/Y') }}
                     @if($paciente->menor_idade)
                         • Menor de idade
                     @endif
                 </p>
                 @if($paciente->menor_idade)
-                    <p class="text-sm text-gray-500">Responsável: {{ $paciente->responsavel_nome }} (CPF {{ $paciente->responsavel_cpf }})</p>
+                    <p class="text-sm text-gray-500">Responsável: {{ $paciente->responsavel_first_name }} (CPF {{ $paciente->responsavel_cpf }})</p>
                     <p class="text-sm text-gray-500">{{ $paciente->responsavel_telefone }} • {{ $paciente->responsavel_email }}</p>
                 @endif
             </div>
@@ -60,23 +60,23 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Nome</span>
-                        <p class="text-gray-900">{{ $paciente->nome }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->first_name }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</span>
-                        <p class="text-gray-900">{{ $paciente->nome_meio ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->middle_name ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Último nome</span>
-                        <p class="text-gray-900">{{ $paciente->ultimo_nome }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->last_name }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento</span>
-                        <p class="text-gray-900">{{ $paciente->data_nascimento?->format('d/m/Y') }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->data_nascimento?->format('d/m/Y') }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">CPF</span>
-                        <p class="text-gray-900">{{ $paciente->cpf ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->cpf ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Menor de idade?</span>
@@ -91,15 +91,15 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Nome do responsável</span>
-                        <p class="text-gray-900">{{ $paciente->responsavel_nome }}</p>
+                        <p class="text-gray-900">{{ $paciente->responsavel_first_name }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</span>
-                        <p class="text-gray-900">{{ $paciente->responsavel_nome_meio ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->responsavel_middle_name ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Último nome</span>
-                        <p class="text-gray-900">{{ $paciente->responsavel_ultimo_nome ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->responsavel_last_name ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">CPF do responsável</span>
@@ -114,15 +114,15 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Telefone</span>
-                        <p class="text-gray-900">{{ $paciente->telefone ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->phone ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Whatsapp</span>
-                        <p class="text-gray-900">{{ $paciente->whatsapp ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->whatsapp ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">E-mail</span>
-                        <p class="text-gray-900">{{ $paciente->email ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->email ?: '-' }}</p>
                     </div>
                 </div>
             </div>
@@ -132,31 +132,31 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">CEP</span>
-                        <p class="text-gray-900">{{ $paciente->cep ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->cep ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Logradouro</span>
-                        <p class="text-gray-900">{{ $paciente->logradouro ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->logradouro ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Número</span>
-                        <p class="text-gray-900">{{ $paciente->numero ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->numero ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Complemento</span>
-                        <p class="text-gray-900">{{ $paciente->complemento ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->complemento ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Bairro</span>
-                        <p class="text-gray-900">{{ $paciente->bairro ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->bairro ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Cidade</span>
-                        <p class="text-gray-900">{{ $paciente->cidade ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->cidade ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Estado</span>
-                        <p class="text-gray-900">{{ $paciente->estado ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->person->estado ?: '-' }}</p>
                     </div>
                 </div>
             </div>

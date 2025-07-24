@@ -18,9 +18,9 @@ return new class extends Migration {
             foreach ($patients as $patient) {
                 $person = Person::create([
                     'organization_id' => $patient->organization_id,
-                    'first_name' => $patient->nome,
-                    'middle_name' => $patient->nome_meio,
-                    'last_name' => $patient->ultimo_nome,
+                    'first_name' => $patient->first_name,
+                    'middle_name' => $patient->middle_name,
+                    'last_name' => $patient->last_name,
                     'data_nascimento' => $patient->data_nascimento,
                     'cpf' => $patient->cpf,
                     'phone' => $patient->telefone,
@@ -41,7 +41,7 @@ return new class extends Migration {
 
         Schema::table('patients', function (Blueprint $table) {
             $table->dropColumn([
-                'nome','nome_meio','ultimo_nome','data_nascimento','cpf','telefone','whatsapp','email','cep','logradouro','numero','complemento','bairro','cidade','estado'
+                'first_name','middle_name','last_name','data_nascimento','cpf','telefone','whatsapp','email','cep','logradouro','numero','complemento','bairro','cidade','estado'
             ]);
         });
     }
@@ -49,9 +49,9 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('patients', function (Blueprint $table) {
-            $table->string('nome')->nullable();
-            $table->string('nome_meio')->nullable();
-            $table->string('ultimo_nome')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('middle_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->date('data_nascimento')->nullable();
             $table->string('cpf')->nullable();
             $table->string('telefone')->nullable();

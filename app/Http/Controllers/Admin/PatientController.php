@@ -41,9 +41,9 @@ class PatientController extends Controller
             'organization_id' => auth()->user()->organization_id,
             'person_id' => $person->id,
             'menor_idade' => $request->menor_idade === 'Sim',
-            'responsavel_nome' => $data['responsavel_nome'] ?? null,
-            'responsavel_nome_meio' => $data['responsavel_nome_meio'] ?? null,
-            'responsavel_ultimo_nome' => $data['responsavel_ultimo_nome'] ?? null,
+            'responsavel_first_name' => $data['responsavel_first_name'] ?? null,
+            'responsavel_middle_name' => $data['responsavel_middle_name'] ?? null,
+            'responsavel_last_name' => $data['responsavel_last_name'] ?? null,
             'responsavel_cpf' => $data['responsavel_cpf'] ?? null,
         ];
 
@@ -57,7 +57,7 @@ class PatientController extends Controller
 
             $password = Str::random(8);
             $user = User::create([
-                'name' => $paciente->nome.' '.$paciente->ultimo_nome,
+                'name' => $paciente->person->first_name.' '.$paciente->person->last_name,
                 'email' => $paciente->email,
                 'organization_id' => auth()->user()->organization_id,
                 'password' => Hash::make($password),
@@ -85,9 +85,9 @@ class PatientController extends Controller
 
         $paciente->update([
             'menor_idade' => $request->menor_idade === 'Sim',
-            'responsavel_nome' => $data['responsavel_nome'] ?? null,
-            'responsavel_nome_meio' => $data['responsavel_nome_meio'] ?? null,
-            'responsavel_ultimo_nome' => $data['responsavel_ultimo_nome'] ?? null,
+            'responsavel_first_name' => $data['responsavel_first_name'] ?? null,
+            'responsavel_middle_name' => $data['responsavel_middle_name'] ?? null,
+            'responsavel_last_name' => $data['responsavel_last_name'] ?? null,
             'responsavel_cpf' => $data['responsavel_cpf'] ?? null,
         ]);
         return redirect()->route('pacientes.index')->with('success', 'Paciente atualizado com sucesso.');
@@ -123,15 +123,15 @@ class PatientController extends Controller
     private function validateData(Request $request): array
     {
         $rules = [
-            'nome' => 'required',
-            'nome_meio' => 'nullable',
-            'ultimo_nome' => 'required',
+            'first_name' => 'required',
+            'middle_name' => 'nullable',
+            'last_name' => 'required',
             'data_nascimento' => 'required|date',
             'cpf' => 'nullable',
             'menor_idade' => 'required|in:Sim,Não',
-            'responsavel_nome' => 'nullable',
-            'responsavel_nome_meio' => 'nullable',
-            'responsavel_ultimo_nome' => 'nullable',
+            'responsavel_first_name' => 'nullable',
+            'responsavel_middle_name' => 'nullable',
+            'responsavel_last_name' => 'nullable',
             'responsavel_cpf' => 'nullable',
             'telefone' => 'nullable',
             'whatsapp' => 'nullable',
@@ -146,7 +146,7 @@ class PatientController extends Controller
         ];
 
         if ($request->menor_idade === 'Sim') {
-            $rules['responsavel_nome'] = 'required';
+            $rules['responsavel_first_name'] = 'required';
             $rules['responsavel_cpf'] = 'required';
             $rules['cpf'] = 'nullable';
         } else {
@@ -160,9 +160,9 @@ class PatientController extends Controller
     private function extractPersonData(array $data): array
     {
         return [
-            'first_name' => $data['nome'],
-            'middle_name' => $data['nome_meio'] ?? null,
-            'last_name' => $data['ultimo_nome'],
+            'first_name' => $data['first_name'],
+            'middle_name' => $data['middle_name'] ?? null,
+            'last_name' => $data['last_name'],
             'data_nascimento' => $data['data_nascimento'],
             'cpf' => $data['cpf'] ?? null,
             'phone' => $data['telefone'] ?? null,
