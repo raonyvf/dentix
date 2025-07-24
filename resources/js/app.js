@@ -235,6 +235,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.querySelectorAll('.work-schedule').forEach(section => {
+        section.querySelectorAll('tr[data-dia]').forEach(row => {
+            const inicio = row.querySelector('input[data-role="inicio"]');
+            const fim = row.querySelector('input[data-role="fim"]');
+            if (!inicio || !fim) return;
+            const min = inicio.getAttribute('min');
+            const max = inicio.getAttribute('max');
+            const validate = () => {
+                inicio.setCustomValidity('');
+                fim.setCustomValidity('');
+                if (inicio.value && min && inicio.value < min) {
+                    inicio.setCustomValidity('Início antes da abertura');
+                }
+                if (fim.value && max && fim.value > max) {
+                    fim.setCustomValidity('Fim após o fechamento');
+                }
+                if (inicio.value && fim.value && fim.value <= inicio.value) {
+                    fim.setCustomValidity('Fim deve ser após o início');
+                }
+            };
+            inicio.addEventListener('input', validate);
+            fim.addEventListener('input', validate);
+            validate();
+        });
+    });
+
 
     const charts = [
         {
