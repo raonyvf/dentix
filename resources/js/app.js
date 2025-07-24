@@ -235,6 +235,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    const toMinutes = t => {
+        if (!t) return null;
+        const [h, m] = t.split(':');
+        return parseInt(h, 10) * 60 + parseInt(m, 10);
+    };
+
     document.querySelectorAll('.work-schedule').forEach(section => {
         section.querySelectorAll('tr[data-dia]').forEach(row => {
             const inicio = row.querySelector('input[data-role="inicio"]');
@@ -245,16 +251,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const validate = () => {
                 inicio.setCustomValidity('');
                 fim.setCustomValidity('');
-                if (inicio.value && min && inicio.value < min) {
+
+                if (inicio.value && min && toMinutes(inicio.value) < toMinutes(min)) {
                     inicio.setCustomValidity('Início antes da abertura');
                 }
-                if (fim.value && max && fim.value > max) {
+                if (fim.value && max && toMinutes(fim.value) > toMinutes(max)) {
                     fim.setCustomValidity('Fim após o fechamento');
                 }
-                if (inicio.value && fim.value && fim.value <= inicio.value) {
+                if (inicio.value && fim.value && toMinutes(fim.value) <= toMinutes(inicio.value)) {
                     fim.setCustomValidity('Fim deve ser após o início');
                 }
+
+                inicio.reportValidity();
+                fim.reportValidity();
             };
+
             inicio.addEventListener('input', validate);
             fim.addEventListener('input', validate);
             validate();
