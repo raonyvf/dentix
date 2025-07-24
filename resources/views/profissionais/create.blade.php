@@ -131,7 +131,7 @@
         </div>
     </form>
     </div>
-    <div x-show="activeTab === 'adm'" x-cloak x-data="{ funcao: '{{ old('funcao') }}', tipo_contrato: '{{ old('tipo_contrato') }}' }">
+    <div x-show="activeTab === 'adm'" x-cloak x-data="{ funcao: '{{ old('funcao') }}', tipo_contrato: '{{ old('tipo_contrato') }}' }" class="space-y-6">
         <x-accordion-section title="Dados funcionais" :open="true">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
