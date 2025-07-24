@@ -78,11 +78,11 @@ class ProfessionalController extends Controller
         }
 
 
-        $profissional = Profissional::create([
+        $profissional = Profissional::create(array_merge([
             'organization_id' => auth()->user()->organization_id,
             'person_id' => $person->id,
             'user_id' => $user?->id,
-        ]);
+        ], $this->extractProfessionalData($data)));
 
         $this->saveWorkSchedules($profissional, $request->input('horarios_trabalho', []));
 
@@ -120,7 +120,7 @@ class ProfessionalController extends Controller
 
         $profissional->person->update($personData);
 
-        $profissional->save();
+        $profissional->update($this->extractProfessionalData($data));
         $this->saveWorkSchedules($profissional, $request->input('horarios_trabalho', []), true);
         return redirect()->route('profissionais.index')->with('success', 'Profissional atualizado com sucesso.');
     }
@@ -153,6 +153,29 @@ class ProfessionalController extends Controller
             'cidade' => 'nullable',
             'estado' => 'nullable',
             'foto' => 'nullable|image',
+            'numero_funcionario' => 'nullable',
+            'email_corporativo' => 'nullable|email',
+            'data_admissao' => 'nullable|date',
+            'data_demissao' => 'nullable|date',
+            'tipo_contrato' => 'nullable',
+            'data_inicio_contrato' => 'nullable|date',
+            'data_fim_contrato' => 'nullable|date',
+            'carga_horaria' => 'nullable|integer',
+            'total_horas_semanais' => 'nullable|integer',
+            'regime_trabalho' => 'nullable',
+            'funcao' => 'nullable',
+            'cargo' => 'nullable',
+            'cro' => 'nullable',
+            'cro_uf' => 'nullable',
+            'salario_fixo' => 'nullable|numeric',
+            'salario_periodo' => 'nullable',
+            'conta' => 'array',
+            'conta.nome_banco' => 'nullable',
+            'conta.tipo' => 'nullable',
+            'conta.agencia' => 'nullable',
+            'conta.numero' => 'nullable',
+            'conta.cpf_cnpj' => 'nullable',
+            'chave_pix' => 'nullable',
             'horarios_trabalho' => 'array',
             'comissoes' => 'array',
             'comissoes.*.comissao' => 'nullable|numeric|between:0,100',
@@ -217,6 +240,31 @@ class ProfessionalController extends Controller
             'bairro' => $data['bairro'] ?? null,
             'cidade' => $data['cidade'] ?? null,
             'estado' => $data['estado'] ?? null,
+        ];
+    }
+
+    private function extractProfessionalData(array $data): array
+    {
+        return [
+            'numero_funcionario' => $data['numero_funcionario'] ?? null,
+            'email_corporativo' => $data['email_corporativo'] ?? null,
+            'data_admissao' => $data['data_admissao'] ?? null,
+            'data_demissao' => $data['data_demissao'] ?? null,
+            'tipo_contrato' => $data['tipo_contrato'] ?? null,
+            'data_inicio_contrato' => $data['data_inicio_contrato'] ?? null,
+            'data_fim_contrato' => $data['data_fim_contrato'] ?? null,
+            'carga_horaria' => $data['carga_horaria'] ?? null,
+            'total_horas_semanais' => $data['total_horas_semanais'] ?? null,
+            'regime_trabalho' => $data['regime_trabalho'] ?? null,
+            'funcao' => $data['funcao'] ?? null,
+            'cargo' => $data['cargo'] ?? null,
+            'cro' => $data['cro'] ?? null,
+            'cro_uf' => $data['cro_uf'] ?? null,
+            'salario_fixo' => $data['salario_fixo'] ?? null,
+            'salario_periodo' => $data['salario_periodo'] ?? null,
+            'comissoes' => $data['comissoes'] ?? null,
+            'conta' => $data['conta'] ?? null,
+            'chave_pix' => $data['chave_pix'] ?? null,
         ];
     }
 
