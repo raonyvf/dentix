@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use App\Models\User;
 use App\Models\Profile;
+use App\Models\Person;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class PatientController extends Controller
 {
@@ -31,8 +33,21 @@ class PatientController extends Controller
     public function store(Request $request)
     {
         $data = $this->validateData($request);
-        $data['menor_idade'] = $request->menor_idade === 'Sim';
-        $paciente = Patient::create($data);
+        $person = Person::create(array_merge(
+            ['organization_id' => auth()->user()->organization_id],
+            $this->extractPersonData($data)
+        ));
+        $patientData = [
+            'organization_id' => auth()->user()->organization_id,
+            'person_id' => $person->id,
+            'menor_idade' => $request->menor_idade === 'Sim',
+            'responsavel_nome' => $data['responsavel_nome'] ?? null,
+            'responsavel_nome_meio' => $data['responsavel_nome_meio'] ?? null,
+            'responsavel_ultimo_nome' => $data['responsavel_ultimo_nome'] ?? null,
+            'responsavel_cpf' => $data['responsavel_cpf'] ?? null,
+        ];
+
+        $paciente = Patient::create($patientData);
 
         if ($request->boolean('create_user') && $paciente->email) {
             $profile = Profile::firstOrCreate([
@@ -66,8 +81,15 @@ class PatientController extends Controller
     public function update(Request $request, Patient $paciente)
     {
         $data = $this->validateData($request);
-        $data['menor_idade'] = $request->menor_idade === 'Sim';
-        $paciente->update($data);
+        $paciente->person->update($this->extractPersonData($data));
+
+        $paciente->update([
+            'menor_idade' => $request->menor_idade === 'Sim',
+            'responsavel_nome' => $data['responsavel_nome'] ?? null,
+            'responsavel_nome_meio' => $data['responsavel_nome_meio'] ?? null,
+            'responsavel_ultimo_nome' => $data['responsavel_ultimo_nome'] ?? null,
+            'responsavel_cpf' => $data['responsavel_cpf'] ?? null,
+        ]);
         return redirect()->route('pacientes.index')->with('success', 'Paciente atualizado com sucesso.');
     }
 
@@ -80,15 +102,20 @@ class PatientController extends Controller
     public function search(Request $request)
     {
         $term = $request->get('q', '');
-        $results = Patient::where('nome', 'like', "%{$term}%")
-            ->orWhere('ultimo_nome', 'like', "%{$term}%")
-            ->orWhere('telefone', 'like', "%{$term}%")
-            ->orWhere('whatsapp', 'like', "%{$term}%")
-            ->orWhere('email', 'like', "%{$term}%")
-            ->orWhere('cpf', 'like', "%{$term}%")
-            ->orderBy('nome')
+        $results = Patient::with('person')
+            ->whereHas('person', function ($q) use ($term) {
+                $q->where('first_name', 'like', "%{$term}%")
+                    ->orWhere('last_name', 'like', "%{$term}%")
+                    ->orWhere('phone', 'like', "%{$term}%")
+                    ->orWhere('whatsapp', 'like', "%{$term}%")
+                    ->orWhere('email', 'like', "%{$term}%")
+                    ->orWhere('cpf', 'like', "%{$term}%");
+            })
             ->limit(10)
-            ->pluck('nome');
+            ->get()
+            ->map(function ($p) {
+                return $p->person->first_name;
+            });
 
         return response()->json($results);
     }
@@ -127,8 +154,27 @@ class PatientController extends Controller
         }
 
         $data = $request->validate($rules);
-        $data['organization_id'] = auth()->user()->organization_id;
-
         return $data;
+    }
+
+    private function extractPersonData(array $data): array
+    {
+        return [
+            'first_name' => $data['nome'],
+            'middle_name' => $data['nome_meio'] ?? null,
+            'last_name' => $data['ultimo_nome'],
+            'data_nascimento' => $data['data_nascimento'],
+            'cpf' => $data['cpf'] ?? null,
+            'phone' => $data['telefone'] ?? null,
+            'whatsapp' => $data['whatsapp'] ?? null,
+            'email' => $data['email'] ?? null,
+            'cep' => $data['cep'] ?? null,
+            'logradouro' => $data['logradouro'] ?? null,
+            'numero' => $data['numero'] ?? null,
+            'complemento' => $data['complemento'] ?? null,
+            'bairro' => $data['bairro'] ?? null,
+            'cidade' => $data['cidade'] ?? null,
+            'estado' => $data['estado'] ?? null,
+        ];
     }
 }

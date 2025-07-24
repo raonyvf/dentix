@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Profissional;
+use App\Models\Person;
 use Illuminate\Http\Request;
 
 class ProfessionalController extends Controller
@@ -22,11 +23,16 @@ class ProfessionalController extends Controller
     {
         $data = $this->validateData($request);
 
+        $personData = $this->extractPersonData($data);
         if ($request->hasFile('foto')) {
-            $data['foto_path'] = $request->file('foto')->store('profissionais', 'public');
+            $personData['photo_path'] = $request->file('foto')->store('profissionais', 'public');
         }
+        $person = Person::create(array_merge(['organization_id' => auth()->user()->organization_id], $personData));
 
-        Profissional::create($data);
+        Profissional::create([
+            'organization_id' => auth()->user()->organization_id,
+            'person_id' => $person->id,
+        ]);
 
         return redirect()->route('profissionais.index')->with('success', 'Profissional salvo com sucesso.');
     }
@@ -40,12 +46,14 @@ class ProfessionalController extends Controller
     {
         $data = $this->validateData($request);
 
+        $personData = $this->extractPersonData($data);
         if ($request->hasFile('foto')) {
-            $data['foto_path'] = $request->file('foto')->store('profissionais', 'public');
+            $personData['photo_path'] = $request->file('foto')->store('profissionais', 'public');
         }
 
-        $profissional->update($data);
+        $profissional->person->update($personData);
 
+        $profissional->save();
         return redirect()->route('profissionais.index')->with('success', 'Profissional atualizado com sucesso.');
     }
 
@@ -78,5 +86,29 @@ class ProfessionalController extends Controller
             'estado' => 'nullable',
             'foto' => 'nullable|image',
         ]);
+    }
+
+    private function extractPersonData(array $data): array
+    {
+        return [
+            'first_name' => $data['nome'],
+            'middle_name' => $data['nome_meio'] ?? null,
+            'last_name' => $data['ultimo_nome'],
+            'data_nascimento' => $data['data_nascimento'] ?? null,
+            'sexo' => $data['sexo'] ?? null,
+            'naturalidade' => $data['naturalidade'] ?? null,
+            'nacionalidade' => $data['nacionalidade'] ?? null,
+            'cpf' => $data['cpf'] ?? null,
+            'rg' => $data['rg'] ?? null,
+            'email' => $data['email'] ?? null,
+            'phone' => $data['telefone'] ?? null,
+            'cep' => $data['cep'] ?? null,
+            'logradouro' => $data['logradouro'] ?? null,
+            'numero' => $data['numero'] ?? null,
+            'complemento' => $data['complemento'] ?? null,
+            'bairro' => $data['bairro'] ?? null,
+            'cidade' => $data['cidade'] ?? null,
+            'estado' => $data['estado'] ?? null,
+        ];
     }
 }
