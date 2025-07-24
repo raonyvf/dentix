@@ -24,15 +24,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nome</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome" value="{{ old('nome') }}" required />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="first_name" value="{{ old('first_name') }}" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome_meio" value="{{ old('nome_meio') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="middle_name" value="{{ old('middle_name') }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="ultimo_nome" value="{{ old('ultimo_nome') }}" required />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="last_name" value="{{ old('last_name') }}" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento</label>
@@ -56,15 +56,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do responsável</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_nome" value="{{ old('responsavel_nome') }}" x-bind:required="menorIdade === 'Sim'" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_first_name" value="{{ old('responsavel_first_name') }}" x-bind:required="menorIdade === 'Sim'" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_nome_meio" value="{{ old('responsavel_nome_meio') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_middle_name" value="{{ old('responsavel_middle_name') }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_ultimo_nome" value="{{ old('responsavel_ultimo_nome') }}" />
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_last_name" value="{{ old('responsavel_last_name') }}" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">CPF do responsável</label>

@@ -27,9 +27,9 @@ class OrganizationController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nome' => 'required',
-            'nome_meio' => 'nullable',
-            'sobrenome' => 'required',
+            'first_name' => 'required',
+            'middle_name' => 'nullable',
+            'last_name' => 'required',
             'nome_fantasia' => 'required',
             'razao_social' => 'nullable',
             'cnpj' => 'required',
@@ -53,9 +53,9 @@ class OrganizationController extends Controller
             'cnpj' => $data['cnpj'],
             'email' => $data['email'],
             'telefone' => $data['telefone'] ?? null,
-            'responsavel_nome' => $data['nome'],
-            'responsavel_nome_meio' => $data['nome_meio'] ?? null,
-            'responsavel_ultimo_nome' => $data['sobrenome'],
+            'responsavel_first_name' => $data['first_name'],
+            'responsavel_middle_name' => $data['middle_name'] ?? null,
+            'responsavel_last_name' => $data['last_name'],
             'cep' => $data['cep'] ?? null,
             'logradouro' => $data['logradouro'] ?? null,
             'numero' => $data['numero'] ?? null,
@@ -96,7 +96,7 @@ class OrganizationController extends Controller
 
         $password = $data['password'] ?? Str::random(10);
 
-        $nomeCompleto = trim($data['nome'] . ' ' . ($data['nome_meio'] ? $data['nome_meio'] . ' ' : '') . $data['sobrenome']);
+        $nomeCompleto = trim($data['first_name'] . ' ' . ($data['middle_name'] ? $data['middle_name'] . ' ' : '') . $data['last_name']);
 
         $user = User::create([
             'name' => $nomeCompleto,
@@ -122,9 +122,9 @@ class OrganizationController extends Controller
     public function update(Request $request, Organization $organization)
     {
         $data = $request->validate([
-            'nome' => 'sometimes',
-            'nome_meio' => 'nullable',
-            'sobrenome' => 'sometimes',
+            'first_name' => 'sometimes',
+            'middle_name' => 'nullable',
+            'last_name' => 'sometimes',
             'nome_fantasia' => 'required',
             'razao_social' => 'nullable',
             'cnpj' => 'required',
@@ -148,9 +148,9 @@ class OrganizationController extends Controller
             'cnpj' => $data['cnpj'],
             'email' => $data['email'],
             'telefone' => $data['telefone'] ?? null,
-            'responsavel_nome' => $data['nome'] ?? $organization->responsavel_nome,
-            'responsavel_nome_meio' => $data['nome_meio'] ?? $organization->responsavel_nome_meio,
-            'responsavel_ultimo_nome' => $data['sobrenome'] ?? $organization->responsavel_ultimo_nome,
+            'responsavel_first_name' => $data['first_name'] ?? $organization->responsavel_first_name,
+            'responsavel_middle_name' => $data['middle_name'] ?? $organization->responsavel_middle_name,
+            'responsavel_last_name' => $data['last_name'] ?? $organization->responsavel_last_name,
             'cep' => $data['cep'] ?? null,
             'logradouro' => $data['logradouro'] ?? null,
             'numero' => $data['numero'] ?? null,
@@ -164,8 +164,8 @@ class OrganizationController extends Controller
 
         $usuario = User::where('organization_id', $organization->id)->first();
         if ($usuario) {
-            if ($request->filled('nome') || $request->filled('nome_meio') || $request->filled('sobrenome')) {
-                $usuario->name = trim($request->input('nome') . ' ' . ($request->input('nome_meio') ? $request->input('nome_meio') . ' ' : '') . $request->input('sobrenome'));
+            if ($request->filled('first_name') || $request->filled('middle_name') || $request->filled('last_name')) {
+                $usuario->name = trim($request->input('first_name') . ' ' . ($request->input('middle_name') ? $request->input('middle_name') . ' ' : '') . $request->input('last_name'));
             }
             if ($request->filled('password')) {
                 $usuario->password = Hash::make($request->input('password'));

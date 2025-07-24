@@ -16,9 +16,9 @@ class Patient extends Model
         'user_id',
         'person_id',
         'menor_idade',
-        'responsavel_nome',
-        'responsavel_nome_meio',
-        'responsavel_ultimo_nome',
+        'responsavel_first_name',
+        'responsavel_middle_name',
+        'responsavel_last_name',
         'responsavel_cpf',
     ];
 

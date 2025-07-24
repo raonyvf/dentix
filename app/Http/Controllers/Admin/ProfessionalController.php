@@ -88,9 +88,9 @@ class ProfessionalController extends Controller
     private function validateData(Request $request): array
     {
         return $request->validate([
-            'nome' => 'required',
-            'nome_meio' => 'nullable',
-            'ultimo_nome' => 'required',
+            'first_name' => 'required',
+            'middle_name' => 'nullable',
+            'last_name' => 'required',
             'data_nascimento' => 'nullable|date',
             'sexo' => 'nullable',
             'naturalidade' => 'nullable',
@@ -113,9 +113,9 @@ class ProfessionalController extends Controller
     private function extractPersonData(array $data): array
     {
         return [
-            'first_name' => $data['nome'],
-            'middle_name' => $data['nome_meio'] ?? null,
-            'last_name' => $data['ultimo_nome'],
+            'first_name' => $data['first_name'],
+            'middle_name' => $data['middle_name'] ?? null,
+            'last_name' => $data['last_name'],
             'data_nascimento' => $data['data_nascimento'] ?? null,
             'sexo' => $data['sexo'] ?? null,
             'naturalidade' => $data['naturalidade'] ?? null,

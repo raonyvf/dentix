@@ -28,7 +28,7 @@
 <div class="space-y-6">
     <div>
         <h2 class="text-xl font-semibold text-gray-700">Resumo Financeiro</h2>
-        <p class="text-sm text-gray-500">{{ $paciente->nome }} {{ $paciente->ultimo_nome }} • ID {{ $paciente->id }}</p>
+        <p class="text-sm text-gray-500">{{ $paciente->person->first_name }} {{ $paciente->person->last_name }} • ID {{ $paciente->id }}</p>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <x-financeiro.card

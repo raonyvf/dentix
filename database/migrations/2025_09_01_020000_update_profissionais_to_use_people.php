@@ -17,9 +17,9 @@ return new class extends Migration {
             foreach ($rows as $prof) {
                 $person = Person::create([
                     'organization_id' => $prof->organization_id,
-                    'first_name' => $prof->nome,
-                    'middle_name' => $prof->nome_meio,
-                    'last_name' => $prof->ultimo_nome,
+                    'first_name' => $prof->first_name,
+                    'middle_name' => $prof->middle_name,
+                    'last_name' => $prof->last_name,
                     'data_nascimento' => $prof->data_nascimento,
                     'sexo' => $prof->sexo,
                     'naturalidade' => $prof->naturalidade,
@@ -44,7 +44,7 @@ return new class extends Migration {
 
         Schema::table('profissionais', function (Blueprint $table) {
             $table->dropColumn([
-                'nome','nome_meio','ultimo_nome','data_nascimento','sexo','naturalidade','nacionalidade','foto_path','cpf','rg','email','telefone','cep','logradouro','numero','complemento','bairro','cidade','estado'
+                'first_name','middle_name','last_name','data_nascimento','sexo','naturalidade','nacionalidade','foto_path','cpf','rg','email','telefone','cep','logradouro','numero','complemento','bairro','cidade','estado'
             ]);
         });
     }
@@ -52,9 +52,9 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('profissionais', function (Blueprint $table) {
-            $table->string('nome')->nullable();
-            $table->string('nome_meio')->nullable();
-            $table->string('ultimo_nome')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('middle_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->date('data_nascimento')->nullable();
             $table->string('sexo')->nullable();
             $table->string('naturalidade')->nullable();

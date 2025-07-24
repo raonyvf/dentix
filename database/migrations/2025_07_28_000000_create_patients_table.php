@@ -11,15 +11,15 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organization_id')->constrained('organizations');
-            $table->string('nome');
-            $table->string('nome_meio')->nullable();
-            $table->string('ultimo_nome');
+            $table->string('first_name');
+            $table->string('middle_name')->nullable();
+            $table->string('last_name');
             $table->date('data_nascimento');
             $table->string('cpf')->nullable();
             $table->boolean('menor_idade')->default(false);
-            $table->string('responsavel_nome')->nullable();
-            $table->string('responsavel_nome_meio')->nullable();
-            $table->string('responsavel_ultimo_nome')->nullable();
+            $table->string('responsavel_first_name')->nullable();
+            $table->string('responsavel_middle_name')->nullable();
+            $table->string('responsavel_last_name')->nullable();
             $table->string('responsavel_cpf')->nullable();
             $table->string('telefone')->nullable();
             $table->string('email')->nullable();

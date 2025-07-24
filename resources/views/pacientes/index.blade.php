@@ -53,11 +53,11 @@
             <tbody class="divide-y divide-gray-200">
                 @foreach ($pacientes as $paciente)
                     <tr>
-                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->nome }} {{ $paciente->ultimo_nome }}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->responsavel_nome ?? '-' }}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">{{ \Carbon\Carbon::parse($paciente->data_nascimento)->age }}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->telefone }}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->whatsapp }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->person->first_name }} {{ $paciente->person->last_name }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->responsavel_first_name ?? '-' }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">{{ \Carbon\Carbon::parse($paciente->person->data_nascimento)->age }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->person->phone }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->person->whatsapp }}</td>
                         <td class="px-4 py-2 whitespace-nowrap">-</td>
                         <td class="px-4 py-2 whitespace-nowrap">-</td>
                         <td class="px-4 py-2 whitespace-nowrap text-center">

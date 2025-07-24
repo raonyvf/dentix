@@ -9,9 +9,9 @@ return new class extends Migration {
         Schema::create('profissionais', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organization_id')->constrained('organizations');
-            $table->string('nome');
-            $table->string('nome_meio')->nullable();
-            $table->string('ultimo_nome');
+            $table->string('first_name');
+            $table->string('middle_name')->nullable();
+            $table->string('last_name');
             $table->date('data_nascimento')->nullable();
             $table->string('sexo')->nullable();
             $table->string('naturalidade')->nullable();
