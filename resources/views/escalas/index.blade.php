@@ -32,11 +32,12 @@
         </select>
     </div>
 </form>
-<div class="overflow-x-auto">
+
+<div class="overflow-x-auto bg-white rounded shadow">
     <table class="min-w-full text-sm">
         <thead>
             <tr>
-                <th class="p-2 bg-gray-50 text-left sticky left-0 z-10">Cadeira</th>
+                <th class="p-2 bg-gray-50 w-24 text-left sticky left-0 z-10">Cadeira</th>
                 @foreach($dias as $d)
                     <th class="p-2 bg-gray-50 text-left capitalize min-w-[576px]">{{ ucfirst($d) }}</th>
                 @endforeach
@@ -45,7 +46,9 @@
         <tbody>
             @foreach($cadeiras as $cadeira)
                 <tr class="border-t">
-                    <td class="bg-gray-50 p-2 whitespace-nowrap sticky left-0">{{ $cadeira->nome }}</td>
+
+                    <td class="bg-gray-50 w-24 p-2 whitespace-nowrap sticky left-0">{{ $cadeira->nome }}</td>
+
                     @foreach($dias as $d)
                         @php $items = $escalas[$cadeira->id][$d] ?? collect(); @endphp
                         <td class="min-w-[576px] align-top p-2">
