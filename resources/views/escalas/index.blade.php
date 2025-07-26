@@ -53,7 +53,7 @@
         </tbody>
     </table>
 </div>
-<div id="escala-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+<div id="escala-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
     <div class="bg-white rounded p-4 w-80">
         <form method="POST" action="{{ route('escalas.store') }}" class="space-y-4">
             @csrf
