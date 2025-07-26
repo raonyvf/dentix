@@ -38,7 +38,7 @@
             <tr>
                 <th class="p-2 bg-gray-50 text-left sticky left-0 z-10">Cadeira</th>
                 @foreach($dias as $d)
-                    <th class="p-2 bg-gray-50 text-left capitalize">{{ ucfirst($d) }}</th>
+                    <th class="p-2 bg-gray-50 text-left capitalize min-w-[576px]">{{ ucfirst($d) }}</th>
                 @endforeach
             </tr>
         </thead>
@@ -48,7 +48,7 @@
                     <td class="bg-gray-50 p-2 whitespace-nowrap sticky left-0">{{ $cadeira->nome }}</td>
                     @foreach($dias as $d)
                         @php $items = $escalas[$cadeira->id][$d] ?? collect(); @endphp
-                        <td class="w-48 align-top p-2">
+                        <td class="min-w-[576px] align-top p-2">
                             @if($items->isNotEmpty())
                                 @php
                                     $sorted = $items->sortBy('hora_inicio')->values();
@@ -83,8 +83,9 @@
                                         @if(optional($it->profissional->user)->especialidade)
                                             <div class="text-xs text-gray-500">{{ optional($it->profissional->user)->especialidade }}</div>
                                         @endif
-                                        <div class="relative h-2 bg-emerald-100 rounded mt-1">
-                                            <div class="absolute top-0 h-2 bg-emerald-400 rounded" style="left:{{ $left }}%; width:{{ $width }}%;"></div>
+                                        <div class="relative h-3 bg-emerald-100 rounded mt-1 overflow-hidden">
+                                            <div class="absolute inset-0 pointer-events-none" style="background-image:repeating-linear-gradient(to right,#d1d5db 0,#d1d5db 1px,transparent 1px,transparent calc(100%/48));"></div>
+                                            <div class="absolute top-0 h-full bg-emerald-400 rounded" style="left:{{ $left }}%; width:{{ $width }}%;"></div>
                                         </div>
                                     </div>
                                 @endforeach
