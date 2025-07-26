@@ -25,12 +25,7 @@ class EscalaTrabalhoController extends Controller
             ->where('semana', $week->toDateString())
             ->get()
             ->groupBy(['cadeira_id','dia_semana']);
-        $dentistas = Profissional::where(function ($q) {
-            $q->where('cargo', 'like', '%dent%')
-              ->orWhere('cargo', 'like', '%odont%')
-              ->orWhere('funcao', 'like', '%dent%')
-              ->orWhere('funcao', 'like', '%odont%');
-        })->get();
+        $dentistas = Profissional::where('funcao', 'Dentrista')->get();
         return view('escalas.index', compact('clinics','clinicId','week','dias','cadeiras','schedules','dentistas'));
     }
 
