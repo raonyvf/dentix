@@ -18,15 +18,25 @@ class EscalaTrabalhoController extends Controller
         $clinicId = $request->input('clinic_id', $clinics->first()->id ?? null);
         $week = $request->input('week');
         $week = $week ? Carbon::parse($week)->startOfWeek(Carbon::MONDAY) : Carbon::now()->startOfWeek(Carbon::MONDAY);
+
+        $semanasDisponiveis = collect(range(-2, 5))->map(fn($i) => Carbon::now()->startOfWeek(Carbon::MONDAY)->addWeeks($i));
         $dias = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
         $cadeiras = $clinicId ? Cadeira::where('clinic_id', $clinicId)->get() : collect();
-        $schedules = EscalaTrabalho::with(['profissional.person'])
+        $escalas = EscalaTrabalho::with(['profissional.person','profissional.user'])
             ->where('clinic_id', $clinicId)
             ->where('semana', $week->toDateString())
             ->get()
             ->groupBy(['cadeira_id','dia_semana']);
-        $dentistas = Profissional::where('funcao', 'Dentista')->get();
-        return view('escalas.index', compact('clinics','clinicId','week','dias','cadeiras','schedules','dentistas'));
+        $dentistas = Profissional::where(function($q){
+                $q->where('funcao', 'Dentista')->orWhere('cargo', 'Dentista');
+            })
+            ->orWhereHas('user', function($q){
+                $q->whereNotNull('especialidade');
+            })
+            ->with(['person'])
+            ->get();
+
+        return view('escalas.index', compact('clinics','clinicId','week','dias','cadeiras','escalas','dentistas','semanasDisponiveis'));
     }
 
     public function store(Request $request)

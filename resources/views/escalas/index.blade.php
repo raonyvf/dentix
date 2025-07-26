@@ -5,9 +5,14 @@
     ['label' => 'Dashboard', 'url' => route('admin.index')],
     ['label' => 'Escalas de Trabalho']
 ]])
-<div class="mb-6 flex justify-between items-center">
+<div class="mb-6 flex flex-wrap justify-between items-center gap-4">
     <h1 class="text-2xl font-bold">Escalas de Trabalho</h1>
-    <button id="open-modal" class="py-2 px-4 bg-blue-600 text-white rounded">+ Adicionar Escala</button>
+    <button id="open-modal" class="flex items-center gap-1 px-4 py-2 bg-emerald-400 text-white rounded hover:bg-emerald-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        <span>Adicionar Escala</span>
+    </button>
 </div>
 <form method="GET" class="flex flex-wrap gap-4 mb-4">
     <div>
@@ -20,32 +25,73 @@
     </div>
     <div>
         <label class="block text-sm font-medium mb-1">Semana</label>
-        <input type="date" name="week" value="{{ $week->format('Y-m-d') }}" class="border rounded px-2 py-1" onchange="this.form.submit()">
+        <select name="week" class="border rounded px-2 py-1" onchange="this.form.submit()">
+            @foreach($semanasDisponiveis as $sem)
+                <option value="{{ $sem->format('Y-m-d') }}" @selected($sem->equalTo($week))>{{ $sem->format('d/m/Y') }}</option>
+            @endforeach
+        </select>
     </div>
 </form>
-<div class="overflow-auto bg-white rounded shadow">
+<div class="overflow-x-auto">
     <table class="min-w-full text-sm">
         <thead>
             <tr>
-                <th class="p-2 bg-gray-50 w-20 text-left">Cadeira</th>
+                <th class="p-2 bg-gray-50 text-left sticky left-0 z-10">Cadeira</th>
                 @foreach($dias as $d)
-                    <th class="p-2 bg-gray-50 text-left capitalize whitespace-nowrap">{{ $d }}</th>
+                    <th class="p-2 bg-gray-50 text-left capitalize">{{ ucfirst($d) }}</th>
                 @endforeach
             </tr>
         </thead>
         <tbody>
             @foreach($cadeiras as $cadeira)
                 <tr class="border-t">
-                    <td class="bg-gray-50 w-20 p-2 whitespace-nowrap">{{ $cadeira->nome }}</td>
+                    <td class="bg-gray-50 p-2 whitespace-nowrap sticky left-0">{{ $cadeira->nome }}</td>
                     @foreach($dias as $d)
-                        <td class="w-40 h-16 p-2 align-top">
-                            @php $items = $schedules[$cadeira->id][$d] ?? collect(); @endphp
-                            @foreach($items as $it)
-                                <div class="mb-1">
-                                    <span class="font-medium">{{ $it->profissional->person->first_name }} {{ $it->profissional->person->last_name }}</span>
-                                    <span class="text-xs text-gray-500">{{ $it->hora_inicio }}-{{ $it->hora_fim }}</span>
-                                </div>
-                            @endforeach
+                        @php $items = $escalas[$cadeira->id][$d] ?? collect(); @endphp
+                        <td class="w-48 align-top p-2">
+                            @if($items->isNotEmpty())
+                                @php
+                                    $sorted = $items->sortBy('hora_inicio')->values();
+                                    $conflict = false;
+                                    for($i=0;$i<$sorted->count();$i++){
+                                        for($j=$i+1;$j<$sorted->count();$j++){
+                                            if(!($sorted[$i]->hora_fim <= $sorted[$j]->hora_inicio || $sorted[$i]->hora_inicio >= $sorted[$j]->hora_fim)){
+                                                $conflict = true; break 2;
+                                            }
+                                        }
+                                    }
+                                @endphp
+                                @foreach($items as $it)
+                                    @php
+                                        $inicio = \Carbon\Carbon::parse($it->hora_inicio);
+                                        $fim = \Carbon\Carbon::parse($it->hora_fim);
+                                        $inicioMin = $inicio->hour*60 + $inicio->minute;
+                                        $fimMin = $fim->hour*60 + $fim->minute;
+                                        $left = $inicioMin / 1440 * 100;
+                                        $width = ($fimMin - $inicioMin) / 1440 * 100;
+                                    @endphp
+                                    <div class="mb-2 p-2 bg-emerald-50 border border-emerald-200 rounded">
+                                        <div class="flex items-center justify-between">
+                                            <span class="font-medium">{{ optional($it->profissional->person)->first_name }} {{ optional($it->profissional->person)->last_name }}</span>
+                                            @if($conflict)
+                                                <svg class="w-4 h-4 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5.07 19h13.86a2 2 0 001.73-3l-6.93-11a2 2 0 00-3.46 0l-6.93 11a2 2 0 001.73 3z" />
+                                                </svg>
+                                            @endif
+                                        </div>
+                                        <div class="text-xs">{{ $it->hora_inicio }} - {{ $it->hora_fim }}</div>
+                                        @if(optional($it->profissional->user)->especialidade)
+                                            <div class="text-xs text-gray-500">{{ optional($it->profissional->user)->especialidade }}</div>
+                                        @endif
+                                        <div class="relative h-2 bg-emerald-100 rounded mt-1">
+                                            <div class="absolute top-0 h-2 bg-emerald-400 rounded" style="left:{{ $left }}%; width:{{ $width }}%;"></div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                <div class="text-xs text-gray-500">{{ $items->count() }} escala{{ $items->count() > 1 ? 's' : '' }}</div>
+                            @else
+                                <div class="text-xs text-gray-400">Livre</div>
+                            @endif
                         </td>
                     @endforeach
                 </tr>
