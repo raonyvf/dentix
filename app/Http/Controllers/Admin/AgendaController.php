@@ -47,7 +47,7 @@ class AgendaController extends Controller
             return response()->json(['closed' => true]);
         }
 
-        $clinic = \App\Models\Clinic::with('horarios')->find($clinicId);
+        $clinic = \App\Models\Clinic::find($clinicId);
         if (! $clinic) {
             return response()->json(['closed' => true]);
         }
@@ -63,8 +63,8 @@ class AgendaController extends Controller
         ];
         $dia = $dias[$date->dayOfWeek];
 
-        $intervalos = $clinic->horarios()
-            ->withoutGlobalScope('organization')
+        $intervalos = \App\Models\Horario::withoutGlobalScopes()
+            ->where('clinic_id', $clinicId)
             ->where('dia_semana', $dia)
             ->orderBy('hora_inicio')
             ->get();
