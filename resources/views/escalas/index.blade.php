@@ -25,20 +25,20 @@
 </form>
 <div class="overflow-auto bg-white rounded shadow">
     <table class="min-w-full text-sm">
-        <thead>
+        <thead class="bg-gray-50">
             <tr>
-                <th class="p-2 bg-gray-50 w-20 text-left">Cadeira</th>
+                <th class="p-2 text-left">Cadeira</th>
                 @foreach($dias as $d)
-                    <th class="p-2 bg-gray-50 text-left capitalize whitespace-nowrap">{{ $d }}</th>
+                    <th class="p-2 text-left capitalize">{{ $d }}</th>
                 @endforeach
             </tr>
         </thead>
         <tbody>
             @foreach($cadeiras as $cadeira)
                 <tr class="border-t">
-                    <td class="bg-gray-50 w-20 p-2 whitespace-nowrap">{{ $cadeira->nome }}</td>
+                    <td class="p-2 whitespace-nowrap">{{ $cadeira->nome }}</td>
                     @foreach($dias as $d)
-                        <td class="w-40 h-16 p-2 align-top">
+                        <td class="p-2 align-top w-40">
                             @php $items = $schedules[$cadeira->id][$d] ?? collect(); @endphp
                             @foreach($items as $it)
                                 <div class="mb-1">
