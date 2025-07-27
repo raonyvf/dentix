@@ -47,6 +47,11 @@ class AgendaController extends Controller
             return response()->json(['closed' => true]);
         }
 
+        $clinic = \App\Models\Clinic::with('horarios')->find($clinicId);
+        if (! $clinic) {
+            return response()->json(['closed' => true]);
+        }
+
         $dias = [
             1 => 'segunda',
             2 => 'terca',
@@ -58,7 +63,8 @@ class AgendaController extends Controller
         ];
         $dia = $dias[$date->dayOfWeek];
 
-        $intervalos = \App\Models\Horario::where('clinic_id', $clinicId)
+        $intervalos = $clinic->horarios()
+            ->withoutGlobalScope('organization')
             ->where('dia_semana', $dia)
             ->orderBy('hora_inicio')
             ->get();
@@ -70,6 +76,7 @@ class AgendaController extends Controller
         $horarios = [];
         $startTimes = [];
         $endTimes = [];
+        $debugIntervals = [];
         foreach ($intervalos as $int) {
             if (!$int->hora_inicio || !$int->hora_fim) {
                 continue;
@@ -78,6 +85,10 @@ class AgendaController extends Controller
             $end = Carbon::createFromTimeString($int->hora_fim);
             $startTimes[] = $start->format('H:i');
             $endTimes[] = $end->format('H:i');
+            $debugIntervals[] = [
+                'inicio' => $start->format('H:i'),
+                'fim' => $end->format('H:i'),
+            ];
             for ($time = $start->copy(); $time <= $end; $time->addMinutes(30)) {
                 $horarios[] = $time->format('H:i');
             }
@@ -89,11 +100,15 @@ class AgendaController extends Controller
         $startTime = min($startTimes);
         $endTime = max($endTimes);
 
+        // Uncomment the line below for raw dump of schedule intervals during debugging
+        // dd($debugIntervals);
+
         return response()->json([
             'closed' => false,
             'horarios' => $horarios,
             'start' => $startTime,
             'end' => $endTime,
+            'intervals' => $debugIntervals,
         ]);
     }
 }

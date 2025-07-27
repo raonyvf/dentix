@@ -95,6 +95,17 @@ window.agendaCalendar = function agendaCalendar() {
                         data.end,
                         data.closed
                     );
+                    const dbg = document.getElementById('clinic-hours-debug');
+                    if (dbg) {
+                        if (data.intervals && data.intervals.length) {
+                            const list = data.intervals.map(i => `${i.inicio}-${i.fim}`).join(', ');
+                            dbg.textContent = `Horários de funcionamento: ${list}`;
+                        } else if (data.closed) {
+                            dbg.textContent = 'Horários de funcionamento: fechado';
+                        } else {
+                            dbg.textContent = '';
+                        }
+                    }
                 });
         },
     };
