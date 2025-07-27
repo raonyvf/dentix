@@ -52,16 +52,20 @@ class AgendaController extends Controller
             return response()->json(['closed' => true]);
         }
 
-        $dias = [
-            Carbon::MONDAY    => 'segunda',
-            Carbon::TUESDAY   => 'terca',
-            Carbon::WEDNESDAY => 'quarta',
-            Carbon::THURSDAY  => 'quinta',
-            Carbon::FRIDAY    => 'sexta',
-            Carbon::SATURDAY  => 'sabado',
-            Carbon::SUNDAY    => 'domingo',
+        $diasIso = [
+            1 => 'segunda',
+            2 => 'terca',
+            3 => 'quarta',
+            4 => 'quinta',
+            5 => 'sexta',
+            6 => 'sabado',
+            7 => 'domingo',
         ];
-        $dia = $dias[$date->dayOfWeekIso];
+        $dia = $diasIso[$date->dayOfWeekIso] ?? null;
+
+        if ($dia === null) {
+            return response()->json(['closed' => true]);
+        }
 
         $intervalos = \App\Models\Horario::withoutGlobalScopes()
             ->where('clinic_id', $clinicId)
