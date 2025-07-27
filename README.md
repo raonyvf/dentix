@@ -180,3 +180,7 @@ If migrations are failing or producing unexpected results, try the steps below:
 2. **Verify which migrations have already run**
    - Look at the `migrations` table in your database or run
      `php artisan migrate:status` to see a list of executed migrations.
+
+## Testando o controlador de horários
+
+Execute `php scripts/test_horarios.php <data>` para verificar os horários retornados pelo endpoint `agendamentos/horarios`. Substitua `<data>` por uma data no formato `AAAA-MM-DD` (por exemplo, `2025-07-27`). O script retorna o JSON produzido pelo controlador, permitindo confirmar se o dia está mapeado corretamente.

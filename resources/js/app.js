@@ -100,8 +100,6 @@ window.agendaCalendar = function agendaCalendar() {
                         if (data.intervals && data.intervals.length) {
                             const list = data.intervals.map(i => `${i.inicio}-${i.fim}`).join(', ');
                             dbg.textContent = `Horários de funcionamento: ${list}`;
-                        } else if (data.closed) {
-                            dbg.textContent = 'Horários de funcionamento: fechado';
                         } else {
                             dbg.textContent = '';
                         }
