@@ -47,8 +47,16 @@ class AgendaController extends Controller
             return response()->json(['closed' => true]);
         }
 
-        $dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo'];
-        $dia = $dias[$date->dayOfWeekIso - 1];
+        $dias = [
+            1 => 'segunda',
+            2 => 'terca',
+            3 => 'quarta',
+            4 => 'quinta',
+            5 => 'sexta',
+            6 => 'sabado',
+            0 => 'domingo',
+        ];
+        $dia = $dias[$date->dayOfWeek];
 
         $intervalos = \App\Models\Horario::where('clinic_id', $clinicId)
             ->where('dia_semana', $dia)
