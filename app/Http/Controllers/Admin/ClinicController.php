@@ -66,6 +66,7 @@ class ClinicController extends Controller
             if (($horario['abertura'] ?? false) && ($horario['fechamento'] ?? false)) {
                 $clinic->horarios()->create([
                     'clinic_id' => $clinic->id,
+                    'organization_id' => $clinic->organization_id,
                     'dia_semana' => $dia,
                     'hora_inicio' => $horario['abertura'],
                     'hora_fim' => $horario['fechamento'],
@@ -137,6 +138,7 @@ class ClinicController extends Controller
             if (($horario['abertura'] ?? false) && ($horario['fechamento'] ?? false)) {
                 $clinic->horarios()->create([
                     'clinic_id' => $clinic->id,
+                    'organization_id' => $clinic->organization_id,
                     'dia_semana' => $dia,
                     'hora_inicio' => $horario['abertura'],
                     'hora_fim' => $horario['fechamento'],
