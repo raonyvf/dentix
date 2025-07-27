@@ -33,66 +33,32 @@
     </div>
 </form>
 <div class="overflow-x-auto bg-white rounded shadow">
-    <table class="min-w-full table-fixed text-sm border-collapse">
+    <table class="table-fixed w-full text-sm border">
         <thead>
             <tr>
-                <th class="p-2 bg-gray-50 w-24 text-left sticky left-64 z-10">Cadeira</th>
+                <th class="w-32 px-2 py-1 bg-white font-semibold border border-gray-200">Cadeira</th>
                 @foreach($dias as $d)
-                    <th class="p-2 bg-gray-50 text-left capitalize border" style="width:14.28%">{{ ucfirst($d) }}</th>
+                    <th class="px-2 py-1 text-center font-semibold bg-white capitalize border border-gray-200" style="width:14.28%">{{ ucfirst($d) }}</th>
                 @endforeach
             </tr>
         </thead>
         <tbody>
             @foreach($cadeiras as $cadeira)
-                <tr class="border-t">
-                    <td class="bg-gray-50 w-24 p-2 whitespace-nowrap sticky left-64">{{ $cadeira->nome }}</td>
+                <tr>
+                    <td class="w-32 px-2 py-1 font-semibold bg-gray-50 border border-gray-200">{{ $cadeira->nome }}</td>
                     @foreach($dias as $d)
                         @php $items = $escalas[$cadeira->id][$d] ?? collect(); @endphp
-                        <td class="p-2 border bg-gray-50 align-top" style="width:14.28%">
-                            @if($items->isNotEmpty())
-                                @php
-                                    $sorted = $items->sortBy('hora_inicio')->values();
-                                    $conflict = false;
-                                    for($i=0;$i<$sorted->count();$i++){
-                                        for($j=$i+1;$j<$sorted->count();$j++){
-                                            if(!($sorted[$i]->hora_fim <= $sorted[$j]->hora_inicio || $sorted[$i]->hora_inicio >= $sorted[$j]->hora_fim)){
-                                                $conflict = true; break 2;
-                                            }
-                                        }
-                                    }
-                                @endphp
-                                @foreach($items as $it)
-                                    @php
-                                        $inicio = \Carbon\Carbon::parse($it->hora_inicio);
-                                        $fim = \Carbon\Carbon::parse($it->hora_fim);
-                                        $inicioMin = $inicio->hour*60 + $inicio->minute;
-                                        $fimMin = $fim->hour*60 + $fim->minute;
-                                        $left = $inicioMin / 1440 * 100;
-                                        $width = ($fimMin - $inicioMin) / 1440 * 100;
-                                    @endphp
-                                    <div class="mb-2 p-2 bg-emerald-50 border border-emerald-200 rounded">
-                                        <div class="flex items-center justify-between">
-                                            <span class="font-medium">{{ optional($it->profissional->person)->first_name }} {{ optional($it->profissional->person)->last_name }}</span>
-                                            @if($conflict)
-                                                <svg class="w-4 h-4 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5.07 19h13.86a2 2 0 001.73-3l-6.93-11a2 2 0 00-3.46 0l-6.93 11a2 2 0 001.73 3z" />
-                                                </svg>
-                                            @endif
-                                        </div>
-                                        <div class="text-xs">{{ $it->hora_inicio }} - {{ $it->hora_fim }}</div>
-                                        @if(optional($it->profissional->user)->especialidade)
-                                            <div class="text-xs text-gray-500">{{ optional($it->profissional->user)->especialidade }}</div>
-                                        @endif
-                                        <div class="relative h-2 bg-emerald-100 rounded mt-1 overflow-hidden">
-                                            <div class="absolute inset-0 pointer-events-none" style="background-image:repeating-linear-gradient(to right,#d1d5db 0,#d1d5db 1px,transparent 1px,transparent calc(100%/48));"></div>
-                                            <div class="absolute top-0 h-full bg-emerald-400 rounded" style="left:{{ $left }}%; width:{{ $width }}%;"></div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                                <div class="text-xs text-gray-500">{{ $items->count() }} escala{{ $items->count() > 1 ? 's' : '' }}</div>
-                            @else
-                                <div class="text-xs text-gray-400">Livre</div>
-                            @endif
+                        <td class="px-2 py-2 border border-gray-200 align-top" style="width:14.28%">
+                            @forelse($items as $it)
+                                <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
+                                    <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->person)->first_name }} {{ optional($it->profissional->person)->last_name }}</div>
+                                    <div>{{ $it->hora_inicio }} – {{ $it->hora_fim }}</div>
+                                    <div class="text-xs text-gray-600">{{ optional($it->profissional->user)->especialidade ?? $it->profissional->cargo }}</div>
+                                    <div class="mt-1 h-2 rounded bg-emerald-400 w-full"></div>
+                                </div>
+                            @empty
+                                <span class="text-sm text-gray-400">Livre</span>
+                            @endforelse
                         </td>
                     @endforeach
                 </tr>
