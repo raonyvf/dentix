@@ -53,15 +53,15 @@ class AgendaController extends Controller
         }
 
         $dias = [
-            1 => 'segunda',
-            2 => 'terca',
-            3 => 'quarta',
-            4 => 'quinta',
-            5 => 'sexta',
-            6 => 'sabado',
-            0 => 'domingo',
+            Carbon::MONDAY    => 'segunda',
+            Carbon::TUESDAY   => 'terca',
+            Carbon::WEDNESDAY => 'quarta',
+            Carbon::THURSDAY  => 'quinta',
+            Carbon::FRIDAY    => 'sexta',
+            Carbon::SATURDAY  => 'sabado',
+            Carbon::SUNDAY    => 'domingo',
         ];
-        $dia = $dias[$date->dayOfWeek];
+        $dia = $dias[$date->dayOfWeekIso];
 
         $intervalos = \App\Models\Horario::withoutGlobalScopes()
             ->where('clinic_id', $clinicId)
