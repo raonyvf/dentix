@@ -16,7 +16,10 @@ class AdminUserSeeder extends Seeder
     {
         $organization = Organization::firstOrCreate(
             ['cnpj' => '00000000000000'],
-            ['nome_fantasia' => 'Default Organization']
+            [
+                'nome_fantasia' => 'Default Organization',
+                'timezone' => config('app.timezone'),
+            ]
         );
 
         $person = Person::firstOrCreate(

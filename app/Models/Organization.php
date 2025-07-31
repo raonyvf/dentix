@@ -24,6 +24,7 @@ class Organization extends Model
         'estado',
         'logo_url',
         'status',
+        'timezone',
     ];
 
 

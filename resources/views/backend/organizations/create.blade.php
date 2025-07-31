@@ -109,6 +109,14 @@
             <p class="text-xs text-gray-500 mt-1">Se deixado em branco, uma senha aleatória será criada e enviada por e-mail.</p>
         </div>
         <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700">Timezone</label>
+            <select name="timezone" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                @foreach(timezone_identifiers_list() as $tz)
+                    <option value="{{ $tz }}" @selected(old('timezone', config('app.timezone')) === $tz)>{{ $tz }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Status</label>
             <select name="status" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
                 <option value="ativo" @selected(old('status') === 'ativo')>Ativa</option>
