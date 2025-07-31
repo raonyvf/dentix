@@ -31,6 +31,9 @@ class EscalaTrabalhoController extends Controller
 
         if ($view === 'month') {
             $month = $request->input('month');
+            if (! $month && $request->filled('week')) {
+                $month = Carbon::parse($request->input('week'))->startOfMonth()->format('Y-m');
+            }
             $month = $month ? Carbon::parse($month)->startOfMonth() : Carbon::now()->startOfMonth();
             $mesesDisponiveis = collect(range(-2, 2))->map(fn($i) => Carbon::now()->startOfMonth()->addMonths($i));
 
