@@ -65,51 +65,104 @@ class EscalaTrabalhoController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'clinic_id' => 'required|exists:clinics,id',
-            'cadeira_id' => 'required|exists:cadeiras,id',
-            'profissional_id' => 'required|exists:profissionais,id',
-            'semana' => 'required|date',
-            'dias' => 'required|array',
-            'dias.*' => 'in:segunda,terca,quarta,quinta,sexta,sabado,domingo',
-            'hora_inicio' => 'required',
-            'hora_fim' => 'required',
-        ]);
-
-        foreach ($data['dias'] as $dia) {
-            // conflict: same chair and time
-            $conflict = EscalaTrabalho::where('cadeira_id', $data['cadeira_id'])
-                ->where('semana', $data['semana'])
-                ->where('dia_semana', $dia)
-                ->where(function($q) use ($data) {
-                    $q->whereBetween('hora_inicio', [$data['hora_inicio'], $data['hora_fim']])
-                      ->orWhereBetween('hora_fim', [$data['hora_inicio'], $data['hora_fim']]);
-                })->exists();
-
-            $conflictProf = EscalaTrabalho::where('profissional_id', $data['profissional_id'])
-                ->where('semana', $data['semana'])
-                ->where('dia_semana', $dia)
-                ->where(function($q) use ($data) {
-                    $q->whereBetween('hora_inicio', [$data['hora_inicio'], $data['hora_fim']])
-                      ->orWhereBetween('hora_fim', [$data['hora_inicio'], $data['hora_fim']]);
-                })->exists();
-
-            if ($conflict || $conflictProf) {
-                return back()->with('error', 'Conflito de horários detectado.');
-            }
-
-            EscalaTrabalho::create([
-                'clinic_id' => $data['clinic_id'],
-                'cadeira_id' => $data['cadeira_id'],
-                'profissional_id' => $data['profissional_id'],
-                'semana' => $data['semana'],
-                'dia_semana' => $dia,
-                'hora_inicio' => $data['hora_inicio'],
-                'hora_fim' => $data['hora_fim'],
+        if ($request->filled('datas')) {
+            $data = $request->validate([
+                'clinic_id' => 'required|exists:clinics,id',
+                'cadeira_id' => 'required|exists:cadeiras,id',
+                'profissional_id' => 'required|exists:profissionais,id',
+                'datas' => 'required|array',
+                'datas.*' => 'date',
+                'hora_inicio' => 'required',
+                'hora_fim' => 'required',
+            ]);
+        } else {
+            $data = $request->validate([
+                'clinic_id' => 'required|exists:clinics,id',
+                'cadeira_id' => 'required|exists:cadeiras,id',
+                'profissional_id' => 'required|exists:profissionais,id',
+                'semana' => 'required|date',
+                'dias' => 'required|array',
+                'dias.*' => 'in:segunda,terca,quarta,quinta,sexta,sabado,domingo',
+                'hora_inicio' => 'required',
+                'hora_fim' => 'required',
             ]);
         }
 
-        $params = ['clinic_id' => $data['clinic_id'], 'week' => $data['semana']];
+        if(isset($data['datas'])) {
+            $map = [1=>'segunda',2=>'terca',3=>'quarta',4=>'quinta',5=>'sexta',6=>'sabado',7=>'domingo'];
+            foreach ($data['datas'] as $d) {
+                $date = Carbon::parse($d);
+                $weekStart = $date->copy()->startOfWeek(Carbon::MONDAY)->toDateString();
+                $dia = $map[$date->isoWeekday()];
+
+                $conflict = EscalaTrabalho::where('cadeira_id', $data['cadeira_id'])
+                    ->where('semana', $weekStart)
+                    ->where('dia_semana', $dia)
+                    ->where(function($q) use ($data) {
+                        $q->whereBetween('hora_inicio', [$data['hora_inicio'], $data['hora_fim']])
+                          ->orWhereBetween('hora_fim', [$data['hora_inicio'], $data['hora_fim']]);
+                    })->exists();
+
+                $conflictProf = EscalaTrabalho::where('profissional_id', $data['profissional_id'])
+                    ->where('semana', $weekStart)
+                    ->where('dia_semana', $dia)
+                    ->where(function($q) use ($data) {
+                        $q->whereBetween('hora_inicio', [$data['hora_inicio'], $data['hora_fim']])
+                          ->orWhereBetween('hora_fim', [$data['hora_inicio'], $data['hora_fim']]);
+                    })->exists();
+
+                if ($conflict || $conflictProf) {
+                    return back()->with('error', 'Conflito de horários detectado.');
+                }
+
+                EscalaTrabalho::create([
+                    'clinic_id' => $data['clinic_id'],
+                    'cadeira_id' => $data['cadeira_id'],
+                    'profissional_id' => $data['profissional_id'],
+                    'semana' => $weekStart,
+                    'dia_semana' => $dia,
+                    'hora_inicio' => $data['hora_inicio'],
+                    'hora_fim' => $data['hora_fim'],
+                ]);
+            }
+        } else {
+            foreach ($data['dias'] as $dia) {
+                $conflict = EscalaTrabalho::where('cadeira_id', $data['cadeira_id'])
+                    ->where('semana', $data['semana'])
+                    ->where('dia_semana', $dia)
+                    ->where(function($q) use ($data) {
+                        $q->whereBetween('hora_inicio', [$data['hora_inicio'], $data['hora_fim']])
+                          ->orWhereBetween('hora_fim', [$data['hora_inicio'], $data['hora_fim']]);
+                    })->exists();
+
+                $conflictProf = EscalaTrabalho::where('profissional_id', $data['profissional_id'])
+                    ->where('semana', $data['semana'])
+                    ->where('dia_semana', $dia)
+                    ->where(function($q) use ($data) {
+                        $q->whereBetween('hora_inicio', [$data['hora_inicio'], $data['hora_fim']])
+                          ->orWhereBetween('hora_fim', [$data['hora_inicio'], $data['hora_fim']]);
+                    })->exists();
+
+                if ($conflict || $conflictProf) {
+                    return back()->with('error', 'Conflito de horários detectado.');
+                }
+
+                EscalaTrabalho::create([
+                    'clinic_id' => $data['clinic_id'],
+                    'cadeira_id' => $data['cadeira_id'],
+                    'profissional_id' => $data['profissional_id'],
+                    'semana' => $data['semana'],
+                    'dia_semana' => $dia,
+                    'hora_inicio' => $data['hora_inicio'],
+                    'hora_fim' => $data['hora_fim'],
+                ]);
+            }
+        }
+
+        $params = ['clinic_id' => $data['clinic_id']];
+        if ($request->filled('semana')) {
+            $params['week'] = $request->input('semana');
+        }
         if ($request->filled('view')) {
             $params['view'] = $request->input('view');
         }
