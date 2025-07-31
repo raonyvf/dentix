@@ -133,11 +133,19 @@
     </div>
 @endif
 <div id="escala-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
-    <div class="bg-white rounded p-4 w-80">
+    <div class="bg-white rounded p-4 w-96">
         <form method="POST" action="{{ route('escalas.store') }}" class="space-y-4">
             @csrf
             <input type="hidden" name="clinic_id" value="{{ $clinicId }}">
             <input type="hidden" name="view" value="{{ $view }}">
+            <div>
+                <label class="block text-sm mb-1">Profissional</label>
+                <select name="profissional_id" class="w-full border rounded px-2 py-1">
+                    @foreach($dentistas as $d)
+                        <option value="{{ $d->id }}">{{ $d->person->first_name }} {{ $d->person->last_name }}</option>
+                    @endforeach
+                </select>
+            </div>
             @if($view==='month')
                 <input type="hidden" name="month" id="calendar-month-input" value="{{ $month->format('Y-m') }}">
                 <div class="mb-2 flex items-center justify-between">
@@ -151,14 +159,6 @@
                 <input type="hidden" name="semana" value="{{ $week->format('Y-m-d') }}">
             @endif
             <div class="flex gap-2 items-end">
-                <div class="flex-1">
-                    <label class="block text-sm mb-1">Profissional</label>
-                    <select name="profissional_id" class="w-full border rounded px-2 py-1">
-                        @foreach($dentistas as $d)
-                            <option value="{{ $d->id }}">{{ $d->person->first_name }} {{ $d->person->last_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
                 <div>
                     <label class="block text-sm mb-1">Início</label>
                     <input type="time" name="hora_inicio" class="border rounded px-2 py-1">
