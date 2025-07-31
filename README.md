@@ -190,4 +190,4 @@ devolvido com uma mensagem de erro e os dados não serão salvos.
 
 ## Testando o controlador de horários
 
-Execute `php scripts/test_horarios.php <data>` para verificar os horários retornados pelo endpoint `agendamentos/horarios`. Substitua `<data>` por uma data no formato `AAAA-MM-DD` (por exemplo, `2025-07-27`). O script retorna o JSON produzido pelo controlador, permitindo confirmar se o dia está mapeado corretamente.
+Execute `php scripts/test_horarios.php <data> [<clinica>]` para verificar os horários retornados pelo endpoint `agendamentos/horarios`. Substitua `<data>` por uma data no formato `AAAA-MM-DD` (por exemplo, `2025-07-27`). Opcionalmente informe o ID da clínica em `<clinica>` para testar o retorno dessa unidade específica. O script exibe o JSON produzido pelo controlador, permitindo confirmar se o dia está mapeado corretamente.
