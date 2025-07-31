@@ -24,54 +24,133 @@
         </select>
     </div>
     <div>
-        <label class="block text-sm font-medium mb-1">Semana</label>
-        <select name="week" class="border rounded px-2 py-1" onchange="this.form.submit()">
-            @foreach($semanasDisponiveis as $sem)
-                <option value="{{ $sem->format('Y-m-d') }}" @selected($sem->equalTo($week))>{{ $sem->format('d/m/Y') }}</option>
-            @endforeach
+        <label class="block text-sm font-medium mb-1">Visualização</label>
+        <select name="view" class="border rounded px-2 py-1" onchange="this.form.submit()">
+            <option value="week" @selected($view==='week')>Semanal</option>
+            <option value="month" @selected($view==='month')>Mensal</option>
         </select>
     </div>
-</form>
-<div class="overflow-x-auto bg-white rounded shadow">
-    <table class="table-fixed w-full text-sm border">
-        <thead>
-            <tr>
-                <th class="w-32 px-2 py-1 bg-white font-semibold border border-gray-200">Cadeira</th>
-                @foreach($dias as $d)
-                    <th class="px-2 py-1 text-center font-semibold bg-white capitalize border border-gray-200" style="width:14.28%">{{ ucfirst($d) }}</th>
+    @if($view==='month')
+        <div>
+            <label class="block text-sm font-medium mb-1">Mês</label>
+            <select name="month" class="border rounded px-2 py-1" onchange="this.form.submit()">
+                @foreach($mesesDisponiveis as $mes)
+                    <option value="{{ $mes->format('Y-m') }}" @selected($mes->equalTo($month))>{{ $mes->translatedFormat('F Y') }}</option>
                 @endforeach
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($cadeiras as $cadeira)
+            </select>
+        </div>
+    @else
+        <div>
+            <label class="block text-sm font-medium mb-1">Semana</label>
+            <select name="week" class="border rounded px-2 py-1" onchange="this.form.submit()">
+                @foreach($semanasDisponiveis as $sem)
+                    <option value="{{ $sem->format('Y-m-d') }}" @selected($sem->equalTo($week))>{{ $sem->format('d/m/Y') }}</option>
+                @endforeach
+            </select>
+        </div>
+    @endif
+</form>
+@if($view==='month')
+    @foreach($weeks as $w)
+        <h2 class="mt-6 font-semibold">Semana de {{ $w->format('d/m/Y') }}</h2>
+        <div class="overflow-x-auto bg-white rounded shadow mb-6">
+            <table class="table-fixed w-full text-sm border">
+                <thead>
+                    <tr>
+                        <th class="w-32 px-2 py-1 bg-white font-semibold border border-gray-200">Cadeira</th>
+                        @php $weekStart = $w; @endphp
+                        @foreach($dias as $d)
+                            <th class="px-2 py-1 text-center font-semibold bg-white capitalize border border-gray-200" style="width:14.28%">
+                                {{ ucfirst($d) }}<br>
+                                <span class="text-xs text-gray-500">{{ $weekStart->copy()->addDays($loop->index)->format('d/m') }}</span>
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($cadeiras as $cadeira)
+                        <tr>
+                            <td class="w-32 px-2 py-1 font-semibold bg-gray-50 border border-gray-200">{{ $cadeira->nome }}</td>
+                            @foreach($dias as $d)
+                                @php $items = $escalas[$w->toDateString()][$cadeira->id][$d] ?? collect(); @endphp
+                                <td class="px-2 py-2 border border-gray-200 align-top" style="width:14.28%">
+                                    @forelse($items as $it)
+                                        <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
+                                            <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->person)->first_name }} {{ optional($it->profissional->person)->last_name }}</div>
+                                            <div>{{ $it->hora_inicio }} – {{ $it->hora_fim }}</div>
+                                            <div class="text-xs text-gray-600">{{ optional($it->profissional->user)->especialidade ?? $it->profissional->cargo }}</div>
+                                            <div class="mt-1 h-2 rounded bg-emerald-400 w-full"></div>
+                                        </div>
+                                    @empty
+                                        <span class="text-sm text-gray-400">Livre</span>
+                                    @endforelse
+                                </td>
+                            @endforeach
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endforeach
+@else
+    <div class="overflow-x-auto bg-white rounded shadow">
+        <table class="table-fixed w-full text-sm border">
+            <thead>
                 <tr>
-                    <td class="w-32 px-2 py-1 font-semibold bg-gray-50 border border-gray-200">{{ $cadeira->nome }}</td>
+                    <th class="w-32 px-2 py-1 bg-white font-semibold border border-gray-200">Cadeira</th>
+                    @php $weekStart = $week; @endphp
                     @foreach($dias as $d)
-                        @php $items = $escalas[$cadeira->id][$d] ?? collect(); @endphp
-                        <td class="px-2 py-2 border border-gray-200 align-top" style="width:14.28%">
-                            @forelse($items as $it)
-                                <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
-                                    <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->person)->first_name }} {{ optional($it->profissional->person)->last_name }}</div>
-                                    <div>{{ $it->hora_inicio }} – {{ $it->hora_fim }}</div>
-                                    <div class="text-xs text-gray-600">{{ optional($it->profissional->user)->especialidade ?? $it->profissional->cargo }}</div>
-                                    <div class="mt-1 h-2 rounded bg-emerald-400 w-full"></div>
-                                </div>
-                            @empty
-                                <span class="text-sm text-gray-400">Livre</span>
-                            @endforelse
-                        </td>
+                        <th class="px-2 py-1 text-center font-semibold bg-white capitalize border border-gray-200" style="width:14.28%">
+                            {{ ucfirst($d) }}<br>
+                            <span class="text-xs text-gray-500">{{ $weekStart->copy()->addDays($loop->index)->format('d/m') }}</span>
+                        </th>
                     @endforeach
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach($cadeiras as $cadeira)
+                    <tr>
+                        <td class="w-32 px-2 py-1 font-semibold bg-gray-50 border border-gray-200">{{ $cadeira->nome }}</td>
+                        @foreach($dias as $d)
+                            @php $items = $escalas[$cadeira->id][$d] ?? collect(); @endphp
+                            <td class="px-2 py-2 border border-gray-200 align-top" style="width:14.28%">
+                                @forelse($items as $it)
+                                    <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
+                                        <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->person)->first_name }} {{ optional($it->profissional->person)->last_name }}</div>
+                                        <div>{{ $it->hora_inicio }} – {{ $it->hora_fim }}</div>
+                                        <div class="text-xs text-gray-600">{{ optional($it->profissional->user)->especialidade ?? $it->profissional->cargo }}</div>
+                                        <div class="mt-1 h-2 rounded bg-emerald-400 w-full"></div>
+                                    </div>
+                                @empty
+                                    <span class="text-sm text-gray-400">Livre</span>
+                                @endforelse
+                            </td>
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+@endif
 <div id="escala-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
     <div class="bg-white rounded p-4 w-80">
         <form method="POST" action="{{ route('escalas.store') }}" class="space-y-4">
             @csrf
             <input type="hidden" name="clinic_id" value="{{ $clinicId }}">
-            <input type="hidden" name="semana" value="{{ $week->format('Y-m-d') }}">
+            <input type="hidden" name="view" value="{{ $view }}">
+            @if($view==='month')
+                <input type="hidden" name="month" value="{{ $month->format('Y-m') }}">
+                <div>
+                    <label class="block text-sm mb-1">Semana</label>
+                    <select name="semana" class="w-full border rounded px-2 py-1">
+                        @foreach($weeks as $w)
+                            <option value="{{ $w->format('Y-m-d') }}">{{ $w->format('d/m/Y') }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @else
+                <input type="hidden" name="semana" value="{{ $week->format('Y-m-d') }}">
+            @endif
             <div>
                 <label class="block text-sm mb-1">Profissional</label>
                 <select name="profissional_id" class="w-full border rounded px-2 py-1">
