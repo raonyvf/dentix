@@ -67,7 +67,10 @@ class AgendaController extends Controller
             return response()->json(['closed' => true]);
         }
 
-        $intervalos = \App\Models\Horario::withoutGlobalScopes()
+        // Remove only the clinic scope so the organization scope remains
+        // active. This prevents pulling schedules from other organizations
+        // while still allowing queries for the selected clinic.
+        $intervalos = \App\Models\Horario::withoutGlobalScope('clinic')
             ->where('clinic_id', $clinicId)
             ->where('dia_semana', $dia)
             ->orderBy('hora_inicio')
