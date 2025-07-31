@@ -40,7 +40,11 @@ class AgendaController extends Controller
 
     public function horarios(Request $request)
     {
-        $date = Carbon::parse($request->query('date'));
+        $date = Carbon::createFromFormat(
+            'Y-m-d',
+            $request->query('date'),
+            config('app.timezone')
+        );
 
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
         if (! $clinicId) {
