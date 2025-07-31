@@ -49,7 +49,7 @@ class EscalaTrabalhoController extends Controller
                 ->where('clinic_id', $clinicId)
                 ->whereBetween('semana', [$weeks->first()->toDateString(), $weeks->last()->toDateString()])
                 ->get()
-                ->groupBy(['semana','cadeira_id','dia_semana']);
+                ->groupBy([fn($e) => $e->semana->toDateString(), 'cadeira_id', 'dia_semana']);
 
             return view('escalas.index', compact('clinics','clinicId','view','month','weeks','dias','cadeiras','escalas','dentistas','mesesDisponiveis'));
         }
