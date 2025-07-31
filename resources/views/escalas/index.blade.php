@@ -139,25 +139,34 @@
             <input type="hidden" name="clinic_id" value="{{ $clinicId }}">
             <input type="hidden" name="view" value="{{ $view }}">
             @if($view==='month')
-                <input type="hidden" name="month" value="{{ $month->format('Y-m') }}">
-                <div>
-                    <label class="block text-sm mb-1">Semana</label>
-                    <select name="semana" class="w-full border rounded px-2 py-1">
-                        @foreach($weeks as $w)
-                            <option value="{{ $w->format('Y-m-d') }}">{{ $w->format('d/m/Y') }}</option>
-                        @endforeach
-                    </select>
+                <input type="hidden" name="month" id="calendar-month-input" value="{{ $month->format('Y-m') }}">
+                <div class="mb-2 flex items-center justify-between">
+                    <button type="button" id="prev-month" class="px-2">&#60;</button>
+                    <span id="calendar-month-label" class="font-semibold"></span>
+                    <button type="button" id="next-month" class="px-2">&#62;</button>
                 </div>
+                <div id="calendar-table" class="mb-2 text-sm"></div>
+                <div id="selected-dates"></div>
             @else
                 <input type="hidden" name="semana" value="{{ $week->format('Y-m-d') }}">
             @endif
-            <div>
-                <label class="block text-sm mb-1">Profissional</label>
-                <select name="profissional_id" class="w-full border rounded px-2 py-1">
-                    @foreach($dentistas as $d)
-                        <option value="{{ $d->id }}">{{ $d->person->first_name }} {{ $d->person->last_name }}</option>
-                    @endforeach
-                </select>
+            <div class="flex gap-2 items-end">
+                <div class="flex-1">
+                    <label class="block text-sm mb-1">Profissional</label>
+                    <select name="profissional_id" class="w-full border rounded px-2 py-1">
+                        @foreach($dentistas as $d)
+                            <option value="{{ $d->id }}">{{ $d->person->first_name }} {{ $d->person->last_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm mb-1">Início</label>
+                    <input type="time" name="hora_inicio" class="border rounded px-2 py-1">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1">Fim</label>
+                    <input type="time" name="hora_fim" class="border rounded px-2 py-1">
+                </div>
             </div>
             <div>
                 <label class="block text-sm mb-1">Cadeira</label>
@@ -167,6 +176,7 @@
                     @endforeach
                 </select>
             </div>
+            @if($view!=='month')
             <div>
                 <label class="block text-sm mb-1">Dias da semana</label>
                 <select name="dias[]" multiple class="w-full border rounded px-2 py-1">
@@ -175,16 +185,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="flex gap-2">
-                <div class="flex-1">
-                    <label class="block text-sm mb-1">Início</label>
-                    <input type="time" name="hora_inicio" class="w-full border rounded px-2 py-1">
-                </div>
-                <div class="flex-1">
-                    <label class="block text-sm mb-1">Fim</label>
-                    <input type="time" name="hora_fim" class="w-full border rounded px-2 py-1">
-                </div>
-            </div>
+            @endif
             <div class="text-right space-x-2">
                 <button type="button" id="escala-cancel" class="px-3 py-1 border rounded">Cancelar</button>
                 <button class="px-3 py-1 bg-blue-600 text-white rounded">Salvar</button>
@@ -194,12 +195,84 @@
 </div>
 @push('scripts')
 <script>
+    const escalaModal = document.getElementById('escala-modal');
     document.getElementById('open-modal').addEventListener('click', () => {
-        document.getElementById('escala-modal').classList.remove('hidden');
+        escalaModal.classList.remove('hidden');
+        if ('{{ $view }}' === 'month') initCalendar();
     });
     document.getElementById('escala-cancel').addEventListener('click', () => {
-        document.getElementById('escala-modal').classList.add('hidden');
+        escalaModal.classList.add('hidden');
     });
+
+    function initCalendar() {
+        const monthInput = document.getElementById('calendar-month-input');
+        const monthLabel = document.getElementById('calendar-month-label');
+        const tableContainer = document.getElementById('calendar-table');
+        const prevBtn = document.getElementById('prev-month');
+        const nextBtn = document.getElementById('next-month');
+        let current = monthInput.value ? new Date(monthInput.value + '-01') : new Date();
+
+        function render() {
+            monthInput.value = current.toISOString().slice(0,7);
+            monthLabel.textContent = current.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+            const first = new Date(current.getFullYear(), current.getMonth(), 1);
+            const start = new Date(first);
+            start.setDate(start.getDate() - ((start.getDay()+6)%7));
+            const end = new Date(current.getFullYear(), current.getMonth()+1, 0);
+            const last = new Date(end);
+            last.setDate(last.getDate() + (7 - ((end.getDay()+6)%7) -1));
+
+            const weekDays = ['Seg','Ter','Qua','Qui','Sex','Sab','Dom'];
+            let html = '<table class="w-full border text-center text-sm"><thead><tr>';
+            weekDays.forEach(d => html += `<th class="border px-1 py-1">${d}</th>`);
+            html += '</tr></thead><tbody></tbody></table>';
+            tableContainer.innerHTML = html;
+
+            const tbody = tableContainer.querySelector('tbody');
+            let d = new Date(start);
+            while (d <= last) {
+                if (d.getDay() === 1) tbody.appendChild(document.createElement('tr'));
+                const row = tbody.lastElementChild;
+                const td = document.createElement('td');
+                td.className = 'border px-1 py-1';
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.dataset.date = d.toISOString().slice(0,10);
+                btn.textContent = d.getDate();
+                btn.className = 'day-btn w-full rounded ' + (d.getMonth() === current.getMonth() ? '' : 'text-gray-400');
+                td.appendChild(btn);
+                row.appendChild(td);
+                d.setDate(d.getDate()+1);
+            }
+
+            tbody.querySelectorAll('.day-btn').forEach(btn => {
+                btn.addEventListener('click', () => toggleDate(btn));
+            });
+        }
+
+        function toggleDate(btn) {
+            const wrapper = document.getElementById('selected-dates');
+            const date = btn.dataset.date;
+            btn.classList.toggle('bg-emerald-400');
+            btn.classList.toggle('text-white');
+            if (btn.classList.contains('bg-emerald-400')) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'datas[]';
+                input.value = date;
+                input.dataset.date = date;
+                wrapper.appendChild(input);
+            } else {
+                const input = wrapper.querySelector(`input[data-date="${date}"]`);
+                if (input) input.remove();
+            }
+        }
+
+        prevBtn.onclick = () => { current.setMonth(current.getMonth() - 1); render(); };
+        nextBtn.onclick = () => { current.setMonth(current.getMonth() + 1); render(); };
+        render();
+    }
 </script>
 @endpush
 @endsection
