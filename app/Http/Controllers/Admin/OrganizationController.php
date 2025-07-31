@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\Profile;
 use App\Models\User;
+use App\Models\Person;
 use App\Notifications\NewAdminPasswordNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -98,14 +99,20 @@ class OrganizationController extends Controller
 
         $password = $data['password'] ?? Str::random(10);
 
-        $nomeCompleto = trim($data['first_name'] . ' ' . ($data['middle_name'] ? $data['middle_name'] . ' ' : '') . $data['last_name']);
+        $person = Person::create([
+            'organization_id' => $organization->id,
+            'first_name' => $data['first_name'],
+            'middle_name' => $data['middle_name'] ?? null,
+            'last_name' => $data['last_name'],
+            'email' => $data['email'],
+        ]);
 
         $user = User::create([
-            'name' => $nomeCompleto,
             'email' => $data['email'],
             'organization_id' => $organization->id,
             'password' => Hash::make($password),
             'must_change_password' => true,
+            'person_id' => $person->id,
         ]);
 
         $user->profiles()->syncWithoutDetaching([$profile->id => ['clinic_id' => null]]);
@@ -169,7 +176,11 @@ class OrganizationController extends Controller
         $usuario = User::where('organization_id', $organization->id)->first();
         if ($usuario) {
             if ($request->filled('first_name') || $request->filled('middle_name') || $request->filled('last_name')) {
-                $usuario->name = trim($request->input('first_name') . ' ' . ($request->input('middle_name') ? $request->input('middle_name') . ' ' : '') . $request->input('last_name'));
+                $usuario->person?->update([
+                    'first_name' => $request->input('first_name') ?? $usuario->person->first_name,
+                    'middle_name' => $request->input('middle_name') ?? $usuario->person->middle_name,
+                    'last_name' => $request->input('last_name') ?? $usuario->person->last_name,
+                ]);
             }
             if ($request->filled('password')) {
                 $usuario->password = Hash::make($request->input('password'));
