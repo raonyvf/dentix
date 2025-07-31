@@ -32,7 +32,7 @@ window.agendaCalendar = function agendaCalendar() {
         for (let i = 0; i < 7; i++) {
             const d = new Date(start);
             d.setDate(start.getDate() + i);
-            const iso = d.toISOString().slice(0, 10);
+            const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
             let classes = 'flex flex-col items-center p-2 rounded cursor-pointer text-xs flex-1 text-center';
             if (iso === selected) {
                 classes += ' bg-black text-white';
@@ -57,7 +57,7 @@ window.agendaCalendar = function agendaCalendar() {
         selectedDate: null,
         init() {
             this.horariosUrl = this.$root.dataset.horariosUrl;
-            this.selectedDate = today.toISOString().slice(0, 10);
+            this.selectedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
             this.days = buildDays(this.selectedDate);
             this.fetchHorarios(this.selectedDate);
         },
