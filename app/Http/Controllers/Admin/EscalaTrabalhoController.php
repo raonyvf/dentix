@@ -56,7 +56,10 @@ class EscalaTrabalhoController extends Controller
         $semanasDisponiveis = collect(range(-2, 5))->map(fn($i) => Carbon::now()->startOfWeek(Carbon::MONDAY)->addWeeks($i));
         $escalas = EscalaTrabalho::with(['profissional.person','profissional.user'])
             ->where('clinic_id', $clinicId)
-            ->where('semana', $week->toDateString())
+            ->whereBetween('semana', [
+                $week->toDateString(),
+                $week->copy()->addDays(6)->toDateString(),
+            ])
             ->get()
             ->groupBy(['cadeira_id','dia_semana']);
 
