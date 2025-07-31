@@ -44,6 +44,7 @@ class OrganizationController extends Controller
             'estado' => 'nullable',
             'logo_url' => 'nullable',
             'status' => 'in:ativo,inativo,suspenso',
+            'timezone' => 'required|timezone',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
@@ -65,6 +66,7 @@ class OrganizationController extends Controller
             'estado' => $data['estado'] ?? null,
             'logo_url' => $data['logo_url'] ?? null,
             'status' => $data['status'] ?? 'ativo',
+            'timezone' => $data['timezone'],
         ]);
      
         $profile = Profile::create([
@@ -139,6 +141,7 @@ class OrganizationController extends Controller
             'estado' => 'nullable',
             'logo_url' => 'nullable',
             'status' => 'in:ativo,inativo,suspenso',
+            'timezone' => 'required|timezone',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
@@ -160,6 +163,7 @@ class OrganizationController extends Controller
             'estado' => $data['estado'] ?? null,
             'logo_url' => $data['logo_url'] ?? null,
             'status' => $data['status'] ?? $organization->status,
+            'timezone' => $data['timezone'],
         ]);
 
         $usuario = User::where('organization_id', $organization->id)->first();

@@ -79,6 +79,7 @@ class ClinicController extends Controller
         unset($data['horarios']);
 
         $data['organization_id'] = auth()->user()->organization_id;
+        $data['timezone'] = auth()->user()->organization->timezone;
 
         $clinic = Clinic::create($data);
 

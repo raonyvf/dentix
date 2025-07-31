@@ -31,6 +31,7 @@ class Clinic extends Model
         'cep',
         'telefone',
         'email',
+        'timezone',
     ];
 
     public function horarios()
