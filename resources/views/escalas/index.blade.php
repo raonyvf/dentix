@@ -58,8 +58,12 @@
                 <thead>
                     <tr>
                         <th class="w-32 px-2 py-1 bg-white font-semibold border border-gray-200">Cadeira</th>
+                        @php $weekStart = $w; @endphp
                         @foreach($dias as $d)
-                            <th class="px-2 py-1 text-center font-semibold bg-white capitalize border border-gray-200" style="width:14.28%">{{ ucfirst($d) }}</th>
+                            <th class="px-2 py-1 text-center font-semibold bg-white capitalize border border-gray-200" style="width:14.28%">
+                                {{ ucfirst($d) }}<br>
+                                <span class="text-xs text-gray-500">{{ $weekStart->copy()->addDays($loop->index)->format('d/m') }}</span>
+                            </th>
                         @endforeach
                     </tr>
                 </thead>
@@ -94,8 +98,12 @@
             <thead>
                 <tr>
                     <th class="w-32 px-2 py-1 bg-white font-semibold border border-gray-200">Cadeira</th>
+                    @php $weekStart = $week; @endphp
                     @foreach($dias as $d)
-                        <th class="px-2 py-1 text-center font-semibold bg-white capitalize border border-gray-200" style="width:14.28%">{{ ucfirst($d) }}</th>
+                        <th class="px-2 py-1 text-center font-semibold bg-white capitalize border border-gray-200" style="width:14.28%">
+                            {{ ucfirst($d) }}<br>
+                            <span class="text-xs text-gray-500">{{ $weekStart->copy()->addDays($loop->index)->format('d/m') }}</span>
+                        </th>
                     @endforeach
                 </tr>
             </thead>
