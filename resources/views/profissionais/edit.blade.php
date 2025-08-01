@@ -303,7 +303,7 @@
                             <span>CNPJ</span>
                         </label>
                     </div>
-                    <input type="text" data-role="cpf_cnpj" name="conta[cpf_cnpj]" value="{{ old('conta.cpf_cnpj', $profissional->conta['cpf_cnpj'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" data-role="cpf_cnpj" name="conta[cpf_cnpj]" value="{{ old('conta.cpf_cnpj', $profissional->conta['cpf_cnpj'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('conta.cpf_cnpj') border-red-500 @enderror" required />
                 </div>
                 <div class="sm:col-span-2">
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Chave PIX</label>
