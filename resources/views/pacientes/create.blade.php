@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['hideErrors' => true])
 
 @section('content')
 @include('partials.breadcrumbs', ['crumbs' => [
@@ -9,21 +9,15 @@
 <div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ menorIdade: '{{ old('menor_idade', 'Não') }}' }">
     <h1 class="text-xl font-semibold mb-4">Novo Paciente</h1>
     @if ($errors->any())
-        <div class="mb-4">
-            <ul class="list-disc list-inside text-sm text-red-600">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+        <x-alert-error>Por favor, preencha todos os campos obrigatórios (*)</x-alert-error>
     @endif
-    <form method="POST" action="{{ route('pacientes.store') }}" class="space-y-6">
+    <form method="POST" action="{{ route('pacientes.store') }}" class="space-y-6" novalidate>
         @csrf
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <h2 class="mb-4 text-sm font-medium text-gray-700">Informações Básicas</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="first_name" value="{{ old('first_name') }}" required />
                 </div>
                 <div>
@@ -31,15 +25,15 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="middle_name" value="{{ old('middle_name') }}" />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="last_name" value="{{ old('last_name') }}" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="date" name="data_nascimento" value="{{ old('data_nascimento') }}" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf') }}" x-bind:required="menorIdade !== 'Sim'" />
                 </div>
                 <div>
@@ -55,7 +49,7 @@
             <h2 class="mb-4 text-sm font-medium text-gray-700">Dados do Responsável</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do responsável</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do responsável *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_first_name" value="{{ old('responsavel_first_name') }}" x-bind:required="menorIdade === 'Sim'" />
                 </div>
                 <div>
@@ -67,7 +61,7 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_last_name" value="{{ old('responsavel_last_name') }}" />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF do responsável</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF do responsável *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_cpf" value="{{ old('responsavel_cpf') }}" x-bind:required="menorIdade === 'Sim'" />
                 </div>
             </div>
