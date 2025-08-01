@@ -6,7 +6,7 @@
     ['label' => 'Profissionais', 'url' => route('profissionais.index')],
     ['label' => 'Editar']
 ]])
-<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ activeTab: 'dados' }">
+<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ activeTab: 'dados', selectedClinics: @js(old('clinics', $profissional->clinics->pluck('id')->toArray())) }">
     <h1 class="text-xl font-semibold mb-4">Editar Profissional</h1>
     <div class="border-b mb-6">
         <nav class="-mb-px flex space-x-4" aria-label="Tabs">
@@ -36,8 +36,8 @@
                     <input type="text" name="first_name" value="{{ old('first_name', $profissional->person->first_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio <span class="text-red-500">*</span></label>
-                    <input type="text" name="middle_name" value="{{ old('middle_name', $profissional->person->middle_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</label>
+                    <input type="text" name="middle_name" value="{{ old('middle_name', $profissional->person->middle_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome <span class="text-red-500">*</span></label>
@@ -172,7 +172,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         @foreach($clinics as $clinic)
                             <label class="flex items-center space-x-2">
-                                <input type="checkbox" name="clinics[]" value="{{ $clinic->id }}" @checked(in_array($clinic->id, old('clinics', $profissional->clinics->pluck('id')->toArray()))) class="rounded border-stroke" />
+                                <input type="checkbox" name="clinics[]" x-model="selectedClinics" value="{{ $clinic->id }}" @checked(in_array($clinic->id, old('clinics', $profissional->clinics->pluck('id')->toArray()))) class="rounded border-stroke" />
                                 <span>{{ $clinic->nome }}</span>
                             </label>
                         @endforeach
@@ -254,7 +254,7 @@
                     @php
                         $vals = $profissional->comissoes[$clinic->id] ?? [];
                     @endphp
-                    <div class="p-4 bg-gray-50 border rounded">
+                    <div class="p-4 bg-gray-50 border rounded" x-show="selectedClinics.includes({{ $clinic->id }})" x-cloak>
                         <h4 class="text-sm font-medium text-gray-700 mb-2">{{ $clinic->nome }}</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
@@ -294,10 +294,10 @@
                     <input type="text" name="conta[numero]" value="{{ old('conta.numero', $profissional->conta['numero'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div data-cpf-cnpj-group>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF/CNPJ do titular <span class="text-red-500">*</span></label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF/CNPJ do titular <span class="text-red-500" data-required-indicator>*</span></label>
                     <div class="flex items-center space-x-4 mb-2">
                         <label class="flex items-center space-x-1">
-                            <input type="radio" name="conta[cpf_cnpj_tipo]" value="cpf" @checked(old('conta.cpf_cnpj_tipo', $profissional->conta['cpf_cnpj_tipo'] ?? 'cpf')==='cpf') required />
+                            <input type="radio" name="conta[cpf_cnpj_tipo]" value="cpf" @checked(old('conta.cpf_cnpj_tipo', $profissional->conta['cpf_cnpj_tipo'] ?? 'cpf')==='cpf') />
                             <span>CPF</span>
                         </label>
                         <label class="flex items-center space-x-1">
@@ -305,7 +305,7 @@
                             <span>CNPJ</span>
                         </label>
                     </div>
-                    <input type="text" data-role="cpf_cnpj" name="conta[cpf_cnpj]" value="{{ old('conta.cpf_cnpj', $profissional->conta['cpf_cnpj'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('conta.cpf_cnpj') border-red-500 @enderror" required />
+                    <input type="text" data-role="cpf_cnpj" name="conta[cpf_cnpj]" value="{{ old('conta.cpf_cnpj', $profissional->conta['cpf_cnpj'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('conta.cpf_cnpj') border-red-500 @enderror" />
                 </div>
                 <div class="sm:col-span-2">
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Chave PIX</label>
