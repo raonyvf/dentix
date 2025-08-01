@@ -30,7 +30,7 @@
         </svg>
         <span>Por favor, preencha todos os campos obrigatórios.</span>
     </div>
-    <form method="POST" action="{{ route('profissionais.update', $profissional) }}" enctype="multipart/form-data" class="space-y-6" data-validate>
+    <form method="POST" action="{{ route('profissionais.update', $profissional) }}" enctype="multipart/form-data" class="space-y-6" data-validate novalidate>
         @csrf
         @method('PUT')
         <div x-show="activeTab === 'dados'" class="space-y-6">
