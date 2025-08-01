@@ -30,7 +30,7 @@
             @endunless
         @endauth
         <main class="flex-1 p-6 overflow-y-auto">
-            @if ($errors->any())
+            @if ($errors->any() && !(isset($hideErrors) && $hideErrors))
                 @include('components.alert-error', ['slot' => $errors->first()])
             @endif
             @if (session('success'))

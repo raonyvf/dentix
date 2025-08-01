@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['hideErrors' => true])
 
 @section('content')
 @include('partials.breadcrumbs', ['crumbs' => [
