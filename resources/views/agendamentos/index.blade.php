@@ -26,11 +26,21 @@
             'past'=>$d->lt(Carbon::today()),
         ];
     }
-    $professionals = [
-        ['id'=>1,'name'=>'Dr. Raony'],
-        ['id'=>2,'name'=>'Dra. Ana'],
-        ['id'=>3,'name'=>'Dr. Pedro'],
-    ];
+    $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
+    $professionals = [];
+    if ($clinicId) {
+        $clinic = \App\Models\Clinic::with(['profissionais.person'])->find($clinicId);
+        if ($clinic) {
+            $professionals = $clinic->profissionais->map(function ($prof) {
+                $gender = $prof->person->sexo ?? null;
+                $prefix = $gender === 'Masculino' ? 'Dr. ' : ($gender === 'Feminino' ? 'Dra. ' : '');
+                return [
+                    'id' => $prof->id,
+                    'name' => $prefix . ($prof->person->first_name ?? ''),
+                ];
+            })->toArray();
+        }
+    }
     $patients = ['João','Maria','Pedro','Ana','Carlos'];
     $horarios = [];
     $startTime = Carbon::createFromTime(0, 0);
