@@ -8,6 +8,7 @@ use App\Models\Clinic;
 use App\Models\Cadeira;
 use App\Models\Profissional;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
 
 class EscalaTrabalhoController extends Controller
 {
@@ -20,13 +21,16 @@ class EscalaTrabalhoController extends Controller
 
         $dias = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
         $cadeiras = $clinicId ? Cadeira::where('clinic_id', $clinicId)->get() : collect();
-        $dentistas = Profissional::where(function($q){
-                $q->where('funcao', 'Dentista')->orWhere('cargo', 'Dentista');
+
+        $dentistas = Profissional::when($clinicId, function ($query) use ($clinicId) {
+                $query->whereHas('clinics', fn($q) => $q->where('clinics.id', $clinicId));
             })
-            ->orWhereHas('user', function($q){
-                $q->whereNotNull('especialidade');
+            ->where(function($q){
+                $q->where('funcao', 'Dentista')
+                  ->orWhere('cargo', 'Dentista')
+                  ->orWhereHas('user', fn($u) => $u->whereNotNull('especialidade'));
             })
-            ->with(['person'])
+            ->with('person')
             ->get();
 
         if ($view === 'month') {
@@ -75,7 +79,11 @@ class EscalaTrabalhoController extends Controller
             $data = $request->validate([
                 'clinic_id' => 'required|exists:clinics,id',
                 'cadeira_id' => 'required|exists:cadeiras,id',
-                'profissional_id' => 'required|exists:profissionais,id',
+                'profissional_id' => [
+                    'required',
+                    'exists:profissionais,id',
+                    Rule::exists('clinic_profissional', 'profissional_id')->where(fn($q) => $q->where('clinic_id', $request->input('clinic_id'))),
+                ],
                 'datas' => 'required|array',
                 'datas.*' => 'date',
                 'hora_inicio' => 'required',
@@ -85,7 +93,11 @@ class EscalaTrabalhoController extends Controller
             $data = $request->validate([
                 'clinic_id' => 'required|exists:clinics,id',
                 'cadeira_id' => 'required|exists:cadeiras,id',
-                'profissional_id' => 'required|exists:profissionais,id',
+                'profissional_id' => [
+                    'required',
+                    'exists:profissionais,id',
+                    Rule::exists('clinic_profissional', 'profissional_id')->where(fn($q) => $q->where('clinic_id', $request->input('clinic_id'))),
+                ],
                 'semana' => 'required|date',
                 'dias' => 'required|array',
                 'dias.*' => 'in:segunda,terca,quarta,quinta,sexta,sabado,domingo',
