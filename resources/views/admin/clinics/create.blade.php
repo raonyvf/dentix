@@ -9,7 +9,14 @@
 <div class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Criar Clínica</h1>
     @if ($errors->any())
-        <x-alert-error>Por favor, preencha todos os campos obrigatórios (*)</x-alert-error>
+        <x-alert-error>
+            <div>Por favor, preencha todos os campos obrigatórios (*).</div>
+            <ul class="list-disc list-inside mt-2">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </x-alert-error>
     @endif
     <form method="POST" action="{{ route('clinicas.store') }}" class="space-y-6" novalidate>
         @csrf
