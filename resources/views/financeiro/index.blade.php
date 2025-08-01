@@ -111,7 +111,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         const ctxClinicas = document.getElementById('clinicas-chart');
         if (ctxClinicas && window.Chart) {
-            new Chart(ctxClinicas, {
+            if (window.clinicasChart) window.clinicasChart.destroy();
+            window.clinicasChart = new Chart(ctxClinicas, {
                 type: 'bar',
                 data: {
                     labels: @json($comparativo->pluck('clinic')),
@@ -139,7 +140,8 @@
 
         const ctxFluxo = document.getElementById('fluxo-chart');
         if (ctxFluxo && window.Chart) {
-            new Chart(ctxFluxo, {
+            if (window.fluxoChart) window.fluxoChart.destroy();
+            window.fluxoChart = new Chart(ctxFluxo, {
                 type: 'bar',
                 data: {
                     labels: @json($meses->pluck('mes')),
@@ -154,7 +156,8 @@
 
         const ctxFormas = document.getElementById('formas-chart');
         if (ctxFormas && window.Chart) {
-            new Chart(ctxFormas, {
+            if (window.formasChart) window.formasChart.destroy();
+            window.formasChart = new Chart(ctxFormas, {
                 type: 'doughnut',
                 data: {
                     labels: @json(collect($formasPagamento)->pluck('label')),
