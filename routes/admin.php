@@ -33,6 +33,7 @@ Route::resource('pacientes', PatientController::class)
     ->parameters(['pacientes' => 'paciente']);
 Route::get('pacientes/buscar', [PatientController::class, 'search'])->name('pacientes.search');
 
+Route::view('orcamentos', 'orcamentos.index')->name('orcamentos.index');
 Route::view('orcamentos/assinar', 'orcamentos.assinar')->name('orcamentos.assinar');
 
 Route::post('selecionar-clinica', [ClinicContextController::class, 'update'])->name('clinicas.selecionar');
