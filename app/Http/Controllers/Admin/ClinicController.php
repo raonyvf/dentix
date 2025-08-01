@@ -118,12 +118,14 @@ class ClinicController extends Controller
         }
 
         $horarios = $clinic->horarios
-            ->mapWithKeys(fn($h) => [
-                $h->dia_semana => [
-                    'abertura' => $h->hora_inicio,
-                    'fechamento' => $h->hora_fim,
-                ],
-            ])->toArray();
+            ->mapWithKeys(function ($h) {
+                return [
+                    $h->dia_semana => [
+                        'abertura' => Carbon::createFromTimeString($h->hora_inicio)->format('H:i'),
+                        'fechamento' => Carbon::createFromTimeString($h->hora_fim)->format('H:i'),
+                    ],
+                ];
+            })->toArray();
 
         return view('admin.clinics.edit', compact('clinic', 'horarios'));
     }
