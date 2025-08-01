@@ -308,6 +308,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
+    const scheduleModal = document.getElementById('schedule-modal');
+    if (scheduleModal) {
+        const cancel = document.getElementById('schedule-cancel');
+        document.querySelectorAll('#schedule-table td[data-professional]').forEach(td => {
+            td.addEventListener('click', () => {
+                scheduleModal.classList.remove('hidden');
+            });
+        });
+        if (cancel) {
+            cancel.addEventListener('click', () => {
+                scheduleModal.classList.add('hidden');
+            });
+        }
+        scheduleModal.addEventListener('click', e => {
+            if (e.target === scheduleModal) {
+                scheduleModal.classList.add('hidden');
+            }
+        });
+    }
+
+
 
     const charts = [
         {
