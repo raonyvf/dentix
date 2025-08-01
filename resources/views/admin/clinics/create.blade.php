@@ -10,7 +10,7 @@
     <h1 class="text-xl font-semibold mb-4">Criar Clínica</h1>
     @if ($errors->any())
         <x-alert-error>
-            <div>Por favor, preencha todos os campos obrigatórios (*).</div>
+            <div>Por favor, preencha todos os campos obrigatórios (<span class="text-red-500">*</span>).</div>
             <ul class="list-disc list-inside mt-2">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -24,11 +24,11 @@
             <h2 class="mb-4 text-sm font-medium text-gray-700">Dados da Clínica</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-2">
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome *</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome" value="{{ old('nome') }}" required />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">CNPJ *</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">CNPJ <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cnpj" value="{{ old('cnpj') }}" required />
                 </div>
             </div>
@@ -38,19 +38,19 @@
             <h2 class="mb-4 text-sm font-medium text-gray-700">Responsável Técnico</h2>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome *</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_first_name" value="{{ old('responsavel_first_name') }}" required />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome do Meio *</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome do Meio <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_middle_name" value="{{ old('responsavel_middle_name') }}" required />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Último *</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Último <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_last_name" value="{{ old('responsavel_last_name') }}" required />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">CRO *</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">CRO <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="number" name="cro" value="{{ old('cro') }}" required />
                 </div>
                 <div>
@@ -68,11 +68,11 @@
             <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">CEP *</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">CEP <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep') }}" required />
                 </div>
                 <div class="sm:col-span-2">
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Logradouro *</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Logradouro <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="logradouro" value="{{ old('logradouro') }}" required />
                 </div>
                 <div>
@@ -88,11 +88,11 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="bairro" value="{{ old('bairro') }}" />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Cidade *</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Cidade <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" value="{{ old('cidade') }}" required />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Estado *</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Estado <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado') }}" required />
                 </div>
             </div>
@@ -101,17 +101,17 @@
             <h2 class="mb-4 text-sm font-medium text-gray-700">Contato</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Telefone *</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Telefone <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="telefone" value="{{ old('telefone') }}" required />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">E-mail *</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">E-mail <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email') }}" required />
                 </div>
             </div>
         </div>
         <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Horários de Funcionamento *</label>
+            <label class="mb-2 block text-sm font-medium text-gray-700">Horários de Funcionamento <span class="text-red-500">*</span></label>
             <div class="mb-2">
                 <button type="button" id="apply-schedule-all" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">Aplicar para selecionados</button>
             </div>
