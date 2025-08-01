@@ -294,10 +294,10 @@
                     <input type="text" name="conta[numero]" value="{{ old('conta.numero', $profissional->conta['numero'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div data-cpf-cnpj-group>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF/CNPJ do titular <span class="text-red-500">*</span></label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF/CNPJ do titular <span class="text-red-500" data-required-indicator>*</span></label>
                     <div class="flex items-center space-x-4 mb-2">
                         <label class="flex items-center space-x-1">
-                            <input type="radio" name="conta[cpf_cnpj_tipo]" value="cpf" @checked(old('conta.cpf_cnpj_tipo', $profissional->conta['cpf_cnpj_tipo'] ?? 'cpf')==='cpf') required />
+                            <input type="radio" name="conta[cpf_cnpj_tipo]" value="cpf" @checked(old('conta.cpf_cnpj_tipo', $profissional->conta['cpf_cnpj_tipo'] ?? 'cpf')==='cpf') />
                             <span>CPF</span>
                         </label>
                         <label class="flex items-center space-x-1">
@@ -305,7 +305,7 @@
                             <span>CNPJ</span>
                         </label>
                     </div>
-                    <input type="text" data-role="cpf_cnpj" name="conta[cpf_cnpj]" value="{{ old('conta.cpf_cnpj', $profissional->conta['cpf_cnpj'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('conta.cpf_cnpj') border-red-500 @enderror" required />
+                    <input type="text" data-role="cpf_cnpj" name="conta[cpf_cnpj]" value="{{ old('conta.cpf_cnpj', $profissional->conta['cpf_cnpj'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('conta.cpf_cnpj') border-red-500 @enderror" />
                 </div>
                 <div class="sm:col-span-2">
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Chave PIX</label>
