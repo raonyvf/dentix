@@ -109,72 +109,61 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const resetCanvas = (id, store) => {
+        const createChart = (id, store, config) => {
             const el = document.getElementById(id);
-            if (!el || !window.Chart) return null;
-            if (window[store]) {
-                window[store].destroy();
-                const clone = el.cloneNode(true);
-                el.parentNode.replaceChild(clone, el);
-                return clone;
-            }
-            return el;
+            if (!el || !window.Chart) return;
+
+            const existing = window.Chart.getChart(el);
+            if (existing) existing.destroy();
+
+            window[store] = new Chart(el, config);
         };
 
-        let canvas = resetCanvas('clinicas-chart', 'clinicasChartInstance');
-        if (canvas) {
-            window.clinicasChartInstance = new Chart(canvas, {
-                type: 'bar',
-                data: {
-                    labels: @json($comparativo->pluck('clinic')),
-                    datasets: [
-                        {
-                            label: 'Receita',
-                            backgroundColor: '#10b981',
-                            data: @json($comparativo->pluck('receita')),
-                        },
-                        {
-                            label: 'Despesa',
-                            backgroundColor: '#ef4444',
-                            data: @json($comparativo->pluck('despesa')),
-                        },
-                        {
-                            label: 'A Receber',
-                            backgroundColor: '#f59e0b',
-                            data: @json($comparativo->pluck('areceber')),
-                        }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
+        createChart('clinicas-chart', 'clinicasChartInstance', {
+            type: 'bar',
+            data: {
+                labels: @json($comparativo->pluck('clinic')),
+                datasets: [
+                    {
+                        label: 'Receita',
+                        backgroundColor: '#10b981',
+                        data: @json($comparativo->pluck('receita')),
+                    },
+                    {
+                        label: 'Despesa',
+                        backgroundColor: '#ef4444',
+                        data: @json($comparativo->pluck('despesa')),
+                    },
+                    {
+                        label: 'A Receber',
+                        backgroundColor: '#f59e0b',
+                        data: @json($comparativo->pluck('areceber')),
+                    }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
 
-        canvas = resetCanvas('fluxo-chart', 'fluxoChartInstance');
-        if (canvas) {
-            window.fluxoChartInstance = new Chart(canvas, {
-                type: 'bar',
-                data: {
-                    labels: @json($meses->pluck('mes')),
-                    datasets: [
-                        { label: 'Receita', backgroundColor: '#10b981', data: @json($meses->pluck('receita')) },
-                        { label: 'Despesa', backgroundColor: '#ef4444', data: @json($meses->pluck('despesa')) }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
+        createChart('fluxo-chart', 'fluxoChartInstance', {
+            type: 'bar',
+            data: {
+                labels: @json($meses->pluck('mes')),
+                datasets: [
+                    { label: 'Receita', backgroundColor: '#10b981', data: @json($meses->pluck('receita')) },
+                    { label: 'Despesa', backgroundColor: '#ef4444', data: @json($meses->pluck('despesa')) }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
 
-        canvas = resetCanvas('formas-chart', 'formasChartInstance');
-        if (canvas) {
-            window.formasChartInstance = new Chart(canvas, {
-                type: 'doughnut',
-                data: {
-                    labels: @json(collect($formasPagamento)->pluck('label')),
-                    datasets: [{ data: @json(collect($formasPagamento)->pluck('percent')), backgroundColor: ['#3b82f6','#10b981','#f59e0b','#6366f1'] }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
+        createChart('formas-chart', 'formasChartInstance', {
+            type: 'doughnut',
+            data: {
+                labels: @json(collect($formasPagamento)->pluck('label')),
+                datasets: [{ data: @json(collect($formasPagamento)->pluck('percent')), backgroundColor: ['#3b82f6','#10b981','#f59e0b','#6366f1'] }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
     });
 </script>
 @endpush
