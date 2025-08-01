@@ -109,60 +109,61 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const ctxClinicas = document.getElementById('clinicas-chart');
-        if (ctxClinicas && window.Chart) {
-            new Chart(ctxClinicas, {
-                type: 'bar',
-                data: {
-                    labels: @json($comparativo->pluck('clinic')),
-                    datasets: [
-                        {
-                            label: 'Receita',
-                            backgroundColor: '#10b981',
-                            data: @json($comparativo->pluck('receita')),
-                        },
-                        {
-                            label: 'Despesa',
-                            backgroundColor: '#ef4444',
-                            data: @json($comparativo->pluck('despesa')),
-                        },
-                        {
-                            label: 'A Receber',
-                            backgroundColor: '#f59e0b',
-                            data: @json($comparativo->pluck('areceber')),
-                        }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
+        const createChart = (id, store, config) => {
+            const el = document.getElementById(id);
+            if (!el || !window.Chart) return;
 
-        const ctxFluxo = document.getElementById('fluxo-chart');
-        if (ctxFluxo && window.Chart) {
-            new Chart(ctxFluxo, {
-                type: 'bar',
-                data: {
-                    labels: @json($meses->pluck('mes')),
-                    datasets: [
-                        { label: 'Receita', backgroundColor: '#10b981', data: @json($meses->pluck('receita')) },
-                        { label: 'Despesa', backgroundColor: '#ef4444', data: @json($meses->pluck('despesa')) }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
+            const existing = window.Chart.getChart(el);
+            if (existing) existing.destroy();
 
-        const ctxFormas = document.getElementById('formas-chart');
-        if (ctxFormas && window.Chart) {
-            new Chart(ctxFormas, {
-                type: 'doughnut',
-                data: {
-                    labels: @json(collect($formasPagamento)->pluck('label')),
-                    datasets: [{ data: @json(collect($formasPagamento)->pluck('percent')), backgroundColor: ['#3b82f6','#10b981','#f59e0b','#6366f1'] }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
+            window[store] = new Chart(el, config);
+        };
+
+        createChart('clinicas-chart', 'clinicasChartInstance', {
+            type: 'bar',
+            data: {
+                labels: @json($comparativo->pluck('clinic')),
+                datasets: [
+                    {
+                        label: 'Receita',
+                        backgroundColor: '#10b981',
+                        data: @json($comparativo->pluck('receita')),
+                    },
+                    {
+                        label: 'Despesa',
+                        backgroundColor: '#ef4444',
+                        data: @json($comparativo->pluck('despesa')),
+                    },
+                    {
+                        label: 'A Receber',
+                        backgroundColor: '#f59e0b',
+                        data: @json($comparativo->pluck('areceber')),
+                    }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        createChart('fluxo-chart', 'fluxoChartInstance', {
+            type: 'bar',
+            data: {
+                labels: @json($meses->pluck('mes')),
+                datasets: [
+                    { label: 'Receita', backgroundColor: '#10b981', data: @json($meses->pluck('receita')) },
+                    { label: 'Despesa', backgroundColor: '#ef4444', data: @json($meses->pluck('despesa')) }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        createChart('formas-chart', 'formasChartInstance', {
+            type: 'doughnut',
+            data: {
+                labels: @json(collect($formasPagamento)->pluck('label')),
+                datasets: [{ data: @json(collect($formasPagamento)->pluck('percent')), backgroundColor: ['#3b82f6','#10b981','#f59e0b','#6366f1'] }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
     });
 </script>
 @endpush
