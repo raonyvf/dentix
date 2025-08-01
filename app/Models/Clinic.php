@@ -22,6 +22,7 @@ class Clinic extends Model
         'responsavel_middle_name',
         'responsavel_last_name',
         'cro',
+        'cro_uf',
         'logradouro',
         'numero',
         'complemento',
