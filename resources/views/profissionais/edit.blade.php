@@ -16,7 +16,7 @@
         </nav>
     </div>
     @if ($errors->any())
-        <x-alert-error>Por favor, preencha todos os campos obrigatórios.</x-alert-error>
+        <x-alert-error>Por favor, preencha todos os campos obrigatórios (*)</x-alert-error>
     @endif
     <form method="POST" action="{{ route('profissionais.update', $profissional) }}" enctype="multipart/form-data" class="space-y-6" novalidate>
         @csrf
