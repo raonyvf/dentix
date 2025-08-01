@@ -27,7 +27,7 @@
                 <tr>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->nome }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->cnpj }}</td>
-                    <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->responsavel_tecnico }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">{{ trim($clinic->responsavel_first_name . ' ' . $clinic->responsavel_middle_name . ' ' . $clinic->responsavel_last_name) }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->cro }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->telefone }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $clinic->email }}</td>
