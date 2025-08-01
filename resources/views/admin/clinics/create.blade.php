@@ -42,11 +42,11 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_first_name" value="{{ old('responsavel_first_name') }}" required />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome do Meio <span class="text-red-500">*</span></label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_middle_name" value="{{ old('responsavel_middle_name') }}" required />
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome do Meio</label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_middle_name" value="{{ old('responsavel_middle_name') }}" />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Último <span class="text-red-500">*</span></label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Último nome <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_last_name" value="{{ old('responsavel_last_name') }}" required />
                 </div>
                 <div>
