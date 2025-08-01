@@ -109,10 +109,21 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const ctxClinicas = document.getElementById('clinicas-chart');
-        if (ctxClinicas && window.Chart) {
-            if (window.clinicasChart) window.clinicasChart.destroy();
-            window.clinicasChart = new Chart(ctxClinicas, {
+        const resetCanvas = (id, store) => {
+            const el = document.getElementById(id);
+            if (!el || !window.Chart) return null;
+            if (window[store]) {
+                window[store].destroy();
+                const clone = el.cloneNode(true);
+                el.parentNode.replaceChild(clone, el);
+                return clone;
+            }
+            return el;
+        };
+
+        let canvas = resetCanvas('clinicas-chart', 'clinicasChartInstance');
+        if (canvas) {
+            window.clinicasChartInstance = new Chart(canvas, {
                 type: 'bar',
                 data: {
                     labels: @json($comparativo->pluck('clinic')),
@@ -138,10 +149,9 @@
             });
         }
 
-        const ctxFluxo = document.getElementById('fluxo-chart');
-        if (ctxFluxo && window.Chart) {
-            if (window.fluxoChart) window.fluxoChart.destroy();
-            window.fluxoChart = new Chart(ctxFluxo, {
+        canvas = resetCanvas('fluxo-chart', 'fluxoChartInstance');
+        if (canvas) {
+            window.fluxoChartInstance = new Chart(canvas, {
                 type: 'bar',
                 data: {
                     labels: @json($meses->pluck('mes')),
@@ -154,10 +164,9 @@
             });
         }
 
-        const ctxFormas = document.getElementById('formas-chart');
-        if (ctxFormas && window.Chart) {
-            if (window.formasChart) window.formasChart.destroy();
-            window.formasChart = new Chart(ctxFormas, {
+        canvas = resetCanvas('formas-chart', 'formasChartInstance');
+        if (canvas) {
+            window.formasChartInstance = new Chart(canvas, {
                 type: 'doughnut',
                 data: {
                     labels: @json(collect($formasPagamento)->pluck('label')),
