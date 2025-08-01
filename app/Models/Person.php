@@ -35,4 +35,10 @@ class Person extends Model
     protected $casts = [
         'data_nascimento' => 'date',
     ];
+
+    public function getFullNameAttribute(): string
+    {
+        $middle = $this->middle_name ? $this->middle_name . ' ' : '';
+        return trim($this->first_name . ' ' . $middle . $this->last_name);
+    }
 }
