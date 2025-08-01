@@ -52,18 +52,18 @@
         <h3 class="text-lg font-semibold">Comparativo entre Clínicas</h3>
         <p class="text-sm text-gray-500">Desempenho financeiro por unidade no mês atual</p>
     </div>
-    <canvas id="clinicas-chart" class="w-full h-72"></canvas>
+    <canvas id="clinicas-chart" class="w-full h-72" height="288"></canvas>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     <div class="bg-white rounded-lg shadow p-4">
         <h3 class="text-lg font-semibold mb-2">Fluxo de Caixa</h3>
         <p class="text-sm text-gray-500">Evolução consolidada de receitas e despesas nos últimos 6 meses</p>
-        <canvas id="fluxo-chart" class="w-full h-64"></canvas>
+        <canvas id="fluxo-chart" class="w-full h-64" height="256"></canvas>
     </div>
     <div class="bg-white rounded-lg shadow p-4">
         <h3 class="text-lg font-semibold mb-2">Formas de Pagamento</h3>
         <p class="text-sm text-gray-500">Distribuição das receitas por forma de pagamento</p>
-        <canvas id="formas-chart" class="w-full h-64"></canvas>
+        <canvas id="formas-chart" class="w-full h-64" height="256"></canvas>
     </div>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
