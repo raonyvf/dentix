@@ -48,7 +48,7 @@
                 @endforeach
             </div>
         </x-accordion-section>
-        <x-accordion-section title="Contas">
+        <x-accordion-section title="Dados bancários">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <span class="text-sm font-medium text-gray-700 mb-2 block">Nome do banco</span>
