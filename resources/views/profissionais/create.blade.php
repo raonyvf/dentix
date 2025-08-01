@@ -130,14 +130,6 @@
                     <label class="text-sm font-medium text-gray-700 mb-2 block">E-mail corporativo</label>
                     <input type="text" name="email_corporativo" value="{{ old('email_corporativo') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
-                <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Data de admissão *</label>
-                    <input type="date" name="data_admissao" value="{{ old('data_admissao') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
-                </div>
-                <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Data de demissão</label>
-                    <input type="date" name="data_demissao" value="{{ old('data_demissao') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
-                </div>
             </div>
         </x-accordion-section>
         <x-accordion-section title="Contrato de Trabalho">
