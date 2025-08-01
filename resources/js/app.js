@@ -70,7 +70,11 @@ window.agendaCalendar = function agendaCalendar() {
             this.days = buildDays(this.selectedDate);
         },
         openDatePicker() {
-            this.$refs.picker.showPicker();
+            if (typeof showDatePicker === 'function') {
+                showDatePicker(this.selectedDate, date => this.onDateSelected(date));
+            } else {
+                this.$refs.picker.showPicker();
+            }
         },
         onDateSelected(val) {
             const d = new Date(val);
@@ -324,6 +328,74 @@ document.addEventListener('DOMContentLoaded', () => {
         scheduleModal.addEventListener('click', e => {
             if (e.target === scheduleModal) {
                 scheduleModal.classList.add('hidden');
+            }
+        });
+    }
+
+    const datePickerModal = document.getElementById('date-picker-modal');
+    if (datePickerModal) {
+        const prev = document.getElementById('dp-prev');
+        const next = document.getElementById('dp-next');
+        const label = document.getElementById('dp-month-label');
+        const calendar = document.getElementById('dp-calendar');
+        let current = new Date();
+        let callback = null;
+
+        function render(selected) {
+            label.textContent = current.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+            calendar.innerHTML = '<table class="w-full border text-center text-sm"><thead><tr></tr></thead><tbody></tbody></table>';
+            const headRow = calendar.querySelector('thead tr');
+            ['Seg','Ter','Qua','Qui','Sex','Sab','Dom'].forEach(d => {
+                const th = document.createElement('th');
+                th.className = 'border px-1 py-1';
+                th.textContent = d;
+                headRow.appendChild(th);
+            });
+
+            const tbody = calendar.querySelector('tbody');
+            const first = new Date(current.getFullYear(), current.getMonth(), 1);
+            const start = new Date(first);
+            start.setDate(start.getDate() - ((start.getDay()+6)%7));
+            const end = new Date(current.getFullYear(), current.getMonth()+1, 0);
+            const last = new Date(end);
+            last.setDate(last.getDate() + (7 - ((end.getDay()+6)%7) -1));
+
+            for (let d = new Date(start); d <= last; d.setDate(d.getDate()+1)) {
+                if (d.getDay() === 1) tbody.appendChild(document.createElement('tr'));
+                const row = tbody.lastElementChild;
+                const td = document.createElement('td');
+                td.className = 'border px-1 py-1';
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                const iso = d.toISOString().slice(0,10);
+                btn.dataset.date = iso;
+                btn.textContent = d.getDate();
+                btn.className = 'w-full rounded ' + (d.getMonth() === current.getMonth() ? '' : 'text-gray-400');
+                if (selected === iso) {
+                    btn.classList.add('bg-emerald-400', 'text-white');
+                }
+                btn.addEventListener('click', () => {
+                    datePickerModal.classList.add('hidden');
+                    if (typeof callback === 'function') callback(iso);
+                });
+                td.appendChild(btn);
+                row.appendChild(td);
+            }
+        }
+
+        window.showDatePicker = function(selected, cb) {
+            callback = cb;
+            current = selected ? new Date(selected + 'T00:00:00') : new Date();
+            current.setDate(1);
+            datePickerModal.classList.remove('hidden');
+            render(selected);
+        };
+
+        prev.addEventListener('click', () => { current.setMonth(current.getMonth() - 1); render(); });
+        next.addEventListener('click', () => { current.setMonth(current.getMonth() + 1); render(); });
+        datePickerModal.addEventListener('click', e => {
+            if (e.target === datePickerModal) {
+                datePickerModal.classList.add('hidden');
             }
         });
     }

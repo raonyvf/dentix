@@ -136,7 +136,18 @@
             <button id="schedule-cancel" class="px-3 py-1 border rounded">Cancelar</button>
             <button id="schedule-save" class="px-3 py-1 bg-primary text-white rounded">Salvar</button>
         </div>
+        </div>
 </div>
+
+<div id="date-picker-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded p-4 w-80">
+        <div class="mb-2 flex items-center justify-between">
+            <button type="button" id="dp-prev" class="px-2">&#60;</button>
+            <span id="dp-month-label" class="font-semibold"></span>
+            <button type="button" id="dp-next" class="px-2">&#62;</button>
+        </div>
+        <div id="dp-calendar" class="mb-2 text-sm"></div>
+    </div>
 </div>
 </div>
 @endsection
