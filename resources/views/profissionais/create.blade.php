@@ -24,19 +24,19 @@
         <x-accordion-section title="Dados pessoais" :open="true">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome *</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome <span class="text-red-500">*</span></label>
                     <input type="text" name="first_name" value="{{ old('first_name') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio *</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio <span class="text-red-500">*</span></label>
                     <input type="text" name="middle_name" value="{{ old('middle_name') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome *</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome <span class="text-red-500">*</span></label>
                     <input type="text" name="last_name" value="{{ old('last_name') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento *</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento <span class="text-red-500">*</span></label>
                     <input type="date" name="data_nascimento" value="{{ old('data_nascimento') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
@@ -65,7 +65,7 @@
         <x-accordion-section title="Documentos">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF *</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF <span class="text-red-500">*</span></label>
                     <input type="text" name="cpf" value="{{ old('cpf') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
@@ -148,7 +148,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Data de início do contrato *</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Data de início do contrato <span class="text-red-500">*</span></label>
                     <input type="date" name="data_inicio_contrato" value="{{ old('data_inicio_contrato') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div x-show="tipo_contrato && tipo_contrato !== 'CLT'" x-cloak>
@@ -171,7 +171,7 @@
                     </div>
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Regime de trabalho *</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Regime de trabalho <span class="text-red-500">*</span></label>
                     <select name="regime_trabalho" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required>
                         <option value="">Selecione</option>
                         <option value="Presencial" @selected(old('regime_trabalho')==='Presencial')>Presencial</option>
@@ -184,7 +184,7 @@
         <x-accordion-section title="Atribuição">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Função *</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Função <span class="text-red-500">*</span></label>
                     <select name="funcao" x-model="funcao" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required>
                         <option value="">Selecione</option>
                         <option value="Dentista" @selected(old('funcao')==='Dentista')>Dentista</option>
@@ -197,13 +197,13 @@
                     </select>
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Cargo *</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Cargo <span class="text-red-500">*</span></label>
                     <input type="text" name="cargo" value="{{ old('cargo') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
             </div>
         </x-accordion-section>
         @php
-            $registrosTitle = 'Registros <span x-show="funcao === \"Dentista\"" class="text-red-500">*</span>';
+            $registrosTitle = 'Registros';
         @endphp
         <x-accordion-section :title-html="$registrosTitle" x-show="funcao === 'Dentista'" x-cloak>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -283,7 +283,7 @@
                     <input type="text" name="conta[numero]" value="{{ old('conta.numero') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div data-cpf-cnpj-group>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF/CNPJ do titular *</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">CPF/CNPJ do titular <span class="text-red-500">*</span></label>
                     <div class="flex items-center space-x-4 mb-2">
                         <label class="flex items-center space-x-1">
                             <input type="radio" name="conta[cpf_cnpj_tipo]" value="cpf" @checked(old('conta.cpf_cnpj_tipo', 'cpf')==='cpf') required />
