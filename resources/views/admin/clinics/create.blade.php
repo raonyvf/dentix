@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['hideErrors' => true])
 
 @section('content')
 @include('partials.breadcrumbs', ['crumbs' => [
@@ -9,25 +9,19 @@
 <div class="w-full bg-white p-6 rounded-lg shadow">
     <h1 class="text-xl font-semibold mb-4">Criar Clínica</h1>
     @if ($errors->any())
-        <div class="mb-4">
-            <ul class="list-disc list-inside text-sm text-red-600">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+        <x-alert-error>Por favor, preencha todos os campos obrigatórios (*)</x-alert-error>
     @endif
-    <form method="POST" action="{{ route('clinicas.store') }}" class="space-y-6">
+    <form method="POST" action="{{ route('clinicas.store') }}" class="space-y-6" novalidate>
         @csrf
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <h2 class="mb-4 text-sm font-medium text-gray-700">Dados da Clínica</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-2">
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Nome *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome" value="{{ old('nome') }}" required />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">CNPJ</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">CNPJ *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cnpj" value="{{ old('cnpj') }}" required />
                 </div>
             </div>
@@ -56,7 +50,7 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_last" value="{{ $respLast }}" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label class="mb-2 block text-sm font-medium text-gray-700">CRO</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">CRO *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cro" value="{{ old('cro') }}" required />
                 </div>
             </div>
@@ -66,11 +60,11 @@
             <h2 class="mb-4 text-sm font-medium text-gray-700">Endereço</h2>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">CEP</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">CEP *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cep" value="{{ old('cep') }}" required />
                 </div>
                 <div class="sm:col-span-2">
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Logradouro</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Logradouro *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="logradouro" value="{{ old('logradouro') }}" required />
                 </div>
                 <div>
@@ -86,11 +80,11 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="bairro" value="{{ old('bairro') }}" />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Cidade</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Cidade *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cidade" value="{{ old('cidade') }}" required />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Estado</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Estado *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="estado" value="{{ old('estado') }}" required />
                 </div>
             </div>
@@ -99,17 +93,17 @@
             <h2 class="mb-4 text-sm font-medium text-gray-700">Contato</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Telefone *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="telefone" value="{{ old('telefone') }}" required />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">E-mail</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">E-mail *</label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="email" name="email" value="{{ old('email') }}" required />
                 </div>
             </div>
         </div>
         <div>
-            <label class="mb-2 block text-sm font-medium text-gray-700">Horários de Funcionamento</label>
+            <label class="mb-2 block text-sm font-medium text-gray-700">Horários de Funcionamento *</label>
             <div class="mb-2">
                 <button type="button" id="apply-schedule-all" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">Aplicar para selecionados</button>
             </div>
