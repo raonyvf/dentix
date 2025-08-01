@@ -135,11 +135,12 @@
     </table>
 </div>
 <div id="schedule-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
-    <div class="bg-white rounded p-4 w-80">
-        <h2 class="text-lg font-semibold mb-4">Agendar Horário</h2>
+    <div class="bg-white rounded p-4 w-96">
+        <h2 class="text-lg font-semibold mb-2">Agendar Horário</h2>
+        <div id="schedule-time" class="text-sm text-gray-600 mb-4"></div>
         <label class="block mb-4">
             <span class="text-sm">Paciente</span>
-            <input id="schedule-patient" type="text" list="schedule-patient-list" placeholder="Buscar..." class="mt-1 w-full border rounded p-1" />
+            <input id="schedule-patient" type="text" list="schedule-patient-list" placeholder="Buscar..." data-search-url="{{ route('pacientes.search') }}" class="mt-1 w-full border rounded p-1" />
             <datalist id="schedule-patient-list"></datalist>
         </label>
         <div class="flex justify-end gap-2">

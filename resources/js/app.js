@@ -332,11 +332,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const scheduleModal = document.getElementById('schedule-modal');
     if (scheduleModal) {
         const cancel = document.getElementById('schedule-cancel');
+        const timeLabel = document.getElementById('schedule-time');
+        const patientInput = document.getElementById('schedule-patient');
+        const patientList = document.getElementById('schedule-patient-list');
+        let searchTimeout;
+
         document.querySelectorAll('#schedule-table td[data-professional]').forEach(td => {
             td.addEventListener('click', () => {
                 scheduleModal.classList.remove('hidden');
+                if (timeLabel) timeLabel.textContent = `Horário: ${td.dataset.time}`;
             });
         });
+
+        if (patientInput && patientList) {
+            patientInput.addEventListener('input', e => {
+                clearTimeout(searchTimeout);
+                const term = e.target.value.trim();
+                if (term.length < 2) { patientList.innerHTML = ''; return; }
+                searchTimeout = setTimeout(() => {
+                    const url = patientInput.dataset.searchUrl;
+                    fetch(`${url}?q=${encodeURIComponent(term)}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            patientList.innerHTML = data.map(n => `<option value="${n}"></option>`).join('');
+                        });
+                }, 300);
+            });
+        }
+
         if (cancel) {
             cancel.addEventListener('click', () => {
                 scheduleModal.classList.add('hidden');
