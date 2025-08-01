@@ -21,7 +21,13 @@
         <tbody class="divide-y divide-gray-200">
             @forelse ($users as $user)
                 <tr>
-                    <td class="px-4 py-2 whitespace-nowrap">{{ $user->name }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">
+                        @if($user->person)
+                            {{ $user->person->full_name }}
+                        @else
+                            {{ $user->name ?? '-' }}
+                        @endif
+                    </td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $user->email }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">
                         @foreach ($user->clinics as $clinic)
