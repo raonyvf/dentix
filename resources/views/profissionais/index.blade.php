@@ -11,7 +11,7 @@
         <p class="text-gray-600">Gestão de profissionais e funcionários</p>
     </div>
     <div class="flex items-center gap-2">
-        <a href="{{ route('profissionais.create') }}" class="py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 text-sm">+ Novo Profissional</a>
+        <a href="{{ route('profissionais.create') }}" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">+ Novo Profissional</a>
         <div class="relative" x-data="{ open: false }">
             <button @click="open = !open" class="py-2 px-4 bg-white border rounded text-sm flex items-center gap-1">
                 Relatórios
