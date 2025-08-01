@@ -202,11 +202,14 @@
                 </div>
             </div>
         </x-accordion-section>
-        <x-accordion-section title="Registros" x-show="funcao === 'Dentista'" x-cloak>
+        @php
+            $registrosTitle = 'Registros <span x-show="funcao === \"Dentista\"" class="text-red-500">*</span>';
+        @endphp
+        <x-accordion-section :title-html="$registrosTitle" x-show="funcao === 'Dentista'" x-cloak>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">CRO</label>
-                    <input type="number" name="cro" value="{{ old('cro') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">CRO <span x-show="funcao === 'Dentista'" class="text-red-500">*</span></label>
+                    <input type="number" name="cro" value="{{ old('cro') }}" x-bind:required="funcao === 'Dentista'" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">UF do CRO</label>
