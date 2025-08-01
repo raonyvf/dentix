@@ -113,8 +113,20 @@
             const el = document.getElementById(id);
             if (!el || !window.Chart) return;
 
-            const existing = window.Chart.getChart(el);
-            if (existing) existing.destroy();
+            // Destroy any existing chart instance attached to this id
+            if (window[store]) {
+                window[store].destroy();
+                delete window[store];
+            } else {
+                const existing = window.Chart.getChart(el);
+                if (existing) existing.destroy();
+            }
+
+            // Reset canvas dimensions so Chart.js doesn't keep expanding it
+            el.removeAttribute('width');
+            el.removeAttribute('height');
+            el.style.width = '';
+            el.style.height = '';
 
             window[store] = new Chart(el, config);
         };
