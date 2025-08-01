@@ -200,6 +200,10 @@ class ProfessionalController extends Controller
             'clinics.*' => 'exists:clinics,id',
         ];
 
+        if ($request->input('funcao') === 'Dentista') {
+            $rules['cro'] = 'required|numeric';
+        }
+
         $tipoConta = $request->input('conta.cpf_cnpj_tipo');
         if ($tipoConta === 'cpf') {
             $rules['conta.cpf_cnpj'][] = new \App\Rules\Cpf;
