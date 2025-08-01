@@ -54,8 +54,8 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="number" name="cro" value="{{ old('cro') }}" required />
                 </div>
                 <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">UF do CRO</label>
-                    <select name="cro_uf" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                    <label class="mb-2 block text-sm font-medium text-gray-700">UF do CRO <span class="text-red-500">*</span></label>
+                    <select name="cro_uf" required class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
                         <option value="">Selecione</option>
                         @foreach(['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'] as $uf)
                             <option value="{{ $uf }}" @selected(old('cro_uf')===$uf)>{{ $uf }}</option>
