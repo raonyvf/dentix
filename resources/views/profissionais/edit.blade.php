@@ -16,7 +16,14 @@
         </nav>
     </div>
     @if ($errors->any())
-        <x-alert-error>Por favor, preencha todos os campos obrigatórios (*)</x-alert-error>
+        <x-alert-error>
+            <div>Por favor, preencha todos os campos obrigatórios (*).</div>
+            <ul class="list-disc list-inside mt-2">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </x-alert-error>
     @endif
     <form method="POST" action="{{ route('profissionais.update', $profissional) }}" enctype="multipart/form-data" class="space-y-6" novalidate>
         @csrf
