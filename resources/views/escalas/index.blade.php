@@ -205,7 +205,7 @@
 
         function render() {
             monthInput.value = current.toISOString().slice(0,7);
-            monthLabel.textContent = current.toLocaleString('default', { month: 'long', year: 'numeric' });
+            monthLabel.textContent = current.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
 
             const first = new Date(current.getFullYear(), current.getMonth(), 1);
             const start = new Date(first);
