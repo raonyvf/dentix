@@ -19,7 +19,7 @@ class Cpf implements Rule
                 $d += $cpf[$c] * (($t + 1) - $c);
             }
             $d = ((10 * $d) % 11) % 10;
-            if ($cpf[$c] != $d) {
+            if ($cpf[$t] != $d) {
                 return false;
             }
         }
