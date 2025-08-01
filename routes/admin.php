@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ClinicContextController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EscalaTrabalhoController;
 use App\Http\Controllers\Admin\FinanceiroController;
+use App\Http\Controllers\Admin\EstoqueController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
 
@@ -41,4 +42,5 @@ Route::post('selecionar-clinica', [ClinicContextController::class, 'update'])->n
 Route::resource('escalas', EscalaTrabalhoController::class)->only(['index','store']);
 
 Route::get('financeiro', [FinanceiroController::class, 'index'])->name('financeiro.index');
+Route::get('estoque', [EstoqueController::class, 'index'])->name('estoque.index');
 
