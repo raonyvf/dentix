@@ -189,8 +189,8 @@ class ProfessionalController extends Controller
             'conta.tipo' => 'nullable',
             'conta.agencia' => 'nullable',
             'conta.numero' => 'nullable',
-            'conta.cpf_cnpj_tipo' => 'required|in:cpf,cnpj',
-            'conta.cpf_cnpj' => ['required'],
+            'conta.cpf_cnpj_tipo' => 'nullable|in:cpf,cnpj',
+            'conta.cpf_cnpj' => ['nullable'],
             'chave_pix' => 'nullable',
             'horarios_trabalho' => 'array',
             'comissoes' => 'array',
@@ -200,14 +200,22 @@ class ProfessionalController extends Controller
             'clinics.*' => 'exists:clinics,id',
         ];
 
+        $requiresCpfCnpj = $request->filled('conta.nome_banco') &&
+            $request->filled('conta.tipo') &&
+            $request->filled('conta.agencia');
+        if ($requiresCpfCnpj) {
+            $rules['conta.cpf_cnpj_tipo'] = 'required|in:cpf,cnpj';
+            $rules['conta.cpf_cnpj'] = ['required'];
+        }
+
         if ($request->input('funcao') === 'Dentista') {
             $rules['cro'] = 'required|numeric';
         }
 
         $tipoConta = $request->input('conta.cpf_cnpj_tipo');
-        if ($tipoConta === 'cpf') {
+        if ($request->filled('conta.cpf_cnpj') && $tipoConta === 'cpf') {
             $rules['conta.cpf_cnpj'][] = new \App\Rules\Cpf;
-        } elseif ($tipoConta === 'cnpj') {
+        } elseif ($request->filled('conta.cpf_cnpj') && $tipoConta === 'cnpj') {
             $rules['conta.cpf_cnpj'][] = new \App\Rules\Cnpj;
         }
 

@@ -181,6 +181,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = group.querySelector('input[data-role="cpf_cnpj"]');
         if (!input) return;
         const radios = group.querySelectorAll('input[type="radio"]');
+        const indicator = group.querySelector('[data-required-indicator]');
+
+        const form = group.closest('form');
+        const bank = form?.querySelector('input[name="conta[nome_banco]"]');
+        const typeField = form?.querySelector('select[name="conta[tipo]"]');
+        const agency = form?.querySelector('input[name="conta[agencia]"]');
+
+        const setRequired = () => {
+            const required = bank?.value.trim() && typeField?.value.trim() && agency?.value.trim();
+            radios.forEach(r => r.required = !!required);
+            input.required = !!required;
+            if (indicator) indicator.style.display = required ? '' : 'none';
+        };
+
+        [bank, typeField, agency].forEach(el => el?.addEventListener('input', setRequired));
+        setRequired();
+
         const mask = () => {
             const type = group.querySelector('input[type="radio"]:checked')?.value || 'cpf';
             let v = input.value.replace(/\D/g, '');
