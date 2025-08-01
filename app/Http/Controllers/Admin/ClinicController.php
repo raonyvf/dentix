@@ -42,7 +42,9 @@ class ClinicController extends Controller
         $data = $request->validate([
             'nome' => 'required',
             'cnpj' => ['required', new Cnpj],
-            'responsavel_tecnico' => 'required',
+            'responsavel_first_name' => 'required',
+            'responsavel_middle_name' => 'required',
+            'responsavel_last_name' => 'required',
             'cro' => 'required',
             'cro_uf' => 'nullable',
             'cep' => 'required',
@@ -136,7 +138,9 @@ class ClinicController extends Controller
         $data = $request->validate([
             'nome' => 'required',
             'cnpj' => ['required', new Cnpj],
-            'responsavel_tecnico' => 'required',
+            'responsavel_first_name' => 'required',
+            'responsavel_middle_name' => 'required',
+            'responsavel_last_name' => 'required',
             'cro' => 'required',
             'cro_uf' => 'nullable',
             'cep' => 'required',

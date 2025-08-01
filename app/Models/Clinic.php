@@ -17,7 +17,6 @@ class Clinic extends Model
     protected $fillable = [
         'nome',
         'cnpj',
-        'responsavel_tecnico',
         'responsavel_first_name',
         'responsavel_middle_name',
         'responsavel_last_name',
