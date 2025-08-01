@@ -23,7 +23,7 @@
         <div class="rounded-sm border border-stroke bg-gray-50 p-4">
             <h2 class="mb-4 text-sm font-medium text-gray-700">Dados da Clínica</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="sm:col-span-2">
+                <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">Nome <span class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="nome" value="{{ old('nome') }}" required />
                 </div>
