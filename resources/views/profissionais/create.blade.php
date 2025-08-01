@@ -6,7 +6,7 @@
     ['label' => 'Profissionais', 'url' => route('profissionais.index')],
     ['label' => 'Novo']
 ]])
-<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ activeTab: 'dados' }">
+<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ activeTab: 'dados', selectedClinics: @js(old('clinics', [])) }">
     <h1 class="text-xl font-semibold mb-4">Novo Profissional</h1>
     <div class="border-b mb-6">
         <nav class="-mb-px flex space-x-4" aria-label="Tabs">
@@ -171,7 +171,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         @foreach($clinics as $clinic)
                             <label class="flex items-center space-x-2">
-                                <input type="checkbox" name="clinics[]" value="{{ $clinic->id }}" @checked(in_array($clinic->id, old('clinics', []))) class="rounded border-stroke" />
+                                <input type="checkbox" name="clinics[]" x-model="selectedClinics" value="{{ $clinic->id }}" @checked(in_array($clinic->id, old('clinics', []))) class="rounded border-stroke" />
                                 <span>{{ $clinic->nome }}</span>
                             </label>
                         @endforeach
@@ -250,7 +250,7 @@
             </div>
             <div class="space-y-4 mt-4">
                 @foreach($clinics as $clinic)
-                    <div class="p-4 bg-gray-50 border rounded">
+                    <div class="p-4 bg-gray-50 border rounded" x-show="selectedClinics.includes({{ $clinic->id }})" x-cloak>
                         <h4 class="text-sm font-medium text-gray-700 mb-2">{{ $clinic->nome }}</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
