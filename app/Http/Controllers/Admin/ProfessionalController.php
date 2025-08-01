@@ -153,7 +153,7 @@ class ProfessionalController extends Controller
     {
         $rules = [
             'first_name' => 'required',
-            'middle_name' => 'required',
+            'middle_name' => 'nullable',
             'last_name' => 'required',
             'data_nascimento' => 'required|date',
             'sexo' => 'nullable',
