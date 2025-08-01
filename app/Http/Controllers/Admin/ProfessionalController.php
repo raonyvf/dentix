@@ -182,7 +182,7 @@ class ProfessionalController extends Controller
             'cargo' => 'required',
             'cro' => 'nullable|numeric',
             'cro_uf' => 'nullable',
-            'salario_fixo' => ['nullable', 'regex:/^\d+(,\d{2})?$/'],
+            'salario_fixo' => ['nullable', 'regex:/^\d+(?:[,.]\d{2})?$/'],
             'salario_periodo' => 'nullable',
             'conta' => 'array',
             'conta.nome_banco' => 'nullable',
