@@ -258,9 +258,9 @@ document.addEventListener('DOMContentLoaded', () => {
             input.value = format(input.value);
         }
 
-        input.addEventListener('input', e => {
+        // Format value only after the user finishes typing to avoid cursor issues
+        input.addEventListener('blur', e => {
             e.target.value = format(e.target.value);
-            e.target.setSelectionRange(e.target.value.length, e.target.value.length);
         });
 
         if (form) {
