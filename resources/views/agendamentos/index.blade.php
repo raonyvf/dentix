@@ -124,7 +124,6 @@
         </tbody>
     </table>
 </div>
-<pre id="clinic-hours-debug" class="text-xs text-gray-500 mt-2"></pre>
 <div id="schedule-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
     <div class="bg-white rounded p-4 w-80">
         <h2 class="text-lg font-semibold mb-4">Agendar Horário</h2>
