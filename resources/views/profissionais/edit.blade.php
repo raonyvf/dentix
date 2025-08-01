@@ -26,19 +26,19 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nome</label>
-                    <input type="text" name="first_name" value="{{ old('first_name', $profissional->person->first_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" name="first_name" value="{{ old('first_name', $profissional->person->first_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('first_name') border-red-500 @enderror" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</label>
-                    <input type="text" name="middle_name" value="{{ old('middle_name', $profissional->person->middle_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" name="middle_name" value="{{ old('middle_name', $profissional->person->middle_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('middle_name') border-red-500 @enderror" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome</label>
-                    <input type="text" name="last_name" value="{{ old('last_name', $profissional->person->last_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" name="last_name" value="{{ old('last_name', $profissional->person->last_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('last_name') border-red-500 @enderror" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento</label>
-                    <input type="date" name="data_nascimento" value="{{ old('data_nascimento', optional($profissional->person->data_nascimento)->format('Y-m-d')) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="date" name="data_nascimento" value="{{ old('data_nascimento', optional($profissional->person->data_nascimento)->format('Y-m-d')) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('data_nascimento') border-red-500 @enderror" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Sexo</label>
@@ -67,7 +67,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">CPF</label>
-                    <input type="text" name="cpf" value="{{ old('cpf', $profissional->person->cpf) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" name="cpf" value="{{ old('cpf', $profissional->person->cpf) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('cpf') border-red-500 @enderror" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">RG</label>
@@ -133,7 +133,7 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de admissão</label>
-                    <input type="date" name="data_admissao" value="{{ old('data_admissao', optional($profissional->data_admissao)->format('Y-m-d')) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="date" name="data_admissao" value="{{ old('data_admissao', optional($profissional->data_admissao)->format('Y-m-d')) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('data_admissao') border-red-500 @enderror" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de demissão</label>
@@ -158,7 +158,7 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de início do contrato</label>
-                    <input type="date" name="data_inicio_contrato" value="{{ old('data_inicio_contrato', optional($profissional->data_inicio_contrato)->format('Y-m-d')) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="date" name="data_inicio_contrato" value="{{ old('data_inicio_contrato', optional($profissional->data_inicio_contrato)->format('Y-m-d')) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('data_inicio_contrato') border-red-500 @enderror" required />
                 </div>
                 <div x-show="tipo_contrato && tipo_contrato !== 'CLT'" x-cloak>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de término do contrato</label>
@@ -181,7 +181,7 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Regime de trabalho</label>
-                    <select name="regime_trabalho" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required>
+                    <select name="regime_trabalho" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('regime_trabalho') border-red-500 @enderror" required>
                         <option value="">Selecione</option>
                         <option value="Presencial" @selected(old('regime_trabalho', $profissional->regime_trabalho ?? '')==='Presencial')>Presencial</option>
                         <option value="Remoto" @selected(old('regime_trabalho', $profissional->regime_trabalho ?? '')==='Remoto')>Remoto</option>
@@ -194,7 +194,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Função</label>
-                    <select name="funcao" x-model="funcao" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required>
+                    <select name="funcao" x-model="funcao" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('funcao') border-red-500 @enderror" required>
                         <option value="">Selecione</option>
                         <option value="Dentista" @selected(old('funcao', $profissional->funcao ?? '')==='Dentista')>Dentista</option>
                         <option value="Assistencial" @selected(old('funcao', $profissional->funcao ?? '')==='Assistencial')>Assistencial</option>
@@ -207,7 +207,7 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Cargo</label>
-                    <input type="text" name="cargo" value="{{ old('cargo', $profissional->cargo ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" name="cargo" value="{{ old('cargo', $profissional->cargo ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('cargo') border-red-500 @enderror" required />
                 </div>
             </div>
         </x-accordion-section>
@@ -291,7 +291,7 @@
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Número da conta</label>
                     <input type="text" name="conta[numero]" value="{{ old('conta.numero', $profissional->conta['numero'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
-                <div data-cpf-cnpj-group>
+                <div data-cpf-cnpj-group class="@error('conta.cpf_cnpj_tipo') border border-red-500 rounded p-2 @enderror">
                     <label class="text-sm font-medium text-gray-700 mb-2 block">CPF/CNPJ do titular</label>
                     <div class="flex items-center space-x-4 mb-2">
                         <label class="flex items-center space-x-1">
@@ -303,7 +303,7 @@
                             <span>CNPJ</span>
                         </label>
                     </div>
-                    <input type="text" data-role="cpf_cnpj" name="conta[cpf_cnpj]" value="{{ old('conta.cpf_cnpj', $profissional->conta['cpf_cnpj'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" data-role="cpf_cnpj" name="conta[cpf_cnpj]" value="{{ old('conta.cpf_cnpj', $profissional->conta['cpf_cnpj'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none @error('conta.cpf_cnpj') border-red-500 @enderror" required />
                 </div>
                 <div class="sm:col-span-2">
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Chave PIX</label>
