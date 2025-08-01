@@ -20,7 +20,7 @@
 <div class="mb-6" x-data="{ filtro: 'Mensal' }">
     <div class="flex gap-2">
         <template x-for="opt in ['Diário','Semanal','Mensal','Anual','Personalizado']" :key="opt">
-            <button @click="filtro = opt" :class="filtro === opt ? 'bg-primary text-white' : 'bg-white border text-gray-700'" class="px-3 py-1 rounded text-sm">{{ opt }}</button>
+            <button @click="filtro = opt" :class="filtro === opt ? 'bg-primary text-white' : 'bg-white border text-gray-700'" class="px-3 py-1 rounded text-sm" x-text="opt"></button>
         </template>
     </div>
 </div>
