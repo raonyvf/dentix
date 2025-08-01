@@ -148,16 +148,17 @@
             </div>
             @if($view==='month')
                 <input type="hidden" name="month" id="calendar-month-input" value="{{ $month->format('Y-m') }}">
-                <div class="mb-2 flex items-center justify-between">
-                    <button type="button" id="prev-month" class="px-2">&#60;</button>
-                    <span id="calendar-month-label" class="font-semibold"></span>
-                    <button type="button" id="next-month" class="px-2">&#62;</button>
-                </div>
-                <div id="calendar-table" class="mb-2 text-sm"></div>
-                <div id="selected-dates"></div>
             @else
                 <input type="hidden" name="semana" value="{{ $week->format('Y-m-d') }}">
+                <input type="hidden" id="calendar-month-input" value="{{ $week->format('Y-m') }}">
             @endif
+            <div class="mb-2 flex items-center justify-between">
+                <button type="button" id="prev-month" class="px-2">&#60;</button>
+                <span id="calendar-month-label" class="font-semibold"></span>
+                <button type="button" id="next-month" class="px-2">&#62;</button>
+            </div>
+            <div id="calendar-table" class="mb-2 text-sm"></div>
+            <div id="selected-dates"></div>
             <div class="flex gap-2 items-end">
                 <div>
                     <label class="block text-sm mb-1">Início</label>
@@ -176,16 +177,6 @@
                     @endforeach
                 </select>
             </div>
-            @if($view!=='month')
-            <div>
-                <label class="block text-sm mb-1">Dias da semana</label>
-                <select name="dias[]" multiple class="w-full border rounded px-2 py-1">
-                    @foreach($dias as $d)
-                        <option value="{{ $d }}">{{ ucfirst($d) }}</option>
-                    @endforeach
-                </select>
-            </div>
-            @endif
             <div class="text-right space-x-2">
                 <button type="button" id="escala-cancel" class="px-3 py-1 border rounded">Cancelar</button>
                 <button class="px-3 py-1 bg-blue-600 text-white rounded">Salvar</button>
@@ -198,7 +189,7 @@
     const escalaModal = document.getElementById('escala-modal');
     document.getElementById('open-modal').addEventListener('click', () => {
         escalaModal.classList.remove('hidden');
-        if ('{{ $view }}' === 'month') initCalendar();
+        initCalendar();
     });
     document.getElementById('escala-cancel').addEventListener('click', () => {
         escalaModal.classList.add('hidden');
