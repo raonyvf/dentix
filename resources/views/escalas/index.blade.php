@@ -7,7 +7,7 @@
 ]])
 <div class="mb-6 flex flex-wrap justify-between items-center gap-4">
     <h1 class="text-2xl font-bold">Escalas de Trabalho</h1>
-    <button id="open-modal" class="flex items-center gap-1 px-4 py-2 bg-emerald-400 text-white rounded hover:bg-emerald-500">
+    <button id="open-modal" class="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
