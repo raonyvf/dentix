@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AgendaController;
 use App\Http\Controllers\Admin\ClinicContextController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EscalaTrabalhoController;
+use App\Http\Controllers\Admin\FinanceiroController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
 
@@ -38,4 +39,6 @@ Route::view('orcamentos/assinar', 'orcamentos.assinar')->name('orcamentos.assina
 Route::post('selecionar-clinica', [ClinicContextController::class, 'update'])->name('clinicas.selecionar');
 
 Route::resource('escalas', EscalaTrabalhoController::class)->only(['index','store']);
+
+Route::get('financeiro', [FinanceiroController::class, 'index'])->name('financeiro.index');
 
