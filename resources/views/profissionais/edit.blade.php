@@ -36,8 +36,8 @@
                     <input type="text" name="first_name" value="{{ old('first_name', $profissional->person->first_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio <span class="text-red-500">*</span></label>
-                    <input type="text" name="middle_name" value="{{ old('middle_name', $profissional->person->middle_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</label>
+                    <input type="text" name="middle_name" value="{{ old('middle_name', $profissional->person->middle_name) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome <span class="text-red-500">*</span></label>
