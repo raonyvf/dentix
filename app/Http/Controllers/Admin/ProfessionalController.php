@@ -173,8 +173,6 @@ class ProfessionalController extends Controller
             'foto' => 'nullable|image',
             'numero_funcionario' => 'nullable',
             'email_corporativo' => 'nullable|email',
-            'data_admissao' => 'required|date',
-            'data_demissao' => 'nullable|date',
             'tipo_contrato' => 'nullable',
             'data_inicio_contrato' => 'required|date',
             'data_fim_contrato' => 'nullable|date',
@@ -275,8 +273,6 @@ class ProfessionalController extends Controller
         return [
             'numero_funcionario' => $data['numero_funcionario'] ?? null,
             'email_corporativo' => $data['email_corporativo'] ?? null,
-            'data_admissao' => $data['data_admissao'] ?? null,
-            'data_demissao' => $data['data_demissao'] ?? null,
             'tipo_contrato' => $data['tipo_contrato'] ?? null,
             'data_inicio_contrato' => $data['data_inicio_contrato'] ?? null,
             'data_fim_contrato' => $data['data_fim_contrato'] ?? null,
