@@ -108,10 +108,10 @@
 </div>
 <div class="overflow-auto" id="schedule-container">
     <div id="schedule-closed" class="hidden text-center py-4 text-gray-500">A clínica está fechada neste dia.</div>
-    <table id="schedule-table" class="min-w-full text-sm">
+    <table id="schedule-table" class="min-w-full text-sm table-fixed">
         <thead>
             <tr>
-                <th class="p-2 bg-gray-50 w-20"></th>
+                <th class="p-2 bg-gray-50 w-24 min-w-[6rem]"></th>
                 @foreach($professionals as $prof)
                     <th class="p-2 bg-gray-50 text-left whitespace-nowrap">{{ $prof['name'] }}</th>
                 @endforeach
@@ -120,9 +120,9 @@
         <tbody>
             @foreach($horarios as $hora)
                 <tr class="border-t" data-row="{{ $hora }}">
-                    <td class="bg-gray-50 w-20" data-slot="{{ $hora }}" data-hora="{{ $hora }}"><x-agenda.horario :time="$hora" /></td>
+                    <td class="bg-gray-50 w-24 min-w-[6rem] h-16 align-middle" data-slot="{{ $hora }}" data-hora="{{ $hora }}"><x-agenda.horario :time="$hora" /></td>
                     @foreach($professionals as $prof)
-                        <td class="w-40 h-16 cursor-pointer" data-professional="{{ $prof['id'] }}" data-time="{{ $hora }}" data-hora="{{ $hora }}">
+                        <td class="h-16 cursor-pointer" data-professional="{{ $prof['id'] }}" data-time="{{ $hora }}" data-hora="{{ $hora }}">
                             @isset($agenda[$prof['id']][$hora])
                                 @php $item = $agenda[$prof['id']][$hora]; @endphp
                                 <x-agenda.agendamento :paciente="$item['paciente']" :tipo="$item['tipo']" :contato="$item['contato']" :status="$item['status']" />
