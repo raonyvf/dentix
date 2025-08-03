@@ -114,7 +114,8 @@ class PatientController extends Controller
             ->limit(10)
             ->get()
             ->map(function ($p) {
-                return $p->person->first_name;
+                $person = $p->person;
+                return trim(($person->first_name ?? '') . ' ' . ($person->last_name ?? ''));
             })
             ->values();
 
