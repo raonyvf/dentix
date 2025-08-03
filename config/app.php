@@ -38,6 +38,7 @@ return [
         Illuminate\Notifications\NotificationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\Mail\MailServiceProvider::class,
+        Illuminate\Redis\RedisServiceProvider::class,
         Laravel\Breeze\BreezeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
@@ -51,5 +52,6 @@ return [
         'Auth' => Illuminate\Support\Facades\Auth::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
+        'Redis' => Illuminate\Support\Facades\Redis::class,
     ],
 ];
