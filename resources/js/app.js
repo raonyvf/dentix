@@ -337,6 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const saveBtn = document.getElementById('schedule-save');
         const patientInput = document.getElementById('schedule-patient');
         const patientList = document.getElementById('schedule-patient-list');
+        const patientIdInput = document.getElementById('schedule-patient-id');
         let searchTimeout;
         const hiddenStart = document.getElementById('hora_inicio');
         const hiddenEnd = document.getElementById('hora_fim');
@@ -436,9 +437,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     fetch(`${url}?q=${encodeURIComponent(term)}`)
                         .then(r => r.json())
                         .then(data => {
-                            patientList.innerHTML = data.map(n => `<option value="${n}"></option>`).join('');
+                            patientList.innerHTML = data.map(n => `<option data-id="${n.id}" value="${n.name}"></option>`).join('');
                         });
                 }, 300);
+            });
+            patientInput.addEventListener('change', () => {
+                const option = Array.from(patientList.options).find(o => o.value === patientInput.value);
+                if (patientIdInput) patientIdInput.value = option?.dataset.id || '';
             });
         }
 
@@ -464,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         data: date,
                         hora_inicio: startInput.value,
                         hora_fim: endInput.value,
-                        paciente: patientInput.value,
+                        patient_id: patientIdInput?.value,
                         observacao: document.getElementById('schedule-observacao')?.value || '',
                         profissional_id: selection.professional,
                     }),

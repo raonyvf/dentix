@@ -12,7 +12,7 @@ class Agendamento extends Model
     protected $fillable = [
         'clinic_id',
         'profissional_id',
-        'paciente',
+        'patient_id',
         'tipo',
         'contato',
         'status',
@@ -34,5 +34,10 @@ class Agendamento extends Model
     public function profissional()
     {
         return $this->belongsTo(Profissional::class);
+    }
+
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
     }
 }
