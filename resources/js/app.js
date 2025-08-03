@@ -334,25 +334,96 @@ document.addEventListener('DOMContentLoaded', () => {
         const cancel = document.getElementById('schedule-cancel');
         const startInput = document.getElementById('schedule-start');
         const endInput = document.getElementById('schedule-end');
+        const saveBtn = document.getElementById('schedule-save');
         const patientInput = document.getElementById('schedule-patient');
         const patientList = document.getElementById('schedule-patient-list');
         let searchTimeout;
-        let selectedTime = '';
+        const hiddenStart = document.getElementById('hora_inicio');
+        const hiddenEnd = document.getElementById('hora_fim');
+        let selection = { start: null, end: null, professional: null };
+
+        const clearSelection = () => {
+            document.querySelectorAll('#schedule-table td[data-professional].selected')
+                .forEach(c => c.classList.remove('selected', 'bg-blue-100'));
+            selection = { start: null, end: null, professional: null };
+            if (hiddenStart) hiddenStart.value = '';
+            if (hiddenEnd) hiddenEnd.value = '';
+        };
+
+        const isOpen = time => {
+            const row = document.querySelector(`tr[data-row="${time}"]`);
+            if (!row || row.classList.contains('hidden')) return false;
+            const slot = row.querySelector(`td[data-slot="${time}"]`);
+            return slot && !slot.classList.contains('text-gray-400');
+        };
+
+        const nextTimes = (start, end) => {
+            const times = [];
+            let cur = toMinutes(start);
+            const final = toMinutes(end);
+            while (cur <= final) {
+                const h = String(Math.floor(cur / 60)).padStart(2, '0');
+                const m = String(cur % 60).padStart(2, '0');
+                times.push(`${h}:${m}`);
+                cur += 30;
+            }
+            return times;
+        };
 
         document.querySelectorAll('#schedule-table td[data-professional]').forEach(td => {
-            td.addEventListener('dblclick', () => {
-                selectedTime = td.dataset.time;
-                scheduleModal.dataset.time = selectedTime;
-                scheduleModal.classList.remove('hidden');
-                if (startInput) startInput.value = selectedTime;
-                if (endInput) {
-                    const [h, m] = selectedTime.split(':').map(Number);
-                    const date = new Date();
-                    date.setHours(h);
-                    date.setMinutes(m + 30);
-                    endInput.value = date.toISOString().slice(11, 16);
+            td.addEventListener('click', () => {
+                const time = td.dataset.time;
+                const prof = td.dataset.professional;
+
+                if (!selection.start) {
+                    if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
+                    selection.start = time;
+                    selection.professional = prof;
+                    td.classList.add('selected', 'bg-blue-100');
+                    if (hiddenStart) hiddenStart.value = time;
+                    return;
+                }
+
+                if (selection.start && !selection.end) {
+                    if (prof !== selection.professional || toMinutes(time) < toMinutes(selection.start)) {
+                        clearSelection();
+                        if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
+                        selection.start = time;
+                        selection.professional = prof;
+                        td.classList.add('selected', 'bg-blue-100');
+                        if (hiddenStart) hiddenStart.value = time;
+                        return;
+                    }
+                    const times = nextTimes(selection.start, time);
+                    for (const t of times) {
+                        if (!isOpen(t)) { alert('Horário fora do horário de funcionamento'); clearSelection(); return; }
+                        const cell = document.querySelector(`#schedule-table td[data-professional="${prof}"][data-time="${t}"]`);
+                        cell?.classList.add('selected', 'bg-blue-100');
+                    }
+                    selection.end = time;
+                    if (hiddenEnd) hiddenEnd.value = time;
+                    if (startInput) startInput.value = selection.start;
+                    if (endInput) endInput.value = selection.end;
+                    scheduleModal.dataset.time = selection.start;
+                    scheduleModal.classList.remove('hidden');
+                    return;
+                }
+
+                if (selection.start && selection.end) {
+                    clearSelection();
+                    if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
+                    selection.start = time;
+                    selection.professional = prof;
+                    td.classList.add('selected', 'bg-blue-100');
+                    if (hiddenStart) hiddenStart.value = time;
                 }
             });
+        });
+
+        document.addEventListener('click', e => {
+            if (selection.start && !e.target.closest('#schedule-table')) {
+                clearSelection();
+            }
         });
 
         if (patientInput && patientList) {
@@ -374,11 +445,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cancel) {
             cancel.addEventListener('click', () => {
                 scheduleModal.classList.add('hidden');
+                clearSelection();
+            });
+        }
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                scheduleModal.classList.add('hidden');
+                clearSelection();
             });
         }
         scheduleModal.addEventListener('click', e => {
             if (e.target === scheduleModal) {
                 scheduleModal.classList.add('hidden');
+                clearSelection();
             }
         });
     }
