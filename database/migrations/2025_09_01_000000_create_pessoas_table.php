@@ -8,7 +8,8 @@ return new class extends Migration {
     {
         Schema::create('pessoas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained('organizations');
+            $organizationTable = Schema::hasTable('organizacoes') ? 'organizacoes' : 'organizations';
+            $table->foreignId('organization_id')->constrained($organizationTable);
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
