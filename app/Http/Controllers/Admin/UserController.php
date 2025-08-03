@@ -30,7 +30,7 @@ class UserController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
             'profiles' => 'required|array|min:1',
             'profiles.*.profile_id' => 'required|exists:profiles,id',
-            'profiles.*.clinic_id' => 'required|exists:clinics,id',
+            'profiles.*.clinic_id' => 'required|exists:clinicas,id',
         ]);
 
         if ($request->filled('password')) {

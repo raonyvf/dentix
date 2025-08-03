@@ -23,7 +23,7 @@ class EscalaTrabalhoController extends Controller
         $cadeiras = $clinicId ? Cadeira::where('clinic_id', $clinicId)->get() : collect();
 
         $dentistas = Profissional::when($clinicId, function ($query) use ($clinicId) {
-                $query->whereHas('clinics', fn($q) => $q->where('clinics.id', $clinicId));
+                $query->whereHas('clinics', fn($q) => $q->where('clinicas.id', $clinicId));
             })
             ->where(function($q){
                 $q->where('funcao', 'Dentista')
@@ -77,7 +77,7 @@ class EscalaTrabalhoController extends Controller
     {
         if ($request->filled('datas')) {
             $data = $request->validate([
-                'clinic_id' => 'required|exists:clinics,id',
+                'clinic_id' => 'required|exists:clinicas,id',
                 'cadeira_id' => 'required|exists:cadeiras,id',
                 'profissional_id' => [
                     'required',
@@ -91,7 +91,7 @@ class EscalaTrabalhoController extends Controller
             ]);
         } else {
             $data = $request->validate([
-                'clinic_id' => 'required|exists:clinics,id',
+                'clinic_id' => 'required|exists:clinicas,id',
                 'cadeira_id' => 'required|exists:cadeiras,id',
                 'profissional_id' => [
                     'required',

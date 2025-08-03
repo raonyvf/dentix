@@ -29,7 +29,7 @@ class CadeiraController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'clinic_id' => 'required|exists:clinics,id',
+            'clinic_id' => 'required|exists:clinicas,id',
             'nome' => 'required',
             'status' => 'required',
         ]);
@@ -66,7 +66,7 @@ class CadeiraController extends Controller
     public function update(Request $request, Cadeira $cadeira)
     {
         $data = $request->validate([
-            'clinic_id' => 'required|exists:clinics,id',
+            'clinic_id' => 'required|exists:clinicas,id',
             'nome' => 'required',
             'status' => 'required',
         ]);

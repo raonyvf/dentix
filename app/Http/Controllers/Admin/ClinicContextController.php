@@ -12,7 +12,7 @@ class ClinicContextController extends Controller
         $clinicId = $request->input('clinic_id');
         $user = $request->user();
 
-        if ($clinicId && $user->clinics()->where('clinics.id', $clinicId)->exists()) {
+        if ($clinicId && $user->clinics()->where('clinicas.id', $clinicId)->exists()) {
             session(['clinic_id' => $clinicId]);
             app()->instance('clinic_id', $clinicId);
         }
