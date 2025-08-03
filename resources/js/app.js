@@ -455,6 +455,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (saveBtn) {
             saveBtn.addEventListener('click', () => {
+                if (!patientIdInput?.value) {
+                    alert('Selecione um paciente');
+                    return;
+                }
+                if (!selection.professional || !startInput.value || !endInput.value) {
+                    alert('Preencha todos os campos do agendamento');
+                    return;
+                }
+
                 const root = document.querySelector('[x-data]');
                 const date = root?.__x?.$data?.selectedDate;
                 const url = saveBtn.dataset.storeUrl;
@@ -469,11 +478,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         data: date,
                         hora_inicio: startInput.value,
                         hora_fim: endInput.value,
-                        patient_id: patientIdInput?.value,
+                        patient_id: patientIdInput.value,
                         observacao: document.getElementById('schedule-observacao')?.value || '',
                         profissional_id: selection.professional,
                     }),
-                }).then(() => window.location.reload());
+                })
+                    .then(async response => {
+                        if (!response.ok) {
+                            let data = {};
+                            try { data = await response.json(); } catch (_) {}
+                            alert(data.message || 'Erro ao salvar agendamento');
+                            if (data.redirect) { window.location.href = data.redirect; }
+                            return;
+                        }
+                        window.location.reload();
+                    })
+                    .catch(() => alert('Erro de rede ao salvar agendamento'));
 
                 scheduleModal.classList.add('hidden');
                 clearSelection();
