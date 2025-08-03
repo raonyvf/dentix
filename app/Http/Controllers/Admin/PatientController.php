@@ -115,7 +115,8 @@ class PatientController extends Controller
             ->get()
             ->map(function ($p) {
                 return $p->person->first_name;
-            });
+            })
+            ->values();
 
         return response()->json($results);
     }
