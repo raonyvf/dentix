@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\Permission;
-use App\Models\Person;
+use App\Models\Pessoa;
 use App\Models\Organization;
 
 class AdminUserSeeder extends Seeder
@@ -22,7 +22,7 @@ class AdminUserSeeder extends Seeder
             ]
         );
 
-        $person = Person::firstOrCreate(
+        $pessoa = Pessoa::firstOrCreate(
             [
                 'email' => 'admin@example.com',
                 'organization_id' => $organization->id,
@@ -38,7 +38,7 @@ class AdminUserSeeder extends Seeder
             [
                 'password' => Hash::make('password'),
                 'organization_id' => $organization->id,
-                'person_id' => $person->id,
+                'pessoa_id' => $pessoa->id,
             ]
         );
 

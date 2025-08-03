@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Profissional;
 use App\Models\ProfissionalHorario;
-use App\Models\Person;
+use App\Models\Pessoa;
 use App\Models\User;
 use App\Models\Clinic;
 use Illuminate\Support\Facades\Hash;
@@ -18,7 +18,7 @@ class ProfessionalController extends Controller
 {
     public function index()
     {
-        $profissionais = Profissional::with(['user.person', 'clinics'])->get();
+        $profissionais = Profissional::with(['user.pessoa', 'clinics'])->get();
 
         $clinicas = Clinic::all();
 
@@ -68,34 +68,34 @@ class ProfessionalController extends Controller
     {
         $data = $this->validateData($request);
 
-        $personData = $this->extractPersonData($data);
+        $pessoaData = $this->extractPessoaData($data);
         if ($request->hasFile('foto')) {
-            $personData['photo_path'] = $request->file('foto')->store('profissionais', 'public');
+            $pessoaData['photo_path'] = $request->file('foto')->store('profissionais', 'public');
         }
-        $person = Person::create(array_merge([
+        $pessoa = Pessoa::create(array_merge([
             'organization_id' => auth()->user()->organization_id
-        ], $personData));
+        ], $pessoaData));
 
         $user = null;
-        if ($person->email) {
-            $user = User::firstWhere('email', $person->email);
+        if ($pessoa->email) {
+            $user = User::firstWhere('email', $pessoa->email);
             if (!$user) {
                 $user = User::create([
-                    'email' => $person->email,
+                    'email' => $pessoa->email,
                     'organization_id' => auth()->user()->organization_id,
                     'password' => Hash::make(Str::random(8)),
                     'must_change_password' => true,
-                    'person_id' => $person->id,
+                    'pessoa_id' => $pessoa->id,
                 ]);
             } else {
-                $user->update(['person_id' => $person->id]);
+                $user->update(['pessoa_id' => $pessoa->id]);
             }
         }
 
 
         $profissional = Profissional::create(array_merge([
             'organization_id' => auth()->user()->organization_id,
-            'person_id' => $person->id,
+            'pessoa_id' => $pessoa->id,
             'user_id' => $user?->id,
         ], $this->extractProfessionalData($data)));
 
@@ -130,12 +130,12 @@ class ProfessionalController extends Controller
     {
         $data = $this->validateData($request);
 
-        $personData = $this->extractPersonData($data);
+        $pessoaData = $this->extractPessoaData($data);
         if ($request->hasFile('foto')) {
-            $personData['photo_path'] = $request->file('foto')->store('profissionais', 'public');
+            $pessoaData['photo_path'] = $request->file('foto')->store('profissionais', 'public');
         }
 
-        $profissional->person->update($personData);
+        $profissional->pessoa->update($pessoaData);
 
         $profissional->update($this->extractProfessionalData($data));
         $profissional->clinics()->sync($request->input('clinics', []));
@@ -256,7 +256,7 @@ class ProfessionalController extends Controller
         return $validator->validate();
     }
 
-    private function extractPersonData(array $data): array
+    private function extractPessoaData(array $data): array
     {
         return [
             'first_name' => $data['first_name'],
