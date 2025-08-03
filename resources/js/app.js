@@ -336,11 +336,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const patientInput = document.getElementById('schedule-patient');
         const patientList = document.getElementById('schedule-patient-list');
         let searchTimeout;
+        let selectedTime = '';
 
         document.querySelectorAll('#schedule-table td[data-professional]').forEach(td => {
             td.addEventListener('click', () => {
+                selectedTime = td.dataset.time;
+                scheduleModal.dataset.time = selectedTime;
                 scheduleModal.classList.remove('hidden');
-                if (timeLabel) timeLabel.textContent = `Horário: ${td.dataset.time}`;
+                if (timeLabel) timeLabel.textContent = `Horário: ${selectedTime}`;
             });
         });
 
