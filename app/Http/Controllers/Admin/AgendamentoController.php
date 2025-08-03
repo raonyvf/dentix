@@ -38,12 +38,14 @@ class AgendamentoController extends Controller
         $date = $request->query('date', Carbon::today()->format('Y-m-d'));
         $agenda = [];
         if ($clinicId) {
-            $agendamentos = Agendamento::where('clinic_id', $clinicId)
+            $agendamentos = Agendamento::with(['patient.person'])
+                ->where('clinic_id', $clinicId)
                 ->whereDate('data', $date)
                 ->get();
             foreach ($agendamentos as $ag) {
+                $person = optional($ag->patient)->person;
                 $agenda[$ag->profissional_id][$ag->hora_inicio] = [
-                    'paciente' => $ag->paciente,
+                    'paciente' => $person ? trim(($person->first_name ?? '') . ' ' . ($person->last_name ?? '')) : '',
                     'tipo' => $ag->tipo ?? '',
                     'contato' => $ag->contato ?? '',
                     'status' => $ag->status ?? 'confirmado',
@@ -63,7 +65,7 @@ class AgendamentoController extends Controller
 
         $data = $request->validate([
             'profissional_id' => 'required|exists:profissionais,id',
-            'paciente' => 'required|string',
+            'patient_id' => 'required|exists:patients,id',
             'data' => 'required|date',
             'hora_inicio' => 'required',
             'hora_fim' => 'required',

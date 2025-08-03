@@ -115,7 +115,10 @@ class PatientController extends Controller
             ->get()
             ->map(function ($p) {
                 $person = $p->person;
-                return trim(($person->first_name ?? '') . ' ' . ($person->last_name ?? ''));
+                return [
+                    'id' => $p->id,
+                    'name' => trim(($person->first_name ?? '') . ' ' . ($person->last_name ?? '')),
+                ];
             })
             ->values();
 
