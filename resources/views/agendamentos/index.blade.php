@@ -135,7 +135,7 @@
     </table>
 </div>
 <div id="schedule-modal" data-time="" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
-    <div class="bg-white rounded p-4 w-96">
+    <div class="bg-white rounded p-4 w-[32rem]">
         <h2 class="text-lg font-semibold mb-2">Agendar Horário</h2>
         <div id="schedule-time" class="text-sm text-gray-600 mb-4"></div>
         <label class="block mb-4">
