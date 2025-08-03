@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Agendamento extends Model
 {
@@ -39,5 +40,14 @@ class Agendamento extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class);
+    }
+
+    protected static function booted()
+    {
+        static::saved(function (Agendamento $agendamento) {
+            $date = $agendamento->data->format('Y-m-d');
+            $cacheKey = "agendamentos_{$agendamento->clinic_id}_{$date}";
+            Cache::forget($cacheKey);
+        });
     }
 }
