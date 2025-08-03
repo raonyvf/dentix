@@ -7,6 +7,7 @@ use App\Models\Agendamento;
 use App\Models\Clinic;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AgendamentoController extends Controller
 {
@@ -38,10 +39,13 @@ class AgendamentoController extends Controller
         $date = $request->query('date', Carbon::today()->format('Y-m-d'));
         $agenda = [];
         if ($clinicId) {
-            $agendamentos = Agendamento::with(['patient.person'])
-                ->where('clinic_id', $clinicId)
-                ->whereDate('data', $date)
-                ->get();
+            $cacheKey = "agendamentos_{$clinicId}_{$date}";
+            $agendamentos = Cache::remember($cacheKey, 60, function () use ($clinicId, $date) {
+                return Agendamento::with(['patient.person'])
+                    ->where('clinic_id', $clinicId)
+                    ->whereDate('data', $date)
+                    ->get();
+            });
             foreach ($agendamentos as $ag) {
                 $person = optional($ag->patient)->person;
                 $agenda[$ag->profissional_id][$ag->hora_inicio] = [
@@ -80,6 +84,8 @@ class AgendamentoController extends Controller
         $data['status'] = 'confirmado';
 
         Agendamento::create($data);
+        $cacheKey = "agendamentos_{$clinicId}_" . Carbon::parse($data['data'])->format('Y-m-d');
+        Cache::forget($cacheKey);
 
         return response()->json(['success' => true]);
     }
