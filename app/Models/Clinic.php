@@ -14,6 +14,8 @@ class Clinic extends Model
 {
     use BelongsToOrganization;
 
+    protected $table = 'clinicas';
+
     protected $fillable = [
         'nome',
         'cnpj',

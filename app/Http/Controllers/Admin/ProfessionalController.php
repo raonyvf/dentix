@@ -197,7 +197,7 @@ class ProfessionalController extends Controller
             'comissoes.*.comissao' => 'nullable|digits_between:1,2',
             'comissoes.*.protese' => 'nullable|digits_between:1,2',
             'clinics' => 'array',
-            'clinics.*' => 'exists:clinics,id',
+            'clinics.*' => 'exists:clinicas,id',
         ];
 
         $requiresCpfCnpj = $request->filled('conta.nome_banco') &&
