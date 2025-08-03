@@ -11,56 +11,7 @@
     <p class="text-gray-600">Agenda semanal por profissional</p>
 </div>
 @php
-    use Illuminate\Support\Carbon;
-    $months = [1=>'Janeiro',2=>'Fevereiro',3=>'Mar\xC3\xA7o',4=>'Abril',5=>'Maio',6=>'Junho',7=>'Julho',8=>'Agosto',9=>'Setembro',10=>'Outubro',11=>'Novembro',12=>'Dezembro'];
-    $week = ['SEG','TER','QUA','QUI','SEX','SAB','DOM'];
-    $start = Carbon::now()->startOfWeek(Carbon::MONDAY);
-    $days = [];
-    for($i=0;$i<7;$i++){
-        $d = $start->copy()->addDays($i);
-        $days[] = [
-            'label'=>$week[$i],
-            'number'=>$d->day,
-            'month'=>$months[$d->month],
-            'active'=>$d->isToday(),
-            'past'=>$d->lt(Carbon::today()),
-        ];
-    }
-    $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
-    $professionals = [];
-    if ($clinicId) {
-        $clinic = \App\Models\Clinic::with(['profissionais.person'])->find($clinicId);
-        if ($clinic) {
-            $professionals = $clinic->profissionais->map(function ($prof) {
-                $gender = $prof->person->sexo ?? null;
-                $prefix = $gender === 'Masculino' ? 'Dr. ' : ($gender === 'Feminino' ? 'Dra. ' : '');
-                return [
-                    'id' => $prof->id,
-                    'name' => $prefix . ($prof->person->first_name ?? ''),
-                ];
-            })->toArray();
-        }
-    }
-    $patients = ['João','Maria','Pedro','Ana','Carlos'];
-    $horarios = [];
-    $startTime = Carbon::createFromTime(0, 0);
-    $endTime = Carbon::createFromTime(23, 30);
-    for ($time = $startTime->copy(); $time <= $endTime; $time->addMinutes(30)) {
-        $horarios[] = $time->format('H:i');
-    }
-    $agenda = [
-        1 => [
-            '08:00' => ['paciente'=>'Maria','tipo'=>'Consulta','contato'=>'(11) 91234-5678','status'=>'confirmado'],
-            '15:00' => ['paciente'=>'Raony','tipo'=>'Retorno','contato'=>'(11) 99876-5432','status'=>'cancelado'],
-        ],
-        2 => [
-            '09:00' => ['paciente'=>'Ana','tipo'=>'Consulta','contato'=>'(11) 95555-4444','status'=>'confirmado'],
-            '16:00' => ['paciente'=>'Luis','tipo'=>'Consulta','contato'=>'(11) 97777-2222','status'=>'vago'],
-        ],
-        3 => [
-            '10:00' => ['paciente'=>'Pedro','tipo'=>'Consulta','contato'=>'(11) 94444-3333','status'=>'confirmado'],
-        ],
-    ];
+    // Dados de agenda são fornecidos pelo controlador
 @endphp
 <div x-data="agendaCalendar()" x-init="init()" data-horarios-url="{{ route('agendamentos.horarios') }}">
     <div class="flex justify-end mb-2 relative">
@@ -160,7 +111,7 @@
         </label>
         <div class="flex justify-end gap-2">
             <button id="schedule-cancel" class="px-3 py-1 border rounded">Cancelar</button>
-            <button id="schedule-save" class="px-3 py-1 bg-primary text-white rounded">Salvar</button>
+            <button id="schedule-save" data-store-url="{{ route('agendamentos.store') }}" class="px-3 py-1 bg-primary text-white rounded">Salvar</button>
         </div>
         </div>
 </div>

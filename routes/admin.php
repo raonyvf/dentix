@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\FormularioController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\ProfessionalController;
 use App\Http\Controllers\Admin\AgendaController;
+use App\Http\Controllers\Admin\AgendamentoController;
 use App\Http\Controllers\Admin\ClinicContextController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EscalaTrabalhoController;
@@ -18,7 +19,8 @@ use App\Http\Controllers\Admin\EstoqueController;
 Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
 
 Route::get('agenda', [AgendaController::class, 'index'])->name('agenda.index');
-Route::view('agendamentos', 'agendamentos.index')->name('agendamentos.index');
+Route::get('agendamentos', [AgendamentoController::class, 'index'])->name('agendamentos.index');
+Route::post('agendamentos', [AgendamentoController::class, 'store'])->name('agendamentos.store');
 Route::get('agendamentos/horarios', [AgendaController::class, 'horarios'])->name('agendamentos.horarios');
 
 

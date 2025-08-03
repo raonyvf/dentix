@@ -450,6 +450,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (saveBtn) {
             saveBtn.addEventListener('click', () => {
+                const root = document.querySelector('[x-data]');
+                const date = root?.__x?.$data?.selectedDate;
+                const url = saveBtn.dataset.storeUrl;
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token,
+                    },
+                    body: JSON.stringify({
+                        data: date,
+                        hora_inicio: startInput.value,
+                        hora_fim: endInput.value,
+                        paciente: patientInput.value,
+                        observacao: document.getElementById('schedule-observacao')?.value || '',
+                        profissional_id: selection.professional,
+                    }),
+                }).then(() => window.location.reload());
+
                 scheduleModal.classList.add('hidden');
                 clearSelection();
             });
