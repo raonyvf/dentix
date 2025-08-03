@@ -12,7 +12,7 @@ use App\Models\Organization;
 use App\Models\ClinicUser;
 use App\Models\Permission;
 use App\Models\Patient;
-use App\Models\Person;
+use App\Models\Pessoa;
 
 class User extends Authenticatable
 {
@@ -28,7 +28,7 @@ class User extends Authenticatable
         'especialidade',
         'salario_base',
         'must_change_password',
-        'person_id',
+        'pessoa_id',
     ];
 
     protected $hidden = [
@@ -67,9 +67,9 @@ class User extends Authenticatable
         return $this->hasOne(Patient::class);
     }
 
-    public function person()
+    public function pessoa()
     {
-        return $this->belongsTo(Person::class);
+        return $this->belongsTo(Pessoa::class);
     }
 
 

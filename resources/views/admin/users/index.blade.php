@@ -22,8 +22,8 @@
             @forelse ($users as $user)
                 <tr>
                     <td class="px-4 py-2 whitespace-nowrap">
-                        @if($user->person)
-                            {{ $user->person->full_name }}
+                        @if($user->pessoa)
+                            {{ $user->pessoa->full_name }}
                         @else
                             {{ $user->name ?? '-' }}
                         @endif

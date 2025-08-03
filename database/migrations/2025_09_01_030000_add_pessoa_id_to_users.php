@@ -3,19 +3,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\User;
-use App\Models\Person;
+use App\Models\Pessoa;
 
 return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('person_id')->nullable()->after('organization_id')->constrained('people');
+            $table->foreignId('pessoa_id')->nullable()->after('organization_id')->constrained('pessoas');
         });
 
         if (Schema::hasTable('users')) {
             $users = User::withoutGlobalScopes()->get();
             foreach ($users as $user) {
-                $person = Person::create([
+                $pessoa = Pessoa::create([
                     'organization_id' => $user->organization_id ?? 1,
                     'first_name' => $user->first_name ?? $user->name,
                     'middle_name' => $user->middle_name,
@@ -37,7 +37,7 @@ return new class extends Migration {
                     'estado' => $user->estado,
                     'photo_path' => $user->photo_path,
                 ]);
-                $user->person_id = $person->id;
+                $user->pessoa_id = $pessoa->id;
                 $user->save();
             }
         }
@@ -71,8 +71,8 @@ return new class extends Migration {
             $table->string('cidade')->nullable();
             $table->string('estado')->nullable();
             $table->string('photo_path')->nullable();
-            $table->dropForeign(['person_id']);
-            $table->dropColumn('person_id');
+            $table->dropForeign(['pessoa_id']);
+            $table->dropColumn('pessoa_id');
         });
     }
 };

@@ -3,20 +3,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Patient;
-use App\Models\Person;
+use App\Models\Pessoa;
 
 return new class extends Migration {
     public function up(): void
     {
         Schema::table('patients', function (Blueprint $table) {
-            $table->foreignId('person_id')->nullable()->after('organization_id')->constrained('people');
+            $table->foreignId('pessoa_id')->nullable()->after('organization_id')->constrained('pessoas');
         });
 
         // move data
         if (Schema::hasTable('patients')) {
             $patients = Patient::withoutGlobalScopes()->get();
             foreach ($patients as $patient) {
-                $person = Person::create([
+                $pessoa = Pessoa::create([
                     'organization_id' => $patient->organization_id,
                     'first_name' => $patient->first_name,
                     'middle_name' => $patient->middle_name,
@@ -34,7 +34,7 @@ return new class extends Migration {
                     'cidade' => $patient->cidade,
                     'estado' => $patient->estado,
                 ]);
-                $patient->person_id = $person->id;
+                $patient->pessoa_id = $pessoa->id;
                 $patient->save();
             }
         }
@@ -64,8 +64,8 @@ return new class extends Migration {
             $table->string('bairro')->nullable();
             $table->string('cidade')->nullable();
             $table->string('estado')->nullable();
-            $table->dropForeign(['person_id']);
-            $table->dropColumn('person_id');
+            $table->dropForeign(['pessoa_id']);
+            $table->dropColumn('pessoa_id');
         });
     }
 };

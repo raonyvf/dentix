@@ -16,14 +16,14 @@ class AgendamentoController extends Controller
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
         $professionals = [];
         if ($clinicId) {
-            $clinic = Clinic::with(['profissionais.person'])->find($clinicId);
+            $clinic = Clinic::with(['profissionais.pessoa'])->find($clinicId);
             if ($clinic) {
                 $professionals = $clinic->profissionais->map(function ($prof) {
-                    $gender = $prof->person->sexo ?? null;
+                    $gender = $prof->pessoa->sexo ?? null;
                     $prefix = $gender === 'Masculino' ? 'Dr. ' : ($gender === 'Feminino' ? 'Dra. ' : '');
                     return [
                         'id' => $prof->id,
-                        'name' => $prefix . ($prof->person->first_name ?? ''),
+                        'name' => $prefix . ($prof->pessoa->first_name ?? ''),
                     ];
                 })->toArray();
             }
@@ -39,6 +39,11 @@ class AgendamentoController extends Controller
         $date = $request->query('date', Carbon::today()->format('Y-m-d'));
         $agenda = [];
         if ($clinicId) {
+          
+            $agendamentos = Agendamento::with(['patient.pessoa'])
+                ->where('clinic_id', $clinicId)
+                ->whereDate('data', $date)
+                ->get();
             $cacheKey = "agendamentos_{$clinicId}_{$date}";
             $agendamentos = Cache::remember($cacheKey, 60, function () use ($clinicId, $date) {
                 return Agendamento::with(['patient.person'])
@@ -46,10 +51,11 @@ class AgendamentoController extends Controller
                     ->whereDate('data', $date)
                     ->get();
             });
+          
             foreach ($agendamentos as $ag) {
-                $person = optional($ag->patient)->person;
+                $pessoa = optional($ag->patient)->pessoa;
                 $agenda[$ag->profissional_id][$ag->hora_inicio] = [
-                    'paciente' => $person ? trim(($person->first_name ?? '') . ' ' . ($person->last_name ?? '')) : '',
+                    'paciente' => $pessoa ? trim(($pessoa->first_name ?? '') . ' ' . ($pessoa->last_name ?? '')) : '',
                     'tipo' => $ag->tipo ?? '',
                     'contato' => $ag->contato ?? '',
                     'status' => $ag->status ?? 'confirmado',

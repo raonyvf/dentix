@@ -49,9 +49,9 @@
             $displayName = '';
             $initials = '';
 
-            if ($user->person) {
-                $displayName = trim($user->person->first_name . ' ' . $user->person->last_name);
-                $initials = strtoupper(substr($user->person->first_name, 0, 1) . substr($user->person->last_name, 0, 1));
+            if ($user->pessoa) {
+                $displayName = trim($user->pessoa->first_name . ' ' . $user->pessoa->last_name);
+                $initials = strtoupper(substr($user->pessoa->first_name, 0, 1) . substr($user->pessoa->last_name, 0, 1));
                 $showEmail = false;
             } else {
                 if ($user->isSuperAdmin()) {

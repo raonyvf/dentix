@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use App\Models\User;
 use App\Models\Profile;
-use App\Models\Person;
+use App\Models\Pessoa;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -33,13 +33,13 @@ class PatientController extends Controller
     public function store(Request $request)
     {
         $data = $this->validateData($request);
-        $person = Person::create(array_merge(
+        $pessoa = Pessoa::create(array_merge(
             ['organization_id' => auth()->user()->organization_id],
-            $this->extractPersonData($data)
+            $this->extractPessoaData($data)
         ));
         $patientData = [
             'organization_id' => auth()->user()->organization_id,
-            'person_id' => $person->id,
+            'pessoa_id' => $pessoa->id,
             'menor_idade' => $request->menor_idade === 'Sim',
             'responsavel_first_name' => $data['responsavel_first_name'] ?? null,
             'responsavel_middle_name' => $data['responsavel_middle_name'] ?? null,
@@ -57,7 +57,7 @@ class PatientController extends Controller
 
             $password = Str::random(8);
             $user = User::create([
-                'name' => $paciente->person->first_name.' '.$paciente->person->last_name,
+                'name' => $paciente->pessoa->first_name.' '.$paciente->pessoa->last_name,
                 'email' => $paciente->email,
                 'organization_id' => auth()->user()->organization_id,
                 'password' => Hash::make($password),
@@ -81,7 +81,7 @@ class PatientController extends Controller
     public function update(Request $request, Patient $paciente)
     {
         $data = $this->validateData($request);
-        $paciente->person->update($this->extractPersonData($data));
+        $paciente->pessoa->update($this->extractPessoaData($data));
 
         $paciente->update([
             'menor_idade' => $request->menor_idade === 'Sim',
@@ -102,8 +102,8 @@ class PatientController extends Controller
     public function search(Request $request)
     {
         $term = $request->get('q', '');
-        $results = Patient::with('person')
-            ->whereHas('person', function ($q) use ($term) {
+        $results = Patient::with('pessoa')
+            ->whereHas('pessoa', function ($q) use ($term) {
                 $q->where('first_name', 'like', "%{$term}%")
                     ->orWhere('last_name', 'like', "%{$term}%")
                     ->orWhere('phone', 'like', "%{$term}%")
@@ -114,10 +114,10 @@ class PatientController extends Controller
             ->limit(10)
             ->get()
             ->map(function ($p) {
-                $person = $p->person;
+                $pessoa = $p->pessoa;
                 return [
                     'id' => $p->id,
-                    'name' => trim(($person->first_name ?? '') . ' ' . ($person->last_name ?? '')),
+                    'name' => trim(($pessoa->first_name ?? '') . ' ' . ($pessoa->last_name ?? '')),
                 ];
             })
             ->values();
@@ -162,7 +162,7 @@ class PatientController extends Controller
         return $data;
     }
 
-    private function extractPersonData(array $data): array
+    private function extractPessoaData(array $data): array
     {
         return [
             'first_name' => $data['first_name'],
