@@ -154,6 +154,10 @@
             <input id="schedule-patient" type="text" list="schedule-patient-list" placeholder="Buscar..." data-search-url="{{ route('pacientes.search') }}" class="mt-1 w-full border rounded p-1" />
             <datalist id="schedule-patient-list"></datalist>
         </label>
+        <label class="block mb-4">
+            <span class="text-sm">Observação</span>
+            <textarea id="schedule-observacao" class="mt-1 w-full border rounded p-1" placeholder="Digite aqui"></textarea>
+        </label>
         <div class="flex justify-end gap-2">
             <button id="schedule-cancel" class="px-3 py-1 border rounded">Cancelar</button>
             <button id="schedule-save" class="px-3 py-1 bg-primary text-white rounded">Salvar</button>
