@@ -15,10 +15,20 @@ php artisan serve
 
 Para migrations que utilizam `renameColumn`, o pacote `doctrine/dbal` é necessário e será instalado via Composer.
 
-Se optar por usar filas no banco de dados, defina `QUEUE_CONNECTION=database` no
-arquivo `.env` e execute `php artisan migrate`. As migrations das tabelas
-`jobs` e `failed_jobs` já fazem parte do repositório. Caso não queira usar
-filas, mantenha `QUEUE_CONNECTION=sync`.
+O projeto utiliza Redis como driver de filas. Defina `QUEUE_CONNECTION=redis` no
+arquivo `.env` e ajuste as variáveis `REDIS_HOST`, `REDIS_PASSWORD` e `REDIS_PORT`.
+Se preferir usar filas no banco de dados, altere para `QUEUE_CONNECTION=database` e rode `php artisan migrate` para criar as
+tabelas `jobs` e `failed_jobs`.
+### Workers de fila
+
+Para processar as filas localmente ou em produção, execute:
+
+```
+php artisan queue:work
+```
+
+Em produção, mantenha o worker ativo utilizando um gerenciador como Supervisor.
+
 
 Caso apareça o erro **"relation 'jobs' already exists"** ao rodar as
 migrações, verifique se não há migrations duplicadas geradas com
