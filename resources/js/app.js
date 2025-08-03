@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let selectedTime = '';
 
         document.querySelectorAll('#schedule-table td[data-professional]').forEach(td => {
-            td.addEventListener('click', () => {
+            td.addEventListener('dblclick', () => {
                 selectedTime = td.dataset.time;
                 scheduleModal.dataset.time = selectedTime;
                 scheduleModal.classList.remove('hidden');
