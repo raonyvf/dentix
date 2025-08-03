@@ -7,7 +7,7 @@ use App\Models\Organization;
 use App\Models\Profile;
 use App\Models\User;
 use App\Models\Person;
-use App\Notifications\NewAdminPasswordNotification;
+use App\Jobs\SendNewAdminPasswordEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -117,7 +117,7 @@ class OrganizationController extends Controller
 
         $user->profiles()->syncWithoutDetaching([$profile->id => ['clinic_id' => null]]);
 
-        $user->notify(new NewAdminPasswordNotification($password));
+        SendNewAdminPasswordEmail::dispatch($user, $password);
 
         return redirect()->route('organizacoes.index')
             ->with('success', 'Organização criada com sucesso.');
