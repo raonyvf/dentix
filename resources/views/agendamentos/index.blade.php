@@ -120,9 +120,9 @@
         <tbody>
             @foreach($horarios as $hora)
                 <tr class="border-t" data-row="{{ $hora }}">
-                    <td class="bg-gray-50 w-20" data-slot="{{ $hora }}"><x-agenda.horario :time="$hora" /></td>
+                    <td class="bg-gray-50 w-20" data-slot="{{ $hora }}" data-hora="{{ $hora }}"><x-agenda.horario :time="$hora" /></td>
                     @foreach($professionals as $prof)
-                        <td class="w-40 h-16 cursor-pointer" data-professional="{{ $prof['id'] }}" data-time="{{ $hora }}">
+                        <td class="w-40 h-16 cursor-pointer" data-professional="{{ $prof['id'] }}" data-time="{{ $hora }}" data-hora="{{ $hora }}">
                             @isset($agenda[$prof['id']][$hora])
                                 @php $item = $agenda[$prof['id']][$hora]; @endphp
                                 <x-agenda.agendamento :paciente="$item['paciente']" :tipo="$item['tipo']" :contato="$item['contato']" :status="$item['status']" />
@@ -147,6 +147,8 @@
                 <input id="schedule-end" type="time" class="mt-1 w-full border rounded p-1" />
             </label>
         </div>
+        <input type="hidden" id="hora_inicio" name="hora_inicio">
+        <input type="hidden" id="hora_fim" name="hora_fim">
         <label class="block mb-4">
             <span class="text-sm">Paciente</span>
             <input id="schedule-patient" type="text" list="schedule-patient-list" placeholder="Buscar..." data-search-url="{{ route('pacientes.search') }}" class="mt-1 w-full border rounded p-1" />
