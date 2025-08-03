@@ -332,7 +332,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const scheduleModal = document.getElementById('schedule-modal');
     if (scheduleModal) {
         const cancel = document.getElementById('schedule-cancel');
-        const timeLabel = document.getElementById('schedule-time');
+        const startInput = document.getElementById('schedule-start');
+        const endInput = document.getElementById('schedule-end');
         const patientInput = document.getElementById('schedule-patient');
         const patientList = document.getElementById('schedule-patient-list');
         let searchTimeout;
@@ -343,7 +344,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedTime = td.dataset.time;
                 scheduleModal.dataset.time = selectedTime;
                 scheduleModal.classList.remove('hidden');
-                if (timeLabel) timeLabel.textContent = `Horário: ${selectedTime}`;
+                if (startInput) startInput.value = selectedTime;
+                if (endInput) {
+                    const [h, m] = selectedTime.split(':').map(Number);
+                    const date = new Date();
+                    date.setHours(h);
+                    date.setMinutes(m + 30);
+                    endInput.value = date.toISOString().slice(11, 16);
+                }
             });
         });
 
