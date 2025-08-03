@@ -145,6 +145,13 @@ Gere a chave de aplicação com
 `php artisan key:generate --show` e copie o resultado
 para a variável `APP_KEY` antes de criar o deploy.
 
+### Sessões e escala horizontal
+
+Antes de escalar a aplicação horizontalmente, configure um serviço de sessões
+compartilhado (por exemplo, Redis ou banco de dados). Todas as instâncias devem
+apontar para o mesmo backend definido em `SESSION_DRIVER` para que os usuários
+permaneçam autenticados entre diferentes servidores.
+
 ### Deploy usando Docker
 
 Se preferir, também é possível criar um serviço do tipo **Docker** no Render.
