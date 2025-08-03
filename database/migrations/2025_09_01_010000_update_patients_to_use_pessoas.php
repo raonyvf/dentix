@@ -2,8 +2,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Patient;
 use App\Models\Pessoa;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration {
     public function up(): void
@@ -14,7 +14,7 @@ return new class extends Migration {
 
         // move data
         if (Schema::hasTable('patients')) {
-            $patients = Patient::withoutGlobalScopes()->get();
+            $patients = DB::table('patients')->get();
             foreach ($patients as $patient) {
                 $pessoa = Pessoa::create([
                     'organization_id' => $patient->organization_id,
@@ -34,8 +34,10 @@ return new class extends Migration {
                     'cidade' => $patient->cidade,
                     'estado' => $patient->estado,
                 ]);
-                $patient->pessoa_id = $pessoa->id;
-                $patient->save();
+
+                DB::table('patients')
+                    ->where('id', $patient->id)
+                    ->update(['pessoa_id' => $pessoa->id]);
             }
         }
 
