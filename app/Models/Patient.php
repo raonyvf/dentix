@@ -11,6 +11,8 @@ class Patient extends Model
 {
     use BelongsToOrganization;
 
+    protected $table = 'pacientes';
+
     protected $fillable = [
         'organization_id',
         'user_id',

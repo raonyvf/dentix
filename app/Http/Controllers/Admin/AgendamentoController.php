@@ -69,7 +69,7 @@ class AgendamentoController extends Controller
 
         $data = $request->validate([
             'profissional_id' => 'required|exists:profissionais,id',
-            'patient_id' => 'required|exists:patients,id',
+            'patient_id' => 'required|exists:pacientes,id',
             'data' => 'required|date',
             'hora_inicio' => 'required',
             'hora_fim' => 'required',
