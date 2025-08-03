@@ -60,7 +60,11 @@ class AgendamentoController extends Controller
     {
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
         if (! $clinicId) {
-            return response()->json(['success' => false], 400);
+            return response()->json([
+                'success' => false,
+                'message' => 'Clínica não selecionada.',
+                'redirect' => '/admin/clinicas',
+            ], 400);
         }
 
         $data = $request->validate([
