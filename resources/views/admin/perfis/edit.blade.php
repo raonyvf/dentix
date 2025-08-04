@@ -30,10 +30,10 @@
                     @foreach($modules as $module)
                     <tr>
                         <td class="px-4 py-2">{{ $module }}</td>
-                        <td class="px-4 py-2 text-center"><input type="checkbox" name="permissions[{{ $module }}][leitura]" class="rounded border-gray-300 text-primary focus:ring-primary" @checked(optional($permissions->get($module))->leitura)></td>
-                        <td class="px-4 py-2 text-center"><input type="checkbox" name="permissions[{{ $module }}][escrita]" class="rounded border-gray-300 text-primary focus:ring-primary" @checked(optional($permissions->get($module))->escrita)></td>
-                        <td class="px-4 py-2 text-center"><input type="checkbox" name="permissions[{{ $module }}][atualizacao]" class="rounded border-gray-300 text-primary focus:ring-primary" @checked(optional($permissions->get($module))->atualizacao)></td>
-                        <td class="px-4 py-2 text-center"><input type="checkbox" name="permissions[{{ $module }}][exclusao]" class="rounded border-gray-300 text-primary focus:ring-primary" @checked(optional($permissions->get($module))->exclusao)></td>
+                        <td class="px-4 py-2 text-center"><input type="checkbox" name="permissoes[{{ $module }}][leitura]" class="rounded border-gray-300 text-primary focus:ring-primary" @checked(optional($permissoes->get($module))->leitura)></td>
+                        <td class="px-4 py-2 text-center"><input type="checkbox" name="permissoes[{{ $module }}][escrita]" class="rounded border-gray-300 text-primary focus:ring-primary" @checked(optional($permissoes->get($module))->escrita)></td>
+                        <td class="px-4 py-2 text-center"><input type="checkbox" name="permissoes[{{ $module }}][atualizacao]" class="rounded border-gray-300 text-primary focus:ring-primary" @checked(optional($permissoes->get($module))->atualizacao)></td>
+                        <td class="px-4 py-2 text-center"><input type="checkbox" name="permissoes[{{ $module }}][exclusao]" class="rounded border-gray-300 text-primary focus:ring-primary" @checked(optional($permissoes->get($module))->exclusao)></td>
                     </tr>
                     @endforeach
                 </tbody>

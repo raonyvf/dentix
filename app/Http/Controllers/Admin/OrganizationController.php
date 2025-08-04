@@ -89,7 +89,7 @@ class OrganizationController extends Controller
         ];
 
         foreach ($modules as $module) {
-            $perfil->permissions()->create([
+            $perfil->permissoes()->create([
                 'modulo' => $module,
                 'leitura' => true,
                 'escrita' => true,

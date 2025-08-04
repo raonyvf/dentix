@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Perfil;
-use App\Models\Permission;
+use App\Models\Permissao;
 
 class PatientProfileSeeder extends Seeder
 {
@@ -20,7 +20,7 @@ class PatientProfileSeeder extends Seeder
         ];
 
         foreach ($modules as $module) {
-            Permission::updateOrCreate(
+            Permissao::updateOrCreate(
                 [
                     'perfil_id' => $perfil->id,
                     'modulo' => $module,

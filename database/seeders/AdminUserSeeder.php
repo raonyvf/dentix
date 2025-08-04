@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Usuario;
 use App\Models\Perfil;
-use App\Models\Permission;
+use App\Models\Permissao;
 use App\Models\Pessoa;
 use App\Models\Organization;
 
@@ -52,7 +52,7 @@ class AdminUserSeeder extends Seeder
         ];
 
         foreach ($modules as $module) {
-            Permission::updateOrCreate(
+            Permissao::updateOrCreate(
                 [
                     'perfil_id' => $perfil->id,
                     'modulo' => $module,
