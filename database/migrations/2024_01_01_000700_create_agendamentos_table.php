@@ -9,9 +9,9 @@ return new class extends Migration {
     {
         Schema::create('agendamentos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('clinic_id')->constrained('clinicas');
+            $table->foreignId('clinica_id')->constrained('clinicas');
             $table->foreignId('profissional_id')->constrained('profissionais');
-            $table->foreignId('patient_id')->nullable()->constrained('pacientes');
+            $table->foreignId('paciente_id')->nullable()->constrained('pacientes');
             $table->string('tipo');
             $table->string('contato')->nullable();
             $table->string('status')->default('agendado');

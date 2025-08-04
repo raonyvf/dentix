@@ -335,9 +335,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const startInput = document.getElementById('schedule-start');
         const endInput = document.getElementById('schedule-end');
         const saveBtn = document.getElementById('schedule-save');
-        const patientInput = document.getElementById('schedule-patient');
-        const patientList = document.getElementById('schedule-patient-list');
-        const patientIdInput = document.getElementById('schedule-patient-id');
+        const pacienteInput = document.getElementById('schedule-paciente');
+        const pacienteList = document.getElementById('schedule-paciente-list');
+        const pacienteIdInput = document.getElementById('schedule-paciente-id');
         let searchTimeout;
         const hiddenStart = document.getElementById('hora_inicio');
         const hiddenEnd = document.getElementById('hora_fim');
@@ -427,23 +427,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        if (patientInput && patientList) {
-            patientInput.addEventListener('input', e => {
+        if (pacienteInput && pacienteList) {
+            pacienteInput.addEventListener('input', e => {
                 clearTimeout(searchTimeout);
                 const term = e.target.value.trim();
-                if (term.length < 2) { patientList.innerHTML = ''; return; }
+                if (term.length < 2) { pacienteList.innerHTML = ''; return; }
                 searchTimeout = setTimeout(() => {
-                    const url = patientInput.dataset.searchUrl;
+                    const url = pacienteInput.dataset.searchUrl;
                     fetch(`${url}?q=${encodeURIComponent(term)}`)
                         .then(r => r.json())
                         .then(data => {
-                            patientList.innerHTML = data.map(n => `<option data-id="${n.id}" value="${n.name}"></option>`).join('');
+                            pacienteList.innerHTML = data.map(n => `<option data-id="${n.id}" value="${n.name}"></option>`).join('');
                         });
                 }, 300);
             });
-            patientInput.addEventListener('change', () => {
-                const option = Array.from(patientList.options).find(o => o.value === patientInput.value);
-                if (patientIdInput) patientIdInput.value = option?.dataset.id || '';
+            pacienteInput.addEventListener('change', () => {
+                const option = Array.from(pacienteList.options).find(o => o.value === pacienteInput.value);
+                if (pacienteIdInput) pacienteIdInput.value = option?.dataset.id || '';
             });
         }
 
@@ -455,7 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (saveBtn) {
             saveBtn.addEventListener('click', () => {
-                if (!patientIdInput?.value) {
+                if (!pacienteIdInput?.value) {
                     alert('Selecione um paciente');
                     return;
                 }
@@ -478,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         data: date,
                         hora_inicio: startInput.value,
                         hora_fim: endInput.value,
-                        patient_id: patientIdInput.value,
+                        paciente_id: pacienteIdInput.value,
                         observacao: document.getElementById('schedule-observacao')?.value || '',
                         profissional_id: selection.professional,
                     }),

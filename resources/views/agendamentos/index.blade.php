@@ -102,9 +102,9 @@
         <input type="hidden" id="hora_fim" name="hora_fim">
         <label class="block mb-4">
             <span class="text-sm">Paciente</span>
-            <input id="schedule-patient" type="text" list="schedule-patient-list" placeholder="Buscar..." data-search-url="{{ route('pacientes.search') }}" class="mt-1 w-full border rounded p-1" />
-            <datalist id="schedule-patient-list"></datalist>
-            <input type="hidden" id="schedule-patient-id" />
+            <input id="schedule-paciente" type="text" list="schedule-paciente-list" placeholder="Buscar..." data-search-url="{{ route('pacientes.search') }}" class="mt-1 w-full border rounded p-1" />
+            <datalist id="schedule-paciente-list"></datalist>
+            <input type="hidden" id="schedule-paciente-id" />
         </label>
         <label class="block mb-4">
             <span class="text-sm">Observação</span>

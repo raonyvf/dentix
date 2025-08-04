@@ -40,20 +40,20 @@ class AgendamentoController extends Controller
         $agenda = [];
         if ($clinicId) {
           
-            $agendamentos = Agendamento::with(['patient.pessoa'])
-                ->where('clinic_id', $clinicId)
+            $agendamentos = Agendamento::with(['paciente.pessoa'])
+                ->where('clinica_id', $clinicId)
                 ->whereDate('data', $date)
                 ->get();
             $cacheKey = "agendamentos_{$clinicId}_{$date}";
             $agendamentos = Cache::remember($cacheKey, 60, function () use ($clinicId, $date) {
-                return Agendamento::with(['patient.person'])
-                    ->where('clinic_id', $clinicId)
+                return Agendamento::with(['paciente.pessoa'])
+                    ->where('clinica_id', $clinicId)
                     ->whereDate('data', $date)
                     ->get();
             });
-          
+
             foreach ($agendamentos as $ag) {
-                $pessoa = optional($ag->patient)->pessoa;
+                $pessoa = optional($ag->paciente)->pessoa;
                 $agenda[$ag->profissional_id][$ag->hora_inicio] = [
                     'paciente' => $pessoa ? trim(($pessoa->first_name ?? '') . ' ' . ($pessoa->last_name ?? '')) : '',
                     'tipo' => $ag->tipo ?? '',
@@ -79,14 +79,14 @@ class AgendamentoController extends Controller
 
         $data = $request->validate([
             'profissional_id' => 'required|exists:profissionais,id',
-            'patient_id' => 'required|exists:pacientes,id',
+            'paciente_id' => 'required|exists:pacientes,id',
             'data' => 'required|date',
             'hora_inicio' => 'required',
             'hora_fim' => 'required',
             'observacao' => 'nullable|string',
         ]);
 
-        $data['clinic_id'] = $clinicId;
+        $data['clinica_id'] = $clinicId;
         $data['status'] = 'confirmado';
 
         Agendamento::create($data);
