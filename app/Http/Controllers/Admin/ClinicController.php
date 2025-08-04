@@ -98,12 +98,12 @@ class ClinicController extends Controller
             }
         }
 
-        $adminProfile = \App\Models\Profile::where('organization_id', $clinic->organization_id)
+        $adminPerfil = \App\Models\Perfil::where('organization_id', $clinic->organization_id)
             ->where('nome', 'Administrador')
             ->first();
-        if ($adminProfile) {
-            foreach ($adminProfile->users as $admin) {
-                $admin->clinics()->syncWithoutDetaching([$clinic->id => ['profile_id' => $adminProfile->id]]);
+        if ($adminPerfil) {
+            foreach ($adminPerfil->users as $admin) {
+                $admin->clinics()->syncWithoutDetaching([$clinic->id => ['perfil_id' => $adminPerfil->id]]);
             }
         }
 

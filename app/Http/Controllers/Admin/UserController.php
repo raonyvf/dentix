@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Profile;
+use App\Models\Perfil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,18 +19,18 @@ class UserController extends Controller
 
     public function edit(User $usuario)
     {
-        $profiles = Profile::all();
+        $perfis = Perfil::all();
         $clinics = auth()->user()->organization->clinics ?? [];
-        return view('admin.users.edit', compact('usuario', 'profiles', 'clinics'));
+        return view('admin.users.edit', compact('usuario', 'perfis', 'clinics'));
     }
 
     public function update(Request $request, User $usuario)
     {
         $data = $request->validate([
             'password' => 'nullable|string|min:8|confirmed',
-            'profiles' => 'required|array|min:1',
-            'profiles.*.profile_id' => 'required|exists:profiles,id',
-            'profiles.*.clinic_id' => 'required|exists:clinicas,id',
+            'perfis' => 'required|array|min:1',
+            'perfis.*.perfil_id' => 'required|exists:perfis,id',
+            'perfis.*.clinic_id' => 'required|exists:clinicas,id',
         ]);
 
         if ($request->filled('password')) {
@@ -39,8 +39,8 @@ class UserController extends Controller
         }
 
         $usuario->clinics()->detach();
-        foreach ($data['profiles'] as $pair) {
-            $usuario->clinics()->attach($pair['clinic_id'], ['profile_id' => $pair['profile_id']]);
+        foreach ($data['perfis'] as $pair) {
+            $usuario->clinics()->attach($pair['clinic_id'], ['perfil_id' => $pair['perfil_id']]);
         }
 
         $usuario->save();

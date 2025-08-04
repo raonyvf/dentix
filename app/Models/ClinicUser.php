@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use App\Models\Perfil;
 
 class ClinicUser extends Pivot
 {
     protected $table = 'clinic_user';
 
-    public function profile()
+    public function perfil()
     {
-        return $this->belongsTo(Profile::class);
+        return $this->belongsTo(Perfil::class);
     }
 }

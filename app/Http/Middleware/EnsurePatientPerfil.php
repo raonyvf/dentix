@@ -5,12 +5,12 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class EnsurePatientProfile
+class EnsurePatientPerfil
 {
     public function handle($request, Closure $next)
     {
         $user = Auth::user();
-        if ($user && $user->profiles()->where('nome', 'Paciente')->exists()) {
+        if ($user && $user->perfis()->where('nome', 'Paciente')->exists()) {
             return $next($request);
         }
 

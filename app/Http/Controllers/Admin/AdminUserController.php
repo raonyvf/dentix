@@ -11,7 +11,7 @@ class AdminUserController extends Controller
 {
     public function index()
     {
-        $admins = User::whereHas('profiles', function ($q) {
+        $admins = User::whereHas('perfis', function ($q) {
             $q->whereIn('nome', ['Administrador', 'Super Administrador']);
         })->with('organization')->get();
 

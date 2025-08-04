@@ -56,7 +56,7 @@ class Clinic extends Model
     {
         return $this->belongsToMany(User::class)
             ->using(ClinicUser::class)
-            ->withPivot('profile_id')
+            ->withPivot('perfil_id')
             ->withTimestamps();
     }
 

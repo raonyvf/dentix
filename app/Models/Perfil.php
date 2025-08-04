@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToOrganization;
 use App\Models\Organization;
 
-class Profile extends Model
+class Perfil extends Model
 {
     use BelongsToOrganization;
+
+    protected $table = 'perfis';
 
     protected $fillable = [
         'organization_id',

@@ -18,11 +18,11 @@
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-            @forelse ($profiles as $profile)
+            @forelse ($perfis as $perfil)
                 <tr>
-                    <td class="px-4 py-2 whitespace-nowrap">{{ $profile->nome }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">{{ $perfil->nome }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">
-                        <a href="{{ route('perfis.edit', $profile) }}" class="text-blue-600 hover:underline">Editar</a>
+                        <a href="{{ route('perfis.edit', $perfil) }}" class="text-blue-600 hover:underline">Editar</a>
                     </td>
                 </tr>
             @empty

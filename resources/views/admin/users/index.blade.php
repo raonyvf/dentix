@@ -31,7 +31,7 @@
                     <td class="px-4 py-2 whitespace-nowrap">{{ $user->email }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">
                         @foreach ($user->clinics as $clinic)
-                            @php $p = \App\Models\Profile::find($clinic->pivot->profile_id); @endphp
+                            @php $p = \App\Models\Perfil::find($clinic->pivot->perfil_id); @endphp
                             <div>{{ $clinic->nome }} - {{ optional($p)->nome }}</div>
                         @endforeach
                     </td>

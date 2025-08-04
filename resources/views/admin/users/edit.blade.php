@@ -36,13 +36,13 @@
         </div>
         <div>
             <h2 class="mb-4 text-sm font-medium text-gray-700">Perfis</h2>
-            <div id="profiles-container" class="space-y-4"></div>
-            <button type="button" id="add-profile" class="py-2 px-4 bg-gray-200 rounded hover:bg-gray-300 text-sm">Adicionar perfil</button>
-            <template id="profile-clinic-template">
-                <div class="profile-clinic-row rounded-sm border border-stroke bg-gray-50 p-4 space-y-4">
+            <div id="perfis-container" class="space-y-4"></div>
+            <button type="button" id="add-perfil" class="py-2 px-4 bg-gray-200 rounded hover:bg-gray-300 text-sm">Adicionar perfil</button>
+            <template id="perfil-clinic-template">
+                <div class="perfil-clinic-row rounded-sm border border-stroke bg-gray-50 p-4 space-y-4">
                     <div class="flex justify-between items-center">
-                        <h3 class="font-medium text-sm profile-number">Perfil __number__</h3>
-                        <button type="button" class="remove-profile text-red-600 hover:text-red-800">
+                        <h3 class="font-medium text-sm perfil-number">Perfil __number__</h3>
+                        <button type="button" class="remove-perfil text-red-600 hover:text-red-800">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
@@ -51,16 +51,16 @@
                     <div class="flex flex-col sm:flex-row gap-4">
                         <div class="flex-1">
                             <label class="mb-2 block text-sm font-medium text-gray-700">Perfil</label>
-                            <select name="profiles[__index__][profile_id]" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                            <select name="perfis[__index__][perfil_id]" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
                                 <option value="">Selecione</option>
-                                @foreach ($profiles as $profile)
-                                    <option value="{{ $profile->id }}">{{ $profile->nome }}</option>
+                                @foreach ($perfis as $perfil)
+                                    <option value="{{ $perfil->id }}">{{ $perfil->nome }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="flex-1">
                             <label class="mb-2 block text-sm font-medium text-gray-700">Clínica</label>
-                            <select name="profiles[__index__][clinic_id]" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                            <select name="perfis[__index__][clinic_id]" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
                                 <option value="">Selecione</option>
                                 @foreach ($clinics as $clinic)
                                     <option value="{{ $clinic->id }}">{{ $clinic->nome }}</option>
@@ -81,34 +81,34 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const container = document.getElementById('profiles-container');
-        const template = document.getElementById('profile-clinic-template').innerHTML;
+        const container = document.getElementById('perfis-container');
+        const template = document.getElementById('perfil-clinic-template').innerHTML;
         let index = 0;
 
         function updateTitles() {
-            container.querySelectorAll('.profile-number').forEach((el, idx) => {
+            container.querySelectorAll('.perfil-number').forEach((el, idx) => {
                 el.textContent = 'Perfil ' + (idx + 1);
             });
         }
 
-        function addRow(profile = '', clinic = '') {
+        function addRow(perfil = '', clinic = '') {
             const html = template.replace(/__index__/g, index).replace(/__number__/g, container.children.length + 1);
             container.insertAdjacentHTML('beforeend', html);
             const row = container.lastElementChild;
-            row.querySelector('.remove-profile').addEventListener('click', () => {
+            row.querySelector('.remove-perfil').addEventListener('click', () => {
                 row.remove();
                 updateTitles();
             });
-            row.querySelector(`select[name="profiles[${index}][profile_id]"]`).value = profile;
-            row.querySelector(`select[name="profiles[${index}][clinic_id]"]`).value = clinic;
+            row.querySelector(`select[name="perfis[${index}][perfil_id]"]`).value = perfil;
+            row.querySelector(`select[name="perfis[${index}][clinic_id]"]`).value = clinic;
             index++;
             updateTitles();
         }
 
-        document.getElementById('add-profile').addEventListener('click', () => addRow());
+        document.getElementById('add-perfil').addEventListener('click', () => addRow());
 
         @foreach ($usuario->clinics as $clinic)
-            addRow('{{ $clinic->pivot->profile_id }}', '{{ $clinic->id }}');
+            addRow('{{ $clinic->pivot->perfil_id }}', '{{ $clinic->id }}');
         @endforeach
     });
 </script>

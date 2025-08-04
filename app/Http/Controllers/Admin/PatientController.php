@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use App\Models\User;
-use App\Models\Profile;
+use App\Models\Perfil;
 use App\Models\Pessoa;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -50,7 +50,7 @@ class PatientController extends Controller
         $paciente = Patient::create($patientData);
 
         if ($request->boolean('create_user') && $paciente->email) {
-            $profile = Profile::firstOrCreate([
+            $perfil = Perfil::firstOrCreate([
                 'nome' => 'Paciente',
                 'organization_id' => auth()->user()->organization_id,
             ]);
@@ -64,7 +64,7 @@ class PatientController extends Controller
                 'must_change_password' => true,
             ]);
 
-            $user->profiles()->syncWithoutDetaching([$profile->id => ['clinic_id' => null]]);
+            $user->perfis()->syncWithoutDetaching([$perfil->id => ['clinic_id' => null]]);
 
             $paciente->user_id = $user->id;
             $paciente->save();
