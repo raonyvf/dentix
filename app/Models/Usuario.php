@@ -10,7 +10,7 @@ use App\Traits\BelongsToOrganization;
 use App\Models\Perfil;
 use App\Models\Organization;
 use App\Models\ClinicaUsuario;
-use App\Models\Permission;
+use App\Models\Permissao;
 use App\Models\Patient;
 use App\Models\Pessoa;
 
@@ -109,7 +109,7 @@ class Usuario extends Authenticatable
             return false;
         }
 
-        return Permission::whereIn('perfil_id', $perfilIds)
+        return Permissao::whereIn('perfil_id', $perfilIds)
             ->where('modulo', $module)
             ->where(function ($q) {
                 $q->where('leitura', true)

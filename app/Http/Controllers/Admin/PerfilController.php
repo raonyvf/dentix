@@ -24,7 +24,7 @@ class PerfilController extends Controller
     {
         $data = $request->validate([
             'nome' => 'required',
-            'permissions' => 'array',
+            'permissoes' => 'array',
         ]);
 
         $perfil = Perfil::create([
@@ -32,7 +32,7 @@ class PerfilController extends Controller
             'organizacao_id' => auth()->user()->organizacao_id,
         ]);
 
-        $this->syncPermissions($perfil, $data['permissions'] ?? []);
+        $this->syncPermissoes($perfil, $data['permissoes'] ?? []);
 
         return redirect()->route('perfis.index')->with('success', 'Perfil salvo com sucesso.');
     }
@@ -40,21 +40,21 @@ class PerfilController extends Controller
     public function edit(Perfil $perfil)
     {
         $modules = $this->modules();
-        $permissions = $perfil->permissions->keyBy('modulo');
-        return view('admin.perfis.edit', compact('perfil', 'modules', 'permissions'));
+        $permissoes = $perfil->permissoes->keyBy('modulo');
+        return view('admin.perfis.edit', compact('perfil', 'modules', 'permissoes'));
     }
 
     public function update(Request $request, Perfil $perfil)
     {
         $data = $request->validate([
             'nome' => 'required',
-            'permissions' => 'array',
+            'permissoes' => 'array',
         ]);
 
         $perfil->update(['nome' => $data['nome']]);
 
-        $perfil->permissions()->delete();
-        $this->syncPermissions($perfil, $data['permissions'] ?? []);
+        $perfil->permissoes()->delete();
+        $this->syncPermissoes($perfil, $data['permissoes'] ?? []);
 
         return redirect()->route('perfis.index')->with('success', 'Perfil atualizado com sucesso.');
     }
@@ -80,10 +80,10 @@ class PerfilController extends Controller
         ];
     }
 
-    private function syncPermissions(Perfil $perfil, array $permissions): void
+    private function syncPermissoes(Perfil $perfil, array $permissoes): void
     {
-        foreach ($permissions as $module => $values) {
-            $perfil->permissions()->create([
+        foreach ($permissoes as $module => $values) {
+            $perfil->permissoes()->create([
                 'modulo' => $module,
                 'leitura' => isset($values['leitura']),
                 'escrita' => isset($values['escrita']),

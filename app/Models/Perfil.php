@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToOrganization;
 use App\Models\Organization;
+use App\Models\Permissao;
 
 class Perfil extends Model
 {
@@ -17,9 +18,9 @@ class Perfil extends Model
         'nome',
     ];
 
-    public function permissions()
+    public function permissoes()
     {
-        return $this->hasMany(Permission::class);
+        return $this->hasMany(Permissao::class);
     }
 
     public function usuarios()

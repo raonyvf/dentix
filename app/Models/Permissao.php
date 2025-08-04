@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Perfil;
 
-class Permission extends Model
+class Permissao extends Model
 {
+    protected $table = 'permissoes';
     protected $fillable = [
         'perfil_id',
         'modulo',
