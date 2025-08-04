@@ -42,10 +42,12 @@ class AdminUserSeeder extends Seeder
             ]
         );
 
-        $perfil = Perfil::firstOrCreate([
-            'nome' => 'Super Administrador',
-            'organizacao_id' => null,
-        ]);
+        $perfil = Perfil::firstOrCreate(
+            [
+                'nome' => 'Super Administrador',
+                'organizacao_id' => $organization->id,
+            ]
+        );
 
         $modules = [
             'Backend',
