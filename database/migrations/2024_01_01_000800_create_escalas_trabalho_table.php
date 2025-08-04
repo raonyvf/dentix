@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -6,12 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('profissional_horarios', function (Blueprint $table) {
+        Schema::create('escalas_trabalho', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('organization_id')->constrained('organizacoes');
+            $table->foreignId('clinic_id')->constrained('clinicas');
+            $table->foreignId('cadeira_id')->constrained('cadeiras');
             $table->foreignId('profissional_id')->constrained('profissionais');
-            $table->foreignId('clinic_id')->constrained('clinics');
-            $table->foreignId('organization_id')->nullable()->constrained('organizations');
-            $table->enum('dia_semana', ['segunda','terca','quarta','quinta','sexta','sabado','domingo']);
+            $table->date('semana');
+            $table->unsignedTinyInteger('dia_semana');
             $table->time('hora_inicio');
             $table->time('hora_fim');
             $table->timestamps();
@@ -20,6 +23,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('profissional_horarios');
+        Schema::dropIfExists('escalas_trabalho');
     }
 };

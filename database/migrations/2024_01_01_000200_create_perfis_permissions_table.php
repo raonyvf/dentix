@@ -4,13 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
+        Schema::create('perfis', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('organization_id')->constrained('organizacoes');
+            $table->string('nome');
+            $table->timestamps();
+        });
+
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profile_id')->constrained('profiles')->onDelete('cascade');
+            $table->foreignId('perfil_id')->constrained('perfis');
             $table->string('modulo');
             $table->boolean('leitura')->default(false);
             $table->boolean('escrita')->default(false);
@@ -23,5 +29,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('permissions');
+        Schema::dropIfExists('perfis');
     }
 };
