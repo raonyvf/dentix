@@ -50,7 +50,7 @@ class EscalaTrabalhoController extends Controller
             }
 
             $escalas = EscalaTrabalho::with(['profissional.person','profissional.user'])
-                ->where('clinic_id', $clinicId)
+                ->where('clinica_id', $clinicId)
                 ->whereBetween('semana', [$weeks->first()->toDateString(), $weeks->last()->toDateString()])
                 ->get()
                 ->groupBy([fn($e) => $e->semana->toDateString(), 'cadeira_id', 'dia_semana']);
@@ -62,7 +62,7 @@ class EscalaTrabalhoController extends Controller
         $week = $week ? Carbon::parse($week)->startOfWeek(Carbon::MONDAY) : Carbon::now()->startOfWeek(Carbon::MONDAY);
         $semanasDisponiveis = collect(range(-2, 5))->map(fn($i) => Carbon::now()->startOfWeek(Carbon::MONDAY)->addWeeks($i));
         $escalas = EscalaTrabalho::with(['profissional.person','profissional.user'])
-            ->where('clinic_id', $clinicId)
+            ->where('clinica_id', $clinicId)
             ->whereBetween('semana', [
                 $week->toDateString(),
                 $week->copy()->addDays(6)->toDateString(),
@@ -82,7 +82,7 @@ class EscalaTrabalhoController extends Controller
                 'profissional_id' => [
                     'required',
                     'exists:profissionais,id',
-                    Rule::exists('clinica_profissional', 'profissional_id')->where(fn($q) => $q->where('clinic_id', $request->input('clinic_id'))),
+                    Rule::exists('clinica_profissional', 'profissional_id')->where(fn($q) => $q->where('clinica_id', $request->input('clinic_id'))),
                 ],
                 'datas' => 'required|array',
                 'datas.*' => 'date',
@@ -96,7 +96,7 @@ class EscalaTrabalhoController extends Controller
                 'profissional_id' => [
                     'required',
                     'exists:profissionais,id',
-                    Rule::exists('clinica_profissional', 'profissional_id')->where(fn($q) => $q->where('clinic_id', $request->input('clinic_id'))),
+                    Rule::exists('clinica_profissional', 'profissional_id')->where(fn($q) => $q->where('clinica_id', $request->input('clinic_id'))),
                 ],
                 'semana' => 'required|date',
                 'dias' => 'required|array',
@@ -134,7 +134,7 @@ class EscalaTrabalhoController extends Controller
                 }
 
                 EscalaTrabalho::create([
-                    'clinic_id' => $data['clinic_id'],
+                    'clinica_id' => $data['clinic_id'],
                     'cadeira_id' => $data['cadeira_id'],
                     'profissional_id' => $data['profissional_id'],
                     'semana' => $weekStart,
@@ -166,7 +166,7 @@ class EscalaTrabalhoController extends Controller
                 }
 
                 EscalaTrabalho::create([
-                    'clinic_id' => $data['clinic_id'],
+                    'clinica_id' => $data['clinic_id'],
                     'cadeira_id' => $data['cadeira_id'],
                     'profissional_id' => $data['profissional_id'],
                     'semana' => $data['semana'],

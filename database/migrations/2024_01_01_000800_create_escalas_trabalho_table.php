@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('escalas_trabalho', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organizacao_id')->constrained('organizacoes');
-            $table->foreignId('clinic_id')->constrained('clinicas');
+            $table->foreignId('clinica_id')->constrained('clinicas');
             $table->foreignId('cadeira_id')->constrained('cadeiras');
             $table->foreignId('profissional_id')->constrained('profissionais');
             $table->date('semana');

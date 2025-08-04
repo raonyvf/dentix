@@ -42,7 +42,7 @@ return new class extends Migration {
         Schema::create('horarios', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organizacao_id')->constrained('organizacoes');
-            $table->foreignId('clinic_id')->constrained('clinicas');
+            $table->foreignId('clinica_id')->constrained('clinicas');
             $table->unsignedTinyInteger('dia_semana');
             $table->time('hora_inicio');
             $table->time('hora_fim');

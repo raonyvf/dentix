@@ -51,7 +51,7 @@ class ProfessionalController extends Controller
             ->get();
 
         $horarios = $profissional->horariosTrabalho
-            ->groupBy('clinic_id')
+            ->groupBy('clinica_id')
             ->map(function ($items) {
                 return $items->mapWithKeys(fn($h) => [
                     $h->dia_semana => [
@@ -113,7 +113,7 @@ class ProfessionalController extends Controller
             ->get();
 
         $horarios = $profissional->horariosTrabalho
-            ->groupBy('clinic_id')
+            ->groupBy('clinica_id')
             ->map(function ($items) {
                 return $items->mapWithKeys(fn($h) => [
                     $h->dia_semana => [
@@ -312,7 +312,7 @@ class ProfessionalController extends Controller
             foreach ($dias as $dia => $horario) {
                 if (($horario['inicio'] ?? false) && ($horario['fim'] ?? false)) {
                     $profissional->horariosTrabalho()->create([
-                        'clinic_id' => $clinicId,
+                        'clinica_id' => $clinicId,
                         'dia_semana' => $dia,
                         'hora_inicio' => $horario['inicio'],
                         'hora_fim' => $horario['fim'],
