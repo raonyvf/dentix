@@ -29,7 +29,7 @@ class CadeiraController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'clinic_id' => 'required|exists:clinicas,id',
+            'clinica_id' => 'required|exists:clinicas,id',
             'nome' => 'required',
             'status' => 'required',
         ]);
@@ -37,7 +37,7 @@ class CadeiraController extends Controller
         $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
         $user = auth()->user();
         if (! $user->isOrganizationAdmin() && ! $user->isSuperAdmin()) {
-            if (is_null($currentClinic) || $data['clinic_id'] != $currentClinic || ! $user->clinics->contains($currentClinic)) {
+            if (is_null($currentClinic) || $data['clinica_id'] != $currentClinic || ! $user->clinics->contains($currentClinic)) {
                 abort(403);
             }
 
@@ -51,7 +51,7 @@ class CadeiraController extends Controller
     public function edit(Cadeira $cadeira)
     {
         $user = auth()->user();
-        if (! $user->isOrganizationAdmin() && $cadeira->clinic_id != (app()->bound('clinic_id') ? app('clinic_id') : null)) {
+        if (! $user->isOrganizationAdmin() && $cadeira->clinica_id != (app()->bound('clinic_id') ? app('clinic_id') : null)) {
             abort(403);
         }
 
@@ -66,7 +66,7 @@ class CadeiraController extends Controller
     public function update(Request $request, Cadeira $cadeira)
     {
         $data = $request->validate([
-            'clinic_id' => 'required|exists:clinicas,id',
+            'clinica_id' => 'required|exists:clinicas,id',
             'nome' => 'required',
             'status' => 'required',
         ]);
@@ -74,7 +74,7 @@ class CadeiraController extends Controller
         $currentClinic = app()->bound('clinic_id') ? app('clinic_id') : null;
         $user = auth()->user();
         if (! $user->isOrganizationAdmin() && ! $user->isSuperAdmin()) {
-            if (is_null($currentClinic) || $cadeira->clinic_id != $currentClinic || $data['clinic_id'] != $currentClinic || ! $user->clinics->contains($currentClinic)) {
+            if (is_null($currentClinic) || $cadeira->clinica_id != $currentClinic || $data['clinica_id'] != $currentClinic || ! $user->clinics->contains($currentClinic)) {
                 abort(403);
             }
 

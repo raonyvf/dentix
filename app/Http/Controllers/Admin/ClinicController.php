@@ -81,7 +81,7 @@ class ClinicController extends Controller
 
         unset($data['horarios']);
 
-        $data['organization_id'] = auth()->user()->organization_id;
+        $data['organizacao_id'] = auth()->user()->organization_id;
         $data['timezone'] = auth()->user()->organization->timezone;
 
         $clinic = Clinic::create($data);
@@ -90,7 +90,7 @@ class ClinicController extends Controller
             if (($horario['abertura'] ?? false) && ($horario['fechamento'] ?? false)) {
                 $clinic->horarios()->create([
                     'clinic_id' => $clinic->id,
-                    'organization_id' => $clinic->organization_id,
+                    'organization_id' => $clinic->organizacao_id,
                     'dia_semana' => $dia,
                     'hora_inicio' => $horario['abertura'],
                     'hora_fim' => $horario['fechamento'],
@@ -98,7 +98,7 @@ class ClinicController extends Controller
             }
         }
 
-        $adminPerfil = \App\Models\Perfil::where('organization_id', $clinic->organization_id)
+        $adminPerfil = \App\Models\Perfil::where('organization_id', $clinic->organizacao_id)
             ->where('nome', 'Administrador')
             ->first();
         if ($adminPerfil) {
@@ -186,7 +186,7 @@ class ClinicController extends Controller
             if (($horario['abertura'] ?? false) && ($horario['fechamento'] ?? false)) {
                 $clinic->horarios()->create([
                     'clinic_id' => $clinic->id,
-                    'organization_id' => $clinic->organization_id,
+                    'organization_id' => $clinic->organizacao_id,
                     'dia_semana' => $dia,
                     'hora_inicio' => $horario['abertura'],
                     'hora_fim' => $horario['fechamento'],
