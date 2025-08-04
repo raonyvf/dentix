@@ -102,7 +102,7 @@ class ClinicController extends Controller
             ->where('nome', 'Administrador')
             ->first();
         if ($adminPerfil) {
-            foreach ($adminPerfil->users as $admin) {
+            foreach ($adminPerfil->usuarios as $admin) {
                 $admin->clinics()->syncWithoutDetaching([$clinic->id => ['perfil_id' => $adminPerfil->id]]);
             }
         }

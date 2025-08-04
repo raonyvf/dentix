@@ -78,7 +78,7 @@
                                         <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
                                             <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->pessoa)->first_name }} {{ optional($it->profissional->pessoa)->last_name }}</div>
                                             <div>{{ $it->hora_inicio }} – {{ $it->hora_fim }}</div>
-                                            <div class="text-xs text-gray-600">{{ optional($it->profissional->user)->especialidade ?? $it->profissional->cargo }}</div>
+                                            <div class="text-xs text-gray-600">{{ optional($it->profissional->usuario)->especialidade ?? $it->profissional->cargo }}</div>
                                             <div class="mt-1 h-2 rounded bg-emerald-400 w-full"></div>
                                         </div>
                                     @empty
@@ -118,7 +118,7 @@
                                     <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
                                         <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->pessoa)->first_name }} {{ optional($it->profissional->pessoa)->last_name }}</div>
                                         <div>{{ $it->hora_inicio }} – {{ $it->hora_fim }}</div>
-                                        <div class="text-xs text-gray-600">{{ optional($it->profissional->user)->especialidade ?? $it->profissional->cargo }}</div>
+                                        <div class="text-xs text-gray-600">{{ optional($it->profissional->usuario)->especialidade ?? $it->profissional->cargo }}</div>
                                         <div class="mt-1 h-2 rounded bg-emerald-400 w-full"></div>
                                     </div>
                                 @empty

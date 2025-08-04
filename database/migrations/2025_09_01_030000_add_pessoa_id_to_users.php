@@ -2,8 +2,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\User;
-use App\Models\Pessoa;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration {
     public function up(): void
@@ -13,9 +12,9 @@ return new class extends Migration {
         });
 
         if (Schema::hasTable('users')) {
-            $users = User::withoutGlobalScopes()->get();
+            $users = DB::table('users')->get();
             foreach ($users as $user) {
-                $pessoa = Pessoa::create([
+                $pessoaId = DB::table('pessoas')->insertGetId([
                     'organization_id' => $user->organization_id ?? 1,
                     'first_name' => $user->first_name ?? $user->name,
                     'middle_name' => $user->middle_name,
@@ -37,8 +36,7 @@ return new class extends Migration {
                     'estado' => $user->estado,
                     'photo_path' => $user->photo_path,
                 ]);
-                $user->pessoa_id = $pessoa->id;
-                $user->save();
+                DB::table('users')->where('id', $user->id)->update(['pessoa_id' => $pessoaId]);
             }
         }
 

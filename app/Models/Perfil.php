@@ -22,9 +22,11 @@ class Perfil extends Model
         return $this->hasMany(Permission::class);
     }
 
-    public function users()
+    public function usuarios()
     {
-        return $this->belongsToMany(User::class, 'clinic_user')->withPivot('clinic_id')->withTimestamps();
+        return $this->belongsToMany(Usuario::class, 'clinic_user', 'perfil_id', 'usuario_id')
+            ->withPivot('clinic_id')
+            ->withTimestamps();
     }
 
     public function organization()

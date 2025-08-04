@@ -65,7 +65,7 @@
                 <td class="px-4 py-2 whitespace-nowrap">
                     <div class="flex items-center space-x-2">
                         @php
-                            $pessoa = optional($profissional->user)->pessoa ?? $profissional->pessoa;
+                            $pessoa = optional($profissional->usuario)->pessoa ?? $profissional->pessoa;
                             $initials = strtoupper(substr($pessoa->first_name, 0, 1) . substr($pessoa->last_name, 0, 1));
                         @endphp
                         @if($pessoa->photo_path)
@@ -75,12 +75,12 @@
                         @endif
                         <div>
                             <div class="font-medium text-gray-700">
-                                {{ optional($profissional->user->pessoa)->first_name ?? $profissional->pessoa->first_name }}
-                                {{ optional($profissional->user->pessoa)->last_name ?? $profissional->pessoa->last_name }}
+                                {{ optional($profissional->usuario->pessoa)->first_name ?? $profissional->pessoa->first_name }}
+                                {{ optional($profissional->usuario->pessoa)->last_name ?? $profissional->pessoa->last_name }}
                             </div>
-                            @if(optional($profissional->user)->especialidade)
+                            @if(optional($profissional->usuario)->especialidade)
                                 <div class="text-xs text-gray-500">
-                                    {{ optional($profissional->user)->especialidade }}
+                                    {{ optional($profissional->usuario)->especialidade }}
                                 </div>
                             @endif
                         </div>
@@ -93,8 +93,8 @@
                     @endforeach
                 </td>
                 <td class="px-4 py-2 whitespace-nowrap">
-                    <div>{{ optional($profissional->user->pessoa)->email ?? $profissional->pessoa->email }}</div>
-                    <div class="text-xs text-gray-500">{{ optional($profissional->user->pessoa)->phone ?? $profissional->pessoa->phone }}</div>
+                    <div>{{ optional($profissional->usuario->pessoa)->email ?? $profissional->pessoa->email }}</div>
+                    <div class="text-xs text-gray-500">{{ optional($profissional->usuario->pessoa)->phone ?? $profissional->pessoa->phone }}</div>
                 </td>
                 <td class="px-4 py-2 whitespace-nowrap text-center">
                     <div class="flex items-center justify-center space-x-2">

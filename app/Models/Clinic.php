@@ -52,9 +52,9 @@ class Clinic extends Model
         return $this->belongsTo(Organization::class);
     }
 
-    public function users()
+    public function usuarios()
     {
-        return $this->belongsToMany(User::class)
+        return $this->belongsToMany(Usuario::class, 'clinic_user', 'clinic_id', 'usuario_id')
             ->using(ClinicUser::class)
             ->withPivot('perfil_id')
             ->withTimestamps();

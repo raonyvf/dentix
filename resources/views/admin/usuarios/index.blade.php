@@ -19,24 +19,24 @@
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-            @forelse ($users as $user)
+            @forelse ($usuarios as $usuario)
                 <tr>
                     <td class="px-4 py-2 whitespace-nowrap">
-                        @if($user->pessoa)
-                            {{ $user->pessoa->full_name }}
+                        @if($usuario->pessoa)
+                            {{ $usuario->pessoa->full_name }}
                         @else
-                            {{ $user->name ?? '-' }}
+                            {{ $usuario->name ?? '-' }}
                         @endif
                     </td>
-                    <td class="px-4 py-2 whitespace-nowrap">{{ $user->email }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">{{ $usuario->email }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">
-                        @foreach ($user->clinics as $clinic)
+                        @foreach ($usuario->clinics as $clinic)
                             @php $p = \App\Models\Perfil::find($clinic->pivot->perfil_id); @endphp
                             <div>{{ $clinic->nome }} - {{ optional($p)->nome }}</div>
                         @endforeach
                     </td>
                     <td class="px-4 py-2 whitespace-nowrap">
-                        <a href="{{ route('usuarios.edit', $user) }}" class="text-blue-600 hover:underline">Editar</a>
+                        <a href="{{ route('usuarios.edit', $usuario) }}" class="text-blue-600 hover:underline">Editar</a>
                     </td>
                 </tr>
             @empty

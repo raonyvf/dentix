@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
-use App\Models\User;
+use App\Models\Usuario;
 use App\Models\Perfil;
 use App\Models\Pessoa;
 use Illuminate\Support\Facades\Hash;
@@ -56,7 +56,7 @@ class PatientController extends Controller
             ]);
 
             $password = Str::random(8);
-            $user = User::create([
+            $usuario = Usuario::create([
                 'name' => $paciente->pessoa->first_name.' '.$paciente->pessoa->last_name,
                 'email' => $paciente->email,
                 'organization_id' => auth()->user()->organization_id,
@@ -64,9 +64,9 @@ class PatientController extends Controller
                 'must_change_password' => true,
             ]);
 
-            $user->perfis()->syncWithoutDetaching([$perfil->id => ['clinic_id' => null]]);
+            $usuario->perfis()->syncWithoutDetaching([$perfil->id => ['clinic_id' => null]]);
 
-            $paciente->user_id = $user->id;
+            $paciente->usuario_id = $usuario->id;
             $paciente->save();
         }
 

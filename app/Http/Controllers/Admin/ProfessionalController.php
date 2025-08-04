@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Profissional;
 use App\Models\ProfissionalHorario;
 use App\Models\Pessoa;
-use App\Models\User;
+use App\Models\Usuario;
 use App\Models\Clinic;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -18,7 +18,7 @@ class ProfessionalController extends Controller
 {
     public function index()
     {
-        $profissionais = Profissional::with(['user.pessoa', 'clinics'])->get();
+        $profissionais = Profissional::with(['usuario.pessoa', 'clinics'])->get();
 
         $clinicas = Clinic::all();
 
@@ -76,11 +76,11 @@ class ProfessionalController extends Controller
             'organization_id' => auth()->user()->organization_id
         ], $pessoaData));
 
-        $user = null;
+        $usuario = null;
         if ($pessoa->email) {
-            $user = User::firstWhere('email', $pessoa->email);
-            if (!$user) {
-                $user = User::create([
+            $usuario = Usuario::firstWhere('email', $pessoa->email);
+            if (!$usuario) {
+                $usuario = Usuario::create([
                     'email' => $pessoa->email,
                     'organization_id' => auth()->user()->organization_id,
                     'password' => Hash::make(Str::random(8)),
@@ -88,7 +88,7 @@ class ProfessionalController extends Controller
                     'pessoa_id' => $pessoa->id,
                 ]);
             } else {
-                $user->update(['pessoa_id' => $pessoa->id]);
+                $usuario->update(['pessoa_id' => $pessoa->id]);
             }
         }
 
@@ -96,7 +96,7 @@ class ProfessionalController extends Controller
         $profissional = Profissional::create(array_merge([
             'organization_id' => auth()->user()->organization_id,
             'pessoa_id' => $pessoa->id,
-            'user_id' => $user?->id,
+            'usuario_id' => $usuario?->id,
         ], $this->extractProfessionalData($data)));
 
         $profissional->clinics()->sync($request->input('clinics', []));

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\Perfil;
-use App\Models\User;
+use App\Models\Usuario;
 use App\Models\Pessoa;
 use App\Notifications\NewAdminPasswordNotification;
 use App\Jobs\SendNewAdminPasswordEmail;
@@ -35,7 +35,7 @@ class OrganizationController extends Controller
             'nome_fantasia' => 'required',
             'razao_social' => 'nullable',
             'cnpj' => 'required',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:usuarios,email',
             'telefone' => 'nullable',
             'cep' => 'nullable',
             'logradouro' => 'nullable',
@@ -108,17 +108,16 @@ class OrganizationController extends Controller
             'email' => $data['email'],
         ]);
 
-        $user = User::create([
+        $usuario = Usuario::create([
             'email' => $data['email'],
             'organization_id' => $organization->id,
             'password' => Hash::make($password),
             'must_change_password' => true,
             'pessoa_id' => $pessoa->id,
         ]);
+        $usuario->perfis()->syncWithoutDetaching([$perfil->id => ['clinic_id' => null]]);
 
-        $user->perfis()->syncWithoutDetaching([$perfil->id => ['clinic_id' => null]]);
-
-        SendNewAdminPasswordEmail::dispatch($user, $password);
+        SendNewAdminPasswordEmail::dispatch($usuario, $password);
 
         return redirect()->route('organizacoes.index')
             ->with('success', 'Organização criada com sucesso.');
@@ -174,7 +173,7 @@ class OrganizationController extends Controller
             'timezone' => $data['timezone'],
         ]);
 
-        $usuario = User::where('organization_id', $organization->id)->first();
+        $usuario = Usuario::where('organization_id', $organization->id)->first();
         if ($usuario) {
             if ($request->filled('first_name') || $request->filled('middle_name') || $request->filled('last_name')) {
                 $usuario->pessoa?->update([

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use App\Models\Usuario;
 use App\Models\Perfil;
 use App\Models\Permission;
 use App\Models\Pessoa;
@@ -29,11 +29,11 @@ class AdminUserSeeder extends Seeder
             ],
             [
                 'first_name' => 'Admin',
-                'last_name' => 'User',
+                'last_name' => 'Usuario',
             ]
         );
 
-        $user = User::updateOrCreate(
+        $usuario = Usuario::updateOrCreate(
             ['email' => 'admin@example.com'],
             [
                 'password' => Hash::make('password'),
@@ -67,6 +67,6 @@ class AdminUserSeeder extends Seeder
         }
 
         // Ensure the admin user only has the Super Administrador perfil
-        $user->perfis()->sync([$perfil->id => ['clinic_id' => null]]);
+        $usuario->perfis()->sync([$perfil->id => ['clinic_id' => null]]);
     }
 }
