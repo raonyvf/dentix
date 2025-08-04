@@ -115,7 +115,7 @@ class OrganizationController extends Controller
             'must_change_password' => true,
             'pessoa_id' => $pessoa->id,
         ]);
-        $usuario->perfis()->syncWithoutDetaching([$perfil->id => ['clinic_id' => null]]);
+        $usuario->perfis()->syncWithoutDetaching([$perfil->id => ['clinica_id' => null]]);
 
         SendNewAdminPasswordEmail::dispatch($usuario, $password);
 

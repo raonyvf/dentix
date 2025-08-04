@@ -67,6 +67,6 @@ class AdminUserSeeder extends Seeder
         }
 
         // Ensure the admin user only has the Super Administrador perfil
-        $usuario->perfis()->sync([$perfil->id => ['clinic_id' => null]]);
+        $usuario->perfis()->sync([$perfil->id => ['clinica_id' => null]]);
     }
 }

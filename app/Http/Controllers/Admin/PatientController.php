@@ -64,7 +64,7 @@ class PatientController extends Controller
                 'must_change_password' => true,
             ]);
 
-            $usuario->perfis()->syncWithoutDetaching([$perfil->id => ['clinic_id' => null]]);
+            $usuario->perfis()->syncWithoutDetaching([$perfil->id => ['clinica_id' => null]]);
 
             $paciente->usuario_id = $usuario->id;
             $paciente->save();

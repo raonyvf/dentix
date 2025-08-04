@@ -60,7 +60,7 @@
                         </div>
                         <div class="flex-1">
                             <label class="mb-2 block text-sm font-medium text-gray-700">Clínica</label>
-                            <select name="perfis[__index__][clinic_id]" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                            <select name="perfis[__index__][clinica_id]" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
                                 <option value="">Selecione</option>
                                 @foreach ($clinics as $clinic)
                                     <option value="{{ $clinic->id }}">{{ $clinic->nome }}</option>
@@ -91,7 +91,7 @@
             });
         }
 
-        function addRow(perfil = '', clinic = '') {
+        function addRow(perfil = '', clinica = '') {
             const html = template.replace(/__index__/g, index).replace(/__number__/g, container.children.length + 1);
             container.insertAdjacentHTML('beforeend', html);
             const row = container.lastElementChild;
@@ -100,7 +100,7 @@
                 updateTitles();
             });
             row.querySelector(`select[name="perfis[${index}][perfil_id]"]`).value = perfil;
-            row.querySelector(`select[name="perfis[${index}][clinic_id]"]`).value = clinic;
+            row.querySelector(`select[name="perfis[${index}][clinica_id]"]`).value = clinica;
             index++;
             updateTitles();
         }

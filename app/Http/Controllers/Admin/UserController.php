@@ -30,7 +30,7 @@ class UserController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
             'perfis' => 'required|array|min:1',
             'perfis.*.perfil_id' => 'required|exists:perfis,id',
-            'perfis.*.clinic_id' => 'required|exists:clinicas,id',
+            'perfis.*.clinica_id' => 'required|exists:clinicas,id',
         ]);
 
         if ($request->filled('password')) {
@@ -40,7 +40,7 @@ class UserController extends Controller
 
         $usuario->clinics()->detach();
         foreach ($data['perfis'] as $pair) {
-            $usuario->clinics()->attach($pair['clinic_id'], ['perfil_id' => $pair['perfil_id']]);
+            $usuario->clinics()->attach($pair['clinica_id'], ['perfil_id' => $pair['perfil_id']]);
         }
 
         $usuario->save();

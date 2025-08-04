@@ -24,9 +24,9 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('clinic_user', function (Blueprint $table) {
+        Schema::create('clinica_usuario', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('clinic_id')->constrained('clinicas');
+            $table->foreignId('clinica_id')->constrained('clinicas');
             $table->foreignId('usuario_id')->constrained('usuarios');
             $table->foreignId('perfil_id')->nullable()->constrained('perfis');
             $table->timestamps();
@@ -35,7 +35,7 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('clinic_user');
+        Schema::dropIfExists('clinica_usuario');
         Schema::dropIfExists('usuarios');
     }
 };
