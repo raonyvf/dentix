@@ -4,18 +4,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('agendamentos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('clinic_id')->constrained('clinics');
+            $table->foreignId('clinic_id')->constrained('clinicas');
             $table->foreignId('profissional_id')->constrained('profissionais');
-            $table->string('paciente');
-            $table->string('tipo')->nullable();
+            $table->foreignId('patient_id')->nullable()->constrained('pacientes');
+            $table->string('tipo');
             $table->string('contato')->nullable();
-            $table->enum('status', ['confirmado', 'cancelado', 'vago'])->default('confirmado');
+            $table->string('status')->default('agendado');
             $table->date('data');
             $table->time('hora_inicio');
             $table->time('hora_fim');
