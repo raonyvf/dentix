@@ -45,11 +45,18 @@ return new class extends Migration {
             }
         }
 
-        Schema::table('patients', function (Blueprint $table) {
-            $table->dropColumn([
-                'first_name','middle_name','last_name','data_nascimento','cpf','telefone','whatsapp','email','cep','logradouro','numero','complemento','bairro','cidade','estado'
-            ]);
-        });
+        $columns = [
+            'first_name', 'middle_name', 'last_name', 'data_nascimento', 'cpf', 'telefone',
+            'whatsapp', 'email', 'cep', 'logradouro', 'numero', 'complemento',
+            'bairro', 'cidade', 'estado',
+        ];
+        $existingColumns = array_filter($columns, fn ($col) => Schema::hasColumn('patients', $col));
+
+        if (!empty($existingColumns)) {
+            Schema::table('patients', function (Blueprint $table) use ($existingColumns) {
+                $table->dropColumn($existingColumns);
+            });
+        }
     }
 
     public function down(): void
