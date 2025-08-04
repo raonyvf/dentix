@@ -13,7 +13,7 @@ class AdminUserController extends Controller
     {
         $admins = Usuario::whereHas('perfis', function ($q) {
             $q->whereIn('nome', ['Administrador', 'Super Administrador']);
-        })->with('organization')->get();
+        })->with(['organization', 'pessoa'])->get();
 
         return view('backend.usuarios-admin.index', compact('admins'));
     }

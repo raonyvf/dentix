@@ -21,7 +21,7 @@
         <tbody class="divide-y divide-gray-200">
             @forelse ($admins as $admin)
                 <tr>
-                    <td class="px-4 py-2 whitespace-nowrap">{{ $admin->name }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">{{ $admin->pessoa?->full_name ?? $admin->name }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $admin->email }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $admin->organization->nome_fantasia ?? 'N/A' }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">
