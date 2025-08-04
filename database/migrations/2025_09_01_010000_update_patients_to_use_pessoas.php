@@ -16,6 +16,10 @@ return new class extends Migration {
         if (Schema::hasTable('patients')) {
             $patients = DB::table('patients')->get();
             foreach ($patients as $patient) {
+                if (empty($patient->first_name) || empty($patient->last_name)) {
+                    continue;
+                }
+
                 $pessoa = Pessoa::create([
                     'organization_id' => $patient->organization_id ?? null,
                     'first_name' => $patient->first_name ?? null,
