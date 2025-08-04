@@ -57,7 +57,7 @@ class PatientController extends Controller
 
             $password = Str::random(8);
             $usuario = Usuario::create([
-                'name' => $paciente->pessoa->first_name.' '.$paciente->pessoa->last_name,
+                'name' => $paciente->pessoa->primeiro_nome.' '.$paciente->pessoa->ultimo_nome,
                 'email' => $paciente->email,
                 'organizacao_id' => auth()->user()->organizacao_id,
                 'password' => Hash::make($password),
@@ -104,8 +104,8 @@ class PatientController extends Controller
         $term = $request->get('q', '');
         $results = Patient::with('pessoa')
             ->whereHas('pessoa', function ($q) use ($term) {
-                $q->where('first_name', 'like', "%{$term}%")
-                    ->orWhere('last_name', 'like', "%{$term}%")
+                $q->where('primeiro_nome', 'like', "%{$term}%")
+                    ->orWhere('ultimo_nome', 'like', "%{$term}%")
                     ->orWhere('phone', 'like', "%{$term}%")
                     ->orWhere('whatsapp', 'like', "%{$term}%")
                     ->orWhere('email', 'like', "%{$term}%")
@@ -117,7 +117,7 @@ class PatientController extends Controller
                 $pessoa = $p->pessoa;
                 return [
                     'id' => $p->id,
-                    'name' => trim(($pessoa->first_name ?? '') . ' ' . ($pessoa->last_name ?? '')),
+                    'name' => trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')),
                 ];
             })
             ->values();
@@ -128,9 +128,9 @@ class PatientController extends Controller
     private function validateData(Request $request): array
     {
         $rules = [
-            'first_name' => 'required',
-            'middle_name' => 'nullable',
-            'last_name' => 'required',
+            'primeiro_nome' => 'required',
+            'nome_meio' => 'nullable',
+            'ultimo_nome' => 'required',
             'data_nascimento' => 'required|date',
             'cpf' => 'nullable',
             'menor_idade' => 'required|in:Sim,Não',
@@ -165,9 +165,9 @@ class PatientController extends Controller
     private function extractPessoaData(array $data): array
     {
         return [
-            'first_name' => $data['first_name'],
-            'middle_name' => $data['middle_name'] ?? null,
-            'last_name' => $data['last_name'],
+            'primeiro_nome' => $data['primeiro_nome'],
+            'nome_meio' => $data['nome_meio'] ?? null,
+            'ultimo_nome' => $data['ultimo_nome'],
             'data_nascimento' => $data['data_nascimento'],
             'cpf' => $data['cpf'] ?? null,
             'phone' => $data['telefone'] ?? null,

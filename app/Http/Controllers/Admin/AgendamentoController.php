@@ -23,7 +23,7 @@ class AgendamentoController extends Controller
                     $prefix = $gender === 'Masculino' ? 'Dr. ' : ($gender === 'Feminino' ? 'Dra. ' : '');
                     return [
                         'id' => $prof->id,
-                        'name' => $prefix . ($prof->pessoa->first_name ?? ''),
+                        'name' => $prefix . ($prof->pessoa->primeiro_nome ?? ''),
                     ];
                 })->toArray();
             }
@@ -55,7 +55,7 @@ class AgendamentoController extends Controller
             foreach ($agendamentos as $ag) {
                 $pessoa = optional($ag->paciente)->pessoa;
                 $agenda[$ag->profissional_id][$ag->hora_inicio] = [
-                    'paciente' => $pessoa ? trim(($pessoa->first_name ?? '') . ' ' . ($pessoa->last_name ?? '')) : '',
+                    'paciente' => $pessoa ? trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')) : '',
                     'tipo' => $ag->tipo ?? '',
                     'contato' => $ag->contato ?? '',
                     'status' => $ag->status ?? 'confirmado',

@@ -28,8 +28,8 @@ class AdminUserSeeder extends Seeder
                 'organizacao_id' => $organization->id,
             ],
             [
-                'first_name' => 'Admin',
-                'last_name' => 'Usuario',
+                'primeiro_nome' => 'Admin',
+                'ultimo_nome' => 'Usuario',
             ]
         );
 

@@ -66,17 +66,17 @@
                     <div class="flex items-center space-x-2">
                         @php
                             $pessoa = optional($profissional->usuario)->pessoa ?? $profissional->pessoa;
-                            $initials = strtoupper(substr($pessoa->first_name, 0, 1) . substr($pessoa->last_name, 0, 1));
+                            $initials = strtoupper(substr($pessoa->primeiro_nome, 0, 1) . substr($pessoa->ultimo_nome, 0, 1));
                         @endphp
                         @if($pessoa->photo_path)
-                            <img src="{{ asset('storage/' . $pessoa->photo_path) }}" alt="{{ $pessoa->first_name }}" class="w-8 h-8 rounded-full object-cover" />
+                            <img src="{{ asset('storage/' . $pessoa->photo_path) }}" alt="{{ $pessoa->primeiro_nome }}" class="w-8 h-8 rounded-full object-cover" />
                         @else
                             <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 uppercase">{{ $initials }}</div>
                         @endif
                         <div>
                             <div class="font-medium text-gray-700">
-                                {{ optional($profissional->usuario->pessoa)->first_name ?? $profissional->pessoa->first_name }}
-                                {{ optional($profissional->usuario->pessoa)->last_name ?? $profissional->pessoa->last_name }}
+                                {{ optional($profissional->usuario->pessoa)->primeiro_nome ?? $profissional->pessoa->primeiro_nome }}
+                                {{ optional($profissional->usuario->pessoa)->ultimo_nome ?? $profissional->pessoa->ultimo_nome }}
                             </div>
                             @if(optional($profissional->usuario)->especialidade)
                                 <div class="text-xs text-gray-500">

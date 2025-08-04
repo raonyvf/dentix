@@ -9,9 +9,9 @@ return [
     'array' => 'O campo :attribute deve ser uma lista.',
 
     'attributes' => [
-        'first_name' => 'nome',
-        'middle_name' => 'nome do meio',
-        'last_name' => 'sobrenome',
+        'primeiro_nome' => 'primeiro nome',
+        'nome_meio' => 'nome do meio',
+        'ultimo_nome' => 'sobrenome',
         'data_nascimento' => 'data de nascimento',
         'cpf' => 'cpf',
         'data_inicio_contrato' => 'data de início do contrato',

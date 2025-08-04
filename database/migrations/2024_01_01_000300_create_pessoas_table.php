@@ -10,9 +10,9 @@ return new class extends Migration {
         Schema::create('pessoas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organizacao_id')->constrained('organizacoes');
-            $table->string('first_name');
-            $table->string('middle_name')->nullable();
-            $table->string('last_name');
+            $table->string('primeiro_nome');
+            $table->string('nome_meio')->nullable();
+            $table->string('ultimo_nome');
             $table->date('data_nascimento')->nullable();
             $table->string('sexo')->nullable();
             $table->string('naturalidade')->nullable();

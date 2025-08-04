@@ -10,10 +10,10 @@
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6">
         <div class="flex items-start space-x-4">
             <span class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-semibold">
-                {{ strtoupper(substr($paciente->pessoa->first_name,0,1) . substr($paciente->pessoa->last_name,0,1)) }}
+                {{ strtoupper(substr($paciente->pessoa->primeiro_nome,0,1) . substr($paciente->pessoa->ultimo_nome,0,1)) }}
             </span>
             <div>
-                <h1 class="text-2xl font-semibold text-gray-700">{{ $paciente->pessoa->first_name }} {{ $paciente->pessoa->last_name }}</h1>
+                <h1 class="text-2xl font-semibold text-gray-700">{{ $paciente->pessoa->primeiro_nome }} {{ $paciente->pessoa->ultimo_nome }}</h1>
                 <p class="text-sm text-gray-500">
                     {{ $paciente->pessoa->data_nascimento?->format('d/m/Y') }}
                     @if($paciente->menor_idade)
@@ -60,15 +60,15 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Nome</span>
-                        <p class="text-gray-900">{{ $paciente->pessoa->first_name }}</p>
+                        <p class="text-gray-900">{{ $paciente->pessoa->primeiro_nome }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</span>
-                        <p class="text-gray-900">{{ $paciente->pessoa->middle_name ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->pessoa->nome_meio ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Último nome</span>
-                        <p class="text-gray-900">{{ $paciente->pessoa->last_name }}</p>
+                        <p class="text-gray-900">{{ $paciente->pessoa->ultimo_nome }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento</span>

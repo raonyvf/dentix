@@ -76,7 +76,7 @@
                                 <td class="px-2 py-2 border border-gray-200 align-top" style="width:14.28%">
                                     @forelse($items as $it)
                                         <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
-                                            <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->pessoa)->first_name }} {{ optional($it->profissional->pessoa)->last_name }}</div>
+                                            <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->pessoa)->primeiro_nome }} {{ optional($it->profissional->pessoa)->ultimo_nome }}</div>
                                             <div>{{ $it->hora_inicio }} – {{ $it->hora_fim }}</div>
                                             <div class="text-xs text-gray-600">{{ optional($it->profissional->usuario)->especialidade ?? $it->profissional->cargo }}</div>
                                             <div class="mt-1 h-2 rounded bg-emerald-400 w-full"></div>
@@ -116,7 +116,7 @@
                             <td class="px-2 py-2 border border-gray-200 align-top" style="width:14.28%">
                                 @forelse($items as $it)
                                     <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
-                                        <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->pessoa)->first_name }} {{ optional($it->profissional->pessoa)->last_name }}</div>
+                                        <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->pessoa)->primeiro_nome }} {{ optional($it->profissional->pessoa)->ultimo_nome }}</div>
                                         <div>{{ $it->hora_inicio }} – {{ $it->hora_fim }}</div>
                                         <div class="text-xs text-gray-600">{{ optional($it->profissional->usuario)->especialidade ?? $it->profissional->cargo }}</div>
                                         <div class="mt-1 h-2 rounded bg-emerald-400 w-full"></div>
@@ -142,7 +142,7 @@
                 <label class="block text-sm mb-1">Profissional</label>
                 <select name="profissional_id" class="w-full border rounded px-2 py-1">
                     @foreach($dentistas as $d)
-                        <option value="{{ $d->id }}">{{ $d->pessoa->first_name }} {{ $d->pessoa->last_name }}</option>
+                        <option value="{{ $d->id }}">{{ $d->pessoa->primeiro_nome }} {{ $d->pessoa->ultimo_nome }}</option>
                     @endforeach
                 </select>
             </div>
