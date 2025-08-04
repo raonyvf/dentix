@@ -17,22 +17,22 @@ return new class extends Migration {
             $patients = DB::table('patients')->get();
             foreach ($patients as $patient) {
                 $pessoa = Pessoa::create([
-                    'organization_id' => $patient->organization_id,
-                    'first_name' => $patient->first_name,
-                    'middle_name' => $patient->middle_name,
-                    'last_name' => $patient->last_name,
-                    'data_nascimento' => $patient->data_nascimento,
-                    'cpf' => $patient->cpf,
-                    'phone' => $patient->telefone,
-                    'whatsapp' => $patient->whatsapp,
-                    'email' => $patient->email,
-                    'cep' => $patient->cep,
-                    'logradouro' => $patient->logradouro,
-                    'numero' => $patient->numero,
-                    'complemento' => $patient->complemento,
-                    'bairro' => $patient->bairro,
-                    'cidade' => $patient->cidade,
-                    'estado' => $patient->estado,
+                    'organization_id' => $patient->organization_id ?? null,
+                    'first_name' => $patient->first_name ?? null,
+                    'middle_name' => $patient->middle_name ?? null,
+                    'last_name' => $patient->last_name ?? null,
+                    'data_nascimento' => $patient->data_nascimento ?? null,
+                    'cpf' => $patient->cpf ?? null,
+                    'phone' => $patient->telefone ?? null,
+                    'whatsapp' => $patient->whatsapp ?? null,
+                    'email' => $patient->email ?? null,
+                    'cep' => $patient->cep ?? null,
+                    'logradouro' => $patient->logradouro ?? null,
+                    'numero' => $patient->numero ?? null,
+                    'complemento' => $patient->complemento ?? null,
+                    'bairro' => $patient->bairro ?? null,
+                    'cidade' => $patient->cidade ?? null,
+                    'estado' => $patient->estado ?? null,
                 ]);
 
                 DB::table('patients')
