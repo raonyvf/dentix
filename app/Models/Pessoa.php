@@ -9,7 +9,7 @@ class Pessoa extends Model
     use BelongsToOrganization;
 
     protected $fillable = [
-        'organization_id',
+        'organizacao_id',
         'first_name',
         'middle_name',
         'last_name',

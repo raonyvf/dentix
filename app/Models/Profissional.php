@@ -17,7 +17,7 @@ class Profissional extends Model
     protected $table = 'profissionais';
 
     protected $fillable = [
-        'organization_id',
+        'organizacao_id',
         'pessoa_id',
         'usuario_id',
         'numero_funcionario',
@@ -53,7 +53,7 @@ class Profissional extends Model
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Organization::class, 'organizacao_id');
     }
 
     public function pessoa()

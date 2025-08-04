@@ -13,7 +13,7 @@ class Perfil extends Model
     protected $table = 'perfis';
 
     protected $fillable = [
-        'organization_id',
+        'organizacao_id',
         'nome',
     ];
 
@@ -31,6 +31,6 @@ class Perfil extends Model
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Organization::class, 'organizacao_id');
     }
 }

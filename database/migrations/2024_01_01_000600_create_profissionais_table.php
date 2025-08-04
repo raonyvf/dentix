@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('profissionais', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained('organizacoes');
+            $table->foreignId('organizacao_id')->constrained('organizacoes');
             $table->foreignId('pessoa_id')->constrained('pessoas');
             $table->foreignId('usuario_id')->nullable()->constrained('usuarios');
             $table->string('numero_funcionario')->nullable();
@@ -35,7 +35,7 @@ return new class extends Migration {
 
         Schema::create('profissional_horarios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained('organizacoes');
+            $table->foreignId('organizacao_id')->constrained('organizacoes');
             $table->foreignId('clinic_id')->constrained('clinicas');
             $table->foreignId('profissional_id')->constrained('profissionais');
             $table->unsignedTinyInteger('dia_semana');

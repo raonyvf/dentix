@@ -14,7 +14,7 @@ class Patient extends Model
     protected $table = 'pacientes';
 
     protected $fillable = [
-        'organization_id',
+        'organizacao_id',
         'usuario_id',
         'pessoa_id',
         'menor_idade',
@@ -30,7 +30,7 @@ class Patient extends Model
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Organization::class, 'organizacao_id');
     }
 
     public function usuario()

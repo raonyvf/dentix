@@ -37,7 +37,7 @@ class ProfessionalController extends Controller
 
     public function create()
     {
-        $clinics = Clinic::where('organizacao_id', auth()->user()->organization_id)
+        $clinics = Clinic::where('organizacao_id', auth()->user()->organizacao_id)
             ->with('horarios')
             ->get();
 
@@ -46,7 +46,7 @@ class ProfessionalController extends Controller
 
     public function show(Profissional $profissional)
     {
-        $clinics = Clinic::where('organizacao_id', auth()->user()->organization_id)
+        $clinics = Clinic::where('organizacao_id', auth()->user()->organizacao_id)
             ->with('horarios')
             ->get();
 
@@ -73,7 +73,7 @@ class ProfessionalController extends Controller
             $pessoaData['photo_path'] = $request->file('foto')->store('profissionais', 'public');
         }
         $pessoa = Pessoa::create(array_merge([
-            'organization_id' => auth()->user()->organization_id
+            'organizacao_id' => auth()->user()->organizacao_id
         ], $pessoaData));
 
         $usuario = null;
@@ -82,7 +82,7 @@ class ProfessionalController extends Controller
             if (!$usuario) {
                 $usuario = Usuario::create([
                     'email' => $pessoa->email,
-                    'organization_id' => auth()->user()->organization_id,
+                    'organizacao_id' => auth()->user()->organizacao_id,
                     'password' => Hash::make(Str::random(8)),
                     'must_change_password' => true,
                     'pessoa_id' => $pessoa->id,
@@ -94,7 +94,7 @@ class ProfessionalController extends Controller
 
 
         $profissional = Profissional::create(array_merge([
-            'organization_id' => auth()->user()->organization_id,
+            'organizacao_id' => auth()->user()->organizacao_id,
             'pessoa_id' => $pessoa->id,
             'usuario_id' => $usuario?->id,
         ], $this->extractProfessionalData($data)));
@@ -108,7 +108,7 @@ class ProfessionalController extends Controller
 
     public function edit(Profissional $profissional)
     {
-        $clinics = Clinic::where('organizacao_id', auth()->user()->organization_id)
+        $clinics = Clinic::where('organizacao_id', auth()->user()->organizacao_id)
             ->with('horarios')
             ->get();
 
@@ -221,7 +221,7 @@ class ProfessionalController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
-        $clinics = Clinic::where('organizacao_id', auth()->user()->organization_id)
+        $clinics = Clinic::where('organizacao_id', auth()->user()->organizacao_id)
             ->with('horarios')
             ->get()
             ->keyBy('id');

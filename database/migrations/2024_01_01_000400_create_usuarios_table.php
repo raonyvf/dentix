@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained('organizacoes');
+            $table->foreignId('organizacao_id')->constrained('organizacoes');
             $table->foreignId('pessoa_id')->nullable()->constrained('pessoas');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

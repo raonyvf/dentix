@@ -13,7 +13,7 @@ class Horario extends Model
 
     protected $fillable = [
         'clinic_id',
-        'organization_id',
+        'organizacao_id',
         'dia_semana',
         'hora_inicio',
         'hora_fim',
@@ -26,6 +26,6 @@ class Horario extends Model
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Organization::class, 'organizacao_id');
     }
 }
