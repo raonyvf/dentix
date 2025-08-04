@@ -15,6 +15,12 @@ return new class extends Migration {
             Schema::table('clinica_usuario', function (Blueprint $table) {
                 $table->renameColumn('clinic_id', 'clinica_id');
             });
+
+            Schema::table('clinica_usuario', function (Blueprint $table) {
+                $table->dropForeign(['clinica_id']);
+                $table->unsignedBigInteger('clinica_id')->nullable()->change();
+                $table->foreign('clinica_id')->references('id')->on('clinicas')->onDelete('cascade');
+            });
         }
     }
 
@@ -22,7 +28,10 @@ return new class extends Migration {
     {
         if (Schema::hasColumn('clinica_usuario', 'clinica_id')) {
             Schema::table('clinica_usuario', function (Blueprint $table) {
+                $table->dropForeign(['clinica_id']);
+                $table->unsignedBigInteger('clinica_id')->nullable(false)->change();
                 $table->renameColumn('clinica_id', 'clinic_id');
+                $table->foreign('clinic_id')->references('id')->on('clinicas')->onDelete('cascade');
             });
         }
 
