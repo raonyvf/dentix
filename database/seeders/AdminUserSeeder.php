@@ -9,6 +9,7 @@ use App\Models\Perfil;
 use App\Models\Permissao;
 use App\Models\Pessoa;
 use App\Models\Organization;
+use App\Models\Clinic;
 
 class AdminUserSeeder extends Seeder
 {
@@ -18,6 +19,16 @@ class AdminUserSeeder extends Seeder
             ['cnpj' => '00000000000000'],
             [
                 'nome_fantasia' => 'Default Organization',
+                'timezone' => config('app.timezone'),
+            ]
+        );
+
+        $clinic = Clinic::firstOrCreate(
+            [
+                'organizacao_id' => $organization->id,
+                'nome' => 'Default Clinic',
+            ],
+            [
                 'timezone' => config('app.timezone'),
             ]
         );
@@ -69,6 +80,6 @@ class AdminUserSeeder extends Seeder
         }
 
         // Ensure the admin user only has the Super Administrador perfil
-        $usuario->perfis()->sync([$perfil->id => ['clinica_id' => null]]);
+        $usuario->perfis()->sync([$perfil->id => ['clinica_id' => $clinic->id]]);
     }
 }

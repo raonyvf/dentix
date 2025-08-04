@@ -26,7 +26,7 @@ return new class extends Migration {
 
         Schema::create('clinica_usuario', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('clinica_id')->constrained('clinicas');
+            $table->foreignId('clinica_id')->nullable()->constrained('clinicas');
             $table->foreignId('usuario_id')->constrained('usuarios');
             $table->foreignId('perfil_id')->nullable()->constrained('perfis');
             $table->timestamps();
