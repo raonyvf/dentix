@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('clinicas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained('organizacoes');
+            $table->foreignId('organizacao_id')->constrained('organizacoes');
             $table->string('nome');
             $table->string('cnpj')->nullable();
             $table->string('responsavel_first_name')->nullable();
@@ -32,8 +32,8 @@ return new class extends Migration {
 
         Schema::create('cadeiras', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained('organizacoes');
-            $table->foreignId('clinic_id')->constrained('clinicas');
+            $table->foreignId('organizacao_id')->constrained('organizacoes');
+            $table->foreignId('clinica_id')->constrained('clinicas');
             $table->string('nome');
             $table->string('status')->default('disponivel');
             $table->timestamps();

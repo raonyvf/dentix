@@ -37,7 +37,7 @@ class ProfessionalController extends Controller
 
     public function create()
     {
-        $clinics = Clinic::where('organization_id', auth()->user()->organization_id)
+        $clinics = Clinic::where('organizacao_id', auth()->user()->organization_id)
             ->with('horarios')
             ->get();
 
@@ -46,7 +46,7 @@ class ProfessionalController extends Controller
 
     public function show(Profissional $profissional)
     {
-        $clinics = Clinic::where('organization_id', auth()->user()->organization_id)
+        $clinics = Clinic::where('organizacao_id', auth()->user()->organization_id)
             ->with('horarios')
             ->get();
 
@@ -108,7 +108,7 @@ class ProfessionalController extends Controller
 
     public function edit(Profissional $profissional)
     {
-        $clinics = Clinic::where('organization_id', auth()->user()->organization_id)
+        $clinics = Clinic::where('organizacao_id', auth()->user()->organization_id)
             ->with('horarios')
             ->get();
 
@@ -221,7 +221,7 @@ class ProfessionalController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
-        $clinics = Clinic::where('organization_id', auth()->user()->organization_id)
+        $clinics = Clinic::where('organizacao_id', auth()->user()->organization_id)
             ->with('horarios')
             ->get()
             ->keyBy('id');

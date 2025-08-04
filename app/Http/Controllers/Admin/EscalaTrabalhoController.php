@@ -20,7 +20,7 @@ class EscalaTrabalhoController extends Controller
         $view = $request->input('view', 'week');
 
         $dias = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
-        $cadeiras = $clinicId ? Cadeira::where('clinic_id', $clinicId)->get() : collect();
+        $cadeiras = $clinicId ? Cadeira::where('clinica_id', $clinicId)->get() : collect();
 
         $dentistas = Profissional::when($clinicId, function ($query) use ($clinicId) {
                 $query->whereHas('clinics', fn($q) => $q->where('clinicas.id', $clinicId));

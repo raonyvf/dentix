@@ -43,13 +43,13 @@ class Clinic extends Model
 
     public function cadeiras()
     {
-        return $this->hasMany(Cadeira::class);
+        return $this->hasMany(Cadeira::class, 'clinica_id');
     }
 
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Organization::class, 'organizacao_id');
     }
 
     public function usuarios()

@@ -12,19 +12,19 @@ class Cadeira extends Model
     use BelongsToOrganization, BelongsToClinic;
 
     protected $fillable = [
-        'clinic_id',
-        'organization_id',
+        'clinica_id',
+        'organizacao_id',
         'nome',
         'status',
     ];
 
     public function clinic()
     {
-        return $this->belongsTo(Clinic::class);
+        return $this->belongsTo(Clinic::class, 'clinica_id');
     }
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Organization::class, 'organizacao_id');
     }
 }
