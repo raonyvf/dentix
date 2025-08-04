@@ -26,7 +26,7 @@
                     <td class="px-4 py-2 whitespace-nowrap">{{ $organization->nome_fantasia }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $organization->cnpj }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">
-                        {{ trim($organization->responsavel_first_name . ' ' . ($organization->responsavel_middle_name ? $organization->responsavel_middle_name . ' ' : '') . $organization->responsavel_last_name) }}
+                        {{ trim($organization->responsavel_primeiro_nome . ' ' . ($organization->responsavel_nome_meio ? $organization->responsavel_nome_meio . ' ' : '') . $organization->responsavel_ultimo_nome) }}
                     </td>
                     <td class="px-4 py-2 whitespace-nowrap">{{ $organization->status }}</td>
                     <td class="px-4 py-2 whitespace-nowrap">
