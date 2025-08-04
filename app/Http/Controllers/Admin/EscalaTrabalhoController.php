@@ -82,7 +82,7 @@ class EscalaTrabalhoController extends Controller
                 'profissional_id' => [
                     'required',
                     'exists:profissionais,id',
-                    Rule::exists('clinic_profissional', 'profissional_id')->where(fn($q) => $q->where('clinic_id', $request->input('clinic_id'))),
+                    Rule::exists('clinica_profissional', 'profissional_id')->where(fn($q) => $q->where('clinic_id', $request->input('clinic_id'))),
                 ],
                 'datas' => 'required|array',
                 'datas.*' => 'date',
@@ -96,7 +96,7 @@ class EscalaTrabalhoController extends Controller
                 'profissional_id' => [
                     'required',
                     'exists:profissionais,id',
-                    Rule::exists('clinic_profissional', 'profissional_id')->where(fn($q) => $q->where('clinic_id', $request->input('clinic_id'))),
+                    Rule::exists('clinica_profissional', 'profissional_id')->where(fn($q) => $q->where('clinic_id', $request->input('clinic_id'))),
                 ],
                 'semana' => 'required|date',
                 'dias' => 'required|array',

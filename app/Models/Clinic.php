@@ -62,6 +62,6 @@ class Clinic extends Model
 
     public function profissionais()
     {
-        return $this->belongsToMany(Profissional::class, 'clinic_profissional')->withTimestamps();
+        return $this->belongsToMany(Profissional::class, 'clinica_profissional')->withTimestamps();
     }
 }
