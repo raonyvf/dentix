@@ -89,7 +89,7 @@ class ClinicController extends Controller
         foreach ($horarios as $dia => $horario) {
             if (($horario['abertura'] ?? false) && ($horario['fechamento'] ?? false)) {
                 $clinic->horarios()->create([
-                    'clinic_id' => $clinic->id,
+                    'clinica_id' => $clinic->id,
                     'organizacao_id' => $clinic->organizacao_id,
                     'dia_semana' => $dia,
                     'hora_inicio' => $horario['abertura'],
@@ -185,7 +185,7 @@ class ClinicController extends Controller
         foreach ($horarios as $dia => $horario) {
             if (($horario['abertura'] ?? false) && ($horario['fechamento'] ?? false)) {
                 $clinic->horarios()->create([
-                    'clinic_id' => $clinic->id,
+                    'clinica_id' => $clinic->id,
                     'organizacao_id' => $clinic->organizacao_id,
                     'dia_semana' => $dia,
                     'hora_inicio' => $horario['abertura'],

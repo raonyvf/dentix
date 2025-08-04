@@ -77,7 +77,7 @@ class AgendaController extends Controller
         // active. This prevents pulling schedules from other organizations
         // while still allowing queries for the selected clinic.
         $intervalos = \App\Models\Horario::withoutGlobalScope('clinic')
-            ->where('clinic_id', $clinicId)
+            ->where('clinica_id', $clinicId)
             ->where('dia_semana', $dia)
             ->orderBy('hora_inicio')
             ->get();

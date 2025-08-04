@@ -38,7 +38,7 @@ class Clinic extends Model
 
     public function horarios()
     {
-        return $this->hasMany(Horario::class);
+        return $this->hasMany(Horario::class, 'clinica_id');
     }
 
     public function cadeiras()
@@ -62,6 +62,6 @@ class Clinic extends Model
 
     public function profissionais()
     {
-        return $this->belongsToMany(Profissional::class, 'clinica_profissional')->withTimestamps();
+        return $this->belongsToMany(Profissional::class, 'clinica_profissional', 'clinica_id', 'profissional_id')->withTimestamps();
     }
 }

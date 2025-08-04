@@ -11,7 +11,7 @@ class ProfissionalHorario extends Model
 
     protected $fillable = [
         'organizacao_id',
-        'clinic_id',
+        'clinica_id',
         'profissional_id',
         'dia_semana',
         'hora_inicio',
@@ -25,6 +25,6 @@ class ProfissionalHorario extends Model
 
     public function clinic()
     {
-        return $this->belongsTo(Clinic::class);
+        return $this->belongsTo(Clinic::class, 'clinica_id');
     }
 }

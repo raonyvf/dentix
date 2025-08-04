@@ -13,7 +13,7 @@ class EscalaTrabalho extends Model
 
     protected $fillable = [
         'organizacao_id',
-        'clinic_id',
+        'clinica_id',
         'cadeira_id',
         'profissional_id',
         'semana',
@@ -38,6 +38,6 @@ class EscalaTrabalho extends Model
 
     public function clinic()
     {
-        return $this->belongsTo(Clinic::class);
+        return $this->belongsTo(Clinic::class, 'clinica_id');
     }
 }
