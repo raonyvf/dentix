@@ -11,7 +11,7 @@ Route::get('/', function () {
             return redirect()->route('backend.index');
         }
 
-        if ($user->profiles()->where('nome', 'Paciente')->exists()) {
+        if ($user->perfis()->where('nome', 'Paciente')->exists()) {
             return redirect()->route('portal.index');
         }
 

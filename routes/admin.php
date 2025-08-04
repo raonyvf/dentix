@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ClinicController;
 use App\Http\Controllers\Admin\CadeiraController;
-use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\PerfilController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\FormularioController;
 use App\Http\Controllers\Admin\PatientController;
@@ -27,7 +27,7 @@ Route::get('agendamentos/horarios', [AgendaController::class, 'horarios'])->name
 Route::resource('clinicas', ClinicController::class)
     ->parameters(['clinicas' => 'clinic']);
 Route::resource('cadeiras', CadeiraController::class);
-Route::resource('perfis', ProfileController::class)->parameters(['perfis' => 'perfil']);
+Route::resource('perfis', PerfilController::class)->parameters(['perfis' => 'perfil']);
 Route::resource('usuarios', UserController::class)->only(['index','edit','update']);
 Route::resource('profissionais', ProfessionalController::class)
     ->parameters(['profissionais' => 'profissional']);

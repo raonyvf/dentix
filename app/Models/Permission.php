@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Perfil;
 
 class Permission extends Model
 {
     protected $fillable = [
-        'profile_id',
+        'perfil_id',
         'modulo',
         'leitura',
         'escrita',
@@ -15,8 +16,8 @@ class Permission extends Model
         'exclusao',
     ];
 
-    public function profile()
+    public function perfil()
     {
-        return $this->belongsTo(Profile::class);
+        return $this->belongsTo(Perfil::class);
     }
 }

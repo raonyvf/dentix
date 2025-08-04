@@ -3,14 +3,14 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Profile;
+use App\Models\Perfil;
 use App\Models\Permission;
 
 class PatientProfileSeeder extends Seeder
 {
     public function run(): void
     {
-        $profile = Profile::firstOrCreate([
+        $perfil = Perfil::firstOrCreate([
             'nome' => 'Paciente',
             'organization_id' => null,
         ]);
@@ -22,7 +22,7 @@ class PatientProfileSeeder extends Seeder
         foreach ($modules as $module) {
             Permission::updateOrCreate(
                 [
-                    'profile_id' => $profile->id,
+                    'perfil_id' => $perfil->id,
                     'modulo' => $module,
                 ],
                 [

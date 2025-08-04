@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Profile;
+use App\Models\Perfil;
 use Illuminate\Http\Request;
 
-class ProfileController extends Controller
+class PerfilController extends Controller
 {
     public function index()
     {
-        $profiles = Profile::all();
-        return view('admin.profiles.index', compact('profiles'));
+        $perfis = Perfil::all();
+        return view('admin.perfis.index', compact('perfis'));
     }
 
     public function create()
     {
         $modules = $this->modules();
-        return view('admin.profiles.create', compact('modules'));
+        return view('admin.perfis.create', compact('modules'));
     }
 
     public function store(Request $request)
@@ -27,24 +27,24 @@ class ProfileController extends Controller
             'permissions' => 'array',
         ]);
 
-        $profile = Profile::create([
+        $perfil = Perfil::create([
             'nome' => $data['nome'],
             'organization_id' => auth()->user()->organization_id,
         ]);
 
-        $this->syncPermissions($profile, $data['permissions'] ?? []);
+        $this->syncPermissions($perfil, $data['permissions'] ?? []);
 
         return redirect()->route('perfis.index')->with('success', 'Perfil salvo com sucesso.');
     }
 
-    public function edit(Profile $perfil)
+    public function edit(Perfil $perfil)
     {
         $modules = $this->modules();
         $permissions = $perfil->permissions->keyBy('modulo');
-        return view('admin.profiles.edit', compact('perfil', 'modules', 'permissions'));
+        return view('admin.perfis.edit', compact('perfil', 'modules', 'permissions'));
     }
 
-    public function update(Request $request, Profile $perfil)
+    public function update(Request $request, Perfil $perfil)
     {
         $data = $request->validate([
             'nome' => 'required',
@@ -59,7 +59,7 @@ class ProfileController extends Controller
         return redirect()->route('perfis.index')->with('success', 'Perfil atualizado com sucesso.');
     }
 
-    public function destroy(Profile $perfil)
+    public function destroy(Perfil $perfil)
     {
         $perfil->delete();
         return redirect()->route('perfis.index')->with('success', 'Perfil removido com sucesso.');
@@ -80,10 +80,10 @@ class ProfileController extends Controller
         ];
     }
 
-    private function syncPermissions(Profile $profile, array $permissions): void
+    private function syncPermissions(Perfil $perfil, array $permissions): void
     {
         foreach ($permissions as $module => $values) {
-            $profile->permissions()->create([
+            $perfil->permissions()->create([
                 'modulo' => $module,
                 'leitura' => isset($values['leitura']),
                 'escrita' => isset($values['escrita']),

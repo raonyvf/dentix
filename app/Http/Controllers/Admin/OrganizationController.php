@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
-use App\Models\Profile;
+use App\Models\Perfil;
 use App\Models\User;
 use App\Models\Pessoa;
 use App\Notifications\NewAdminPasswordNotification;
@@ -71,7 +71,7 @@ class OrganizationController extends Controller
             'timezone' => $data['timezone'],
         ]);
      
-        $profile = Profile::create([
+        $perfil = Perfil::create([
             'organization_id' => $organization->id,
             'nome' => 'Administrador',
         ]);
@@ -89,7 +89,7 @@ class OrganizationController extends Controller
         ];
 
         foreach ($modules as $module) {
-            $profile->permissions()->create([
+            $perfil->permissions()->create([
                 'modulo' => $module,
                 'leitura' => true,
                 'escrita' => true,
@@ -116,7 +116,7 @@ class OrganizationController extends Controller
             'pessoa_id' => $pessoa->id,
         ]);
 
-        $user->profiles()->syncWithoutDetaching([$profile->id => ['clinic_id' => null]]);
+        $user->perfis()->syncWithoutDetaching([$perfil->id => ['clinic_id' => null]]);
 
         SendNewAdminPasswordEmail::dispatch($user, $password);
 

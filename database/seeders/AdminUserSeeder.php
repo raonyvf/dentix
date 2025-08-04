@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\Profile;
+use App\Models\Perfil;
 use App\Models\Permission;
 use App\Models\Pessoa;
 use App\Models\Organization;
@@ -42,7 +42,7 @@ class AdminUserSeeder extends Seeder
             ]
         );
 
-        $profile = Profile::firstOrCreate([
+        $perfil = Perfil::firstOrCreate([
             'nome' => 'Super Administrador',
             'organization_id' => null,
         ]);
@@ -54,7 +54,7 @@ class AdminUserSeeder extends Seeder
         foreach ($modules as $module) {
             Permission::updateOrCreate(
                 [
-                    'profile_id' => $profile->id,
+                    'perfil_id' => $perfil->id,
                     'modulo' => $module,
                 ],
                 [
@@ -66,7 +66,7 @@ class AdminUserSeeder extends Seeder
             );
         }
 
-        // Ensure the admin user only has the Super Administrador profile
-        $user->profiles()->sync([$profile->id => ['clinic_id' => null]]);
+        // Ensure the admin user only has the Super Administrador perfil
+        $user->perfis()->sync([$perfil->id => ['clinic_id' => null]]);
     }
 }
