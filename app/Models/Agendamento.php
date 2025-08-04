@@ -11,9 +11,9 @@ class Agendamento extends Model
     use HasFactory;
 
     protected $fillable = [
-        'clinic_id',
+        'clinica_id',
         'profissional_id',
-        'patient_id',
+        'paciente_id',
         'tipo',
         'contato',
         'status',
@@ -27,7 +27,7 @@ class Agendamento extends Model
         'data' => 'date',
     ];
 
-    public function clinic()
+    public function clinica()
     {
         return $this->belongsTo(Clinic::class);
     }
@@ -37,7 +37,7 @@ class Agendamento extends Model
         return $this->belongsTo(Profissional::class);
     }
 
-    public function patient()
+    public function paciente()
     {
         return $this->belongsTo(Patient::class);
     }
@@ -46,7 +46,7 @@ class Agendamento extends Model
     {
         static::saved(function (Agendamento $agendamento) {
             $date = $agendamento->data->format('Y-m-d');
-            $cacheKey = "agendamentos_{$agendamento->clinic_id}_{$date}";
+            $cacheKey = "agendamentos_{$agendamento->clinica_id}_{$date}";
             Cache::forget($cacheKey);
         });
     }
