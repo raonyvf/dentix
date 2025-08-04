@@ -24,8 +24,8 @@ class Perfil extends Model
 
     public function usuarios()
     {
-        return $this->belongsToMany(Usuario::class, 'clinic_user', 'perfil_id', 'usuario_id')
-            ->withPivot('clinic_id')
+        return $this->belongsToMany(Usuario::class, 'clinica_usuario', 'perfil_id', 'usuario_id')
+            ->withPivot('clinica_id')
             ->withTimestamps();
     }
 

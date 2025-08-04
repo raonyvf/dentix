@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Traits\BelongsToOrganization;
 use App\Models\Perfil;
 use App\Models\Organization;
-use App\Models\ClinicUser;
+use App\Models\ClinicaUsuario;
 use App\Models\Permission;
 use App\Models\Patient;
 use App\Models\Pessoa;
@@ -50,17 +50,17 @@ class Usuario extends Authenticatable
 
     public function clinics()
     {
-        return $this->belongsToMany(Clinic::class, 'clinic_user', 'usuario_id', 'clinic_id')
-            ->using(ClinicUser::class)
+        return $this->belongsToMany(Clinic::class, 'clinica_usuario', 'usuario_id', 'clinica_id')
+            ->using(ClinicaUsuario::class)
             ->withPivot('perfil_id')
             ->withTimestamps();
     }
 
     public function perfis()
     {
-        return $this->belongsToMany(Perfil::class, 'clinic_user', 'usuario_id', 'perfil_id')
-            ->using(ClinicUser::class)
-            ->withPivot('clinic_id')
+        return $this->belongsToMany(Perfil::class, 'clinica_usuario', 'usuario_id', 'perfil_id')
+            ->using(ClinicaUsuario::class)
+            ->withPivot('clinica_id')
             ->withTimestamps();
     }
 
@@ -97,8 +97,8 @@ class Usuario extends Authenticatable
 
             if ($clinicId) {
                 $perfilQuery->where(function ($query) use ($clinicId) {
-                    $query->where('clinic_user.clinic_id', $clinicId)
-                        ->orWhereNull('clinic_user.clinic_id');
+                    $query->where('clinica_usuario.clinica_id', $clinicId)
+                        ->orWhereNull('clinica_usuario.clinica_id');
                 });
             }
         }
