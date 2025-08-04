@@ -12,7 +12,7 @@ class EscalaTrabalho extends Model
     protected $table = 'escalas_trabalho';
 
     protected $fillable = [
-        'organization_id',
+        'organizacao_id',
         'clinic_id',
         'cadeira_id',
         'profissional_id',

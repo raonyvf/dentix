@@ -12,7 +12,7 @@ class PatientProfileSeeder extends Seeder
     {
         $perfil = Perfil::firstOrCreate([
             'nome' => 'Paciente',
-            'organization_id' => null,
+            'organizacao_id' => null,
         ]);
 
         $modules = [

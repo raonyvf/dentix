@@ -72,7 +72,7 @@ class OrganizationController extends Controller
         ]);
      
         $perfil = Perfil::create([
-            'organization_id' => $organization->id,
+            'organizacao_id' => $organization->id,
             'nome' => 'Administrador',
         ]);
 
@@ -101,7 +101,7 @@ class OrganizationController extends Controller
         $password = $data['password'] ?? Str::random(10);
 
         $pessoa = Pessoa::create([
-            'organization_id' => $organization->id,
+            'organizacao_id' => $organization->id,
             'first_name' => $data['first_name'],
             'middle_name' => $data['middle_name'] ?? null,
             'last_name' => $data['last_name'],
@@ -110,7 +110,7 @@ class OrganizationController extends Controller
 
         $usuario = Usuario::create([
             'email' => $data['email'],
-            'organization_id' => $organization->id,
+            'organizacao_id' => $organization->id,
             'password' => Hash::make($password),
             'must_change_password' => true,
             'pessoa_id' => $pessoa->id,
@@ -173,7 +173,7 @@ class OrganizationController extends Controller
             'timezone' => $data['timezone'],
         ]);
 
-        $usuario = Usuario::where('organization_id', $organization->id)->first();
+        $usuario = Usuario::where('organizacao_id', $organization->id)->first();
         if ($usuario) {
             if ($request->filled('first_name') || $request->filled('middle_name') || $request->filled('last_name')) {
                 $usuario->pessoa?->update([

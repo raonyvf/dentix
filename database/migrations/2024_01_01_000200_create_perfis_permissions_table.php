@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('perfis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained('organizacoes');
+            $table->foreignId('organizacao_id')->constrained('organizacoes');
             $table->string('nome');
             $table->timestamps();
         });

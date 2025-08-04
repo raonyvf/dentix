@@ -29,7 +29,7 @@ class PerfilController extends Controller
 
         $perfil = Perfil::create([
             'nome' => $data['nome'],
-            'organization_id' => auth()->user()->organization_id,
+            'organizacao_id' => auth()->user()->organizacao_id,
         ]);
 
         $this->syncPermissions($perfil, $data['permissions'] ?? []);

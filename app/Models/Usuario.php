@@ -23,7 +23,7 @@ class Usuario extends Authenticatable
     protected $fillable = [
         'email',
         'password',
-        'organization_id',
+        'organizacao_id',
         'dentista',
         'cro',
         'cargo',
@@ -45,7 +45,7 @@ class Usuario extends Authenticatable
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Organization::class, 'organizacao_id');
     }
 
     public function clinics()

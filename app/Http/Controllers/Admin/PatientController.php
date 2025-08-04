@@ -34,11 +34,11 @@ class PatientController extends Controller
     {
         $data = $this->validateData($request);
         $pessoa = Pessoa::create(array_merge(
-            ['organization_id' => auth()->user()->organization_id],
+            ['organizacao_id' => auth()->user()->organizacao_id],
             $this->extractPessoaData($data)
         ));
         $patientData = [
-            'organization_id' => auth()->user()->organization_id,
+            'organizacao_id' => auth()->user()->organizacao_id,
             'pessoa_id' => $pessoa->id,
             'menor_idade' => $request->menor_idade === 'Sim',
             'responsavel_first_name' => $data['responsavel_first_name'] ?? null,
@@ -52,14 +52,14 @@ class PatientController extends Controller
         if ($request->boolean('create_user') && $paciente->email) {
             $perfil = Perfil::firstOrCreate([
                 'nome' => 'Paciente',
-                'organization_id' => auth()->user()->organization_id,
+                'organizacao_id' => auth()->user()->organizacao_id,
             ]);
 
             $password = Str::random(8);
             $usuario = Usuario::create([
                 'name' => $paciente->pessoa->first_name.' '.$paciente->pessoa->last_name,
                 'email' => $paciente->email,
-                'organization_id' => auth()->user()->organization_id,
+                'organizacao_id' => auth()->user()->organizacao_id,
                 'password' => Hash::make($password),
                 'must_change_password' => true,
             ]);

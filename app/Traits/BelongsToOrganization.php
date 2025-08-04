@@ -9,7 +9,8 @@ trait BelongsToOrganization
 {
     protected static function bootBelongsToOrganization()
     {
-        if (! auth()->check() || is_null(auth()->user()->organization_id) || auth()->user()->isSuperAdmin()) {
+        $orgId = auth()->check() ? (auth()->user()->organizacao_id ?? auth()->user()->organization_id) : null;
+        if (is_null($orgId) || (auth()->check() && auth()->user()->isSuperAdmin())) {
             return;
         }
 
@@ -23,13 +24,13 @@ trait BelongsToOrganization
         }
 
         if ($column) {
-            static::addGlobalScope('organization', function (Builder $builder) use ($instance, $column) {
-                $builder->where($instance->getTable() . '.' . $column, auth()->user()->organization_id);
+            static::addGlobalScope('organization', function (Builder $builder) use ($instance, $column, $orgId) {
+                $builder->where($instance->getTable() . '.' . $column, $orgId);
             });
 
-            static::creating(function ($model) use ($column) {
+            static::creating(function ($model) use ($column, $orgId) {
                 if (is_null($model->$column)) {
-                    $model->$column = auth()->user()->organization_id;
+                    $model->$column = $orgId;
                 }
             });
         }

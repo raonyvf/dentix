@@ -25,7 +25,7 @@ class AdminUserSeeder extends Seeder
         $pessoa = Pessoa::firstOrCreate(
             [
                 'email' => 'admin@example.com',
-                'organization_id' => $organization->id,
+                'organizacao_id' => $organization->id,
             ],
             [
                 'first_name' => 'Admin',
@@ -37,14 +37,14 @@ class AdminUserSeeder extends Seeder
             ['email' => 'admin@example.com'],
             [
                 'password' => Hash::make('password'),
-                'organization_id' => $organization->id,
+                'organizacao_id' => $organization->id,
                 'pessoa_id' => $pessoa->id,
             ]
         );
 
         $perfil = Perfil::firstOrCreate([
             'nome' => 'Super Administrador',
-            'organization_id' => null,
+            'organizacao_id' => null,
         ]);
 
         $modules = [

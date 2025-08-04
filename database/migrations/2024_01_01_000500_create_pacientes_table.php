@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('pacientes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained('organizacoes');
+            $table->foreignId('organizacao_id')->constrained('organizacoes');
             $table->foreignId('usuario_id')->nullable()->constrained('usuarios');
             $table->foreignId('pessoa_id')->constrained('pessoas');
             $table->boolean('menor_idade')->default(false);

@@ -10,7 +10,7 @@ class ProfissionalHorario extends Model
     use BelongsToOrganization, BelongsToClinic;
 
     protected $fillable = [
-        'organization_id',
+        'organizacao_id',
         'clinic_id',
         'profissional_id',
         'dia_semana',
