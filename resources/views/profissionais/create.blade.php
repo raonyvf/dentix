@@ -32,15 +32,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nome <span class="text-red-500">*</span></label>
-                    <input type="text" name="first_name" value="{{ old('first_name') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" name="primeiro_nome" value="{{ old('primeiro_nome') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</label>
-                    <input type="text" name="middle_name" value="{{ old('middle_name') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="nome_meio" value="{{ old('nome_meio') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome <span class="text-red-500">*</span></label>
-                    <input type="text" name="last_name" value="{{ old('last_name') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" name="ultimo_nome" value="{{ old('ultimo_nome') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento <span class="text-red-500">*</span></label>

@@ -50,8 +50,8 @@
             $initials = '';
 
             if ($user->pessoa) {
-                $displayName = trim($user->pessoa->first_name . ' ' . $user->pessoa->last_name);
-                $initials = strtoupper(substr($user->pessoa->first_name, 0, 1) . substr($user->pessoa->last_name, 0, 1));
+                $displayName = trim($user->pessoa->primeiro_nome . ' ' . $user->pessoa->ultimo_nome);
+                $initials = strtoupper(substr($user->pessoa->primeiro_nome, 0, 1) . substr($user->pessoa->ultimo_nome, 0, 1));
                 $showEmail = false;
             } else {
                 if ($user->isSuperAdmin()) {

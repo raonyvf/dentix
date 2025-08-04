@@ -152,9 +152,9 @@ class ProfessionalController extends Controller
     private function validateData(Request $request): array
     {
         $rules = [
-            'first_name' => 'required',
-            'middle_name' => 'nullable',
-            'last_name' => 'required',
+            'primeiro_nome' => 'required',
+            'nome_meio' => 'nullable',
+            'ultimo_nome' => 'required',
             'data_nascimento' => 'required|date',
             'sexo' => 'nullable',
             'naturalidade' => 'nullable',
@@ -259,9 +259,9 @@ class ProfessionalController extends Controller
     private function extractPessoaData(array $data): array
     {
         return [
-            'first_name' => $data['first_name'],
-            'middle_name' => $data['middle_name'] ?? null,
-            'last_name' => $data['last_name'],
+            'primeiro_nome' => $data['primeiro_nome'],
+            'nome_meio' => $data['nome_meio'] ?? null,
+            'ultimo_nome' => $data['ultimo_nome'],
             'data_nascimento' => $data['data_nascimento'] ?? null,
             'sexo' => $data['sexo'] ?? null,
             'naturalidade' => $data['naturalidade'] ?? null,

@@ -10,9 +10,9 @@ class Pessoa extends Model
 
     protected $fillable = [
         'organizacao_id',
-        'first_name',
-        'middle_name',
-        'last_name',
+        'primeiro_nome',
+        'nome_meio',
+        'ultimo_nome',
         'data_nascimento',
         'sexo',
         'naturalidade',
@@ -38,7 +38,7 @@ class Pessoa extends Model
 
     public function getFullNameAttribute(): string
     {
-        $middle = $this->middle_name ? $this->middle_name . ' ' : '';
-        return trim($this->first_name . ' ' . $middle . $this->last_name);
+        $middle = $this->nome_meio ? $this->nome_meio . ' ' : '';
+        return trim($this->primeiro_nome . ' ' . $middle . $this->ultimo_nome);
     }
 }

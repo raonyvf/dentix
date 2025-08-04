@@ -29,9 +29,9 @@ class OrganizationController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'first_name' => 'required',
-            'middle_name' => 'nullable',
-            'last_name' => 'required',
+            'primeiro_nome' => 'required',
+            'nome_meio' => 'nullable',
+            'ultimo_nome' => 'required',
             'nome_fantasia' => 'required',
             'razao_social' => 'nullable',
             'cnpj' => 'required',
@@ -56,9 +56,9 @@ class OrganizationController extends Controller
             'cnpj' => $data['cnpj'],
             'email' => $data['email'],
             'telefone' => $data['telefone'] ?? null,
-            'responsavel_primeiro_nome' => $data['first_name'],
-            'responsavel_nome_meio' => $data['middle_name'] ?? null,
-            'responsavel_ultimo_nome' => $data['last_name'],
+            'responsavel_primeiro_nome' => $data['primeiro_nome'],
+            'responsavel_nome_meio' => $data['nome_meio'] ?? null,
+            'responsavel_ultimo_nome' => $data['ultimo_nome'],
             'cep' => $data['cep'] ?? null,
             'logradouro' => $data['logradouro'] ?? null,
             'numero' => $data['numero'] ?? null,
@@ -102,9 +102,9 @@ class OrganizationController extends Controller
 
         $pessoa = Pessoa::create([
             'organizacao_id' => $organization->id,
-            'first_name' => $data['first_name'],
-            'middle_name' => $data['middle_name'] ?? null,
-            'last_name' => $data['last_name'],
+            'primeiro_nome' => $data['primeiro_nome'],
+            'nome_meio' => $data['nome_meio'] ?? null,
+            'ultimo_nome' => $data['ultimo_nome'],
             'email' => $data['email'],
         ]);
 
@@ -131,9 +131,9 @@ class OrganizationController extends Controller
     public function update(Request $request, Organization $organization)
     {
         $data = $request->validate([
-            'first_name' => 'sometimes',
-            'middle_name' => 'nullable',
-            'last_name' => 'sometimes',
+            'primeiro_nome' => 'sometimes',
+            'nome_meio' => 'nullable',
+            'ultimo_nome' => 'sometimes',
             'nome_fantasia' => 'required',
             'razao_social' => 'nullable',
             'cnpj' => 'required',
@@ -158,9 +158,9 @@ class OrganizationController extends Controller
             'cnpj' => $data['cnpj'],
             'email' => $data['email'],
             'telefone' => $data['telefone'] ?? null,
-            'responsavel_primeiro_nome' => $data['first_name'] ?? $organization->responsavel_primeiro_nome,
-            'responsavel_nome_meio' => $data['middle_name'] ?? $organization->responsavel_nome_meio,
-            'responsavel_ultimo_nome' => $data['last_name'] ?? $organization->responsavel_ultimo_nome,
+            'responsavel_primeiro_nome' => $data['primeiro_nome'] ?? $organization->responsavel_primeiro_nome,
+            'responsavel_nome_meio' => $data['nome_meio'] ?? $organization->responsavel_nome_meio,
+            'responsavel_ultimo_nome' => $data['ultimo_nome'] ?? $organization->responsavel_ultimo_nome,
             'cep' => $data['cep'] ?? null,
             'logradouro' => $data['logradouro'] ?? null,
             'numero' => $data['numero'] ?? null,
@@ -175,11 +175,11 @@ class OrganizationController extends Controller
 
         $usuario = Usuario::where('organizacao_id', $organization->id)->first();
         if ($usuario) {
-            if ($request->filled('first_name') || $request->filled('middle_name') || $request->filled('last_name')) {
+            if ($request->filled('primeiro_nome') || $request->filled('nome_meio') || $request->filled('ultimo_nome')) {
                 $usuario->pessoa?->update([
-                    'first_name' => $request->input('first_name') ?? $usuario->pessoa->first_name,
-                    'middle_name' => $request->input('middle_name') ?? $usuario->pessoa->middle_name,
-                    'last_name' => $request->input('last_name') ?? $usuario->pessoa->last_name,
+                    'primeiro_nome' => $request->input('primeiro_nome') ?? $usuario->pessoa->primeiro_nome,
+                    'nome_meio' => $request->input('nome_meio') ?? $usuario->pessoa->nome_meio,
+                    'ultimo_nome' => $request->input('ultimo_nome') ?? $usuario->pessoa->ultimo_nome,
                 ]);
             }
             if ($request->filled('password')) {
