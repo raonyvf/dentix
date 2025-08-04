@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Usuario;
 use App\Models\Perfil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,19 +12,19 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with(['person', 'clinics'])->get();
-        return view('admin.users.index', compact('users'));
+        $usuarios = Usuario::with(['pessoa', 'clinics'])->get();
+        return view('admin.usuarios.index', compact('usuarios'));
     }
 
 
-    public function edit(User $usuario)
+    public function edit(Usuario $usuario)
     {
         $perfis = Perfil::all();
         $clinics = auth()->user()->organization->clinics ?? [];
-        return view('admin.users.edit', compact('usuario', 'perfis', 'clinics'));
+        return view('admin.usuarios.edit', compact('usuario', 'perfis', 'clinics'));
     }
 
-    public function update(Request $request, User $usuario)
+    public function update(Request $request, Usuario $usuario)
     {
         $data = $request->validate([
             'password' => 'nullable|string|min:8|confirmed',

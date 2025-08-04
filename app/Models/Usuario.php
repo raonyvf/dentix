@@ -14,9 +14,11 @@ use App\Models\Permission;
 use App\Models\Patient;
 use App\Models\Pessoa;
 
-class User extends Authenticatable
+class Usuario extends Authenticatable
 {
     use HasFactory, Notifiable, BelongsToOrganization;
+
+    protected $table = 'usuarios';
 
     protected $fillable = [
         'email',
@@ -48,7 +50,7 @@ class User extends Authenticatable
 
     public function clinics()
     {
-        return $this->belongsToMany(Clinic::class)
+        return $this->belongsToMany(Clinic::class, 'clinic_user', 'usuario_id', 'clinic_id')
             ->using(ClinicUser::class)
             ->withPivot('perfil_id')
             ->withTimestamps();
@@ -56,7 +58,7 @@ class User extends Authenticatable
 
     public function perfis()
     {
-        return $this->belongsToMany(Perfil::class, 'clinic_user')
+        return $this->belongsToMany(Perfil::class, 'clinic_user', 'usuario_id', 'perfil_id')
             ->using(ClinicUser::class)
             ->withPivot('clinic_id')
             ->withTimestamps();

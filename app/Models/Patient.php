@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToOrganization;
-use App\Models\User;
+use App\Models\Usuario;
 use App\Models\Pessoa;
 
 class Patient extends Model
@@ -15,7 +15,7 @@ class Patient extends Model
 
     protected $fillable = [
         'organization_id',
-        'user_id',
+        'usuario_id',
         'pessoa_id',
         'menor_idade',
         'responsavel_first_name',
@@ -33,9 +33,9 @@ class Patient extends Model
         return $this->belongsTo(Organization::class);
     }
 
-    public function user()
+    public function usuario()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Usuario::class);
     }
 
     public function pessoa()

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -11,19 +11,19 @@ class AdminUserController extends Controller
 {
     public function index()
     {
-        $admins = User::whereHas('perfis', function ($q) {
+        $admins = Usuario::whereHas('perfis', function ($q) {
             $q->whereIn('nome', ['Administrador', 'Super Administrador']);
         })->with('organization')->get();
 
-        return view('backend.admin-users.index', compact('admins'));
+        return view('backend.usuarios-admin.index', compact('admins'));
     }
 
-    public function edit(User $usuario)
+    public function edit(Usuario $usuario)
     {
-        return view('backend.admin-users.edit', compact('usuario'));
+        return view('backend.usuarios-admin.edit', compact('usuario'));
     }
 
-    public function update(Request $request, User $usuario)
+    public function update(Request $request, Usuario $usuario)
     {
         $data = $request->validate([
             'password' => 'required|confirmed|min:8',

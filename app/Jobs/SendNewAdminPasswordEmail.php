@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\User;
+use App\Models\Usuario;
 use App\Notifications\NewAdminPasswordNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,13 +15,13 @@ class SendNewAdminPasswordEmail implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        protected User $user,
+        protected Usuario $usuario,
         protected string $password,
     ) {
     }
 
     public function handle(): void
     {
-        $this->user->notify(new NewAdminPasswordNotification($this->password));
+        $this->usuario->notify(new NewAdminPasswordNotification($this->password));
     }
 }

@@ -4,7 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToOrganization;
 use App\Models\Pessoa;
-use App\Models\User;
+use App\Models\Usuario;
 use App\Models\ProfissionalHorario;
 
 class Profissional extends Model
@@ -19,7 +19,7 @@ class Profissional extends Model
     protected $fillable = [
         'organization_id',
         'pessoa_id',
-        'user_id',
+        'usuario_id',
         'numero_funcionario',
         'email_corporativo',
         'data_admissao',
@@ -61,9 +61,9 @@ class Profissional extends Model
         return $this->belongsTo(Pessoa::class);
     }
 
-    public function user()
+    public function usuario()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Usuario::class);
     }
 
     public function horariosTrabalho()
