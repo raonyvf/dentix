@@ -107,11 +107,20 @@ class EscalaTrabalhoController extends Controller
             ]);
         }
 
+        $clinic = Clinic::with('horarios')->find($data['clinic_id']);
+
         if(isset($data['datas'])) {
             foreach ($data['datas'] as $d) {
                 $date = Carbon::parse($d);
                 $weekStart = $date->copy()->startOfWeek(Carbon::MONDAY)->toDateString();
                 $dia = $date->isoWeekday();
+
+                $ref = $clinic->horarios->firstWhere('dia_semana', $dia);
+                if (! $ref
+                    || Carbon::parse($data['hora_inicio']) < Carbon::parse($ref->hora_inicio)
+                    || Carbon::parse($data['hora_fim']) > Carbon::parse($ref->hora_fim)) {
+                    return back()->with('error', 'Horário fora do expediente da clínica.');
+                }
 
                 $conflict = EscalaTrabalho::where('cadeira_id', $data['cadeira_id'])
                     ->where('semana', $weekStart)
@@ -149,6 +158,14 @@ class EscalaTrabalhoController extends Controller
                 if (! $dia) {
                     continue;
                 }
+
+                $ref = $clinic->horarios->firstWhere('dia_semana', $dia);
+                if (! $ref
+                    || Carbon::parse($data['hora_inicio']) < Carbon::parse($ref->hora_inicio)
+                    || Carbon::parse($data['hora_fim']) > Carbon::parse($ref->hora_fim)) {
+                    return back()->with('error', 'Horário fora do expediente da clínica.');
+                }
+
                 $conflict = EscalaTrabalho::where('cadeira_id', $data['cadeira_id'])
                     ->where('semana', $data['semana'])
                     ->where('dia_semana', $dia)
