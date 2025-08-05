@@ -160,7 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
             altInput: true,
             altFormat: 'd/m/Y',
             dateFormat: 'Y-m-d',
-            locale: 'pt'
+            locale: 'pt',
+            allowInput: true
         });
     }
     const cnpjInput = document.querySelector('input[name="cnpj"]');
