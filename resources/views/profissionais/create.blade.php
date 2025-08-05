@@ -47,8 +47,8 @@
                     <input type="text" name="data_nascimento" value="{{ old('data_nascimento') }}" class="datepicker w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required placeholder="DD/MM/YYYY" />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Sexo</label>
-                    <select name="sexo" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Sexo <span class="text-red-500">*</span></label>
+                    <select name="sexo" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required>
                         <option value="">Selecione</option>
                         <option value="Masculino" @selected(old('sexo')==='Masculino')>Masculino</option>
                         <option value="Feminino" @selected(old('sexo')==='Feminino')>Feminino</option>
@@ -56,12 +56,12 @@
                     </select>
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Naturalidade</label>
-                    <input type="text" name="naturalidade" value="{{ old('naturalidade') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Naturalidade <span class="text-red-500">*</span></label>
+                    <input type="text" name="naturalidade" value="{{ old('naturalidade') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nacionalidade</label>
-                    <input type="text" name="nacionalidade" value="{{ old('nacionalidade') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Nacionalidade <span class="text-red-500">*</span></label>
+                    <input type="text" name="nacionalidade" value="{{ old('nacionalidade') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div class="sm:col-span-2">
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Foto</label>
@@ -84,44 +84,44 @@
         <x-accordion-section title="Dados de contato">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Email <span class="text-red-500">*</span></label>
+                    <input type="email" name="email" value="{{ old('email') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Telefone</label>
-                    <input type="text" name="telefone" value="{{ old('telefone') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Telefone <span class="text-red-500">*</span></label>
+                    <input type="text" name="telefone" value="{{ old('telefone') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
             </div>
         </x-accordion-section>
         <x-accordion-section title="Endereço">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">CEP</label>
-                    <input type="text" name="cep" value="{{ old('cep') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">CEP <span class="text-red-500">*</span></label>
+                    <input type="text" name="cep" value="{{ old('cep') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Logradouro</label>
-                    <input type="text" name="logradouro" value="{{ old('logradouro') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Logradouro <span class="text-red-500">*</span></label>
+                    <input type="text" name="logradouro" value="{{ old('logradouro') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Número</label>
-                    <input type="text" name="numero" value="{{ old('numero') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Número <span class="text-red-500">*</span></label>
+                    <input type="text" name="numero" value="{{ old('numero') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Complemento</label>
                     <input type="text" name="complemento" value="{{ old('complemento') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Bairro</label>
-                    <input type="text" name="bairro" value="{{ old('bairro') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Bairro <span class="text-red-500">*</span></label>
+                    <input type="text" name="bairro" value="{{ old('bairro') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Cidade</label>
-                    <input type="text" name="cidade" value="{{ old('cidade') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Cidade <span class="text-red-500">*</span></label>
+                    <input type="text" name="cidade" value="{{ old('cidade') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Estado</label>
-                    <input type="text" name="estado" value="{{ old('estado') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Estado <span class="text-red-500">*</span></label>
+                    <input type="text" name="estado" value="{{ old('estado') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
             </div>
         </x-accordion-section>
@@ -142,8 +142,8 @@
         <x-accordion-section title="Contrato de Trabalho">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Tipo de Contrato</label>
-                    <select name="tipo_contrato" x-model="tipo_contrato" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none">
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Tipo de Contrato <span class="text-red-500">*</span></label>
+                    <select name="tipo_contrato" x-model="tipo_contrato" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required>
                         <option value="">Selecione</option>
                         <option value="CLT" @selected(old('tipo_contrato')==='CLT')>CLT (Contrato com carteira assinada)</option>
                         <option value="PJ" @selected(old('tipo_contrato')==='PJ')>PJ (Pessoa Jurídica)</option>
@@ -167,11 +167,11 @@
                     <input type="number" name="total_horas_semanais" value="{{ old('total_horas_semanais') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div class="sm:col-span-2">
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Clínicas</label>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Clínicas <span class="text-red-500">*</span></label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         @foreach($clinics as $clinic)
                             <label class="flex items-center space-x-2">
-                                <input type="checkbox" name="clinics[]" x-model="selectedClinics" value="{{ $clinic->id }}" @checked(in_array($clinic->id, old('clinics', []))) class="rounded border-stroke" />
+                                <input type="checkbox" name="clinics[]" x-model="selectedClinics" value="{{ $clinic->id }}" @checked(in_array($clinic->id, old('clinics', []))) class="rounded border-stroke" :required="selectedClinics.length === 0" />
                                 <span>{{ $clinic->nome }}</span>
                             </label>
                         @endforeach
@@ -235,8 +235,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="sm:col-span-2 flex space-x-2">
                     <div class="flex-1">
-                        <label class="text-sm font-medium text-gray-700 mb-2 block">Salário fixo</label>
-                        <input type="text" name="salario_fixo" value="{{ old('salario_fixo') }}" class="currency-brl w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                        <label class="text-sm font-medium text-gray-700 mb-2 block">Salário fixo <span class="text-red-500">*</span></label>
+                        <input type="text" name="salario_fixo" value="{{ old('salario_fixo') }}" class="currency-brl w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                     </div>
                     <div>
                         <label class="text-sm font-medium text-gray-700 mb-2 block">&nbsp;</label>
