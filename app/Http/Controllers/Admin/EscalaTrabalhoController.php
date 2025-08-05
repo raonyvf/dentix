@@ -116,17 +116,17 @@ class EscalaTrabalhoController extends Controller
                 $conflict = EscalaTrabalho::where('cadeira_id', $data['cadeira_id'])
                     ->where('semana', $weekStart)
                     ->where('dia_semana', $dia)
-                    ->where(function($q) use ($data) {
-                        $q->whereBetween('hora_inicio', [$data['hora_inicio'], $data['hora_fim']])
-                          ->orWhereBetween('hora_fim', [$data['hora_inicio'], $data['hora_fim']]);
+                    ->where(function ($q) use ($data) {
+                        $q->where('hora_inicio', '<', $data['hora_fim'])
+                          ->where('hora_fim', '>', $data['hora_inicio']);
                     })->exists();
 
                 $conflictProf = EscalaTrabalho::where('profissional_id', $data['profissional_id'])
                     ->where('semana', $weekStart)
                     ->where('dia_semana', $dia)
-                    ->where(function($q) use ($data) {
-                        $q->whereBetween('hora_inicio', [$data['hora_inicio'], $data['hora_fim']])
-                          ->orWhereBetween('hora_fim', [$data['hora_inicio'], $data['hora_fim']]);
+                    ->where(function ($q) use ($data) {
+                        $q->where('hora_inicio', '<', $data['hora_fim'])
+                          ->where('hora_fim', '>', $data['hora_inicio']);
                     })->exists();
 
                 if ($conflict || $conflictProf) {
@@ -152,17 +152,17 @@ class EscalaTrabalhoController extends Controller
                 $conflict = EscalaTrabalho::where('cadeira_id', $data['cadeira_id'])
                     ->where('semana', $data['semana'])
                     ->where('dia_semana', $dia)
-                    ->where(function($q) use ($data) {
-                        $q->whereBetween('hora_inicio', [$data['hora_inicio'], $data['hora_fim']])
-                          ->orWhereBetween('hora_fim', [$data['hora_inicio'], $data['hora_fim']]);
+                    ->where(function ($q) use ($data) {
+                        $q->where('hora_inicio', '<', $data['hora_fim'])
+                          ->where('hora_fim', '>', $data['hora_inicio']);
                     })->exists();
 
                 $conflictProf = EscalaTrabalho::where('profissional_id', $data['profissional_id'])
                     ->where('semana', $data['semana'])
                     ->where('dia_semana', $dia)
-                    ->where(function($q) use ($data) {
-                        $q->whereBetween('hora_inicio', [$data['hora_inicio'], $data['hora_fim']])
-                          ->orWhereBetween('hora_fim', [$data['hora_inicio'], $data['hora_fim']]);
+                    ->where(function ($q) use ($data) {
+                        $q->where('hora_inicio', '<', $data['hora_fim'])
+                          ->where('hora_fim', '>', $data['hora_inicio']);
                     })->exists();
 
                 if ($conflict || $conflictProf) {
