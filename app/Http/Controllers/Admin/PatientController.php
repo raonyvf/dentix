@@ -153,6 +153,7 @@ class PatientController extends Controller
 
         if ($request->menor_idade === 'Sim') {
             $rules['responsavel_first_name'] = 'required';
+            $rules['responsavel_last_name'] = 'required';
             $rules['responsavel_cpf'] = 'required';
             $rules['cpf'] = 'nullable';
         } else {
