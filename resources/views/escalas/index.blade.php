@@ -50,6 +50,7 @@
         </div>
     @endif
 </form>
+@php $clinic = $clinics->firstWhere('id', $clinicId); @endphp
 @if($view==='month')
     @foreach($weeks as $w)
         <h2 class="mt-6 font-semibold">Semana de {{ $w->format('d/m/Y') }}</h2>
@@ -77,12 +78,7 @@
                                 @endphp
                                 <td class="px-2 py-2 border border-gray-200 align-top space-y-2" style="width:14.28%">
                                     @forelse($items as $it)
-                                        <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
-                                            <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->pessoa)->primeiro_nome }} {{ optional($it->profissional->pessoa)->ultimo_nome }}</div>
-                                            <div>{{ $it->hora_inicio }} – {{ $it->hora_fim }}</div>
-                                            <div class="text-xs text-gray-600">{{ optional($it->profissional->usuario)->especialidade ?? $it->profissional->cargo }}</div>
-                                            <div class="mt-1 h-2 rounded bg-emerald-400 w-full"></div>
-                                        </div>
+                                        @include('escalas.partials.card', ['it' => $it, 'clinic' => $clinic, 'diaSemana' => $d->value])
                                     @empty
                                         <span class="text-sm text-gray-400">Livre</span>
                                     @endforelse
@@ -119,12 +115,7 @@
                             @endphp
                             <td class="px-2 py-2 border border-gray-200 align-top space-y-2" style="width:14.28%">
                                 @forelse($items as $it)
-                                    <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
-                                        <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->pessoa)->primeiro_nome }} {{ optional($it->profissional->pessoa)->ultimo_nome }}</div>
-                                        <div>{{ $it->hora_inicio }} – {{ $it->hora_fim }}</div>
-                                        <div class="text-xs text-gray-600">{{ optional($it->profissional->usuario)->especialidade ?? $it->profissional->cargo }}</div>
-                                        <div class="mt-1 h-2 rounded bg-emerald-400 w-full"></div>
-                                    </div>
+                                    @include('escalas.partials.card', ['it' => $it, 'clinic' => $clinic, 'diaSemana' => $d->value])
                                 @empty
                                     <span class="text-sm text-gray-400">Livre</span>
                                 @endforelse
