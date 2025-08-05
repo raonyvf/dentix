@@ -171,6 +171,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 v = v.replace(/(\d{2})(\d)/, '$1/$2');
                 v = v.replace(/(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
                 e.target.value = v;
+
+                const fp = e.target._flatpickr;
+                if (fp) {
+                    if (v.length === 10) {
+                        fp.setDate(v, false, 'd/m/Y');
+                    } else if (v.length === 0) {
+                        fp.clear();
+                    }
+                }
             });
         });
     }
