@@ -7,3 +7,7 @@
 .flatpickr-input {
     background-image: none !important;
 }
+
+.flatpickr-input::-webkit-calendar-picker-indicator {
+    display: none !important;
+}

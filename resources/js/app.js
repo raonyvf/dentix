@@ -158,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.flatpickr) {
         flatpickr('.datepicker', {
             altInput: true,
+            altInputClass: 'w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none',
             altFormat: 'd/m/Y',
             dateFormat: 'Y-m-d',
             locale: 'pt',
