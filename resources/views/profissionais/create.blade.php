@@ -250,7 +250,7 @@
             </div>
             <div class="space-y-4 mt-4">
                 @foreach($clinics as $clinic)
-                    <div class="p-4 bg-gray-50 border rounded" x-show="selectedClinics.includes({{ $clinic->id }})" x-cloak>
+                    <div class="p-4 bg-gray-50 border rounded" x-show="selectedClinics.includes('{{ $clinic->id }}')" x-cloak>
                         <h4 class="text-sm font-medium text-gray-700 mb-2">{{ $clinic->nome }}</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
