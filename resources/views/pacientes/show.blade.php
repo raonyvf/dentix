@@ -21,7 +21,7 @@
                     @endif
                 </p>
                 @if($paciente->menor_idade)
-                    <p class="text-sm text-gray-500">Responsável: {{ $paciente->responsavel_first_name }} (CPF {{ $paciente->responsavel_cpf }})</p>
+                    <p class="text-sm text-gray-500">Responsável: {{ $paciente->responsavel_primeiro_nome }} (CPF {{ $paciente->responsavel_cpf }})</p>
                     <p class="text-sm text-gray-500">{{ $paciente->responsavel_telefone }} • {{ $paciente->responsavel_email }}</p>
                 @endif
             </div>
@@ -91,15 +91,15 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Nome do responsável</span>
-                        <p class="text-gray-900">{{ $paciente->responsavel_first_name }}</p>
+                        <p class="text-gray-900">{{ $paciente->responsavel_primeiro_nome }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Nome do meio</span>
-                        <p class="text-gray-900">{{ $paciente->responsavel_middle_name ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->responsavel_nome_meio ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">Último nome</span>
-                        <p class="text-gray-900">{{ $paciente->responsavel_last_name ?: '-' }}</p>
+                        <p class="text-gray-900">{{ $paciente->responsavel_ultimo_nome ?: '-' }}</p>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-700 mb-2 block">CPF do responsável</span>

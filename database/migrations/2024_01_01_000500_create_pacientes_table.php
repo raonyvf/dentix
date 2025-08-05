@@ -13,9 +13,9 @@ return new class extends Migration {
             $table->foreignId('usuario_id')->nullable()->constrained('usuarios');
             $table->foreignId('pessoa_id')->constrained('pessoas');
             $table->boolean('menor_idade')->default(false);
-            $table->string('responsavel_first_name')->nullable();
-            $table->string('responsavel_middle_name')->nullable();
-            $table->string('responsavel_last_name')->nullable();
+            $table->string('responsavel_primeiro_nome')->nullable();
+            $table->string('responsavel_nome_meio')->nullable();
+            $table->string('responsavel_ultimo_nome')->nullable();
             $table->string('responsavel_cpf')->nullable();
             $table->timestamps();
         });

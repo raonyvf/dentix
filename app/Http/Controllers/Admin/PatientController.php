@@ -41,9 +41,9 @@ class PatientController extends Controller
             'organizacao_id' => auth()->user()->organizacao_id,
             'pessoa_id' => $pessoa->id,
             'menor_idade' => $request->menor_idade === 'Sim',
-            'responsavel_first_name' => $data['responsavel_first_name'] ?? null,
-            'responsavel_middle_name' => $data['responsavel_middle_name'] ?? null,
-            'responsavel_last_name' => $data['responsavel_last_name'] ?? null,
+            'responsavel_primeiro_nome' => $data['responsavel_primeiro_nome'] ?? null,
+            'responsavel_nome_meio' => $data['responsavel_nome_meio'] ?? null,
+            'responsavel_ultimo_nome' => $data['responsavel_ultimo_nome'] ?? null,
             'responsavel_cpf' => $data['responsavel_cpf'] ?? null,
         ];
 
@@ -85,9 +85,9 @@ class PatientController extends Controller
 
         $paciente->update([
             'menor_idade' => $request->menor_idade === 'Sim',
-            'responsavel_first_name' => $data['responsavel_first_name'] ?? null,
-            'responsavel_middle_name' => $data['responsavel_middle_name'] ?? null,
-            'responsavel_last_name' => $data['responsavel_last_name'] ?? null,
+            'responsavel_primeiro_nome' => $data['responsavel_primeiro_nome'] ?? null,
+            'responsavel_nome_meio' => $data['responsavel_nome_meio'] ?? null,
+            'responsavel_ultimo_nome' => $data['responsavel_ultimo_nome'] ?? null,
             'responsavel_cpf' => $data['responsavel_cpf'] ?? null,
         ]);
         return redirect()->route('pacientes.index')->with('success', 'Paciente atualizado com sucesso.');
@@ -135,9 +135,9 @@ class PatientController extends Controller
             'sexo' => 'required',
             'cpf' => 'nullable',
             'menor_idade' => 'required|in:Sim,Não',
-            'responsavel_first_name' => 'nullable',
-            'responsavel_middle_name' => 'nullable',
-            'responsavel_last_name' => 'nullable',
+            'responsavel_primeiro_nome' => 'nullable',
+            'responsavel_nome_meio' => 'nullable',
+            'responsavel_ultimo_nome' => 'nullable',
             'responsavel_cpf' => 'nullable',
             'telefone' => 'required',
             'whatsapp' => 'nullable',
@@ -152,8 +152,8 @@ class PatientController extends Controller
         ];
 
         if ($request->menor_idade === 'Sim') {
-            $rules['responsavel_first_name'] = 'required';
-            $rules['responsavel_last_name'] = 'required';
+            $rules['responsavel_primeiro_nome'] = 'required';
+            $rules['responsavel_ultimo_nome'] = 'required';
             $rules['responsavel_cpf'] = 'required';
             $rules['cpf'] = 'nullable';
         } else {
