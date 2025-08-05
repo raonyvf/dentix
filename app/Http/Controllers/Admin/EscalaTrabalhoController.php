@@ -53,8 +53,9 @@ class EscalaTrabalhoController extends Controller
             $escalas = EscalaTrabalho::with(['profissional.person','profissional.user'])
                 ->where('clinica_id', $clinicId)
                 ->whereBetween('semana', [$weeks->first()->toDateString(), $weeks->last()->toDateString()])
+                ->orderBy('hora_inicio')
                 ->get()
-                ->groupBy([fn($e) => $e->semana->toDateString(), 'cadeira_id', 'dia_semana']);
+                ->groupBy([fn($e) => $e->semana->toDateString(), 'cadeira_id', 'dia_semana'], preserveKeys: true);
 
             return view('escalas.index', compact('clinics','clinicId','view','month','weeks','dias','cadeiras','escalas','dentistas','mesesDisponiveis'));
         }
@@ -68,8 +69,9 @@ class EscalaTrabalhoController extends Controller
                 $week->toDateString(),
                 $week->copy()->addDays(6)->toDateString(),
             ])
+            ->orderBy('hora_inicio')
             ->get()
-            ->groupBy(['cadeira_id','dia_semana']);
+            ->groupBy(['cadeira_id','dia_semana'], preserveKeys: true);
 
         return view('escalas.index', compact('clinics','clinicId','view','week','dias','cadeiras','escalas','dentistas','semanasDisponiveis'));
     }
@@ -122,7 +124,8 @@ class EscalaTrabalhoController extends Controller
                     return back()->with('error', 'Horário fora do expediente da clínica.');
                 }
 
-                $conflict = EscalaTrabalho::where('cadeira_id', $data['cadeira_id'])
+                $conflict = EscalaTrabalho::where('clinica_id', $data['clinic_id'])
+                    ->where('cadeira_id', $data['cadeira_id'])
                     ->where('semana', $weekStart)
                     ->where('dia_semana', $dia)
                     ->where(function ($q) use ($data) {
@@ -130,7 +133,8 @@ class EscalaTrabalhoController extends Controller
                           ->where('hora_fim', '>', $data['hora_inicio']);
                     })->exists();
 
-                $conflictProf = EscalaTrabalho::where('profissional_id', $data['profissional_id'])
+                $conflictProf = EscalaTrabalho::where('clinica_id', $data['clinic_id'])
+                    ->where('profissional_id', $data['profissional_id'])
                     ->where('semana', $weekStart)
                     ->where('dia_semana', $dia)
                     ->where(function ($q) use ($data) {
@@ -166,7 +170,8 @@ class EscalaTrabalhoController extends Controller
                     return back()->with('error', 'Horário fora do expediente da clínica.');
                 }
 
-                $conflict = EscalaTrabalho::where('cadeira_id', $data['cadeira_id'])
+                $conflict = EscalaTrabalho::where('clinica_id', $data['clinic_id'])
+                    ->where('cadeira_id', $data['cadeira_id'])
                     ->where('semana', $data['semana'])
                     ->where('dia_semana', $dia)
                     ->where(function ($q) use ($data) {
@@ -174,7 +179,8 @@ class EscalaTrabalhoController extends Controller
                           ->where('hora_fim', '>', $data['hora_inicio']);
                     })->exists();
 
-                $conflictProf = EscalaTrabalho::where('profissional_id', $data['profissional_id'])
+                $conflictProf = EscalaTrabalho::where('clinica_id', $data['clinic_id'])
+                    ->where('profissional_id', $data['profissional_id'])
                     ->where('semana', $data['semana'])
                     ->where('dia_semana', $dia)
                     ->where(function ($q) use ($data) {
