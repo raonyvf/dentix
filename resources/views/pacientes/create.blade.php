@@ -73,8 +73,8 @@
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_middle_name" value="{{ old('responsavel_middle_name') }}" />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome</label>
-                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_last_name" value="{{ old('responsavel_last_name') }}" />
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Último nome <span x-show="menorIdade === 'Sim'" x-cloak class="text-red-500">*</span></label>
+                    <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="responsavel_last_name" value="{{ old('responsavel_last_name') }}" x-bind:required="menorIdade === 'Sim'" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">CPF do responsável <span x-show="menorIdade === 'Sim'" x-cloak class="text-red-500">*</span></label>
