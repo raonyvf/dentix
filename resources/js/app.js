@@ -164,6 +164,15 @@ document.addEventListener('DOMContentLoaded', () => {
             locale: 'pt',
             allowInput: true
         });
+
+        document.querySelectorAll('.flatpickr-input:not([type="hidden"])').forEach(input => {
+            input.addEventListener('input', e => {
+                let v = e.target.value.replace(/\D/g, '').slice(0, 8);
+                v = v.replace(/(\d{2})(\d)/, '$1/$2');
+                v = v.replace(/(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
+                e.target.value = v;
+            });
+        });
     }
     const cnpjInput = document.querySelector('input[name="cnpj"]');
     if (cnpjInput) {
