@@ -167,16 +167,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.querySelectorAll('.flatpickr-input:not([type="hidden"])').forEach(input => {
             input.addEventListener('input', e => {
-                let v = e.target.value.replace(/\D/g, '').slice(0, 8);
-                v = v.replace(/(\d{2})(\d)/, '$1/$2');
-                v = v.replace(/(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
+                const digits = e.target.value.replace(/\D/g, '').slice(0, 8);
+                let v = '';
+                if (digits.length > 0) {
+                    v = digits.slice(0, 2);
+                }
+                if (digits.length >= 3) {
+                    v += '/' + digits.slice(2, 4);
+                } else if (digits.length > 2) {
+                    v += '/' + digits.slice(2);
+                }
+                if (digits.length >= 5) {
+                    v += '/' + digits.slice(4, 8);
+                }
                 e.target.value = v;
 
                 const fp = e.target._flatpickr;
                 if (fp) {
-                    if (v.length === 10) {
+                    if (digits.length === 8) {
                         fp.setDate(v, false, 'd/m/Y');
-                    } else if (v.length === 0) {
+                    } else if (digits.length === 0) {
                         fp.clear();
                     }
                 }
