@@ -16,7 +16,9 @@ class EscalaTrabalhoController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $clinics = $user->isOrganizationAdmin() ? Clinic::all() : $user->clinics()->get();
+        $clinics = $user->isOrganizationAdmin()
+            ? Clinic::with('horarios')->get()
+            : $user->clinics()->with('horarios')->get();
         $clinicId = $request->input('clinic_id', $clinics->first()->id ?? null);
         $view = $request->input('view', 'week');
 
