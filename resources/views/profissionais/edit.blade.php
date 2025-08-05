@@ -45,7 +45,7 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento <span class="text-red-500">*</span></label>
-                    <input type="date" name="data_nascimento" value="{{ old('data_nascimento', optional($profissional->pessoa->data_nascimento)->format('Y-m-d')) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" name="data_nascimento" value="{{ old('data_nascimento', optional($profissional->pessoa->data_nascimento)->format('Y-m-d')) }}" class="datepicker w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Sexo</label>
@@ -157,11 +157,11 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de início do contrato <span class="text-red-500">*</span></label>
-                    <input type="date" name="data_inicio_contrato" value="{{ old('data_inicio_contrato', optional($profissional->data_inicio_contrato)->format('Y-m-d')) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" name="data_inicio_contrato" value="{{ old('data_inicio_contrato', optional($profissional->data_inicio_contrato)->format('Y-m-d')) }}" class="datepicker w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
                 </div>
                 <div x-show="tipo_contrato && tipo_contrato !== 'CLT'" x-cloak>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de término do contrato</label>
-                    <input type="date" name="data_fim_contrato" value="{{ old('data_fim_contrato', optional($profissional->data_fim_contrato)->format('Y-m-d')) }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                    <input type="text" name="data_fim_contrato" value="{{ old('data_fim_contrato', optional($profissional->data_fim_contrato)->format('Y-m-d')) }}" class="datepicker w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Total de horas semanais</label>
