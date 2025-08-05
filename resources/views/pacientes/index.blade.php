@@ -54,7 +54,17 @@
                 @foreach ($pacientes as $paciente)
                     <tr>
                         <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->pessoa->primeiro_nome }} {{ $paciente->pessoa->ultimo_nome }}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->responsavel_primeiro_nome ?? '-' }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">
+                            {{
+                                $paciente->menor_idade
+                                    ? (trim(
+                                        ($paciente->responsavel_primeiro_nome ?? '') . ' ' .
+                                        ($paciente->responsavel_nome_meio ? $paciente->responsavel_nome_meio . ' ' : '') .
+                                        ($paciente->responsavel_ultimo_nome ?? '')
+                                    ) ?: '-')
+                                    : '-'
+                            }}
+                        </td>
                         <td class="px-4 py-2 whitespace-nowrap">{{ \Carbon\Carbon::parse($paciente->pessoa->data_nascimento)->age }}</td>
                         <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->pessoa->phone }}</td>
                         <td class="px-4 py-2 whitespace-nowrap">{{ $paciente->pessoa->whatsapp }}</td>
