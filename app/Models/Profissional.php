@@ -66,6 +66,16 @@ class Profissional extends Model
         return $this->belongsTo(Usuario::class);
     }
 
+    public function person()
+    {
+        return $this->pessoa();
+    }
+
+    public function user()
+    {
+        return $this->usuario();
+    }
+
     public function horariosTrabalho()
     {
         return $this->hasMany(ProfissionalHorario::class);
