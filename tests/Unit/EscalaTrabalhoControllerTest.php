@@ -11,6 +11,14 @@ class EscalaTrabalhoControllerTest extends TestCase
             && Carbon::parse($existingEnd) > Carbon::parse($newStart);
     }
 
+    private function withinClinicHours($clinicStart, $clinicEnd, $start, $end)
+    {
+        return !(
+            Carbon::parse($start) < Carbon::parse($clinicStart)
+            || Carbon::parse($end) > Carbon::parse($clinicEnd)
+        );
+    }
+
     public function test_allows_adjacent_times()
     {
         $this->assertFalse(
@@ -22,6 +30,20 @@ class EscalaTrabalhoControllerTest extends TestCase
     {
         $this->assertTrue(
             $this->overlaps('08:00', '10:00', '09:00', '11:00')
+        );
+    }
+
+    public function test_detects_schedule_outside_clinic_hours()
+    {
+        $this->assertFalse(
+            $this->withinClinicHours('08:00', '17:00', '07:00', '09:00')
+        );
+    }
+
+    public function test_allows_schedule_within_clinic_hours()
+    {
+        $this->assertTrue(
+            $this->withinClinicHours('08:00', '17:00', '09:00', '10:00')
         );
     }
 }
