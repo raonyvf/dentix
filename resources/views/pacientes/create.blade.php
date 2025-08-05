@@ -40,6 +40,15 @@
                     <input class="datepicker w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="data_nascimento" value="{{ old('data_nascimento') }}" required />
                 </div>
                 <div>
+                    <label class="text-sm font-medium text-gray-700 mb-2 block">Sexo <span class="text-red-500">*</span></label>
+                    <select name="sexo" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required>
+                        <option value="">Selecione</option>
+                        <option value="Masculino" @selected(old('sexo')==='Masculino')>Masculino</option>
+                        <option value="Feminino" @selected(old('sexo')==='Feminino')>Feminino</option>
+                        <option value="Outro" @selected(old('sexo')==='Outro')>Outro</option>
+                    </select>
+                </div>
+                <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">CPF <span x-show="menorIdade !== 'Sim'" x-cloak class="text-red-500">*</span></label>
                     <input class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="cpf" value="{{ old('cpf') }}" x-bind:required="menorIdade !== 'Sim'" />
                 </div>
