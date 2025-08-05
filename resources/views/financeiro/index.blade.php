@@ -122,11 +122,16 @@
                 if (existing) existing.destroy();
             }
 
-            // Reset canvas dimensions so Chart.js doesn't keep expanding it
-            el.removeAttribute('width');
-            el.removeAttribute('height');
-            el.style.width = '';
-            el.style.height = '';
+            // Fully reset the canvas before creating a new chart
+            const ctx = el.getContext('2d');
+            ctx.clearRect(0, 0, el.width, el.height);
+            el.width = el.height = 0;
+            el.removeAttribute('style');
+
+            // Replace the canvas node to ensure a fresh element
+            const freshCanvas = el.cloneNode(true);
+            el.replaceWith(freshCanvas);
+            el = freshCanvas;
 
             window[store] = new Chart(el, config);
         };
