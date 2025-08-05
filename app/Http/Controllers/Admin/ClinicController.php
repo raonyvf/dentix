@@ -7,6 +7,7 @@ use App\Models\Clinic;
 use App\Rules\Cnpj;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Enums\DiaSemana;
 
 class ClinicController extends Controller
 {
@@ -87,11 +88,12 @@ class ClinicController extends Controller
         $clinic = Clinic::create($data);
 
         foreach ($horarios as $dia => $horario) {
-            if (($horario['abertura'] ?? false) && ($horario['fechamento'] ?? false)) {
+            $diaNumero = DiaSemana::fromName($dia)?->value;
+            if ($diaNumero && ($horario['abertura'] ?? false) && ($horario['fechamento'] ?? false)) {
                 $clinic->horarios()->create([
                     'clinica_id' => $clinic->id,
                     'organizacao_id' => $clinic->organizacao_id,
-                    'dia_semana' => $dia,
+                    'dia_semana' => $diaNumero,
                     'hora_inicio' => $horario['abertura'],
                     'hora_fim' => $horario['fechamento'],
                 ]);
@@ -119,8 +121,9 @@ class ClinicController extends Controller
 
         $horarios = $clinic->horarios
             ->mapWithKeys(function ($h) {
+                $diaNome = DiaSemana::from($h->dia_semana)->toName();
                 return [
-                    $h->dia_semana => [
+                    $diaNome => [
                         'abertura' => Carbon::createFromTimeString($h->hora_inicio)->format('H:i'),
                         'fechamento' => Carbon::createFromTimeString($h->hora_fim)->format('H:i'),
                     ],
@@ -183,11 +186,12 @@ class ClinicController extends Controller
         $clinic->horarios()->delete();
 
         foreach ($horarios as $dia => $horario) {
-            if (($horario['abertura'] ?? false) && ($horario['fechamento'] ?? false)) {
+            $diaNumero = DiaSemana::fromName($dia)?->value;
+            if ($diaNumero && ($horario['abertura'] ?? false) && ($horario['fechamento'] ?? false)) {
                 $clinic->horarios()->create([
                     'clinica_id' => $clinic->id,
                     'organizacao_id' => $clinic->organizacao_id,
-                    'dia_semana' => $dia,
+                    'dia_semana' => $diaNumero,
                     'hora_inicio' => $horario['abertura'],
                     'hora_fim' => $horario['fechamento'],
                 ]);
