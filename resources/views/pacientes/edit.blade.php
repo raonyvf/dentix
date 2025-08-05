@@ -68,7 +68,7 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento <span class="text-red-500">*</span></label>
-                    <input class="datepicker w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="data_nascimento" value="{{ old('data_nascimento', $paciente->pessoa->data_nascimento?->format('Y-m-d')) }}" required />
+                    <input class="datepicker w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" type="text" name="data_nascimento" value="{{ old('data_nascimento', $paciente->pessoa->data_nascimento?->format('Y-m-d')) }}" placeholder="DD/MM/YYYY" required />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">CPF <span x-show="menorIdade !== 'Sim'" x-cloak class="text-red-500">*</span></label>
