@@ -173,6 +173,7 @@
                 </select>
             </div>
             <div class="text-right space-x-2">
+                <button type="button" id="escala-delete" class="px-3 py-1 border rounded text-red-600 hidden">Excluir</button>
                 <button type="button" id="escala-cancel" class="px-3 py-1 border rounded">Cancelar</button>
                 <button class="px-3 py-1 bg-blue-600 text-white rounded">Salvar</button>
             </div>
@@ -182,7 +183,15 @@
 @push('scripts')
 <script>
     const escalaModal = document.getElementById('escala-modal');
+    const escalaForm = escalaModal.querySelector('form');
+    const deleteBtn = document.getElementById('escala-delete');
     document.getElementById('open-modal').addEventListener('click', () => {
+        escalaForm.reset();
+        escalaForm.action = '{{ route('escalas.store') }}';
+        const method = escalaForm.querySelector('input[name="_method"]');
+        if (method) method.remove();
+        deleteBtn.classList.add('hidden');
+        document.getElementById('selected-dates').innerHTML = '';
         escalaModal.classList.remove('hidden');
         initCalendar();
     });
@@ -190,7 +199,65 @@
         escalaModal.classList.add('hidden');
     });
 
-    function initCalendar() {
+    document.querySelectorAll('.escala-card').forEach(card => {
+        card.addEventListener('dblclick', () => {
+            escalaForm.reset();
+            deleteBtn.classList.remove('hidden');
+            const id = card.dataset.id;
+            escalaForm.action = `${window.location.pathname}/` + id;
+            let method = escalaForm.querySelector('input[name="_method"]');
+            if (!method) {
+                method = document.createElement('input');
+                method.type = 'hidden';
+                method.name = '_method';
+                escalaForm.appendChild(method);
+            }
+            method.value = 'PUT';
+            escalaForm.querySelector('[name="profissional_id"]').value = card.dataset.profissional;
+            escalaForm.querySelector('[name="hora_inicio"]').value = card.dataset.horaInicio;
+            escalaForm.querySelector('[name="hora_fim"]').value = card.dataset.horaFim;
+            escalaForm.querySelector('[name="cadeira_id"]').value = card.dataset.cadeira;
+            const date = card.dataset.date;
+            document.getElementById('selected-dates').innerHTML = '';
+            const monthInput = document.getElementById('calendar-month-input');
+            monthInput.value = date.slice(0,7);
+            if (escalaForm.querySelector('[name="month"]')) {
+                escalaForm.querySelector('[name="month"]').value = date.slice(0,7);
+            }
+            if (escalaForm.querySelector('[name="semana"]')) {
+                const d = new Date(date);
+                const diff = (d.getDay()+6)%7; // Monday start
+                d.setDate(d.getDate()-diff);
+                escalaForm.querySelector('[name="semana"]').value = d.toISOString().slice(0,10);
+            }
+            escalaModal.classList.remove('hidden');
+            initCalendar([date], true);
+        });
+    });
+
+    deleteBtn.addEventListener('click', () => {
+        const id = escalaForm.action.split('/').pop();
+        if (confirm('Tem certeza que deseja excluir esta escala?')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = escalaForm.action;
+            form.innerHTML = `<input type="hidden" name="_token" value="${document.querySelector('meta[name=csrf-token]').content}"><input type="hidden" name="_method" value="DELETE">`;
+            ['clinic_id','view','semana','month'].forEach(name => {
+                const input = escalaForm.querySelector(`[name="${name}"]`);
+                if (input) {
+                    const copy = document.createElement('input');
+                    copy.type = 'hidden';
+                    copy.name = name === 'semana' ? 'week' : name;
+                    copy.value = input.value;
+                    form.appendChild(copy);
+                }
+            });
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+
+    function initCalendar(selected = [], single = false) {
         const monthInput = document.getElementById('calendar-month-input');
         const monthLabel = document.getElementById('calendar-month-label');
         const tableContainer = document.getElementById('calendar-table');
@@ -234,18 +301,31 @@
 
             tbody.querySelectorAll('.day-btn').forEach(btn => {
                 btn.addEventListener('click', () => toggleDate(btn));
+                if (selected.includes(btn.dataset.date)) {
+                    toggleDate(btn, true);
+                }
             });
         }
 
-        function toggleDate(btn) {
+        function toggleDate(btn, force = false) {
             const wrapper = document.getElementById('selected-dates');
             const date = btn.dataset.date;
-            btn.classList.toggle('bg-emerald-400');
-            btn.classList.toggle('text-white');
+            if (single) {
+                wrapper.innerHTML = '';
+                tableContainer.querySelectorAll('.day-btn').forEach(b => {
+                    b.classList.remove('bg-emerald-400','text-white');
+                });
+            }
+            if (!force) {
+                btn.classList.toggle('bg-emerald-400');
+                btn.classList.toggle('text-white');
+            } else {
+                btn.classList.add('bg-emerald-400','text-white');
+            }
             if (btn.classList.contains('bg-emerald-400')) {
                 const input = document.createElement('input');
                 input.type = 'hidden';
-                input.name = 'datas[]';
+                input.name = single ? 'data' : 'datas[]';
                 input.value = date;
                 input.dataset.date = date;
                 wrapper.appendChild(input);

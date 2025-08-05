@@ -41,7 +41,7 @@ Route::view('orcamentos/assinar', 'orcamentos.assinar')->name('orcamentos.assina
 
 Route::post('selecionar-clinica', [ClinicContextController::class, 'update'])->name('clinicas.selecionar');
 
-Route::resource('escalas', EscalaTrabalhoController::class)->only(['index','store']);
+Route::resource('escalas', EscalaTrabalhoController::class)->only(['index','store','update','destroy']);
 
 Route::get('financeiro', [FinanceiroController::class, 'index'])->name('financeiro.index');
 Route::get('estoque', [EstoqueController::class, 'index'])->name('estoque.index');
