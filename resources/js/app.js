@@ -552,7 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 td.className = 'border px-1 py-1';
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                const iso = d.toISOString().slice(0,10);
+                const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
                 btn.dataset.date = iso;
                 btn.textContent = d.getDate();
                 btn.className = 'w-full rounded ' + (d.getMonth() === current.getMonth() ? '' : 'text-gray-400');
