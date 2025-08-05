@@ -155,6 +155,14 @@ window.updateScheduleTable = function(openTimes, start, end, closed) {
 Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (window.flatpickr) {
+        flatpickr('.datepicker', {
+            altInput: true,
+            altFormat: 'd/m/Y',
+            dateFormat: 'Y-m-d',
+            locale: 'pt'
+        });
+    }
     const cnpjInput = document.querySelector('input[name="cnpj"]');
     if (cnpjInput) {
         cnpjInput.addEventListener('input', e => {
