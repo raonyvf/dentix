@@ -45,7 +45,7 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Data de nascimento <span class="text-red-500">*</span></label>
-                    <input type="text" name="data_nascimento" value="{{ old('data_nascimento', optional($profissional->pessoa->data_nascimento)->format('Y-m-d')) }}" class="datepicker w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required />
+                    <input type="text" name="data_nascimento" value="{{ old('data_nascimento', optional($profissional->pessoa->data_nascimento)->format('Y-m-d')) }}" class="datepicker w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" required readonly />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700 mb-2 block">Sexo <span class="text-red-500">*</span></label>

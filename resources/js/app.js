@@ -162,35 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
             altFormat: 'd/m/Y',
             dateFormat: 'Y-m-d',
             locale: 'pt',
-            allowInput: true
-        });
-
-        document.querySelectorAll('.flatpickr-input:not([type="hidden"])').forEach(input => {
-            input.addEventListener('input', e => {
-                const digits = e.target.value.replace(/\D/g, '').slice(0, 8);
-                let v = '';
-                if (digits.length > 0) {
-                    v = digits.slice(0, 2);
-                }
-                if (digits.length >= 3) {
-                    v += '/' + digits.slice(2, 4);
-                } else if (digits.length > 2) {
-                    v += '/' + digits.slice(2);
-                }
-                if (digits.length >= 5) {
-                    v += '/' + digits.slice(4, 8);
-                }
-                e.target.value = v;
-
-                const fp = e.target._flatpickr;
-                if (fp) {
-                    if (digits.length === 8) {
-                        fp.setDate(v, false, 'd/m/Y');
-                    } else if (digits.length === 0) {
-                        fp.clear();
-                    }
-                }
-            });
+            allowInput: false
         });
     }
     const cnpjInput = document.querySelector('input[name="cnpj"]');
