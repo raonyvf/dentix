@@ -12,7 +12,7 @@
     $duracao = $inicio->diffInMinutes($fim);
     $percentual = $totalMinutos > 0 ? ($duracao / $totalMinutos) * 100 : 0;
 @endphp
-<div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
+<div class="mb-2 p-2 rounded bg-emerald-50 text-sm escala-card" data-id="{{ $it->id }}" data-profissional="{{ $it->profissional_id }}" data-hora-inicio="{{ $it->hora_inicio }}" data-hora-fim="{{ $it->hora_fim }}" data-cadeira="{{ $it->cadeira_id }}" data-date="{{ \Carbon\Carbon::parse($it->semana)->addDays($it->dia_semana - 1)->format('Y-m-d') }}">
     <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
         {{ optional($it->profissional->pessoa)->primeiro_nome }} {{ optional($it->profissional->pessoa)->ultimo_nome }}
     </div>
