@@ -73,9 +73,9 @@
                             <td class="w-32 px-2 py-1 font-semibold bg-gray-50 border border-gray-200">{{ $cadeira->nome }}</td>
                             @foreach($dias as $d)
                                 @php
-                                    $items = data_get($escalas, $w->toDateString().'.'.$cadeira->id.'.'.$d->value, collect())->sortBy('hora_inicio');
+                                    $items = collect(data_get($escalas, $w->toDateString().'.'.$cadeira->id.'.'.$d->value, []))->sortBy('hora_inicio');
                                 @endphp
-                                <td class="px-2 py-2 border border-gray-200 align-top" style="width:14.28%">
+                                <td class="px-2 py-2 border border-gray-200 align-top space-y-2" style="width:14.28%">
                                     @forelse($items as $it)
                                         <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
                                             <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->pessoa)->primeiro_nome }} {{ optional($it->profissional->pessoa)->ultimo_nome }}</div>
@@ -115,9 +115,9 @@
                         <td class="w-32 px-2 py-1 font-semibold bg-gray-50 border border-gray-200">{{ $cadeira->nome }}</td>
                         @foreach($dias as $d)
                             @php
-                                $items = data_get($escalas, $cadeira->id.'.'.$d->value, collect())->sortBy('hora_inicio');
+                                $items = collect(data_get($escalas, $cadeira->id.'.'.$d->value, []))->sortBy('hora_inicio');
                             @endphp
-                            <td class="px-2 py-2 border border-gray-200 align-top" style="width:14.28%">
+                            <td class="px-2 py-2 border border-gray-200 align-top space-y-2" style="width:14.28%">
                                 @forelse($items as $it)
                                     <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
                                         <div class="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{{ optional($it->profissional->pessoa)->primeiro_nome }} {{ optional($it->profissional->pessoa)->ultimo_nome }}</div>
