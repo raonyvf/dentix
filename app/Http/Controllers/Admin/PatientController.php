@@ -139,16 +139,16 @@ class PatientController extends Controller
             'responsavel_middle_name' => 'nullable',
             'responsavel_last_name' => 'nullable',
             'responsavel_cpf' => 'nullable',
-            'telefone' => 'nullable',
+            'telefone' => 'required',
             'whatsapp' => 'nullable',
             'email' => 'nullable|email',
-            'cep' => 'nullable',
-            'logradouro' => 'nullable',
-            'numero' => 'nullable',
+            'cep' => 'required',
+            'logradouro' => 'required',
+            'numero' => 'required',
             'complemento' => 'nullable',
-            'bairro' => 'nullable',
-            'cidade' => 'nullable',
-            'estado' => 'nullable',
+            'bairro' => 'required',
+            'cidade' => 'required',
+            'estado' => 'required',
         ];
 
         if ($request->menor_idade === 'Sim') {
