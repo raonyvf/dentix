@@ -9,6 +9,7 @@ use App\Models\Cadeira;
 use App\Models\Profissional;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
+use App\Enums\DiaSemana;
 
 class EscalaTrabalhoController extends Controller
 {
@@ -19,7 +20,7 @@ class EscalaTrabalhoController extends Controller
         $clinicId = $request->input('clinic_id', $clinics->first()->id ?? null);
         $view = $request->input('view', 'week');
 
-        $dias = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
+        $dias = DiaSemana::cases();
         $cadeiras = $clinicId ? Cadeira::where('clinica_id', $clinicId)->get() : collect();
 
         $dentistas = Profissional::when($clinicId, function ($query) use ($clinicId) {
@@ -107,11 +108,10 @@ class EscalaTrabalhoController extends Controller
         }
 
         if(isset($data['datas'])) {
-            $map = [1=>'segunda',2=>'terca',3=>'quarta',4=>'quinta',5=>'sexta',6=>'sabado',7=>'domingo'];
             foreach ($data['datas'] as $d) {
                 $date = Carbon::parse($d);
                 $weekStart = $date->copy()->startOfWeek(Carbon::MONDAY)->toDateString();
-                $dia = $map[$date->isoWeekday()];
+                $dia = $date->isoWeekday();
 
                 $conflict = EscalaTrabalho::where('cadeira_id', $data['cadeira_id'])
                     ->where('semana', $weekStart)
@@ -144,7 +144,11 @@ class EscalaTrabalhoController extends Controller
                 ]);
             }
         } else {
-            foreach ($data['dias'] as $dia) {
+            foreach ($data['dias'] as $diaNome) {
+                $dia = DiaSemana::fromName($diaNome)?->value;
+                if (! $dia) {
+                    continue;
+                }
                 $conflict = EscalaTrabalho::where('cadeira_id', $data['cadeira_id'])
                     ->where('semana', $data['semana'])
                     ->where('dia_semana', $dia)

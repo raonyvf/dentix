@@ -61,7 +61,7 @@
                         @php $weekStart = $w; @endphp
                         @foreach($dias as $d)
                             <th class="px-2 py-1 text-center font-semibold bg-white capitalize border border-gray-200" style="width:14.28%">
-                                {{ ucfirst($d) }}<br>
+                                {{ ucfirst($d->toName()) }}<br>
                                 <span class="text-xs text-gray-500">{{ $weekStart->copy()->addDays($loop->index)->format('d/m') }}</span>
                             </th>
                         @endforeach
@@ -72,7 +72,7 @@
                         <tr>
                             <td class="w-32 px-2 py-1 font-semibold bg-gray-50 border border-gray-200">{{ $cadeira->nome }}</td>
                             @foreach($dias as $d)
-                                @php $items = $escalas[$w->toDateString()][$cadeira->id][$d] ?? collect(); @endphp
+                                @php $items = $escalas[$w->toDateString()][$cadeira->id][$d->value] ?? collect(); @endphp
                                 <td class="px-2 py-2 border border-gray-200 align-top" style="width:14.28%">
                                     @forelse($items as $it)
                                         <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">
@@ -101,7 +101,7 @@
                     @php $weekStart = $week; @endphp
                     @foreach($dias as $d)
                         <th class="px-2 py-1 text-center font-semibold bg-white capitalize border border-gray-200" style="width:14.28%">
-                            {{ ucfirst($d) }}<br>
+                            {{ ucfirst($d->toName()) }}<br>
                             <span class="text-xs text-gray-500">{{ $weekStart->copy()->addDays($loop->index)->format('d/m') }}</span>
                         </th>
                     @endforeach
@@ -112,7 +112,7 @@
                     <tr>
                         <td class="w-32 px-2 py-1 font-semibold bg-gray-50 border border-gray-200">{{ $cadeira->nome }}</td>
                         @foreach($dias as $d)
-                            @php $items = $escalas[$cadeira->id][$d] ?? collect(); @endphp
+                            @php $items = $escalas[$cadeira->id][$d->value] ?? collect(); @endphp
                             <td class="px-2 py-2 border border-gray-200 align-top" style="width:14.28%">
                                 @forelse($items as $it)
                                     <div class="mb-2 p-2 rounded bg-emerald-50 text-sm">

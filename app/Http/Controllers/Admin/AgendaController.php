@@ -58,20 +58,7 @@ class AgendaController extends Controller
 
         $date->setTimezone($clinic->timezone ?? config('app.timezone'));
 
-        $diasIso = [
-            1 => 'segunda',
-            2 => 'terca',
-            3 => 'quarta',
-            4 => 'quinta',
-            5 => 'sexta',
-            6 => 'sabado',
-            7 => 'domingo',
-        ];
-        $dia = $diasIso[$date->dayOfWeekIso] ?? null;
-
-        if ($dia === null) {
-            return response()->json(['closed' => true]);
-        }
+        $dia = $date->dayOfWeekIso;
 
         // Remove only the clinic scope so the organization scope remains
         // active. This prevents pulling schedules from other organizations
