@@ -46,4 +46,24 @@ class EscalaTrabalhoControllerTest extends TestCase
             $this->withinClinicHours('08:00', '17:00', '09:00', '10:00')
         );
     }
+
+    public function test_month_copy_respects_target_month()
+    {
+        $targetMonth = Carbon::create(2025, 6, 1)->startOfMonth();
+        $sourceMonth = Carbon::create(2025, 8, 1)->startOfMonth();
+
+        $sourceStart = $sourceMonth->copy()->startOfWeek(Carbon::MONDAY);
+        if ($sourceStart->lt($sourceMonth)) {
+            $sourceStart->addWeek();
+        }
+        $targetStart = $targetMonth->copy()->startOfWeek(Carbon::MONDAY);
+        if ($targetStart->lt($targetMonth)) {
+            $targetStart->addWeek();
+        }
+
+        $diff = Carbon::parse('2025-08-04')->diffInWeeks($sourceStart);
+        $newWeek = $targetStart->copy()->addWeeks($diff);
+
+        $this->assertSame('2025-06-02', $newWeek->toDateString());
+    }
 }
