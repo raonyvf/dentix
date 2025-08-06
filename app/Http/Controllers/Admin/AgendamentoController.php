@@ -9,7 +9,6 @@ use App\Models\EscalaTrabalho;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 class AgendamentoController extends Controller
 {
@@ -67,14 +66,6 @@ class AgendamentoController extends Controller
             ->get();
 
         return $escalas->pluck('profissional')
-            ->filter(function ($prof) {
-                $funcao = Str::lower($prof->funcao ?? '');
-                $cargo = Str::lower($prof->cargo ?? '');
-                $especialidade = $prof->user->especialidade ?? null;
-                return Str::contains($funcao, 'dentista')
-                    || Str::contains($cargo, 'dentista')
-                    || ! is_null($especialidade);
-            })
             ->unique('id')
             ->map(function ($prof) {
                 $gender = $prof->pessoa->sexo ?? null;
