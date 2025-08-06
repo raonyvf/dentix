@@ -109,20 +109,17 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const createChart = (id, store, config) => {
+        const createChart = (id, config) => {
             const el = document.getElementById(id);
             if (!el || !window.Chart) return;
 
-            // Destroy any existing chart instance attached to this element
-            const existing = window[store] || Chart.getChart(el);
-            if (existing) {
-                existing.destroy();
-            }
+            const existing = Chart.getChart ? Chart.getChart(el) : null;
+            if (existing) existing.destroy();
 
-            window[store] = new Chart(el, config);
+            new Chart(el, config);
         };
 
-        createChart('clinicas-chart', 'clinicasChartInstance', {
+        createChart('clinicas-chart', {
             type: 'bar',
             data: {
                 labels: @json($comparativo->pluck('clinic')),
@@ -147,7 +144,7 @@
             options: { responsive: true, maintainAspectRatio: false }
         });
 
-        createChart('fluxo-chart', 'fluxoChartInstance', {
+        createChart('fluxo-chart', {
             type: 'bar',
             data: {
                 labels: @json($meses->pluck('mes')),
@@ -159,7 +156,7 @@
             options: { responsive: true, maintainAspectRatio: false }
         });
 
-        createChart('formas-chart', 'formasChartInstance', {
+        createChart('formas-chart', {
             type: 'doughnut',
             data: {
                 labels: @json(collect($formasPagamento)->pluck('label')),
