@@ -41,7 +41,7 @@
     @if($view==='month')
         <div>
             <label class="block text-sm font-medium mb-1">Mês</label>
-            <select name="month" class="border rounded px-2 py-1" onchange="this.form.submit()">
+            <select name="month" id="mesSelecionado" class="border rounded px-2 py-1" onchange="this.form.submit()">
                 @foreach($mesesDisponiveis as $mes)
                     <option value="{{ $mes->format('Y-m') }}" @selected($mes->equalTo($month))>{{ $mes->translatedFormat('F Y') }}</option>
                 @endforeach
@@ -50,7 +50,7 @@
     @else
         <div>
             <label class="block text-sm font-medium mb-1">Semana</label>
-            <select name="week" class="border rounded px-2 py-1" onchange="this.form.submit()">
+            <select name="week" id="semanaSelecionada" class="border rounded px-2 py-1" onchange="this.form.submit()">
                 @foreach($semanasDisponiveis as $sem)
                     <option value="{{ $sem->format('Y-m-d') }}" @selected($sem->equalTo($week))>{{ $sem->format('d/m/Y') }}</option>
                 @endforeach
@@ -142,7 +142,7 @@
             <input type="hidden" name="clinic_id" value="{{ $clinicId }}">
             <input type="hidden" name="view" value="{{ $view }}">
             @if($view==='month')
-                <input type="hidden" name="month" value="{{ $month->format('Y-m') }}">
+                <input type="hidden" name="month" id="monthDestino">
                 <div>
                     <label class="block text-sm mb-1">Copiar do mês</label>
                     <select name="source_month" class="w-full border rounded px-2 py-1">
@@ -154,7 +154,7 @@
                     </select>
                 </div>
             @else
-                <input type="hidden" name="week" value="{{ $week->format('Y-m-d') }}">
+                <input type="hidden" name="week" id="weekDestino" value="{{ $week->format('Y-m-d') }}">
                 <div>
                     <label class="block text-sm mb-1">Copiar da semana</label>
                     <select name="source_week" class="w-full border rounded px-2 py-1">
@@ -236,6 +236,16 @@
     const copyCancel = document.getElementById('copy-cancel');
     if (openCopyBtn && copyModal && copyCancel) {
         openCopyBtn.addEventListener('click', () => {
+            const monthSelect = document.getElementById('mesSelecionado');
+            const weekSelect = document.getElementById('semanaSelecionada');
+            const monthInput = document.getElementById('monthDestino');
+            const weekInput = document.getElementById('weekDestino');
+            if (monthSelect && monthInput) {
+                monthInput.value = monthSelect.value;
+            }
+            if (weekSelect && weekInput) {
+                weekInput.value = weekSelect.value;
+            }
             copyModal.classList.remove('hidden');
         });
         copyCancel.addEventListener('click', () => {
