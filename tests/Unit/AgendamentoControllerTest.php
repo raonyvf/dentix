@@ -13,24 +13,24 @@ class AgendamentoControllerTest extends TestCase
         $clinicId = 1;
         $date = '2024-05-20';
 
-        $collection = collect([
-            (object) ['profissional' => (object) [
-                'id' => 1,
-                'funcao' => null,
-                'cargo' => 'Dentista',
-                'user' => null,
-                'pessoa' => (object) ['primeiro_nome' => 'Ana', 'sexo' => 'Feminino'],
-            ]],
-            (object) ['profissional' => (object) [
-                'id' => 2,
-                'funcao' => null,
-                'cargo' => 'Ortodontista',
-                'user' => null,
-                'pessoa' => (object) ['primeiro_nome' => 'Bruno', 'sexo' => 'Masculino'],
-            ]],
+        $escalas = collect([
+            (object) ['profissional_id' => 1],
+            (object) ['profissional_id' => 2],
         ]);
 
-        \App\Models\EscalaTrabalho::setCollection($collection);
+        $profissionais = collect([
+            (object) [
+                'id' => 1,
+                'pessoa' => (object) ['primeiro_nome' => 'Ana', 'sexo' => 'Feminino'],
+            ],
+            (object) [
+                'id' => 2,
+                'pessoa' => (object) ['primeiro_nome' => 'Bruno', 'sexo' => 'Masculino'],
+            ],
+        ]);
+
+        \App\Models\EscalaTrabalho::setCollection($escalas);
+        \App\Models\Profissional::setCollection($profissionais);
 
         $controller = new AgendamentoController();
         $reflection = new \ReflectionClass($controller);

@@ -64,12 +64,16 @@ namespace {
             return new self($values);
         }
 
-        public function unique(string $key): self
+        public function unique(?string $key = null): self
         {
             $unique = [];
             $seen = [];
             foreach ($this->items as $item) {
-                $value = is_array($item) ? ($item[$key] ?? null) : ($item->$key ?? null);
+                if ($key === null) {
+                    $value = $item;
+                } else {
+                    $value = is_array($item) ? ($item[$key] ?? null) : ($item->$key ?? null);
+                }
                 if (!in_array($value, $seen, true)) {
                     $seen[] = $value;
                     $unique[] = $item;
@@ -132,17 +136,36 @@ namespace App\Models {
             self::$collection = $collection;
         }
 
+        public static function __callStatic($name, $arguments)
+        {
+            $instance = new self;
+            return $instance->$name(...$arguments);
+        }
+
+        public function __call($name, $arguments)
+        {
+            if ($name === 'get') {
+                return self::$collection;
+            }
+            return $this;
+        }
+    }
+
+    class Profissional
+    {
+        public static $collection;
+
+        public static function setCollection($collection): void
+        {
+            self::$collection = $collection;
+        }
+
         public static function with($relations)
         {
             return new self;
         }
 
-        public function where(...$args)
-        {
-            return $this;
-        }
-
-        public function whereBetween(...$args)
+        public function whereIn($field, $values)
         {
             return $this;
         }
