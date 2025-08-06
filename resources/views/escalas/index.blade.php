@@ -250,7 +250,7 @@
         let current = monthInput.value ? new Date(monthInput.value + '-01') : new Date();
 
         function render() {
-            monthInput.value = current.toISOString().slice(0,7);
+            monthInput.value = current.toLocaleDateString('en-CA').slice(0,7);
             monthLabel.textContent = current.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
 
             const first = new Date(current.getFullYear(), current.getMonth(), 1);
@@ -275,7 +275,7 @@
                 td.className = 'border px-1 py-1';
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.dataset.date = d.toISOString().slice(0,10);
+                btn.dataset.date = d.toLocaleDateString('en-CA');
                 btn.textContent = d.getDate();
                 btn.className = 'day-btn w-full rounded ' + (d.getMonth() === current.getMonth() ? '' : 'text-gray-400');
                 td.appendChild(btn);
