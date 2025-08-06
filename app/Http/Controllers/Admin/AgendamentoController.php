@@ -58,20 +58,29 @@ class AgendamentoController extends Controller
         $weekStart = $carbon->copy()->startOfWeek(Carbon::MONDAY)->toDateString();
         $day = $carbon->isoWeekday();
 
-        $escalas = EscalaTrabalho::with(['profissional.pessoa'])
+        $escalas = EscalaTrabalho::with(['profissional.pessoa', 'profissional.user'])
             ->where('clinica_id', $clinicId)
             ->where('semana', $weekStart)
             ->where('dia_semana', $day)
             ->get();
 
-        return $escalas->pluck('profissional')->unique('id')->map(function ($prof) {
-            $gender = $prof->pessoa->sexo ?? null;
-            $prefix = $gender === 'Masculino' ? 'Dr. ' : ($gender === 'Feminino' ? 'Dra. ' : '');
-            return [
-                'id' => $prof->id,
-                'name' => $prefix . ($prof->pessoa->primeiro_nome ?? ''),
-            ];
-        })->values()->toArray();
+        return $escalas->pluck('profissional')
+            ->filter(function ($prof) {
+                return $prof->funcao === 'Dentista'
+                    || $prof->cargo === 'Dentista'
+                    || ($prof->user && $prof->user->especialidade);
+            })
+            ->unique('id')
+            ->map(function ($prof) {
+                $gender = $prof->pessoa->sexo ?? null;
+                $prefix = $gender === 'Masculino' ? 'Dr. ' : ($gender === 'Feminino' ? 'Dra. ' : '');
+                return [
+                    'id' => $prof->id,
+                    'name' => $prefix . ($prof->pessoa->primeiro_nome ?? ''),
+                ];
+            })
+            ->values()
+            ->toArray();
     }
 
     public function professionals(Request $request)
