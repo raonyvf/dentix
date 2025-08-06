@@ -8,7 +8,7 @@
 <div class="mb-6 flex flex-wrap justify-between items-center gap-4">
     <h1 class="text-2xl font-bold">Escalas de Trabalho</h1>
     <div class="flex gap-2">
-        <button id="open-copy-modal" class="flex items-center gap-1 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+        <button id="open-copy-modal" class="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16h8M8 12h8m-5 8h2a2 2 0 002-2V6a2 2 0 00-2-2H9a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
@@ -41,7 +41,7 @@
     @if($view==='month')
         <div>
             <label class="block text-sm font-medium mb-1">Mês</label>
-            <select name="month" class="border rounded px-2 py-1" onchange="this.form.submit()">
+            <select name="month" id="mesSelecionado" class="border rounded px-2 py-1" onchange="this.form.submit()">
                 @foreach($mesesDisponiveis as $mes)
                     <option value="{{ $mes->format('Y-m') }}" @selected($mes->equalTo($month))>{{ $mes->translatedFormat('F Y') }}</option>
                 @endforeach
@@ -50,7 +50,7 @@
     @else
         <div>
             <label class="block text-sm font-medium mb-1">Semana</label>
-            <select name="week" class="border rounded px-2 py-1" onchange="this.form.submit()">
+            <select name="week" id="semanaSelecionada" class="border rounded px-2 py-1" onchange="this.form.submit()">
                 @foreach($semanasDisponiveis as $sem)
                     <option value="{{ $sem->format('Y-m-d') }}" @selected($sem->equalTo($week))>{{ $sem->format('d/m/Y') }}</option>
                 @endforeach
@@ -142,7 +142,7 @@
             <input type="hidden" name="clinic_id" value="{{ $clinicId }}">
             <input type="hidden" name="view" value="{{ $view }}">
             @if($view==='month')
-                <input type="hidden" name="month" value="{{ $month->format('Y-m') }}">
+                <input type="hidden" name="month" id="monthDestino">
                 <div>
                     <label class="block text-sm mb-1">Copiar do mês</label>
                     <select name="source_month" class="w-full border rounded px-2 py-1">
@@ -154,7 +154,7 @@
                     </select>
                 </div>
             @else
-                <input type="hidden" name="week" value="{{ $week->format('Y-m-d') }}">
+                <input type="hidden" name="week" id="weekDestino" value="{{ $week->format('Y-m-d') }}">
                 <div>
                     <label class="block text-sm mb-1">Copiar da semana</label>
                     <select name="source_week" class="w-full border rounded px-2 py-1">
@@ -232,12 +232,26 @@
     const escalaForm = escalaModal.querySelector('form');
     const deleteBtn = document.getElementById('escala-delete');
     const copyModal = document.getElementById('copy-modal');
-    document.getElementById('open-copy-modal').addEventListener('click', () => {
-        copyModal.classList.remove('hidden');
-    });
-    document.getElementById('copy-cancel').addEventListener('click', () => {
-        copyModal.classList.add('hidden');
-    });
+    const openCopyBtn = document.getElementById('open-copy-modal');
+    const copyCancel = document.getElementById('copy-cancel');
+    if (openCopyBtn && copyModal && copyCancel) {
+        openCopyBtn.addEventListener('click', () => {
+            const monthSelect = document.getElementById('mesSelecionado');
+            const weekSelect = document.getElementById('semanaSelecionada');
+            const monthInput = document.getElementById('monthDestino');
+            const weekInput = document.getElementById('weekDestino');
+            if (monthSelect && monthInput) {
+                monthInput.value = monthSelect.value;
+            }
+            if (weekSelect && weekInput) {
+                weekInput.value = weekSelect.value;
+            }
+            copyModal.classList.remove('hidden');
+        });
+        copyCancel.addEventListener('click', () => {
+            copyModal.classList.add('hidden');
+        });
+    }
     document.getElementById('open-modal').addEventListener('click', () => {
         escalaForm.reset();
         escalaForm.action = '{{ route('escalas.store') }}';
