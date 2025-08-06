@@ -232,12 +232,16 @@
     const escalaForm = escalaModal.querySelector('form');
     const deleteBtn = document.getElementById('escala-delete');
     const copyModal = document.getElementById('copy-modal');
-    document.getElementById('open-copy-modal').addEventListener('click', () => {
-        copyModal.classList.remove('hidden');
-    });
-    document.getElementById('copy-cancel').addEventListener('click', () => {
-        copyModal.classList.add('hidden');
-    });
+    const openCopyBtn = document.getElementById('open-copy-modal');
+    const copyCancel = document.getElementById('copy-cancel');
+    if (openCopyBtn && copyModal && copyCancel) {
+        openCopyBtn.addEventListener('click', () => {
+            copyModal.classList.remove('hidden');
+        });
+        copyCancel.addEventListener('click', () => {
+            copyModal.classList.add('hidden');
+        });
+    }
     document.getElementById('open-modal').addEventListener('click', () => {
         escalaForm.reset();
         escalaForm.action = '{{ route('escalas.store') }}';
