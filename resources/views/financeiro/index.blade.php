@@ -113,25 +113,11 @@
             const el = document.getElementById(id);
             if (!el || !window.Chart) return;
 
-            // Destroy any existing chart instance attached to this id
-            if (window[store]) {
-                window[store].destroy();
-                delete window[store];
-            } else {
-                const existing = window.Chart.getChart(el);
-                if (existing) existing.destroy();
+            // Destroy any existing chart instance attached to this element
+            const existing = window[store] || Chart.getChart(el);
+            if (existing) {
+                existing.destroy();
             }
-
-            // Fully reset the canvas before creating a new chart
-            const ctx = el.getContext('2d');
-            ctx.clearRect(0, 0, el.width, el.height);
-            el.width = el.height = 0;
-            el.removeAttribute('style');
-
-            // Replace the canvas node to ensure a fresh element
-            const freshCanvas = el.cloneNode(true);
-            el.replaceWith(freshCanvas);
-            el = freshCanvas;
 
             window[store] = new Chart(el, config);
         };
