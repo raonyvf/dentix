@@ -72,6 +72,7 @@ class AgendamentoController extends Controller
             ->get();
 
         return $profissionais
+  
             ->map(function ($prof) {
                 $gender = $prof->pessoa->sexo ?? null;
                 $prefix = $gender === 'Masculino' ? 'Dr. ' : ($gender === 'Feminino' ? 'Dra. ' : '');
