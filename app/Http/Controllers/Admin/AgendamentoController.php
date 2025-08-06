@@ -66,8 +66,11 @@ class AgendamentoController extends Controller
 
         return $escalas->pluck('profissional')
             ->filter(function ($prof) {
-                return $prof->funcao === 'Dentista'
-                    || $prof->cargo === 'Dentista'
+                $funcao = strtolower($prof->funcao ?? '');
+                $cargo = strtolower($prof->cargo ?? '');
+
+                return $funcao === 'dentista'
+                    || $cargo === 'dentista'
                     || ($prof->user && $prof->user->especialidade);
             })
             ->unique('id')
