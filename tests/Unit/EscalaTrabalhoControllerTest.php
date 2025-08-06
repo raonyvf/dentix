@@ -66,4 +66,28 @@ class EscalaTrabalhoControllerTest extends TestCase
 
         $this->assertSame('2025-06-02', $newWeek->toDateString());
     }
+
+    public function test_accepts_past_year_and_month()
+    {
+        $year = 1999;
+        $monthNumber = 11;
+        $selected = Carbon::create($year, $monthNumber, 1)->startOfMonth();
+        $this->assertSame('1999-11-01', $selected->toDateString());
+
+        $meses = collect(range(1, 12))->map(fn($m) => Carbon::create($year, $m, 1)->startOfMonth());
+        $this->assertCount(12, $meses);
+        $this->assertTrue($meses->first()->isSameMonth(Carbon::create($year, 1, 1)));
+        $this->assertTrue($meses->last()->isSameMonth(Carbon::create($year, 12, 1)));
+    }
+
+    public function test_accepts_future_year_and_month()
+    {
+        $year = Carbon::now()->year + 5;
+        $monthNumber = 3;
+        $selected = Carbon::create($year, $monthNumber, 1)->startOfMonth();
+        $this->assertSame($year.'-03-01', $selected->toDateString());
+
+        $meses = collect(range(1, 12))->map(fn($m) => Carbon::create($year, $m, 1)->startOfMonth());
+        $this->assertTrue($meses->contains(fn($m) => $m->isSameMonth($selected)));
+    }
 }

@@ -35,9 +35,14 @@ class EscalaTrabalhoController extends Controller
             ->with('person')
             ->get();
 
-        $month = $request->input('month');
-        $month = $month ? Carbon::parse($month)->startOfMonth() : Carbon::now()->startOfMonth();
-        $mesesDisponiveis = collect(range(-2, 2))->map(fn($i) => Carbon::now()->startOfMonth()->addMonths($i));
+        $yearParam = $request->input('year');
+        $monthParam = $request->input('month');
+
+        $year = $yearParam ? (int)$yearParam : Carbon::now()->year;
+        $monthNumber = $monthParam ? (int)$monthParam : Carbon::now()->month;
+
+        $month = Carbon::create($year, $monthNumber, 1)->startOfMonth();
+        $mesesDisponiveis = collect(range(1, 12))->map(fn($m) => Carbon::create($year, $m, 1)->startOfMonth());
 
         $weeks = collect();
         $current = $month->copy()->startOfWeek(Carbon::MONDAY);
@@ -188,6 +193,9 @@ class EscalaTrabalhoController extends Controller
         $params = [
             'clinic_id' => $data['clinic_id'],
         ];
+        if ($request->filled('year')) {
+            $params['year'] = $request->input('year');
+        }
         if ($request->filled('month')) {
             $params['month'] = $request->input('month');
         }
@@ -258,8 +266,15 @@ class EscalaTrabalhoController extends Controller
 
         $params = [
             'clinic_id' => $escala->clinica_id,
-            'month' => $request->input('month', Carbon::parse($data['data'])->format('Y-m')),
         ];
+        if ($request->filled('year') && $request->filled('month')) {
+            $params['year'] = $request->input('year');
+            $params['month'] = $request->input('month');
+        } else {
+            $date = Carbon::parse($data['data']);
+            $params['year'] = $date->year;
+            $params['month'] = $date->month;
+        }
 
         return redirect()->route('escalas.index', $params)
             ->with('success', 'Escala atualizada com sucesso.');
@@ -272,6 +287,9 @@ class EscalaTrabalhoController extends Controller
         $params = [
             'clinic_id' => $escala->clinica_id,
         ];
+        if ($request->filled('year')) {
+            $params['year'] = $request->input('year');
+        }
         if ($request->filled('month')) {
             $params['month'] = $request->input('month');
         }
@@ -350,7 +368,8 @@ class EscalaTrabalhoController extends Controller
 
         $params = [
             'clinic_id' => $clinicId,
-            'month' => $targetMonth->format('Y-m'),
+            'year' => $targetMonth->year,
+            'month' => $targetMonth->month,
         ];
 
         return redirect()->route('escalas.index', $params)

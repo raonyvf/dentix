@@ -32,12 +32,20 @@
         </select>
     </div>
     <div>
+        <label class="block text-sm font-medium mb-1">Ano</label>
+        <input type="number" name="year" id="anoSelecionado" class="border rounded px-2 py-1" value="{{ $month->year }}" onchange="this.form.submit()">
+    </div>
+    <div>
         <label class="block text-sm font-medium mb-1">Mês</label>
         <select name="month" id="mesSelecionado" class="border rounded px-2 py-1" onchange="this.form.submit()">
             @foreach($mesesDisponiveis as $mes)
-                <option value="{{ $mes->format('Y-m') }}" @selected($mes->equalTo($month))>{{ $mes->translatedFormat('F Y') }}</option>
+                <option value="{{ $mes->month }}" @selected($mes->equalTo($month))>{{ $mes->translatedFormat('F') }}</option>
             @endforeach
         </select>
+    </div>
+    <div class="flex items-end gap-2">
+        <button type="button" id="prev-month-btn" class="px-2 py-1 border rounded">Anterior</button>
+        <button type="button" id="next-month-btn" class="px-2 py-1 border rounded">Próximo</button>
     </div>
 </form>
 @php $clinic = $clinics->firstWhere('id', $clinicId); @endphp
@@ -113,7 +121,9 @@
         <form method="POST" action="{{ route('escalas.store') }}" class="space-y-4">
             @csrf
             <input type="hidden" name="clinic_id" value="{{ $clinicId }}">
-            <input type="hidden" name="month" id="calendar-month-input" value="{{ $month->format('Y-m') }}">
+            <input type="hidden" name="year" id="form-year" value="{{ $month->year }}">
+            <input type="hidden" name="month" id="form-month" value="{{ $month->month }}">
+            <input type="hidden" id="calendar-month-input" value="{{ $month->format('Y-m') }}">
             <div>
                 <label class="block text-sm mb-1">Profissional</label>
                 <select name="profissional_id" class="w-full border rounded px-2 py-1">
@@ -122,7 +132,6 @@
                     @endforeach
                 </select>
             </div>
-            <input type="hidden" name="month" id="calendar-month-input" value="{{ $month->format('Y-m') }}">
             <div class="mb-2 flex items-center justify-between">
                 <button type="button" id="prev-month" class="px-2">&#60;</button>
                 <span id="calendar-month-label" class="font-semibold"></span>
@@ -164,18 +173,38 @@
     const copyModal = document.getElementById('copy-modal');
     const openCopyBtn = document.getElementById('open-copy-modal');
     const copyCancel = document.getElementById('copy-cancel');
+    const monthSelectTop = document.getElementById('mesSelecionado');
+    const yearInputTop = document.getElementById('anoSelecionado');
+    const prevNav = document.getElementById('prev-month-btn');
+    const nextNav = document.getElementById('next-month-btn');
+
     if (openCopyBtn && copyModal && copyCancel) {
         openCopyBtn.addEventListener('click', () => {
-            const monthSelect = document.getElementById('mesSelecionado');
             const monthInput = document.getElementById('monthDestino');
-            if (monthSelect && monthInput) {
-                monthInput.value = monthSelect.value;
+            if (monthSelectTop && yearInputTop && monthInput) {
+                const value = `${yearInputTop.value}-${String(monthSelectTop.value).padStart(2,'0')}`;
+                monthInput.value = value;
             }
             copyModal.classList.remove('hidden');
         });
         copyCancel.addEventListener('click', () => {
             copyModal.classList.add('hidden');
         });
+    }
+
+    if (prevNav && nextNav && monthSelectTop && yearInputTop) {
+        function changeMonth(delta) {
+            let year = parseInt(yearInputTop.value);
+            let month = parseInt(monthSelectTop.value);
+            month += delta;
+            if (month < 1) { month = 12; year--; }
+            if (month > 12) { month = 1; year++; }
+            monthSelectTop.value = month;
+            yearInputTop.value = year;
+            monthSelectTop.form.submit();
+        }
+        prevNav.addEventListener('click', () => changeMonth(-1));
+        nextNav.addEventListener('click', () => changeMonth(1));
     }
     document.getElementById('open-modal').addEventListener('click', () => {
         escalaForm.reset();
@@ -213,7 +242,8 @@
             document.getElementById('selected-dates').innerHTML = '';
             const monthInput = document.getElementById('calendar-month-input');
             monthInput.value = date.slice(0,7);
-            escalaForm.querySelector('[name="month"]').value = date.slice(0,7);
+            escalaForm.querySelector('[name="year"]').value = date.slice(0,4);
+            escalaForm.querySelector('[name="month"]').value = parseInt(date.slice(5,7),10);
             escalaModal.classList.remove('hidden');
             initCalendar([date], true);
         });
@@ -226,7 +256,7 @@
             form.method = 'POST';
             form.action = escalaForm.action;
             form.innerHTML = `<input type="hidden" name="_token" value="${document.querySelector('meta[name=csrf-token]').content}"><input type="hidden" name="_method" value="DELETE">`;
-            ['clinic_id','month'].forEach(name => {
+            ['clinic_id','year','month'].forEach(name => {
                 const input = escalaForm.querySelector(`[name="${name}"]`);
                 if (input) {
                     const copy = document.createElement('input');
@@ -252,6 +282,9 @@
         function render() {
             monthInput.value = current.toLocaleDateString('en-CA').slice(0,7);
             monthLabel.textContent = current.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+            const [y,m] = monthInput.value.split('-');
+            escalaForm.querySelector('[name="year"]').value = y;
+            escalaForm.querySelector('[name="month"]').value = parseInt(m,10);
 
             const first = new Date(current.getFullYear(), current.getMonth(), 1);
             const start = new Date(first);
