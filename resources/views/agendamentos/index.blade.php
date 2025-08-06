@@ -13,7 +13,7 @@
 @php
     // Dados de agenda são fornecidos pelo controlador
 @endphp
-<div x-data="agendaCalendar()" x-init="init()" data-horarios-url="{{ route('agendamentos.horarios') }}">
+<div x-data="agendaCalendar()" x-init="init()" data-horarios-url="{{ route('agendamentos.horarios') }}" data-professionals-url="{{ route('agendamentos.professionals') }}" data-base-times='@json($horarios)' data-current-date="{{ $date }}">
     <div class="flex justify-end mb-2 relative">
         <button @click="openDatePicker" class="p-2 border rounded bg-white">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -46,7 +46,7 @@
             </button>
         </div>
     </div>
-<div class="flex items-center gap-2 overflow-x-auto mb-4">
+<div id="professionals-bar" class="flex items-center gap-2 overflow-x-auto mb-4">
     <x-agenda.profissional name="Todos os Profissionais" active />
     @foreach($professionals as $prof)
         <x-agenda.profissional :name="$prof['name']" />
@@ -59,6 +59,7 @@
 </div>
 <div class="overflow-auto" id="schedule-container">
     <div id="schedule-closed" class="hidden text-center py-4 text-gray-500">A clínica está fechada neste dia.</div>
+    <div id="schedule-empty" class="hidden text-center py-4 text-gray-500">Sem profissionais disponíveis neste dia.</div>
     <table id="schedule-table" class="min-w-full text-sm table-fixed">
         <thead>
             <tr>

@@ -22,6 +22,7 @@ Route::get('agenda', [AgendaController::class, 'index'])->name('agenda.index');
 Route::get('agendamentos', [AgendamentoController::class, 'index'])->name('agendamentos.index');
 Route::post('agendamentos', [AgendamentoController::class, 'store'])->name('agendamentos.store');
 Route::get('agendamentos/horarios', [AgendaController::class, 'horarios'])->name('agendamentos.horarios');
+Route::get('agendamentos/profissionais', [AgendamentoController::class, 'professionals'])->name('agendamentos.professionals');
 
 
 Route::resource('clinicas', ClinicController::class)
