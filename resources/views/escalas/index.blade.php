@@ -32,89 +32,27 @@
         </select>
     </div>
     <div>
-        <label class="block text-sm font-medium mb-1">Visualização</label>
-        <select name="view" class="border rounded px-2 py-1" onchange="this.form.submit()">
-            <option value="week" @selected($view==='week')>Semanal</option>
-            <option value="month" @selected($view==='month')>Mensal</option>
+        <label class="block text-sm font-medium mb-1">Mês</label>
+        <select name="month" id="mesSelecionado" class="border rounded px-2 py-1" onchange="this.form.submit()">
+            @foreach($mesesDisponiveis as $mes)
+                <option value="{{ $mes->format('Y-m') }}" @selected($mes->equalTo($month))>{{ $mes->translatedFormat('F Y') }}</option>
+            @endforeach
         </select>
     </div>
-    @if($view==='month')
-        <div>
-            <label class="block text-sm font-medium mb-1">Mês</label>
-            <select name="month" id="mesSelecionado" class="border rounded px-2 py-1" onchange="this.form.submit()">
-                @foreach($mesesDisponiveis as $mes)
-                    <option value="{{ $mes->format('Y-m') }}" @selected($mes->equalTo($month))>{{ $mes->translatedFormat('F Y') }}</option>
-                @endforeach
-            </select>
-        </div>
-    @else
-        <div>
-            <label class="block text-sm font-medium mb-1">Semana</label>
-            <select name="week" id="semanaSelecionada" class="border rounded px-2 py-1" onchange="this.form.submit()">
-                @foreach($semanasDisponiveis as $sem)
-                    <option value="{{ $sem->format('Y-m-d') }}" @selected($sem->equalTo($week))>{{ $sem->format('d/m/Y') }}</option>
-                @endforeach
-            </select>
-        </div>
-    @endif
 </form>
 @php $clinic = $clinics->firstWhere('id', $clinicId); @endphp
-@if($view==='month')
-    @foreach($weeks as $w)
-        <h2 class="mt-6 font-semibold">Semana de {{ $w->format('d/m/Y') }}</h2>
-        <div class="overflow-x-auto bg-white rounded shadow mb-6">
-            <table class="table-fixed w-full text-sm border">
-                <thead>
-                    <tr>
-                        <th class="w-32 px-2 py-1 bg-white font-semibold border border-gray-200">Cadeira</th>
-                        @php $weekStart = $w; @endphp
-                        @foreach($dias as $d)
-                            @php
-                                $date = $weekStart->copy()->addDays($loop->index);
-                                $outMonth = !$date->isSameMonth($month);
-                            @endphp
-                            <th class="px-2 py-1 text-center font-semibold capitalize border border-gray-200 {{ $outMonth ? 'bg-gray-100 text-gray-500' : 'bg-white' }}" style="width:14.28%">
-                                {{ ucfirst($d->toName()) }}<br>
-                                <span class="text-xs {{ $outMonth ? 'text-gray-400' : 'text-gray-500' }}">{{ $date->format('d/m') }}</span>
-                            </th>
-                        @endforeach
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($cadeiras as $cadeira)
-                        <tr>
-                            <td class="w-32 px-2 py-1 font-semibold bg-gray-50 border border-gray-200">{{ $cadeira->nome }}</td>
-                            @foreach($dias as $d)
-                                @php
-                                    $date = $w->copy()->addDays($loop->index);
-                                    $outMonth = !$date->isSameMonth($month);
-                                    $items = collect(data_get($escalas, $w->toDateString().'.'.$cadeira->id.'.'.$d->value, []))->sortBy('hora_inicio');
-                                @endphp
-                                <td class="px-2 py-2 border border-gray-200 align-top space-y-2 {{ $outMonth ? 'bg-gray-100 text-gray-500' : '' }}" style="width:14.28%">
-                                    @forelse($items as $it)
-                                        @include('escalas.partials.card', ['it' => $it, 'clinic' => $clinic, 'diaSemana' => $d->value, 'out' => $outMonth])
-                                    @empty
-                                        <span class="text-sm {{ $outMonth ? 'text-gray-500' : 'text-gray-400' }}">Livre</span>
-                                    @endforelse
-                                </td>
-                            @endforeach
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    @endforeach
-@else
-    <div class="overflow-x-auto bg-white rounded shadow">
+@foreach($weeks as $w)
+    <h2 class="mt-6 font-semibold">Semana de {{ $w->format('d/m/Y') }}</h2>
+    <div class="overflow-x-auto bg-white rounded shadow mb-6">
         <table class="table-fixed w-full text-sm border">
             <thead>
                 <tr>
                     <th class="w-32 px-2 py-1 bg-white font-semibold border border-gray-200">Cadeira</th>
-                    @php $weekStart = $week; @endphp
+                    @php $weekStart = $w; @endphp
                     @foreach($dias as $d)
                         @php
                             $date = $weekStart->copy()->addDays($loop->index);
-                            $outMonth = !$date->isSameMonth($week);
+                            $outMonth = !$date->isSameMonth($month);
                         @endphp
                         <th class="px-2 py-1 text-center font-semibold capitalize border border-gray-200 {{ $outMonth ? 'bg-gray-100 text-gray-500' : 'bg-white' }}" style="width:14.28%">
                             {{ ucfirst($d->toName()) }}<br>
@@ -129,9 +67,9 @@
                         <td class="w-32 px-2 py-1 font-semibold bg-gray-50 border border-gray-200">{{ $cadeira->nome }}</td>
                         @foreach($dias as $d)
                             @php
-                                $date = $weekStart->copy()->addDays($loop->index);
-                                $outMonth = !$date->isSameMonth($week);
-                                $items = collect(data_get($escalas, $cadeira->id.'.'.$d->value, []))->sortBy('hora_inicio');
+                                $date = $w->copy()->addDays($loop->index);
+                                $outMonth = !$date->isSameMonth($month);
+                                $items = collect(data_get($escalas, $w->toDateString().'.'.$cadeira->id.'.'.$d->value, []))->sortBy('hora_inicio');
                             @endphp
                             <td class="px-2 py-2 border border-gray-200 align-top space-y-2 {{ $outMonth ? 'bg-gray-100 text-gray-500' : '' }}" style="width:14.28%">
                                 @forelse($items as $it)
@@ -146,38 +84,23 @@
             </tbody>
         </table>
     </div>
-@endif
+@endforeach
 <div id="copy-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
     <div class="bg-white rounded p-4 w-80">
         <form method="POST" action="{{ route('escalas.copy') }}" class="space-y-4">
             @csrf
             <input type="hidden" name="clinic_id" value="{{ $clinicId }}">
-            <input type="hidden" name="view" value="{{ $view }}">
-            @if($view==='month')
-                <input type="hidden" name="month" id="monthDestino">
-                <div>
-                    <label class="block text-sm mb-1">Copiar do mês</label>
-                    <select name="source_month" class="w-full border rounded px-2 py-1">
-                        @foreach($mesesDisponiveis as $mes)
-                            @if(!$mes->equalTo($month))
-                                <option value="{{ $mes->format('Y-m') }}">{{ $mes->translatedFormat('F Y') }}</option>
-                            @endif
-                        @endforeach
-                    </select>
-                </div>
-            @else
-                <input type="hidden" name="week" id="weekDestino" value="{{ $week->format('Y-m-d') }}">
-                <div>
-                    <label class="block text-sm mb-1">Copiar da semana</label>
-                    <select name="source_week" class="w-full border rounded px-2 py-1">
-                        @foreach($semanasDisponiveis as $sem)
-                            @if(!$sem->equalTo($week))
-                                <option value="{{ $sem->format('Y-m-d') }}">{{ $sem->format('d/m/Y') }}</option>
-                            @endif
-                        @endforeach
-                    </select>
-                </div>
-            @endif
+            <input type="hidden" name="month" id="monthDestino">
+            <div>
+                <label class="block text-sm mb-1">Copiar do mês</label>
+                <select name="source_month" class="w-full border rounded px-2 py-1">
+                    @foreach($mesesDisponiveis as $mes)
+                        @if(!$mes->equalTo($month))
+                            <option value="{{ $mes->format('Y-m') }}">{{ $mes->translatedFormat('F Y') }}</option>
+                        @endif
+                    @endforeach
+                </select>
+            </div>
             <div class="text-right space-x-2">
                 <button type="button" id="copy-cancel" class="px-3 py-1 border rounded">Cancelar</button>
                 <button class="px-3 py-1 bg-blue-600 text-white rounded">Copiar</button>
@@ -190,7 +113,7 @@
         <form method="POST" action="{{ route('escalas.store') }}" class="space-y-4">
             @csrf
             <input type="hidden" name="clinic_id" value="{{ $clinicId }}">
-            <input type="hidden" name="view" value="{{ $view }}">
+            <input type="hidden" name="month" id="calendar-month-input" value="{{ $month->format('Y-m') }}">
             <div>
                 <label class="block text-sm mb-1">Profissional</label>
                 <select name="profissional_id" class="w-full border rounded px-2 py-1">
@@ -199,12 +122,7 @@
                     @endforeach
                 </select>
             </div>
-            @if($view==='month')
-                <input type="hidden" name="month" id="calendar-month-input" value="{{ $month->format('Y-m') }}">
-            @else
-                <input type="hidden" name="semana" value="{{ $week->format('Y-m-d') }}">
-                <input type="hidden" id="calendar-month-input" value="{{ $week->format('Y-m') }}">
-            @endif
+            <input type="hidden" name="month" id="calendar-month-input" value="{{ $month->format('Y-m') }}">
             <div class="mb-2 flex items-center justify-between">
                 <button type="button" id="prev-month" class="px-2">&#60;</button>
                 <span id="calendar-month-label" class="font-semibold"></span>
@@ -249,14 +167,9 @@
     if (openCopyBtn && copyModal && copyCancel) {
         openCopyBtn.addEventListener('click', () => {
             const monthSelect = document.getElementById('mesSelecionado');
-            const weekSelect = document.getElementById('semanaSelecionada');
             const monthInput = document.getElementById('monthDestino');
-            const weekInput = document.getElementById('weekDestino');
             if (monthSelect && monthInput) {
                 monthInput.value = monthSelect.value;
-            }
-            if (weekSelect && weekInput) {
-                weekInput.value = weekSelect.value;
             }
             copyModal.classList.remove('hidden');
         });
@@ -300,15 +213,7 @@
             document.getElementById('selected-dates').innerHTML = '';
             const monthInput = document.getElementById('calendar-month-input');
             monthInput.value = date.slice(0,7);
-            if (escalaForm.querySelector('[name="month"]')) {
-                escalaForm.querySelector('[name="month"]').value = date.slice(0,7);
-            }
-            if (escalaForm.querySelector('[name="semana"]')) {
-                const d = new Date(date);
-                const diff = (d.getDay()+6)%7; // Monday start
-                d.setDate(d.getDate()-diff);
-                escalaForm.querySelector('[name="semana"]').value = d.toISOString().slice(0,10);
-            }
+            escalaForm.querySelector('[name="month"]').value = date.slice(0,7);
             escalaModal.classList.remove('hidden');
             initCalendar([date], true);
         });
@@ -321,12 +226,12 @@
             form.method = 'POST';
             form.action = escalaForm.action;
             form.innerHTML = `<input type="hidden" name="_token" value="${document.querySelector('meta[name=csrf-token]').content}"><input type="hidden" name="_method" value="DELETE">`;
-            ['clinic_id','view','semana','month'].forEach(name => {
+            ['clinic_id','month'].forEach(name => {
                 const input = escalaForm.querySelector(`[name="${name}"]`);
                 if (input) {
                     const copy = document.createElement('input');
                     copy.type = 'hidden';
-                    copy.name = name === 'semana' ? 'week' : name;
+                    copy.name = name;
                     copy.value = input.value;
                     form.appendChild(copy);
                 }

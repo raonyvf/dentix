@@ -20,7 +20,6 @@ class EscalaTrabalhoController extends Controller
             ? Clinic::with('horarios')->get()
             : $user->clinics()->with('horarios')->get();
         $clinicId = $request->input('clinic_id', $clinics->first()->id ?? null);
-        $view = $request->input('view', 'week');
 
         $dias = DiaSemana::cases();
         $cadeiras = $clinicId ? Cadeira::where('clinica_id', $clinicId)->get() : collect();
@@ -36,46 +35,26 @@ class EscalaTrabalhoController extends Controller
             ->with('person')
             ->get();
 
-        if ($view === 'month') {
-            $month = $request->input('month');
-            if (! $month && $request->filled('week')) {
-                $month = Carbon::parse($request->input('week'))->startOfMonth()->format('Y-m');
-            }
-            $month = $month ? Carbon::parse($month)->startOfMonth() : Carbon::now()->startOfMonth();
-            $mesesDisponiveis = collect(range(-2, 2))->map(fn($i) => Carbon::now()->startOfMonth()->addMonths($i));
+        $month = $request->input('month');
+        $month = $month ? Carbon::parse($month)->startOfMonth() : Carbon::now()->startOfMonth();
+        $mesesDisponiveis = collect(range(-2, 2))->map(fn($i) => Carbon::now()->startOfMonth()->addMonths($i));
 
-            $weeks = collect();
-            $current = $month->copy()->startOfWeek(Carbon::MONDAY);
-            $last = $month->copy()->endOfMonth()->endOfWeek(Carbon::SUNDAY);
-            while ($current->lte($last)) {
-                $weeks->push($current->copy());
-                $current->addWeek();
-            }
-
-            $escalas = EscalaTrabalho::with(['profissional.person','profissional.user'])
-                ->where('clinica_id', $clinicId)
-                ->whereBetween('semana', [$weeks->first()->toDateString(), $weeks->last()->toDateString()])
-                ->orderBy('hora_inicio')
-                ->get()
-                ->groupBy([fn($e) => $e->semana->toDateString(), 'cadeira_id', 'dia_semana'], preserveKeys: true);
-
-            return view('escalas.index', compact('clinics','clinicId','view','month','weeks','dias','cadeiras','escalas','dentistas','mesesDisponiveis'));
+        $weeks = collect();
+        $current = $month->copy()->startOfWeek(Carbon::MONDAY);
+        $last = $month->copy()->endOfMonth()->endOfWeek(Carbon::SUNDAY);
+        while ($current->lte($last)) {
+            $weeks->push($current->copy());
+            $current->addWeek();
         }
 
-        $week = $request->input('week');
-        $week = $week ? Carbon::parse($week)->startOfWeek(Carbon::MONDAY) : Carbon::now()->startOfWeek(Carbon::MONDAY);
-        $semanasDisponiveis = collect(range(-2, 5))->map(fn($i) => Carbon::now()->startOfWeek(Carbon::MONDAY)->addWeeks($i));
         $escalas = EscalaTrabalho::with(['profissional.person','profissional.user'])
             ->where('clinica_id', $clinicId)
-            ->whereBetween('semana', [
-                $week->toDateString(),
-                $week->copy()->addDays(6)->toDateString(),
-            ])
+            ->whereBetween('semana', [$weeks->first()->toDateString(), $weeks->last()->toDateString()])
             ->orderBy('hora_inicio')
             ->get()
-            ->groupBy(['cadeira_id','dia_semana'], preserveKeys: true);
+            ->groupBy([fn($e) => $e->semana->toDateString(), 'cadeira_id', 'dia_semana'], preserveKeys: true);
 
-        return view('escalas.index', compact('clinics','clinicId','view','week','dias','cadeiras','escalas','dentistas','semanasDisponiveis'));
+        return view('escalas.index', compact('clinics','clinicId','month','weeks','dias','cadeiras','escalas','dentistas','mesesDisponiveis'));
     }
 
     public function store(Request $request)
@@ -206,13 +185,9 @@ class EscalaTrabalhoController extends Controller
             }
         }
 
-        $params = ['clinic_id' => $data['clinic_id']];
-        if ($request->filled('semana')) {
-            $params['week'] = $request->input('semana');
-        }
-        if ($request->filled('view')) {
-            $params['view'] = $request->input('view');
-        }
+        $params = [
+            'clinic_id' => $data['clinic_id'],
+        ];
         if ($request->filled('month')) {
             $params['month'] = $request->input('month');
         }
@@ -281,16 +256,10 @@ class EscalaTrabalhoController extends Controller
             'hora_fim' => $data['hora_fim'],
         ]);
 
-        $params = ['clinic_id' => $escala->clinica_id];
-        if ($request->filled('view')) {
-            $params['view'] = $request->input('view');
-        }
-        if ($request->filled('semana')) {
-            $params['week'] = $request->input('semana');
-        }
-        if ($request->filled('month')) {
-            $params['month'] = $request->input('month');
-        }
+        $params = [
+            'clinic_id' => $escala->clinica_id,
+            'month' => $request->input('month', Carbon::parse($data['data'])->format('Y-m')),
+        ];
 
         return redirect()->route('escalas.index', $params)
             ->with('success', 'Escala atualizada com sucesso.');
@@ -300,13 +269,9 @@ class EscalaTrabalhoController extends Controller
     {
         $escala->delete();
 
-        $params = ['clinic_id' => $escala->clinica_id];
-        if ($request->filled('view')) {
-            $params['view'] = $request->input('view');
-        }
-        if ($request->filled('week')) {
-            $params['week'] = $request->input('week');
-        }
+        $params = [
+            'clinic_id' => $escala->clinica_id,
+        ];
         if ($request->filled('month')) {
             $params['month'] = $request->input('month');
         }
@@ -317,103 +282,42 @@ class EscalaTrabalhoController extends Controller
 
     public function copy(Request $request)
     {
-        $view = $request->input('view', 'week');
-
-        if ($view === 'month') {
-            $data = $request->validate([
-                'clinic_id' => 'required|exists:clinicas,id',
-                'month' => 'required|date',
-                'source_month' => 'required|date',
-            ]);
-
-            $clinicId = $data['clinic_id'];
-            $targetMonth = Carbon::parse($data['month'])->startOfMonth();
-            $sourceMonth = Carbon::parse($data['source_month'])->startOfMonth();
-
-            $sourceStart = $sourceMonth->copy()->startOfWeek(Carbon::MONDAY);
-            if ($sourceStart->lt($sourceMonth)) {
-                $sourceStart->addWeek();
-            }
-            $sourceEnd = $sourceMonth->copy()->endOfMonth()->endOfWeek(Carbon::SUNDAY);
-
-            $targetStart = $targetMonth->copy()->startOfWeek(Carbon::MONDAY);
-            if ($targetStart->lt($targetMonth)) {
-                $targetStart->addWeek();
-            }
-
-            $sourceEscalas = EscalaTrabalho::where('clinica_id', $clinicId)
-                ->whereBetween('semana', [$sourceStart->toDateString(), $sourceEnd->toDateString()])
-                ->get();
-
-            foreach ($sourceEscalas as $escala) {
-                $diff = Carbon::parse($escala->semana)->diffInWeeks($sourceStart);
-                $newWeek = $targetStart->copy()->addWeeks($diff);
-                if ($newWeek->month !== $targetMonth->month) {
-                    continue;
-                }
-                $newWeek = $newWeek->toDateString();
-
-                $conflict = EscalaTrabalho::where('clinica_id', $clinicId)
-                    ->where('cadeira_id', $escala->cadeira_id)
-                    ->where('semana', $newWeek)
-                    ->where('dia_semana', $escala->dia_semana)
-                    ->where(function ($q) use ($escala) {
-                        $q->where('hora_inicio', '<', $escala->hora_fim)
-                          ->where('hora_fim', '>', $escala->hora_inicio);
-                    })->exists();
-
-                $conflictProf = EscalaTrabalho::where('clinica_id', $clinicId)
-                    ->where('profissional_id', $escala->profissional_id)
-                    ->where('semana', $newWeek)
-                    ->where('dia_semana', $escala->dia_semana)
-                    ->where(function ($q) use ($escala) {
-                        $q->where('hora_inicio', '<', $escala->hora_fim)
-                          ->where('hora_fim', '>', $escala->hora_inicio);
-                    })->exists();
-
-                if ($conflict || $conflictProf) {
-                    continue;
-                }
-
-                EscalaTrabalho::create([
-                    'clinica_id' => $clinicId,
-                    'cadeira_id' => $escala->cadeira_id,
-                    'profissional_id' => $escala->profissional_id,
-                    'semana' => $newWeek,
-                    'dia_semana' => $escala->dia_semana,
-                    'hora_inicio' => $escala->hora_inicio,
-                    'hora_fim' => $escala->hora_fim,
-                ]);
-            }
-
-            $params = [
-                'clinic_id' => $clinicId,
-                'view' => 'month',
-                'month' => $targetMonth->format('Y-m'),
-            ];
-
-            return redirect()->route('escalas.index', $params)
-                ->with('success', 'Escala copiada com sucesso.');
-        }
-
         $data = $request->validate([
             'clinic_id' => 'required|exists:clinicas,id',
-            'week' => 'required|date',
-            'source_week' => 'required|date',
+            'month' => 'required|date',
+            'source_month' => 'required|date',
         ]);
 
         $clinicId = $data['clinic_id'];
-        $targetWeek = Carbon::parse($data['week'])->startOfWeek(Carbon::MONDAY);
-        $sourceWeek = Carbon::parse($data['source_week'])->startOfWeek(Carbon::MONDAY);
+        $targetMonth = Carbon::parse($data['month'])->startOfMonth();
+        $sourceMonth = Carbon::parse($data['source_month'])->startOfMonth();
+
+        $sourceStart = $sourceMonth->copy()->startOfWeek(Carbon::MONDAY);
+        if ($sourceStart->lt($sourceMonth)) {
+            $sourceStart->addWeek();
+        }
+        $sourceEnd = $sourceMonth->copy()->endOfMonth()->endOfWeek(Carbon::SUNDAY);
+
+        $targetStart = $targetMonth->copy()->startOfWeek(Carbon::MONDAY);
+        if ($targetStart->lt($targetMonth)) {
+            $targetStart->addWeek();
+        }
 
         $sourceEscalas = EscalaTrabalho::where('clinica_id', $clinicId)
-            ->where('semana', $sourceWeek->toDateString())
+            ->whereBetween('semana', [$sourceStart->toDateString(), $sourceEnd->toDateString()])
             ->get();
 
         foreach ($sourceEscalas as $escala) {
+            $diff = Carbon::parse($escala->semana)->diffInWeeks($sourceStart);
+            $newWeek = $targetStart->copy()->addWeeks($diff);
+            if ($newWeek->month !== $targetMonth->month) {
+                continue;
+            }
+            $newWeek = $newWeek->toDateString();
+
             $conflict = EscalaTrabalho::where('clinica_id', $clinicId)
                 ->where('cadeira_id', $escala->cadeira_id)
-                ->where('semana', $targetWeek->toDateString())
+                ->where('semana', $newWeek)
                 ->where('dia_semana', $escala->dia_semana)
                 ->where(function ($q) use ($escala) {
                     $q->where('hora_inicio', '<', $escala->hora_fim)
@@ -422,7 +326,7 @@ class EscalaTrabalhoController extends Controller
 
             $conflictProf = EscalaTrabalho::where('clinica_id', $clinicId)
                 ->where('profissional_id', $escala->profissional_id)
-                ->where('semana', $targetWeek->toDateString())
+                ->where('semana', $newWeek)
                 ->where('dia_semana', $escala->dia_semana)
                 ->where(function ($q) use ($escala) {
                     $q->where('hora_inicio', '<', $escala->hora_fim)
@@ -437,7 +341,7 @@ class EscalaTrabalhoController extends Controller
                 'clinica_id' => $clinicId,
                 'cadeira_id' => $escala->cadeira_id,
                 'profissional_id' => $escala->profissional_id,
-                'semana' => $targetWeek->toDateString(),
+                'semana' => $newWeek,
                 'dia_semana' => $escala->dia_semana,
                 'hora_inicio' => $escala->hora_inicio,
                 'hora_fim' => $escala->hora_fim,
@@ -446,8 +350,7 @@ class EscalaTrabalhoController extends Controller
 
         $params = [
             'clinic_id' => $clinicId,
-            'view' => 'week',
-            'week' => $targetWeek->toDateString(),
+            'month' => $targetMonth->format('Y-m'),
         ];
 
         return redirect()->route('escalas.index', $params)
