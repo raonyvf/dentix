@@ -9,6 +9,7 @@ use App\Models\EscalaTrabalho;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class AgendamentoController extends Controller
 {
