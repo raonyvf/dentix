@@ -19,15 +19,15 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="flex h-screen bg-gray-100 overflow-hidden">
+<body class="flex h-screen bg-gray-100">
     @auth
         @unless(isset($hideNav) && $hideNav)
-            <aside :class="sidebarCollapsed ? 'w-20' : 'w-64'" class="h-full bg-white border-r shadow transition-all duration-300 overflow-y-auto">
+            <aside :class="sidebarCollapsed ? 'w-20' : 'w-64'" class="h-screen bg-white border-r shadow transition-all duration-300 overflow-y-auto">
                 @include('partials.sidebar')
             </aside>
         @endunless
     @endauth
-    <div class="flex flex-col flex-1 w-full h-full overflow-hidden">
+    <div class="flex flex-col flex-1 h-screen overflow-hidden min-h-0">
         @auth
             @unless(isset($hideNav) && $hideNav)
                 @include('partials.topbar')
