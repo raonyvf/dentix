@@ -53,15 +53,17 @@ class EscalaTrabalhoControllerTest extends TestCase
         $sourceMonth = Carbon::create(2025, 8, 1)->startOfMonth();
 
         $sourceStart = $sourceMonth->copy()->startOfWeek(Carbon::MONDAY);
+        if ($sourceStart->lt($sourceMonth)) {
+            $sourceStart->addWeek();
+        }
         $targetStart = $targetMonth->copy()->startOfWeek(Carbon::MONDAY);
         if ($targetStart->lt($targetMonth)) {
             $targetStart->addWeek();
         }
 
-        $diff = Carbon::parse('2025-07-28')->diffInWeeks($sourceStart);
+        $diff = Carbon::parse('2025-08-04')->diffInWeeks($sourceStart);
         $newWeek = $targetStart->copy()->addWeeks($diff);
 
-        $this->assertSame(6, $newWeek->month);
-        $this->assertGreaterThanOrEqual(1, $newWeek->day);
+        $this->assertSame('2025-06-02', $newWeek->toDateString());
     }
 }

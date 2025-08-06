@@ -331,6 +331,9 @@ class EscalaTrabalhoController extends Controller
             $sourceMonth = Carbon::parse($data['source_month'])->startOfMonth();
 
             $sourceStart = $sourceMonth->copy()->startOfWeek(Carbon::MONDAY);
+            if ($sourceStart->lt($sourceMonth)) {
+                $sourceStart->addWeek();
+            }
             $sourceEnd = $sourceMonth->copy()->endOfMonth()->endOfWeek(Carbon::SUNDAY);
 
             $targetStart = $targetMonth->copy()->startOfWeek(Carbon::MONDAY);
