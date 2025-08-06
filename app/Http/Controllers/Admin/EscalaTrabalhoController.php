@@ -332,7 +332,11 @@ class EscalaTrabalhoController extends Controller
 
             $sourceStart = $sourceMonth->copy()->startOfWeek(Carbon::MONDAY);
             $sourceEnd = $sourceMonth->copy()->endOfMonth()->endOfWeek(Carbon::SUNDAY);
-            $targetStart = $targetMonth->copy()->firstOfMonth(Carbon::MONDAY);
+
+            $targetStart = $targetMonth->copy()->startOfWeek(Carbon::MONDAY);
+            if ($targetStart->lt($targetMonth)) {
+                $targetStart->addWeek();
+            }
 
             $sourceEscalas = EscalaTrabalho::where('clinica_id', $clinicId)
                 ->whereBetween('semana', [$sourceStart->toDateString(), $sourceEnd->toDateString()])
@@ -340,7 +344,11 @@ class EscalaTrabalhoController extends Controller
 
             foreach ($sourceEscalas as $escala) {
                 $diff = Carbon::parse($escala->semana)->diffInWeeks($sourceStart);
-                $newWeek = $targetStart->copy()->addWeeks($diff)->toDateString();
+                $newWeek = $targetStart->copy()->addWeeks($diff);
+                if ($newWeek->month !== $targetMonth->month) {
+                    continue;
+                }
+                $newWeek = $newWeek->toDateString();
 
                 $conflict = EscalaTrabalho::where('clinica_id', $clinicId)
                     ->where('cadeira_id', $escala->cadeira_id)
