@@ -314,4 +314,132 @@ class EscalaTrabalhoController extends Controller
         return redirect()->route('escalas.index', $params)
             ->with('success', 'Escala excluída com sucesso.');
     }
+
+    public function copy(Request $request)
+    {
+        $view = $request->input('view', 'week');
+
+        if ($view === 'month') {
+            $data = $request->validate([
+                'clinic_id' => 'required|exists:clinicas,id',
+                'month' => 'required|date',
+                'source_month' => 'required|date',
+            ]);
+
+            $clinicId = $data['clinic_id'];
+            $targetMonth = Carbon::parse($data['month'])->startOfMonth();
+            $sourceMonth = Carbon::parse($data['source_month'])->startOfMonth();
+
+            $sourceStart = $sourceMonth->copy()->startOfWeek(Carbon::MONDAY);
+            $sourceEnd = $sourceMonth->copy()->endOfMonth()->endOfWeek(Carbon::SUNDAY);
+            $targetStart = $targetMonth->copy()->startOfWeek(Carbon::MONDAY);
+
+            $sourceEscalas = EscalaTrabalho::where('clinica_id', $clinicId)
+                ->whereBetween('semana', [$sourceStart->toDateString(), $sourceEnd->toDateString()])
+                ->get();
+
+            foreach ($sourceEscalas as $escala) {
+                $diff = Carbon::parse($escala->semana)->diffInWeeks($sourceStart);
+                $newWeek = $targetStart->copy()->addWeeks($diff)->toDateString();
+
+                $conflict = EscalaTrabalho::where('clinica_id', $clinicId)
+                    ->where('cadeira_id', $escala->cadeira_id)
+                    ->where('semana', $newWeek)
+                    ->where('dia_semana', $escala->dia_semana)
+                    ->where(function ($q) use ($escala) {
+                        $q->where('hora_inicio', '<', $escala->hora_fim)
+                          ->where('hora_fim', '>', $escala->hora_inicio);
+                    })->exists();
+
+                $conflictProf = EscalaTrabalho::where('clinica_id', $clinicId)
+                    ->where('profissional_id', $escala->profissional_id)
+                    ->where('semana', $newWeek)
+                    ->where('dia_semana', $escala->dia_semana)
+                    ->where(function ($q) use ($escala) {
+                        $q->where('hora_inicio', '<', $escala->hora_fim)
+                          ->where('hora_fim', '>', $escala->hora_inicio);
+                    })->exists();
+
+                if ($conflict || $conflictProf) {
+                    continue;
+                }
+
+                EscalaTrabalho::create([
+                    'clinica_id' => $clinicId,
+                    'cadeira_id' => $escala->cadeira_id,
+                    'profissional_id' => $escala->profissional_id,
+                    'semana' => $newWeek,
+                    'dia_semana' => $escala->dia_semana,
+                    'hora_inicio' => $escala->hora_inicio,
+                    'hora_fim' => $escala->hora_fim,
+                ]);
+            }
+
+            $params = [
+                'clinic_id' => $clinicId,
+                'view' => 'month',
+                'month' => $targetMonth->format('Y-m'),
+            ];
+
+            return redirect()->route('escalas.index', $params)
+                ->with('success', 'Escala copiada com sucesso.');
+        }
+
+        $data = $request->validate([
+            'clinic_id' => 'required|exists:clinicas,id',
+            'week' => 'required|date',
+            'source_week' => 'required|date',
+        ]);
+
+        $clinicId = $data['clinic_id'];
+        $targetWeek = Carbon::parse($data['week'])->startOfWeek(Carbon::MONDAY);
+        $sourceWeek = Carbon::parse($data['source_week'])->startOfWeek(Carbon::MONDAY);
+
+        $sourceEscalas = EscalaTrabalho::where('clinica_id', $clinicId)
+            ->where('semana', $sourceWeek->toDateString())
+            ->get();
+
+        foreach ($sourceEscalas as $escala) {
+            $conflict = EscalaTrabalho::where('clinica_id', $clinicId)
+                ->where('cadeira_id', $escala->cadeira_id)
+                ->where('semana', $targetWeek->toDateString())
+                ->where('dia_semana', $escala->dia_semana)
+                ->where(function ($q) use ($escala) {
+                    $q->where('hora_inicio', '<', $escala->hora_fim)
+                      ->where('hora_fim', '>', $escala->hora_inicio);
+                })->exists();
+
+            $conflictProf = EscalaTrabalho::where('clinica_id', $clinicId)
+                ->where('profissional_id', $escala->profissional_id)
+                ->where('semana', $targetWeek->toDateString())
+                ->where('dia_semana', $escala->dia_semana)
+                ->where(function ($q) use ($escala) {
+                    $q->where('hora_inicio', '<', $escala->hora_fim)
+                      ->where('hora_fim', '>', $escala->hora_inicio);
+                })->exists();
+
+            if ($conflict || $conflictProf) {
+                continue;
+            }
+
+            EscalaTrabalho::create([
+                'clinica_id' => $clinicId,
+                'cadeira_id' => $escala->cadeira_id,
+                'profissional_id' => $escala->profissional_id,
+                'semana' => $targetWeek->toDateString(),
+                'dia_semana' => $escala->dia_semana,
+                'hora_inicio' => $escala->hora_inicio,
+                'hora_fim' => $escala->hora_fim,
+            ]);
+        }
+
+        $params = [
+            'clinic_id' => $clinicId,
+            'view' => 'week',
+            'week' => $targetWeek->toDateString(),
+        ];
+
+        return redirect()->route('escalas.index', $params)
+            ->with('success', 'Escala copiada com sucesso.');
+    }
 }
