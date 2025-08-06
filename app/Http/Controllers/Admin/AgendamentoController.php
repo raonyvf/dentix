@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Agendamento;
 use App\Models\Clinic;
+use App\Models\EscalaTrabalho;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -14,20 +15,8 @@ class AgendamentoController extends Controller
     public function index(Request $request)
     {
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
-        $professionals = [];
-        if ($clinicId) {
-            $clinic = Clinic::with(['profissionais.pessoa'])->find($clinicId);
-            if ($clinic) {
-                $professionals = $clinic->profissionais->map(function ($prof) {
-                    $gender = $prof->pessoa->sexo ?? null;
-                    $prefix = $gender === 'Masculino' ? 'Dr. ' : ($gender === 'Feminino' ? 'Dra. ' : '');
-                    return [
-                        'id' => $prof->id,
-                        'name' => $prefix . ($prof->pessoa->primeiro_nome ?? ''),
-                    ];
-                })->toArray();
-            }
-        }
+        $date = $request->query('date', Carbon::today()->format('Y-m-d'));
+        $professionals = $clinicId ? $this->professionalsForDate($clinicId, $date) : [];
 
         $horarios = [];
         $startTime = Carbon::createFromTime(0, 0);
@@ -36,19 +25,16 @@ class AgendamentoController extends Controller
             $horarios[] = $time->format('H:i');
         }
 
-        $date = $request->query('date', Carbon::today()->format('Y-m-d'));
         $agenda = [];
-        if ($clinicId) {
-          
-            $agendamentos = Agendamento::with(['paciente.pessoa'])
-                ->where('clinica_id', $clinicId)
-                ->whereDate('data', $date)
-                ->get();
+        if ($clinicId && $professionals) {
+            $profIds = array_column($professionals, 'id');
+
             $cacheKey = "agendamentos_{$clinicId}_{$date}";
-            $agendamentos = Cache::remember($cacheKey, 60, function () use ($clinicId, $date) {
+            $agendamentos = Cache::remember($cacheKey, 60, function () use ($clinicId, $date, $profIds) {
                 return Agendamento::with(['paciente.pessoa'])
                     ->where('clinica_id', $clinicId)
                     ->whereDate('data', $date)
+                    ->whereIn('profissional_id', $profIds)
                     ->get();
             });
 
@@ -63,7 +49,65 @@ class AgendamentoController extends Controller
             }
         }
 
-        return view('agendamentos.index', compact('professionals', 'horarios', 'agenda'));
+        return view('agendamentos.index', compact('professionals', 'horarios', 'agenda', 'date'));
+    }
+
+    protected function professionalsForDate(int $clinicId, string $date): array
+    {
+        $carbon = Carbon::parse($date);
+        $weekStart = $carbon->copy()->startOfWeek(Carbon::MONDAY)->toDateString();
+        $day = $carbon->isoWeekday();
+
+        $escalas = EscalaTrabalho::with(['profissional.pessoa'])
+            ->where('clinica_id', $clinicId)
+            ->where('semana', $weekStart)
+            ->where('dia_semana', $day)
+            ->get();
+
+        return $escalas->pluck('profissional')->unique('id')->map(function ($prof) {
+            $gender = $prof->pessoa->sexo ?? null;
+            $prefix = $gender === 'Masculino' ? 'Dr. ' : ($gender === 'Feminino' ? 'Dra. ' : '');
+            return [
+                'id' => $prof->id,
+                'name' => $prefix . ($prof->pessoa->primeiro_nome ?? ''),
+            ];
+        })->values()->toArray();
+    }
+
+    public function professionals(Request $request)
+    {
+        $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
+        $date = $request->query('date');
+
+        if (! $clinicId || ! $date) {
+            return response()->json(['professionals' => [], 'agenda' => []]);
+        }
+
+        $professionals = $this->professionalsForDate($clinicId, $date);
+        $agenda = [];
+
+        if ($professionals) {
+            $profIds = array_column($professionals, 'id');
+            $agendamentos = Agendamento::with(['paciente.pessoa'])
+                ->where('clinica_id', $clinicId)
+                ->whereDate('data', $date)
+                ->whereIn('profissional_id', $profIds)
+                ->get();
+            foreach ($agendamentos as $ag) {
+                $pessoa = optional($ag->paciente)->pessoa;
+                $agenda[$ag->profissional_id][$ag->hora_inicio] = [
+                    'paciente' => $pessoa ? trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')) : '',
+                    'tipo' => $ag->tipo ?? '',
+                    'contato' => $ag->contato ?? '',
+                    'status' => $ag->status ?? 'confirmado',
+                ];
+            }
+        }
+
+        return response()->json([
+            'professionals' => $professionals,
+            'agenda' => $agenda,
+        ]);
     }
 
     public function store(Request $request)
