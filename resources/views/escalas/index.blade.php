@@ -69,9 +69,13 @@
                         <th class="w-32 px-2 py-1 bg-white font-semibold border border-gray-200">Cadeira</th>
                         @php $weekStart = $w; @endphp
                         @foreach($dias as $d)
-                            <th class="px-2 py-1 text-center font-semibold bg-white capitalize border border-gray-200" style="width:14.28%">
+                            @php
+                                $date = $weekStart->copy()->addDays($loop->index);
+                                $outMonth = !$date->isSameMonth($month);
+                            @endphp
+                            <th class="px-2 py-1 text-center font-semibold capitalize border border-gray-200 {{ $outMonth ? 'bg-gray-100 text-gray-500' : 'bg-white' }}" style="width:14.28%">
                                 {{ ucfirst($d->toName()) }}<br>
-                                <span class="text-xs text-gray-500">{{ $weekStart->copy()->addDays($loop->index)->format('d/m') }}</span>
+                                <span class="text-xs {{ $outMonth ? 'text-gray-400' : 'text-gray-500' }}">{{ $date->format('d/m') }}</span>
                             </th>
                         @endforeach
                     </tr>
@@ -82,13 +86,15 @@
                             <td class="w-32 px-2 py-1 font-semibold bg-gray-50 border border-gray-200">{{ $cadeira->nome }}</td>
                             @foreach($dias as $d)
                                 @php
+                                    $date = $w->copy()->addDays($loop->index);
+                                    $outMonth = !$date->isSameMonth($month);
                                     $items = collect(data_get($escalas, $w->toDateString().'.'.$cadeira->id.'.'.$d->value, []))->sortBy('hora_inicio');
                                 @endphp
-                                <td class="px-2 py-2 border border-gray-200 align-top space-y-2" style="width:14.28%">
+                                <td class="px-2 py-2 border border-gray-200 align-top space-y-2 {{ $outMonth ? 'bg-gray-100 text-gray-500' : '' }}" style="width:14.28%">
                                     @forelse($items as $it)
-                                        @include('escalas.partials.card', ['it' => $it, 'clinic' => $clinic, 'diaSemana' => $d->value])
+                                        @include('escalas.partials.card', ['it' => $it, 'clinic' => $clinic, 'diaSemana' => $d->value, 'out' => $outMonth])
                                     @empty
-                                        <span class="text-sm text-gray-400">Livre</span>
+                                        <span class="text-sm {{ $outMonth ? 'text-gray-500' : 'text-gray-400' }}">Livre</span>
                                     @endforelse
                                 </td>
                             @endforeach
@@ -106,9 +112,13 @@
                     <th class="w-32 px-2 py-1 bg-white font-semibold border border-gray-200">Cadeira</th>
                     @php $weekStart = $week; @endphp
                     @foreach($dias as $d)
-                        <th class="px-2 py-1 text-center font-semibold bg-white capitalize border border-gray-200" style="width:14.28%">
+                        @php
+                            $date = $weekStart->copy()->addDays($loop->index);
+                            $outMonth = !$date->isSameMonth($week);
+                        @endphp
+                        <th class="px-2 py-1 text-center font-semibold capitalize border border-gray-200 {{ $outMonth ? 'bg-gray-100 text-gray-500' : 'bg-white' }}" style="width:14.28%">
                             {{ ucfirst($d->toName()) }}<br>
-                            <span class="text-xs text-gray-500">{{ $weekStart->copy()->addDays($loop->index)->format('d/m') }}</span>
+                            <span class="text-xs {{ $outMonth ? 'text-gray-400' : 'text-gray-500' }}">{{ $date->format('d/m') }}</span>
                         </th>
                     @endforeach
                 </tr>
@@ -119,13 +129,15 @@
                         <td class="w-32 px-2 py-1 font-semibold bg-gray-50 border border-gray-200">{{ $cadeira->nome }}</td>
                         @foreach($dias as $d)
                             @php
+                                $date = $weekStart->copy()->addDays($loop->index);
+                                $outMonth = !$date->isSameMonth($week);
                                 $items = collect(data_get($escalas, $cadeira->id.'.'.$d->value, []))->sortBy('hora_inicio');
                             @endphp
-                            <td class="px-2 py-2 border border-gray-200 align-top space-y-2" style="width:14.28%">
+                            <td class="px-2 py-2 border border-gray-200 align-top space-y-2 {{ $outMonth ? 'bg-gray-100 text-gray-500' : '' }}" style="width:14.28%">
                                 @forelse($items as $it)
-                                    @include('escalas.partials.card', ['it' => $it, 'clinic' => $clinic, 'diaSemana' => $d->value])
+                                    @include('escalas.partials.card', ['it' => $it, 'clinic' => $clinic, 'diaSemana' => $d->value, 'out' => $outMonth])
                                 @empty
-                                    <span class="text-sm text-gray-400">Livre</span>
+                                    <span class="text-sm {{ $outMonth ? 'text-gray-500' : 'text-gray-400' }}">Livre</span>
                                 @endforelse
                             </td>
                         @endforeach
