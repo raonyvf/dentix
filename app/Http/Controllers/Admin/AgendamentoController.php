@@ -9,7 +9,6 @@ use App\Models\EscalaTrabalho;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 class AgendamentoController extends Controller
 {
@@ -60,22 +59,19 @@ class AgendamentoController extends Controller
         $weekEnd = $carbon->copy()->endOfWeek(Carbon::SUNDAY)->toDateString();
         $day = $carbon->isoWeekday();
 
-        $escalas = EscalaTrabalho::with(['profissional.pessoa', 'profissional.user'])
-            ->where('clinica_id', $clinicId)
+        $profissionalIds = EscalaTrabalho::where('clinica_id', $clinicId)
             ->whereBetween('semana', [$weekStart, $weekEnd])
             ->where('dia_semana', $day)
+            ->get()
+            ->pluck('profissional_id')
+            ->unique()
+            ->toArray();
+
+        $profissionais = \App\Models\Profissional::with('pessoa')
+            ->whereIn('id', $profissionalIds)
             ->get();
 
-        return $escalas->pluck('profissional')
-            ->filter(function ($prof) {
-                $funcao = Str::lower($prof->funcao ?? '');
-                $cargo = Str::lower($prof->cargo ?? '');
-                $especialidade = $prof->user->especialidade ?? null;
-                return Str::contains($funcao, 'dentista')
-                    || Str::contains($cargo, 'dentista')
-                    || ! is_null($especialidade);
-            })
-            ->unique('id')
+        return $profissionais
             ->map(function ($prof) {
                 $gender = $prof->pessoa->sexo ?? null;
                 $prefix = $gender === 'Masculino' ? 'Dr. ' : ($gender === 'Feminino' ? 'Dra. ' : '');
