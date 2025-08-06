@@ -332,7 +332,7 @@ class EscalaTrabalhoController extends Controller
 
             $sourceStart = $sourceMonth->copy()->startOfWeek(Carbon::MONDAY);
             $sourceEnd = $sourceMonth->copy()->endOfMonth()->endOfWeek(Carbon::SUNDAY);
-            $targetStart = $targetMonth->copy()->startOfWeek(Carbon::MONDAY);
+            $targetStart = $targetMonth->copy()->firstOfMonth(Carbon::MONDAY);
 
             $sourceEscalas = EscalaTrabalho::where('clinica_id', $clinicId)
                 ->whereBetween('semana', [$sourceStart->toDateString(), $sourceEnd->toDateString()])
