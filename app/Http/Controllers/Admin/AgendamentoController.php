@@ -57,16 +57,24 @@ class AgendamentoController extends Controller
     {
         $carbon = Carbon::parse($date);
         $weekStart = $carbon->copy()->startOfWeek(Carbon::MONDAY)->toDateString();
+        $weekEnd = $carbon->copy()->endOfWeek(Carbon::SUNDAY)->toDateString();
         $day = $carbon->isoWeekday();
 
         $escalas = EscalaTrabalho::with(['profissional.pessoa', 'profissional.user'])
             ->where('clinica_id', $clinicId)
-            ->where('semana', $weekStart)
+            ->whereBetween('semana', [$weekStart, $weekEnd])
             ->where('dia_semana', $day)
             ->get();
 
         return $escalas->pluck('profissional')
-            ->filter()
+            ->filter(function ($prof) {
+                $funcao = Str::lower($prof->funcao ?? '');
+                $cargo = Str::lower($prof->cargo ?? '');
+                $especialidade = $prof->user->especialidade ?? null;
+                return Str::contains($funcao, 'dentista')
+                    || Str::contains($cargo, 'dentista')
+                    || ! is_null($especialidade);
+            })
             ->unique('id')
             ->map(function ($prof) {
                 $gender = $prof->pessoa->sexo ?? null;
