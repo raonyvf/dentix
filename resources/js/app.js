@@ -71,7 +71,11 @@ window.agendaCalendar = function agendaCalendar() {
                 this.selectedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
             }
             this.days = buildDays(this.selectedDate);
-            this.fetchHorarios(this.selectedDate);
+            this.fetchProfessionals(this.selectedDate).then(profs => {
+                if (profs && profs.length) {
+                    this.fetchHorarios(this.selectedDate);
+                }
+            });
         },
         prevWeek() {
             start.setDate(start.getDate() - 7);
@@ -98,7 +102,11 @@ window.agendaCalendar = function agendaCalendar() {
         selectDay(date) {
             this.selectedDate = date;
             this.days = buildDays(this.selectedDate);
-            this.fetchProfessionals(date).then(() => this.fetchHorarios(date));
+            this.fetchProfessionals(date).then(profs => {
+                if (profs && profs.length) {
+                    this.fetchHorarios(date);
+                }
+            });
         },
         fetchHorarios(date) {
             if (!this.horariosUrl) return;
@@ -123,11 +131,12 @@ window.agendaCalendar = function agendaCalendar() {
                 });
         },
         fetchProfessionals(date) {
-            if (!this.professionalsUrl) return Promise.resolve();
+            if (!this.professionalsUrl) return Promise.resolve([]);
             return fetch(`${this.professionalsUrl}?date=${date}`)
                 .then(r => r.json())
                 .then(data => {
                     window.renderSchedule(data.professionals, data.agenda, this.baseTimes);
+                    return data.professionals;
                 });
         },
     };
