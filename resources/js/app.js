@@ -171,26 +171,44 @@ window.updateScheduleTable = function(openTimes, start, end, closed) {
     });
 };
 
-window.renderSchedule = function(professionals, agenda, baseTimes) {
+window.renderSchedule = function (professionals, agenda, baseTimes) {
     const bar = document.getElementById('professionals-bar');
     const table = document.getElementById('schedule-table');
     const emptyMsg = document.getElementById('schedule-empty');
+    const hasProfessionals = professionals.length > 0;
+
     if (bar) {
         bar.innerHTML = '';
-        if (professionals.length > 0) {
-            bar.insertAdjacentHTML('beforeend', '<button class="px-4 py-2 rounded border text-sm whitespace-nowrap bg-primary text-white">Todos os Profissionais</button>');
+        if (hasProfessionals) {
+            bar.insertAdjacentHTML(
+                'beforeend',
+                '<button class="px-4 py-2 rounded border text-sm whitespace-nowrap bg-primary text-white">Todos os Profissionais</button>'
+            );
             professionals.forEach(p => {
-                bar.insertAdjacentHTML('beforeend', `<button class="px-4 py-2 rounded border text-sm whitespace-nowrap bg-white text-gray-700" data-professional="${p.id}">${p.name}</button>`);
+                bar.insertAdjacentHTML(
+                    'beforeend',
+                    `<button class="px-4 py-2 rounded border text-sm whitespace-nowrap bg-white text-gray-700" data-professional="${p.id}">${p.name}</button>`
+                );
             });
         }
     }
+
+    if (!hasProfessionals) {
+        if (table) table.classList.add('hidden');
+        if (emptyMsg) emptyMsg.classList.remove('hidden');
+        return;
+    }
+
     if (table) {
         const theadRow = table.querySelector('thead tr');
         const tbody = table.querySelector('tbody');
         if (theadRow) {
             theadRow.innerHTML = '<th class="p-2 bg-gray-50 w-24 min-w-[6rem]"></th>';
             professionals.forEach(p => {
-                theadRow.insertAdjacentHTML('beforeend', `<th class="p-2 bg-gray-50 text-left whitespace-nowrap">${p.name}</th>`);
+                theadRow.insertAdjacentHTML(
+                    'beforeend',
+                    `<th class="p-2 bg-gray-50 text-left whitespace-nowrap">${p.name}</th>`
+                );
             });
         }
         if (tbody) {
@@ -212,14 +230,10 @@ window.renderSchedule = function(professionals, agenda, baseTimes) {
                 tbody.insertAdjacentHTML('beforeend', row);
             });
         }
+        table.classList.remove('hidden');
     }
-    if (professionals.length === 0) {
-        if (table) table.classList.add('hidden');
-        if (emptyMsg) emptyMsg.classList.remove('hidden');
-    } else {
-        if (table) table.classList.remove('hidden');
-        if (emptyMsg) emptyMsg.classList.add('hidden');
-    }
+
+    if (emptyMsg) emptyMsg.classList.add('hidden');
 };
 
 
