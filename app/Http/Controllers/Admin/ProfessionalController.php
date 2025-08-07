@@ -102,6 +102,7 @@ class ProfessionalController extends Controller
         $profissional->clinics()->sync($request->input('clinics', []));
 
         $this->saveWorkSchedules($profissional, $request->input('horarios_trabalho', []));
+        $this->saveCommissions($profissional, $request->input('comissoes', []));
 
         return redirect()->route('profissionais.index')->with('success', 'Profissional salvo com sucesso.');
     }
@@ -140,6 +141,7 @@ class ProfessionalController extends Controller
         $profissional->update($this->extractProfessionalData($data));
         $profissional->clinics()->sync($request->input('clinics', []));
         $this->saveWorkSchedules($profissional, $request->input('horarios_trabalho', []), true);
+        $this->saveCommissions($profissional, $request->input('comissoes', []), true);
         return redirect()->route('profissionais.index')->with('success', 'Profissional atualizado com sucesso.');
     }
 
@@ -194,8 +196,8 @@ class ProfessionalController extends Controller
             'chave_pix' => 'nullable',
             'horarios_trabalho' => 'array',
             'comissoes' => 'array',
-            'comissoes.*.comissao' => 'nullable|digits_between:1,2',
-            'comissoes.*.protese' => 'nullable|digits_between:1,2',
+            'comissoes.*.comissao' => 'nullable|numeric',
+            'comissoes.*.protese' => 'nullable|numeric',
             'clinics' => 'required|array|min:1',
             'clinics.*' => 'exists:clinicas,id',
         ];
@@ -298,7 +300,6 @@ class ProfessionalController extends Controller
                 ? str_replace(',', '.', preg_replace('/(?<=\\d)\.(?=\d{3}(?:\D|$))/', '', $data['salario_fixo']))
                 : null,
             'salario_periodo' => $data['salario_periodo'] ?? null,
-            'comissoes' => $data['comissoes'] ?? null,
             'conta' => $data['conta'] ?? null,
             'chave_pix' => $data['chave_pix'] ?? null,
         ];
@@ -320,6 +321,23 @@ class ProfessionalController extends Controller
                         'hora_fim' => $horario['fim'],
                     ]);
                 }
+            }
+        }
+    }
+
+    private function saveCommissions(Profissional $profissional, array $data, bool $replace = false): void
+    {
+        if ($replace) {
+            $profissional->comissoes()->delete();
+        }
+
+        foreach ($data as $clinicId => $vals) {
+            if (($vals['comissao'] ?? null) !== null || ($vals['protese'] ?? null) !== null) {
+                $profissional->comissoes()->create([
+                    'clinica_id' => $clinicId,
+                    'comissao' => $vals['comissao'] ?? null,
+                    'protese' => $vals['protese'] ?? null,
+                ]);
             }
         }
     }

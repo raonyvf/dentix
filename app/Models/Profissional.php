@@ -6,6 +6,7 @@ use App\Traits\BelongsToOrganization;
 use App\Models\Pessoa;
 use App\Models\Usuario;
 use App\Models\ProfissionalHorario;
+use App\Models\ProfissionalComissao;
 
 class Profissional extends Model
 {
@@ -35,7 +36,6 @@ class Profissional extends Model
         'cro_uf',
         'salario_fixo',
         'salario_periodo',
-        'comissoes',
         'conta',
         'chave_pix',
     ];
@@ -47,7 +47,6 @@ class Profissional extends Model
         'data_fim_contrato' => 'date',
         'total_horas_semanais' => 'integer',
         'salario_fixo' => 'decimal:2',
-        'comissoes' => 'array',
         'conta' => 'array',
     ];
 
@@ -84,5 +83,10 @@ class Profissional extends Model
     public function clinics()
     {
         return $this->belongsToMany(Clinic::class, 'clinica_profissional', 'profissional_id', 'clinica_id')->withTimestamps();
+    }
+
+    public function comissoes()
+    {
+        return $this->hasMany(ProfissionalComissao::class);
     }
 }
