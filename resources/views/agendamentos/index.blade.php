@@ -89,6 +89,7 @@
 <div id="schedule-modal" data-time="" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
     <div class="bg-white rounded p-4 w-[32rem]">
         <h2 class="text-lg font-semibold mb-2">Agendar Horário</h2>
+        <p id="schedule-summary" class="text-sm text-gray-600 mb-4"></p>
         <div class="flex gap-2 mb-4">
             <label class="block flex-1">
                 <span class="text-sm">Início</span>
@@ -101,6 +102,8 @@
         </div>
         <input type="hidden" id="hora_inicio" name="hora_inicio">
         <input type="hidden" id="hora_fim" name="hora_fim">
+        <input type="hidden" id="schedule-professional">
+        <input type="hidden" id="schedule-date">
         <label class="block mb-4">
             <span class="text-sm">Paciente</span>
             <input id="schedule-paciente" type="text" list="schedule-paciente-list" placeholder="Buscar..." data-search-url="{{ route('pacientes.search') }}" class="mt-1 w-full border rounded p-1" />
