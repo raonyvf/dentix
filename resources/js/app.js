@@ -517,14 +517,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const openModal = () => {
             const root = document.querySelector('[x-data]');
             const date = root?.__x?.$data?.selectedDate || '';
+
+            // ensure times are filled – default end is start + 30min
+            if (selection.start && !selection.end) {
+                selection.end = addMinutes(selection.start, 30);
+            }
+            if (startInput) startInput.value = selection.start || '';
+            if (endInput) endInput.value = selection.end || '';
+            if (hiddenStart) hiddenStart.value = startInput.value;
+            if (hiddenEnd) hiddenEnd.value = endInput.value;
+
+            if (professionalInput) {
+                professionalInput.value = selection.professional || '';
+            }
             if (dateInput) dateInput.value = date;
-            if (professionalInput && selection.professional) professionalInput.value = selection.professional;
+
             if (summary) {
                 const th = document.querySelector(`#schedule-table thead th[data-professional="${selection.professional}"]`);
                 const profName = th ? th.textContent.trim() : '';
                 summary.textContent = `${profName} - ${date}`;
             }
-            scheduleModal.dataset.time = selection.start;
+
+            scheduleModal.dataset.time = selection.start || '';
             scheduleModal.classList.remove('hidden');
         };
 
@@ -535,24 +549,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 td.addEventListener('mousedown', e => {
                     if (e.button !== 0) return;
-                    const time = td.dataset.time;
-                    const prof = td.dataset.professional;
+                    const cell = e.currentTarget;
+                    const time = cell.dataset.time;
+                    const prof = cell.dataset.professional;
                     if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
                     dragging = true;
                     suppressClick = true;
                     selectRange(prof, time, time);
                 });
 
-                td.addEventListener('mouseenter', () => {
-                    if (!dragging || td.dataset.professional !== selection.professional) return;
-                    const time = td.dataset.time;
+                td.addEventListener('mouseenter', e => {
+                    if (!dragging) return;
+                    const cell = e.currentTarget;
+                    if (cell.dataset.professional !== selection.professional) return;
+                    const time = cell.dataset.time;
                     if (toMinutes(time) < toMinutes(selection.start)) return;
                     selectRange(selection.professional, selection.start, time);
                 });
 
-                td.addEventListener('dblclick', () => {
-                    const start = td.dataset.time;
-                    const prof = td.dataset.professional;
+                td.addEventListener('dblclick', e => {
+                    const cell = e.currentTarget;
+                    const start = cell.dataset.time;
+                    const prof = cell.dataset.professional;
                     const end = addMinutes(start, 30);
                     if (!selectRange(prof, start, end)) return;
                     suppressClick = true;
@@ -562,14 +580,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 td.addEventListener('click', e => {
                     if (suppressClick || e.detail > 1) return;
-                    const time = td.dataset.time;
-                    const prof = td.dataset.professional;
+                    const cell = e.currentTarget;
+                    const time = cell.dataset.time;
+                    const prof = cell.dataset.professional;
 
                     if (!selection.start) {
                         if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
                         selection.start = time;
                         selection.professional = prof;
-                        td.classList.add('selected', 'bg-blue-100');
+                        cell.classList.add('selected', 'bg-blue-100');
                         if (hiddenStart) hiddenStart.value = time;
                         return;
                     }
@@ -580,7 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
                             selection.start = time;
                             selection.professional = prof;
-                            td.classList.add('selected', 'bg-blue-100');
+                            cell.classList.add('selected', 'bg-blue-100');
                             if (hiddenStart) hiddenStart.value = time;
                             return;
                         }
@@ -594,7 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
                         selection.start = time;
                         selection.professional = prof;
-                        td.classList.add('selected', 'bg-blue-100');
+                        cell.classList.add('selected', 'bg-blue-100');
                         if (hiddenStart) hiddenStart.value = time;
                     }
                 });
