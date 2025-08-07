@@ -165,7 +165,22 @@ namespace App\Models {
             return new self;
         }
 
+        public function join($table, $first, $operator, $second)
+        {
+            return $this;
+        }
+
+        public function where($field, $value)
+        {
+            return $this;
+        }
+
         public function whereIn($field, $values)
+        {
+            return $this;
+        }
+
+        public function distinct($field)
         {
             return $this;
         }

@@ -177,10 +177,12 @@ window.renderSchedule = function(professionals, agenda, baseTimes) {
     const emptyMsg = document.getElementById('schedule-empty');
     if (bar) {
         bar.innerHTML = '';
-        bar.insertAdjacentHTML('beforeend', '<button class="px-4 py-2 rounded border text-sm whitespace-nowrap bg-primary text-white">Todos os Profissionais</button>');
-        professionals.forEach(p => {
-            bar.insertAdjacentHTML('beforeend', `<button class="px-4 py-2 rounded border text-sm whitespace-nowrap bg-white text-gray-700" data-professional="${p.id}">${p.name}</button>`);
-        });
+        if (professionals.length > 0) {
+            bar.insertAdjacentHTML('beforeend', '<button class="px-4 py-2 rounded border text-sm whitespace-nowrap bg-primary text-white">Todos os Profissionais</button>');
+            professionals.forEach(p => {
+                bar.insertAdjacentHTML('beforeend', `<button class="px-4 py-2 rounded border text-sm whitespace-nowrap bg-white text-gray-700" data-professional="${p.id}">${p.name}</button>`);
+            });
+        }
     }
     if (table) {
         const theadRow = table.querySelector('thead tr');
