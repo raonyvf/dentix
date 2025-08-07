@@ -294,7 +294,9 @@ class ProfessionalController extends Controller
             'cargo' => $data['cargo'] ?? null,
             'cro' => $data['cro'] ?? null,
             'cro_uf' => $data['cro_uf'] ?? null,
-            'salario_fixo' => isset($data['salario_fixo']) ? str_replace(',', '.', str_replace('.', '', $data['salario_fixo'])) : null,
+            'salario_fixo' => isset($data['salario_fixo'])
+                ? str_replace(',', '.', preg_replace('/(?<=\\d)\.(?=\d{3}(?:\D|$))/', '', $data['salario_fixo']))
+                : null,
             'salario_periodo' => $data['salario_periodo'] ?? null,
             'comissoes' => $data['comissoes'] ?? null,
             'conta' => $data['conta'] ?? null,
