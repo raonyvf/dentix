@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Agendamento;
-use App\Models\Clinic;
-use App\Models\EscalaTrabalho;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -31,8 +29,7 @@ class AgendamentoController extends Controller
 
             $cacheKey = "agendamentos_{$clinicId}_{$date}";
             $agendamentos = Cache::remember($cacheKey, 60, function () use ($clinicId, $date, $profIds) {
-                return Agendamento::with(['paciente.pessoa'])
-                    ->where('clinica_id', $clinicId)
+@@ -36,61 +34,57 @@ class AgendamentoController extends Controller
                     ->whereDate('data', $date)
                     ->whereIn('profissional_id', $profIds)
                     ->get();
@@ -58,17 +55,13 @@ class AgendamentoController extends Controller
         $weekStart = $carbon->copy()->startOfWeek(Carbon::MONDAY)->toDateString();
         $day = $carbon->isoWeekday();
 
-        $profissionalIds = EscalaTrabalho::where('clinica_id', $clinicId)
-            ->whereDate('semana', $weekStart)
-            ->where('dia_semana', $day)
-            ->distinct('profissional_id')
-            ->pluck('profissional_id')
-            ->toArray();
-
         $profissionais = \App\Models\Profissional::with('pessoa')
+            ->join('escalas_trabalho', 'profissionais.id', '=', 'escalas_trabalho.profissional_id')
             ->join('clinica_profissional', 'profissionais.id', '=', 'clinica_profissional.profissional_id')
+            ->where('escalas_trabalho.clinica_id', $clinicId)
             ->where('clinica_profissional.clinica_id', $clinicId)
-            ->whereIn('profissionais.id', $profissionalIds)
+            ->whereDate('escalas_trabalho.semana', $weekStart)
+            ->where('escalas_trabalho.dia_semana', $day)
             ->distinct('profissionais.id')
             ->get();
 
