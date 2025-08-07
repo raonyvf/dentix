@@ -9,6 +9,7 @@ use App\Traits\BelongsToOrganization;
 use App\Models\Organization;
 use App\Models\ClinicaUsuario;
 use App\Models\Profissional;
+use App\Models\ProfissionalComissao;
 
 class Clinic extends Model
 {
@@ -63,5 +64,10 @@ class Clinic extends Model
     public function profissionais()
     {
         return $this->belongsToMany(Profissional::class, 'clinica_profissional', 'clinica_id', 'profissional_id')->withTimestamps();
+    }
+
+    public function profissionalComissoes()
+    {
+        return $this->hasMany(ProfissionalComissao::class, 'clinica_id');
     }
 }

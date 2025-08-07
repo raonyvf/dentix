@@ -31,17 +31,17 @@
             </div>
             <div class="space-y-4">
                 @foreach($clinics as $clinic)
-                    @php $vals = $profissional->comissoes[$clinic->id] ?? []; @endphp
+                    @php $comissao = $profissional->comissoes->firstWhere('clinica_id', $clinic->id); @endphp
                     <div class="p-4 bg-gray-50 border rounded">
                         <h4 class="text-sm font-medium text-gray-700 mb-2">{{ $clinic->nome }}</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <span class="text-sm font-medium text-gray-700 mb-2 block">% de comissão</span>
-                                <p class="text-gray-900">{{ $vals['comissao'] ?? '-' }}</p>
+                                <p class="text-gray-900">{{ $comissao->comissao ?? '-' }}</p>
                             </div>
                             <div>
                                 <span class="text-sm font-medium text-gray-700 mb-2 block">% prótese</span>
-                                <p class="text-gray-900">{{ $vals['protese'] ?? '-' }}</p>
+                                <p class="text-gray-900">{{ $comissao->protese ?? '-' }}</p>
                             </div>
                         </div>
                     </div>

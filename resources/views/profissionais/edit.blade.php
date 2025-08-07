@@ -252,18 +252,18 @@
             <div class="space-y-4 mt-4">
                 @foreach($clinics as $clinic)
                     @php
-                        $vals = $profissional->comissoes[$clinic->id] ?? [];
+                        $comissao = $profissional->comissoes->firstWhere('clinica_id', $clinic->id);
                     @endphp
                     <div class="p-4 bg-gray-50 border rounded" x-show="selectedClinics.includes('{{ $clinic->id }}')" x-cloak>
                         <h4 class="text-sm font-medium text-gray-700 mb-2">{{ $clinic->nome }}</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="text-sm font-medium text-gray-700 mb-2 block">% de comissão</label>
-                                <input type="number" step="0.01" min="0" max="100" name="comissoes[{{ $clinic->id }}][comissao]" value="{{ old('comissoes.' . $clinic->id . '.comissao', $vals['comissao'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                                <input type="number" step="0.01" min="0" max="100" name="comissoes[{{ $clinic->id }}][comissao]" value="{{ old('comissoes.' . $clinic->id . '.comissao', $comissao->comissao ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                             </div>
                             <div>
                                 <label class="text-sm font-medium text-gray-700 mb-2 block">% prótese</label>
-                                <input type="number" step="0.01" min="0" max="100" name="comissoes[{{ $clinic->id }}][protese]" value="{{ old('comissoes.' . $clinic->id . '.protese', $vals['protese'] ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
+                                <input type="number" step="0.01" min="0" max="100" name="comissoes[{{ $clinic->id }}][protese]" value="{{ old('comissoes.' . $clinic->id . '.protese', $comissao->protese ?? '') }}" class="w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black focus:border-primary focus:outline-none" />
                             </div>
                         </div>
                     </div>
