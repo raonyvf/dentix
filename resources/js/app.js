@@ -480,7 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const times = [];
             let cur = toMinutes(start);
             const final = toMinutes(end);
-            while (cur <= final) {
+            while (cur < final) {
                 const h = String(Math.floor(cur / 60)).padStart(2, '0');
                 const m = String(cur % 60).padStart(2, '0');
                 times.push(`${h}:${m}`);
@@ -499,7 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const selectRange = (prof, start, end) => {
             clearSelection();
-            const times = nextTimes(start, end);
+            const times = start === end ? [start] : nextTimes(start, end);
             for (const t of times) {
                 if (!isOpen(t)) { alert('Horário fora do horário de funcionamento'); clearSelection(); return false; }
                 const cell = document.querySelector(`#schedule-table td[data-professional="${prof}"][data-time="${t}"]`);
