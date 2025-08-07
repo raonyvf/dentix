@@ -107,10 +107,34 @@ namespace {
 
             $this->assertSame([1, 2], $ids);
         }
+
+        public function test_professionals_route_excludes_unscheduled_professionals()
+        {
+            $escalas = collect([
+                (object) ['profissional_id' => 1, 'clinica_id' => 1, 'semana' => '2025-08-04', 'dia_semana' => 4],
+            ]);
+            \App\Models\EscalaTrabalho::setCollection($escalas);
+
+            $profissionais = collect([
+                (object) ['id' => 1, 'pessoa' => (object) ['primeiro_nome' => 'Dentista Um', 'sexo' => 'Feminino']],
+                (object) ['id' => 2, 'pessoa' => (object) ['primeiro_nome' => 'Dentista Dois', 'sexo' => 'Masculino']],
+            ]);
+            \App\Models\Profissional::setCollection($profissionais);
+
+            $controller = new AgendamentoController();
+            $request = new \Illuminate\Http\Request(['date' => '2025-08-07']);
+            $result = $controller->professionals($request);
+
+            $ids = array_column($result['professionals'], 'id');
+            sort($ids);
+
+            $this->assertSame([1], $ids);
+        }
     }
 
     $test = new AgendamentoTest();
     $test->test_professionals_route_returns_all_scheduled_professionals();
-    echo "Test passed\n";
+    $test->test_professionals_route_excludes_unscheduled_professionals();
+    echo "Tests passed\n";
 }
 

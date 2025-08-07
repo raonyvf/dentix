@@ -91,6 +91,17 @@ namespace {
             return new self($mapped);
         }
 
+        public function filter(callable $callback): self
+        {
+            $filtered = [];
+            foreach ($this->items as $item) {
+                if ($callback($item)) {
+                    $filtered[] = $item;
+                }
+            }
+            return new self($filtered);
+        }
+
         public function values(): self
         {
             return new self(array_values($this->items));
