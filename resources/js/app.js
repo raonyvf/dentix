@@ -607,11 +607,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('mouseup', e => {
             if (!dragging) return;
             dragging = false;
-            if (selection.start && selection.end && e.target.closest('#schedule-table')) {
+
+            if (suppressClick && selection.start === selection.end) {
+                setTimeout(() => { suppressClick = false; }, 0);
+                return;
+            }
+
+            if (selection.start && selection.end && selection.start !== selection.end && e.target.closest('#schedule-table')) {
                 openModal();
             } else {
                 clearSelection();
             }
+
             setTimeout(() => { suppressClick = false; }, 0);
         });
 
