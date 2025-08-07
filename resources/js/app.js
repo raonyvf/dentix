@@ -364,7 +364,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('input.currency-brl').forEach(input => {
         const form = input.closest('form');
 
-        const toNumber = val => val.replace(/[^0-9,]/g, '').replace(',', '.');
+        const toNumber = val =>
+            val
+                .replace(/[^\d.,-]/g, '')
+                .replace(/\./g, '')
+                .replace(',', '.');
         const format = val => {
             const num = parseFloat(toNumber(val));
             return isNaN(num) ? '' : num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
