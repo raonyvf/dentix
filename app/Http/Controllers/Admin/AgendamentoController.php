@@ -28,12 +28,17 @@ class AgendamentoController extends Controller
             $profIds = array_column($professionals, 'id');
 
             $cacheKey = "agendamentos_{$clinicId}_{$date}";
-            $agendamentos = Cache::remember($cacheKey, 60, function () use ($clinicId, $date, $profIds) {
-@@ -36,61 +34,57 @@ class AgendamentoController extends Controller
-                    ->whereDate('data', $date)
-                    ->whereIn('profissional_id', $profIds)
-                    ->get();
-            });
+            $agendamentos = Cache::remember(
+                $cacheKey,
+                60,
+                function () use ($clinicId, $date, $profIds) {
+                    return Agendamento::with(['paciente.pessoa'])
+                        ->where('clinica_id', $clinicId)
+                        ->whereDate('data', $date)
+                        ->whereIn('profissional_id', $profIds)
+                        ->get();
+                }
+            );
 
             foreach ($agendamentos as $ag) {
                 $pessoa = optional($ag->paciente)->pessoa;
