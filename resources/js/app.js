@@ -451,6 +451,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const hiddenStart = document.getElementById('hora_inicio');
         const hiddenEnd = document.getElementById('hora_fim');
         let selection = { start: null, end: null, professional: null };
+        let dragging = false;
+        let suppressClick = false;
 
         const clearSelection = () => {
             document.querySelectorAll('#schedule-table td[data-professional].selected')
@@ -480,8 +482,65 @@ document.addEventListener('DOMContentLoaded', () => {
             return times;
         };
 
+        const addMinutes = (time, mins) => {
+            const [h, m] = time.split(':').map(Number);
+            const total = h * 60 + m + mins;
+            const hh = String(Math.floor(total / 60)).padStart(2, '0');
+            const mm = String(total % 60).padStart(2, '0');
+            return `${hh}:${mm}`;
+        };
+
+        const selectRange = (prof, start, end) => {
+            clearSelection();
+            const times = nextTimes(start, end);
+            for (const t of times) {
+                if (!isOpen(t)) { alert('Horário fora do horário de funcionamento'); clearSelection(); return false; }
+                const cell = document.querySelector(`#schedule-table td[data-professional="${prof}"][data-time="${t}"]`);
+                cell?.classList.add('selected', 'bg-blue-100');
+            }
+            selection = { start, end, professional: prof };
+            if (hiddenStart) hiddenStart.value = start;
+            if (hiddenEnd) hiddenEnd.value = end;
+            if (startInput) startInput.value = start;
+            if (endInput) endInput.value = end;
+            return true;
+        };
+
+        const openModal = () => {
+            scheduleModal.dataset.time = selection.start;
+            scheduleModal.classList.remove('hidden');
+        };
+
         document.querySelectorAll('#schedule-table td[data-professional]').forEach(td => {
-            td.addEventListener('click', () => {
+            td.addEventListener('mousedown', e => {
+                if (e.button !== 0) return;
+                const time = td.dataset.time;
+                const prof = td.dataset.professional;
+                if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
+                dragging = true;
+                suppressClick = true;
+                selectRange(prof, time, time);
+            });
+
+            td.addEventListener('mouseenter', () => {
+                if (!dragging || td.dataset.professional !== selection.professional) return;
+                const time = td.dataset.time;
+                if (toMinutes(time) < toMinutes(selection.start)) return;
+                selectRange(selection.professional, selection.start, time);
+            });
+
+            td.addEventListener('dblclick', () => {
+                const start = td.dataset.time;
+                const prof = td.dataset.professional;
+                const end = addMinutes(start, 30);
+                if (!selectRange(prof, start, end)) return;
+                suppressClick = true;
+                openModal();
+                setTimeout(() => { suppressClick = false; }, 0);
+            });
+
+            td.addEventListener('click', e => {
+                if (suppressClick || e.detail > 1) return;
                 const time = td.dataset.time;
                 const prof = td.dataset.professional;
 
@@ -504,18 +563,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (hiddenStart) hiddenStart.value = time;
                         return;
                     }
-                    const times = nextTimes(selection.start, time);
-                    for (const t of times) {
-                        if (!isOpen(t)) { alert('Horário fora do horário de funcionamento'); clearSelection(); return; }
-                        const cell = document.querySelector(`#schedule-table td[data-professional="${prof}"][data-time="${t}"]`);
-                        cell?.classList.add('selected', 'bg-blue-100');
-                    }
-                    selection.end = time;
-                    if (hiddenEnd) hiddenEnd.value = time;
-                    if (startInput) startInput.value = selection.start;
-                    if (endInput) endInput.value = selection.end;
-                    scheduleModal.dataset.time = selection.start;
-                    scheduleModal.classList.remove('hidden');
+                    if (!selectRange(prof, selection.start, time)) return;
+                    openModal();
                     return;
                 }
 
@@ -528,6 +577,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (hiddenStart) hiddenStart.value = time;
                 }
             });
+        });
+
+        document.addEventListener('mouseup', e => {
+            if (!dragging) return;
+            dragging = false;
+            if (selection.start && selection.end && e.target.closest('#schedule-table')) {
+                openModal();
+            } else {
+                clearSelection();
+            }
+            setTimeout(() => { suppressClick = false; }, 0);
         });
 
         document.addEventListener('click', e => {
