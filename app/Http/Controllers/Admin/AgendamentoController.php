@@ -60,18 +60,24 @@ class AgendamentoController extends Controller
         $weekStart = $carbon->copy()->startOfWeek(Carbon::MONDAY)->toDateString();
         $day = $carbon->isoWeekday();
 
+        $ids = \App\Models\EscalaTrabalho::where('clinica_id', $clinicId)
+            ->whereDate('semana', $weekStart)
+            ->where('dia_semana', $day)
+            ->get()
+            ->filter(fn($e) => $e->semana == $weekStart && $e->dia_semana == $day)
+            ->pluck('profissional_id')
+            ->unique()
+            ->toArray();
+
+        if (empty($ids)) {
+            return [];
+        }
+
         $profissionais = \App\Models\Profissional::with('pessoa')
-            ->join('escalas_trabalho', 'profissionais.id', '=', 'escalas_trabalho.profissional_id')
-            ->join('clinica_profissional', 'profissionais.id', '=', 'clinica_profissional.profissional_id')
-            ->where('escalas_trabalho.clinica_id', $clinicId)
-            ->where('clinica_profissional.clinica_id', $clinicId)
-            ->whereDate('escalas_trabalho.semana', $weekStart)
-            ->where('escalas_trabalho.dia_semana', $day)
-            ->distinct('profissionais.id')
-            ->get();
+            ->get()
+            ->filter(fn($p) => in_array($p->id, $ids));
 
         return $profissionais
-  
             ->map(function ($prof) {
                 $gender = $prof->pessoa->sexo ?? null;
                 $prefix = $gender === 'Masculino' ? 'Dr. ' : ($gender === 'Feminino' ? 'Dra. ' : '');
