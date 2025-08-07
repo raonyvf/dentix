@@ -56,19 +56,20 @@ class AgendamentoController extends Controller
     {
         $carbon = Carbon::parse($date);
         $weekStart = $carbon->copy()->startOfWeek(Carbon::MONDAY)->toDateString();
-        $weekEnd = $carbon->copy()->endOfWeek(Carbon::SUNDAY)->toDateString();
         $day = $carbon->isoWeekday();
 
         $profissionalIds = EscalaTrabalho::where('clinica_id', $clinicId)
-            ->whereBetween('semana', [$weekStart, $weekEnd])
+            ->whereDate('semana', $weekStart)
             ->where('dia_semana', $day)
-            ->get()
+            ->distinct('profissional_id')
             ->pluck('profissional_id')
-            ->unique()
             ->toArray();
 
         $profissionais = \App\Models\Profissional::with('pessoa')
-            ->whereIn('id', $profissionalIds)
+            ->join('clinica_profissional', 'profissionais.id', '=', 'clinica_profissional.profissional_id')
+            ->where('clinica_profissional.clinica_id', $clinicId)
+            ->whereIn('profissionais.id', $profissionalIds)
+            ->distinct('profissionais.id')
             ->get();
 
         return $profissionais
