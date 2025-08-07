@@ -6,7 +6,11 @@
     ['label' => 'Profissionais', 'url' => route('profissionais.index')],
     ['label' => 'Editar']
 ]])
-<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ activeTab: 'dados', selectedClinics: @js(old('clinics', $profissional->clinics->pluck('id')->toArray())) }">
+@php
+    $selectedClinics = collect(old('clinics', $profissional->clinics->pluck('id')->toArray()))
+        ->map(fn ($id) => (string) $id);
+@endphp
+<div class="w-full bg-white p-6 rounded-lg shadow" x-data="{ activeTab: 'dados', selectedClinics: @js($selectedClinics->toArray()) }">
     <h1 class="text-xl font-semibold mb-4">Editar Profissional</h1>
     <div class="border-b mb-6">
         <nav class="-mb-px flex space-x-4" aria-label="Tabs">
