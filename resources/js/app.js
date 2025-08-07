@@ -216,7 +216,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes) {
             professionals.forEach(p => {
                 theadRow.insertAdjacentHTML(
                     'beforeend',
-                    `<th class="p-2 bg-gray-50 text-left whitespace-nowrap">${p.name}</th>`
+                    `<th class="p-2 bg-gray-50 text-left whitespace-nowrap border-l">${p.name}</th>`
                 );
             });
         }
@@ -225,7 +225,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes) {
             baseTimes.forEach(hora => {
                 let row = `<tr class="border-t" data-row="${hora}"><td class="bg-gray-50 w-24 min-w-[6rem] h-16 align-middle" data-slot="${hora}" data-hora="${hora}"><div class="h-full flex items-center justify-end px-2 text-xs text-gray-500 whitespace-nowrap">${hora}</div></td>`;
                 professionals.forEach(p => {
-                    row += `<td class="h-16 cursor-pointer" data-professional="${p.id}" data-time="${hora}" data-hora="${hora}">`;
+                    row += `<td class="h-16 cursor-pointer border-l" data-professional="${p.id}" data-time="${hora}" data-hora="${hora}">`;
                     const item = agenda[p.id] && agenda[p.id][hora];
                     if (item) {
                         let color = 'bg-gray-100 text-gray-700';

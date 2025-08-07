@@ -90,7 +90,7 @@
             <tr>
                 <th class="p-2 bg-gray-50 w-20"></th>
                 @foreach($professionals as $prof)
-                    <th class="p-2 bg-gray-50 text-left whitespace-nowrap">{{ $prof['name'] }}</th>
+                    <th class="p-2 bg-gray-50 text-left whitespace-nowrap border-l">{{ $prof['name'] }}</th>
                 @endforeach
             </tr>
         </thead>
@@ -99,7 +99,7 @@
                 <tr class="border-t">
                     <td class="bg-gray-50 w-20"><x-agenda.horario :time="$hora"/></td>
                     @foreach($professionals as $prof)
-                        <td class="w-40 h-16">
+                        <td class="w-40 h-16 border-l">
                             @isset($agenda[$prof['id']][$hora])
                                 @php $item = $agenda[$prof['id']][$hora]; @endphp
                                 <x-agenda.agendamento :paciente="$item['paciente']" :tipo="$item['tipo']" :contato="$item['contato']" :status="$item['status']" />
