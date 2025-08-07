@@ -63,8 +63,6 @@ class AgendamentoController extends Controller
         $ids = \App\Models\EscalaTrabalho::where('clinica_id', $clinicId)
             ->whereDate('semana', $weekStart)
             ->where('dia_semana', $day)
-            ->get()
-            ->filter(fn($e) => $e->semana == $weekStart && $e->dia_semana == $day)
             ->pluck('profissional_id')
             ->unique()
             ->toArray();
