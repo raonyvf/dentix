@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return true;
         };
 
-        const openModal = () => {
+        const abrirModalAgendamento = () => {
             const root = document.querySelector('[x-data]');
             const date = root?.__x?.$data?.selectedDate || '';
 
@@ -541,6 +541,8 @@ document.addEventListener('DOMContentLoaded', () => {
             scheduleModal.dataset.time = selection.start || '';
             scheduleModal.classList.remove('hidden');
         };
+
+        window.abrirModalAgendamento = abrirModalAgendamento;
 
         const attachCellHandlers = () => {
             document.querySelectorAll('#schedule-table td[data-professional]').forEach(td => {
@@ -574,7 +576,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const end = addMinutes(start, 30);
                     if (!selectRange(prof, start, end)) return;
                     suppressClick = true;
-                    openModal();
+                    abrirModalAgendamento();
                     setTimeout(() => { suppressClick = false; }, 0);
                 });
 
@@ -604,7 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             return;
                         }
                         if (!selectRange(prof, selection.start, time)) return;
-                        openModal();
+                        abrirModalAgendamento();
                         return;
                     }
 
@@ -633,7 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (selection.start && selection.end && selection.start !== selection.end && e.target.closest('#schedule-table')) {
-                openModal();
+                abrirModalAgendamento();
             } else {
                 clearSelection();
             }
