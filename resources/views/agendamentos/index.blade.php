@@ -65,7 +65,7 @@
             <tr>
                 <th class="p-2 bg-gray-50 w-24 min-w-[6rem]"></th>
                 @foreach($professionals as $prof)
-                    <th class="p-2 bg-gray-50 text-left whitespace-nowrap border-l">{{ $prof['name'] }}</th>
+                    <th class="p-2 bg-gray-50 text-left whitespace-nowrap border-l" data-professional="{{ $prof['id'] }}">{{ $prof['name'] }}</th>
                 @endforeach
             </tr>
         </thead>
