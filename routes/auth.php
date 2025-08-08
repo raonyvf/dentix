@@ -6,10 +6,10 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])
     ->name('login')
-    ->middleware('throttle:60,1');
+    ->middleware('throttle:5,10');
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
-    ->middleware('throttle:60,1');
+    ->middleware('throttle:5,10');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->name('logout');
