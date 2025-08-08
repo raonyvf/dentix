@@ -489,7 +489,7 @@ function attachCellHandlers() {
 }
 
 window.attachCellHandlers = attachCellHandlers;
-attachCellHandlers();
+document.addEventListener('DOMContentLoaded', attachCellHandlers);
 document.addEventListener('schedule:rendered', attachCellHandlers);
 
 Alpine.start();

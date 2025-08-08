@@ -34,6 +34,7 @@ describe('schedule selection', () => {
     buildDom();
     global.alert = vi.fn();
     await import('../app.js');
+    document.dispatchEvent(new Event('DOMContentLoaded'));
   });
 
   it('opens modal with 30min duration on double click', () => {
