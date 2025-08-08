@@ -701,6 +701,12 @@ document.addEventListener('DOMContentLoaded', () => {
             pacienteInput.addEventListener('input', e => {
                 clearTimeout(searchTimeout);
                 const term = e.target.value.trim();
+                const selected = Array.from(pacienteList.options).find(o => o.value === term);
+                if (selected) {
+                    if (pacienteIdInput) pacienteIdInput.value = selected.dataset.id || '';
+                    return;
+                }
+                if (pacienteIdInput) pacienteIdInput.value = '';
                 if (term.length < 2) { pacienteList.innerHTML = ''; return; }
                 searchTimeout = setTimeout(() => {
                     const url = pacienteInput.dataset.searchUrl;
@@ -710,10 +716,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             pacienteList.innerHTML = data.map(n => `<option data-id="${n.id}" value="${n.name}"></option>`).join('');
                         });
                 }, 300);
-            });
-            pacienteInput.addEventListener('change', () => {
-                const option = Array.from(pacienteList.options).find(o => o.value === pacienteInput.value);
-                if (pacienteIdInput) pacienteIdInput.value = option?.dataset.id || '';
             });
         }
 

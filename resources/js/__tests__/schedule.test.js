@@ -14,6 +14,11 @@ const buildDom = () => {
       <div id="schedule-summary"></div>
       <input id="hora_inicio" />
       <input id="hora_fim" />
+      <input id="schedule-paciente" data-search-url="/search" list="schedule-paciente-list" />
+      <datalist id="schedule-paciente-list"></datalist>
+      <input id="schedule-paciente-id" />
+      <button id="schedule-save"></button>
+      <button id="schedule-cancel"></button>
     </div>
     <table id="schedule-table">
       <thead>
@@ -78,6 +83,21 @@ describe('schedule selection', () => {
 
     expect(profInput.value).toBe('1');
     expect(summary.textContent).toContain('Prof 1');
+  });
+
+  it('sets patient id when selecting from search results', async () => {
+    vi.useFakeTimers();
+    global.fetch = vi.fn(() =>
+      Promise.resolve({ json: () => Promise.resolve([{ id: 1, name: 'John Doe' }]) })
+    );
+    const input = document.getElementById('schedule-paciente');
+    input.value = 'Jo';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await vi.runAllTimersAsync();
+    input.value = 'John Doe';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(document.getElementById('schedule-paciente-id').value).toBe('1');
+    vi.useRealTimers();
   });
 });
 
