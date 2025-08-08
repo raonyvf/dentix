@@ -557,13 +557,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.abrirModalAgendamento = abrirModalAgendamento;
 
         const attachCellHandlers = () => {
-            const table = document.getElementById('schedule-table');
-            if (!table || table.dataset.bound) return;
-            table.dataset.bound = '1';
+            if (attachCellHandlers.bound) return;
+            attachCellHandlers.bound = true;
 
-            table.addEventListener('mousedown', e => {
+            document.addEventListener('mousedown', e => {
                 if (e.detail > 1) return;
-                const cell = e.target.closest('td[data-professional]');
+                const cell = e.target.closest('#schedule-table td[data-professional]');
                 if (!cell || e.button !== 0) return;
                 const time = cell.dataset.time;
                 const prof = cell.dataset.professional;
@@ -573,17 +572,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectRange(prof, time, time);
             });
 
-            table.addEventListener('mouseover', e => {
+            document.addEventListener('mouseover', e => {
                 if (!dragging) return;
-                const cell = e.target.closest('td[data-professional]');
+                const cell = e.target.closest('#schedule-table td[data-professional]');
                 if (!cell || cell.dataset.professional !== selection.professional) return;
                 const time = cell.dataset.time;
                 if (toMinutes(time) < toMinutes(selection.start)) return;
                 selectRange(selection.professional, selection.start, time);
             });
 
-            table.addEventListener('dblclick', e => {
-                const cell = e.target.closest('td[data-professional]');
+            document.addEventListener('dblclick', e => {
+                const cell = e.target.closest('#schedule-table td[data-professional]');
                 if (!cell) return;
                 const start = cell.dataset.time;
                 const prof = cell.dataset.professional;
@@ -591,9 +590,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 openScheduleModal(prof, start, end);
             });
 
-            table.addEventListener('click', e => {
+            document.addEventListener('click', e => {
                 if (suppressClick || e.detail > 1) return;
-                const cell = e.target.closest('td[data-professional]');
+                const cell = e.target.closest('#schedule-table td[data-professional]');
                 if (!cell) return;
                 const time = cell.dataset.time;
                 const prof = cell.dataset.professional;
