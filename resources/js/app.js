@@ -522,7 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const abrirModalAgendamento = () => {
-            const root = document.querySelector('[x-data]');
+            const root = scheduleModal.closest('[x-data]');
             const date = root?.__x?.$data?.selectedDate || '';
 
             // ensure times are filled – default end is start + 30min
