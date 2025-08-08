@@ -251,7 +251,7 @@ let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, pacient
 let selection = { start: null, end: null, professional: null };
 let dragging = false;
 let suppressClick = false;
-let handleMouseDown, handleMouseOver, handleDblClick, handleClick, handleMouseUp;
+let handleMouseDown, handleMouseMove, handleDblClick, handleClick, handleMouseUp;
 
 const toMinutes = t => {
     if (!t) return null;
@@ -364,7 +364,7 @@ function attachCellHandlers() {
     hiddenEnd = document.getElementById('hora_fim');
 
     if (handleMouseDown) document.removeEventListener('mousedown', handleMouseDown);
-    if (handleMouseOver) document.removeEventListener('mouseover', handleMouseOver);
+    if (handleMouseMove) document.removeEventListener('mousemove', handleMouseMove);
     if (handleDblClick) document.removeEventListener('dblclick', handleDblClick);
     if (handleClick) document.removeEventListener('click', handleClick);
     if (handleMouseUp) document.removeEventListener('mouseup', handleMouseUp);
@@ -377,12 +377,13 @@ function attachCellHandlers() {
         const time = cell.dataset.time;
         const prof = cell.dataset.professional;
         if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
+        e.preventDefault();
         dragging = true;
         suppressClick = true;
         selectRange(prof, time, time);
     };
 
-    handleMouseOver = e => {
+    handleMouseMove = e => {
         if (!dragging) return;
         const cell = e.target.closest('#schedule-table td[data-professional]');
         if (!cell || cell.dataset.professional !== selection.professional) return;
@@ -470,7 +471,7 @@ function attachCellHandlers() {
     };
 
     document.addEventListener('mousedown', handleMouseDown);
-    document.addEventListener('mouseover', handleMouseOver);
+    document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('dblclick', handleDblClick);
     document.addEventListener('click', handleClick);
     document.addEventListener('mouseup', handleMouseUp);
