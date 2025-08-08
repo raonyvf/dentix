@@ -761,7 +761,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (data.redirect) { window.location.href = data.redirect; }
                             return;
                         }
-                        window.location.reload();
+                        const root = document.querySelector('[x-data]');
+                        const comp = root?.__x?.$data;
+                        if (comp) {
+                            comp.fetchProfessionals(date).then(profs => {
+                                if (profs && profs.length) {
+                                    comp.fetchHorarios(date);
+                                }
+                            });
+                        }
                     })
                     .catch(() => alert('Erro de rede ao salvar agendamento'));
 
