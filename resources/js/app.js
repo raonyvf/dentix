@@ -249,6 +249,8 @@ window.renderSchedule = function (professionals, agenda, baseTimes) {
 
 let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, pacienteList, pacienteIdInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd;
 let selection = { start: null, end: null, professional: null };
+let currentProfessionalId = null;
+let currentProfessionalName = '';
 let dragging = false;
 let suppressClick = false;
 let handleMouseDown, handleMouseMove, handleDblClick, handleClick, handleMouseUp;
@@ -280,19 +282,15 @@ const addMinutes = (time, mins) => {
     return `${hh}:${mm}`;
 };
 
-const clearSelection = (preserveProfessional = false) => {
+const clearSelection = () => {
     document.querySelectorAll('#schedule-table td[data-professional].selected')
         .forEach(c => c.classList.remove('selected', 'bg-blue-100'));
-    selection = {
-        start: null,
-        end: null,
-        professional: preserveProfessional ? selection.professional : null,
-    };
+    selection.start = null;
+    selection.end = null;
     if (hiddenStart) hiddenStart.value = '';
     if (hiddenEnd) hiddenEnd.value = '';
-    if (!preserveProfessional && professionalInput) professionalInput.value = '';
-    if (dateInput && !preserveProfessional) dateInput.value = '';
-    if (!preserveProfessional && summary) summary.textContent = '';
+    if (startInput) startInput.value = '';
+    if (endInput) endInput.value = '';
 };
 
 const isOpen = time => {
@@ -312,11 +310,13 @@ const selectRange = (prof, start, end) => {
     }
     const finalEnd = start === end ? null : end;
     selection = { start, end: finalEnd, professional: prof };
+    currentProfessionalId = prof;
+    const th = document.querySelector(`#schedule-table thead th[data-professional="${prof}"]`);
+    currentProfessionalName = th ? th.textContent.trim() : '';
     if (hiddenStart) hiddenStart.value = start;
     if (hiddenEnd) hiddenEnd.value = finalEnd || '';
     if (startInput) startInput.value = start;
     if (endInput) endInput.value = finalEnd || '';
-    if (professionalInput) professionalInput.value = prof;
     return true;
 };
 
@@ -333,14 +333,12 @@ const abrirModalAgendamento = () => {
     if (hiddenEnd) hiddenEnd.value = endInput?.value || '';
 
     if (professionalInput) {
-        professionalInput.value = selection.professional || '';
+        professionalInput.value = currentProfessionalId || '';
     }
     if (dateInput) dateInput.value = date;
 
     if (summary) {
-        const th = document.querySelector(`#schedule-table thead th[data-professional="${selection.professional}"]`);
-        const profName = th ? th.textContent.trim() : '';
-        summary.textContent = `${profName} - ${date}`;
+        summary.textContent = currentProfessionalName ? `${currentProfessionalName} - ${date}` : `${date}`;
     }
 
     if (scheduleModal) {
@@ -351,6 +349,9 @@ const abrirModalAgendamento = () => {
 window.abrirModalAgendamento = abrirModalAgendamento;
 
 const openScheduleModal = (prof, start, end) => {
+    const th = document.querySelector(`#schedule-table thead th[data-professional="${prof}"]`);
+    currentProfessionalId = prof;
+    currentProfessionalName = th ? th.textContent.trim() : '';
     if (!selectRange(prof, start, end)) return;
     abrirModalAgendamento();
 };
@@ -411,17 +412,17 @@ function attachCellHandlers() {
 
     handleClick = e => {
         if (suppressClick || e.detail > 1) {
-            if (selection.start && !e.target.closest('#schedule-table')) {
-                if (!scheduleModal || !scheduleModal.contains(e.target)) {
-                    clearSelection(true);
+                if (selection.start && !e.target.closest('#schedule-table')) {
+                    if (!scheduleModal || !scheduleModal.contains(e.target)) {
+                        clearSelection();
+                    }
                 }
-            }
             return;
         }
         const cell = e.target.closest('#schedule-table td[data-professional]');
         if (!cell) {
             if (selection.start && (!scheduleModal || !scheduleModal.contains(e.target))) {
-                clearSelection(true);
+                clearSelection();
             }
             return;
         }

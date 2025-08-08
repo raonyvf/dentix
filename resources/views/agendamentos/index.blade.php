@@ -102,7 +102,7 @@
         </div>
         <input type="hidden" id="hora_inicio" name="hora_inicio">
         <input type="hidden" id="hora_fim" name="hora_fim">
-        <input type="hidden" id="schedule-professional">
+        <input type="text" id="schedule-professional" readonly class="hidden">
         <input type="hidden" id="schedule-date">
         <label class="block mb-4">
             <span class="text-sm">Paciente</span>
