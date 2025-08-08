@@ -252,6 +252,7 @@ let selection = { start: null, end: null, professional: null };
 let dragging = false;
 let suppressClick = false;
 let handleMouseDown, handleMouseMove, handleDblClick, handleClick, handleMouseUp;
+let lastClickedCell = null;
 
 const toMinutes = t => {
     if (!t) return null;
@@ -410,15 +411,17 @@ function attachCellHandlers() {
     };
 
     handleClick = e => {
-        if (suppressClick || e.detail > 1) {
+        const cell = e.target.closest('#schedule-table td[data-professional]');
+        if (suppressClick || (e.detail > 1 && cell === lastClickedCell)) {
             if (selection.start && !e.target.closest('#schedule-table')) {
                 if (!scheduleModal || !scheduleModal.contains(e.target)) {
                     clearSelection(true);
                 }
             }
+            lastClickedCell = cell;
             return;
         }
-        const cell = e.target.closest('#schedule-table td[data-professional]');
+        lastClickedCell = cell;
         if (!cell) {
             if (selection.start && (!scheduleModal || !scheduleModal.contains(e.target))) {
                 clearSelection(true);
@@ -438,13 +441,17 @@ function attachCellHandlers() {
         }
 
         if (selection.start && selection.end == null) {
-            if (prof !== selection.professional || toMinutes(time) < toMinutes(selection.start)) {
+            if (prof !== selection.professional) {
                 clearSelection();
                 if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
                 selection.start = time;
                 selection.professional = prof;
                 cell.classList.add('selected', 'bg-blue-100');
                 if (hiddenStart) hiddenStart.value = time;
+                return;
+            }
+            if (toMinutes(time) < toMinutes(selection.start)) {
+                openScheduleModal(prof, time, selection.start);
                 return;
             }
             selection.end = time;
