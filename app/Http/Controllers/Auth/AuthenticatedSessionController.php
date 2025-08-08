@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -22,8 +23,17 @@ class AuthenticatedSessionController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
             $user = Auth::user();
+
+            $previousSession = $user->current_session_id;
+            $request->session()->regenerate();
+            $currentSession = $request->session()->getId();
+
+            if ($previousSession && $previousSession !== $currentSession) {
+                Session::getHandler()->destroy($previousSession);
+            }
+
+            $user->startSession($currentSession);
             if (
                 $user->organization &&
                 $user->organization->status !== 'ativo' &&
@@ -52,7 +62,14 @@ class AuthenticatedSessionController extends Controller
 
     public function destroy(Request $request)
     {
+        $user = $request->user();
+
         Auth::guard('web')->logout();
+
+        if ($user) {
+            $user->clearSession();
+        }
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/');

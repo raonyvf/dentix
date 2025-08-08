@@ -31,6 +31,7 @@ class Usuario extends Authenticatable
         'salario_base',
         'must_change_password',
         'pessoa_id',
+        'current_session_id',
     ];
 
     protected $hidden = [
@@ -117,5 +118,17 @@ class Usuario extends Authenticatable
                     ->orWhere('atualizacao', true)
                     ->orWhere('exclusao', true);
             })->exists();
+    }
+
+    public function startSession(string $sessionId): void
+    {
+        $this->current_session_id = $sessionId;
+        $this->save();
+    }
+
+    public function clearSession(): void
+    {
+        $this->current_session_id = null;
+        $this->save();
     }
 }
