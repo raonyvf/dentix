@@ -51,12 +51,11 @@ describe('schedule selection', () => {
     expect(document.getElementById('schedule-end').value).toBe('09:30');
   });
 
-  it('opens modal with correct start and end after two clicks', async () => {
+  it('opens modal with correct start and end after two clicks', () => {
     const first = document.querySelector('#schedule-table td[data-professional="1"][data-time="09:00"]');
     first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
     first.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
     first.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    await new Promise(r => setTimeout(r, 0));
 
     const second = document.querySelector('#schedule-table td[data-professional="1"][data-time="10:00"]');
     second.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
