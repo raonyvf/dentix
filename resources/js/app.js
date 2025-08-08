@@ -248,7 +248,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes) {
 };
 
 let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, pacienteList, pacienteIdInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd;
-let selection = { start: null, end: null, professional: null };
+let selection = { start: null, end: null, professional: null, date: null };
 let dragging = false;
 let suppressClick = false;
 let handleMouseDown, handleMouseMove, handleDblClick, handleClick, handleMouseUp;
@@ -288,6 +288,7 @@ const clearSelection = (preserveProfessional = false) => {
         start: null,
         end: null,
         professional: preserveProfessional ? selection.professional : null,
+        date: preserveProfessional ? selection.date : null,
     };
     if (hiddenStart) hiddenStart.value = '';
     if (hiddenEnd) hiddenEnd.value = '';
@@ -303,7 +304,7 @@ const isOpen = time => {
     return slot && !slot.classList.contains('text-gray-400');
 };
 
-const selectRange = (prof, start, end) => {
+const selectRange = (prof, start, end, date) => {
     clearSelection();
     const times = start === end ? [start] : nextTimes(start, end);
     for (const t of times) {
@@ -312,18 +313,19 @@ const selectRange = (prof, start, end) => {
         cell?.classList.add('selected', 'bg-blue-100');
     }
     const finalEnd = start === end ? null : end;
-    selection = { start, end: finalEnd, professional: prof };
+    selection = { start, end: finalEnd, professional: prof, date };
     if (hiddenStart) hiddenStart.value = start;
     if (hiddenEnd) hiddenEnd.value = finalEnd || '';
     if (startInput) startInput.value = start;
     if (endInput) endInput.value = finalEnd || '';
     if (professionalInput) professionalInput.value = prof;
+    if (dateInput) dateInput.value = date || '';
     return true;
 };
 
 const abrirModalAgendamento = () => {
     const root = scheduleModal?.closest('[x-data]');
-    const date = root?.__x?.$data?.selectedDate || '';
+    const date = selection.date || root?.__x?.$data?.selectedDate || '';
 
     if (selection.start && !selection.end) {
         selection.end = addMinutes(selection.start, 30);
@@ -351,8 +353,8 @@ const abrirModalAgendamento = () => {
 };
 window.abrirModalAgendamento = abrirModalAgendamento;
 
-const openScheduleModal = (prof, start, end) => {
-    if (!selectRange(prof, start, end)) return;
+const openScheduleModal = (prof, start, end, date = null) => {
+    if (!selectRange(prof, start, end, date ?? selection.date)) return;
     abrirModalAgendamento();
 };
 
@@ -382,11 +384,12 @@ function attachCellHandlers() {
         if (!cell || e.button !== 0 || selection.start) return;
         const time = cell.dataset.time;
         const prof = cell.dataset.professional;
+        const date = cell.dataset.date;
         if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
         e.preventDefault();
         dragging = true;
         suppressClick = true;
-        selectRange(prof, time, time);
+        selectRange(prof, time, time, date);
     };
 
     handleMouseMove = e => {
@@ -395,7 +398,7 @@ function attachCellHandlers() {
         if (!cell || cell.dataset.professional !== selection.professional) return;
         const time = cell.dataset.time;
         if (toMinutes(time) < toMinutes(selection.start)) return;
-        selectRange(selection.professional, selection.start, time);
+        selectRange(selection.professional, selection.start, time, selection.date);
     };
 
     handleDblClick = e => {
@@ -406,8 +409,9 @@ function attachCellHandlers() {
         clearSelection();
         const start = cell.dataset.time;
         const prof = cell.dataset.professional;
+        const date = cell.dataset.date;
         const end = addMinutes(start, 30);
-        openScheduleModal(prof, start, end);
+        openScheduleModal(prof, start, end, date);
     };
 
     handleClick = e => {
@@ -444,32 +448,35 @@ function attachCellHandlers() {
         }
         const time = cell.dataset.time;
         const prof = cell.dataset.professional;
+        const date = cell.dataset.date;
 
         if (!selection.start) {
             if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
             selection.start = time;
             selection.professional = prof;
+            selection.date = date;
             cell.classList.add('selected', 'bg-blue-100');
             if (hiddenStart) hiddenStart.value = time;
             return;
         }
 
         if (selection.start && selection.end == null) {
-            if (prof !== selection.professional) {
+            if (prof !== selection.professional || date !== selection.date) {
                 clearSelection();
                 if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
                 selection.start = time;
                 selection.professional = prof;
+                selection.date = date;
                 cell.classList.add('selected', 'bg-blue-100');
                 if (hiddenStart) hiddenStart.value = time;
                 return;
             }
             if (toMinutes(time) < toMinutes(selection.start)) {
-                openScheduleModal(prof, time, selection.start);
+                openScheduleModal(prof, time, selection.start, selection.date);
                 return;
             }
             selection.end = time;
-            openScheduleModal(prof, selection.start, selection.end);
+            openScheduleModal(prof, selection.start, selection.end, selection.date);
             return;
         }
 
@@ -478,6 +485,7 @@ function attachCellHandlers() {
             if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
             selection.start = time;
             selection.professional = prof;
+            selection.date = date;
             cell.classList.add('selected', 'bg-blue-100');
             if (hiddenStart) hiddenStart.value = time;
         }
@@ -753,7 +761,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const root = document.querySelector('[x-data]');
-                const date = root?.__x?.$data?.selectedDate;
+                const date = selection.date || root?.__x?.$data?.selectedDate;
                 const url = saveBtn.dataset.storeUrl;
                 const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 fetch(url, {
