@@ -65,7 +65,7 @@
             <tr>
                 <th class="p-2 bg-gray-50 w-24 min-w-[6rem]"></th>
                 @foreach($professionals as $prof)
-                    <th class="p-2 bg-gray-50 text-left whitespace-nowrap border-l" data-professional="{{ $prof['id'] }}">{{ $prof['name'] }}</th>
+                    <th class="p-2 bg-gray-50 text-left whitespace-nowrap border-l" data-professional-id="{{ $prof['id'] }}">{{ $prof['name'] }}</th>
                 @endforeach
             </tr>
         </thead>
@@ -74,7 +74,7 @@
                 <tr class="border-t" data-row="{{ $hora }}">
                     <td class="bg-gray-50 w-24 min-w-[6rem] h-16 align-middle" data-slot="{{ $hora }}" data-hora="{{ $hora }}"><x-agenda.horario :time="$hora" /></td>
                     @foreach($professionals as $prof)
-                        <td class="h-16 cursor-pointer border-l" data-professional="{{ $prof['id'] }}" data-time="{{ $hora }}" data-hora="{{ $hora }}">
+                        <td class="h-16 cursor-pointer border-l" data-professional-id="{{ $prof['id'] }}" data-hora="{{ $hora }}" data-date="{{ $date }}">
                             @isset($agenda[$prof['id']][$hora])
                                 @php $item = $agenda[$prof['id']][$hora]; @endphp
                                 <x-agenda.agendamento :paciente="$item['paciente']" :tipo="$item['tipo']" :contato="$item['contato']" :status="$item['status']" />
@@ -86,7 +86,7 @@
         </tbody>
     </table>
 </div>
-<div x-ignore id="schedule-modal" data-time="" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+<div x-ignore id="schedule-modal" data-hora="" data-date="" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
     <div class="bg-white rounded p-4 w-[32rem]">
         <h2 class="text-lg font-semibold mb-2">Agendar Horário</h2>
         <p id="schedule-summary" class="text-sm text-gray-600 mb-4"></p>

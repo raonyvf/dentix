@@ -135,7 +135,7 @@ window.agendaCalendar = function agendaCalendar() {
             return fetch(`${this.professionalsUrl}?date=${date}`)
                 .then(r => r.json())
                 .then(data => {
-                    window.renderSchedule(data.professionals, data.agenda, this.baseTimes);
+                    window.renderSchedule(data.professionals, data.agenda, this.baseTimes, date);
                     return data.professionals;
                 });
         },
@@ -181,7 +181,7 @@ window.updateScheduleTable = function(openTimes, start, end, closed) {
     document.dispatchEvent(new Event('schedule:rendered'));
 };
 
-window.renderSchedule = function (professionals, agenda, baseTimes) {
+window.renderSchedule = function (professionals, agenda, baseTimes, date) {
     const bar = document.getElementById('professionals-bar');
     const table = document.getElementById('schedule-table');
     const emptyMsg = document.getElementById('schedule-empty');
@@ -197,7 +197,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes) {
             professionals.forEach(p => {
                 bar.insertAdjacentHTML(
                     'beforeend',
-                    `<button class="px-4 py-2 rounded border text-sm whitespace-nowrap bg-white text-gray-700" data-professional="${p.id}">${p.name}</button>`
+                    `<button class="px-4 py-2 rounded border text-sm whitespace-nowrap bg-white text-gray-700" data-professional-id="${p.id}">${p.name}</button>`
                 );
             });
         }
@@ -217,7 +217,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes) {
             professionals.forEach(p => {
                 theadRow.insertAdjacentHTML(
                     'beforeend',
-                    `<th class="p-2 bg-gray-50 text-left whitespace-nowrap border-l" data-professional="${p.id}">${p.name}</th>`
+                    `<th class="p-2 bg-gray-50 text-left whitespace-nowrap border-l" data-professional-id="${p.id}">${p.name}</th>`
                 );
             });
         }
@@ -226,7 +226,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes) {
             baseTimes.forEach(hora => {
                 let row = `<tr class="border-t" data-row="${hora}"><td class="bg-gray-50 w-24 min-w-[6rem] h-16 align-middle" data-slot="${hora}" data-hora="${hora}"><div class="h-full flex items-center justify-end px-2 text-xs text-gray-500 whitespace-nowrap">${hora}</div></td>`;
                 professionals.forEach(p => {
-                    row += `<td class="h-16 cursor-pointer border-l" data-professional="${p.id}" data-time="${hora}" data-hora="${hora}">`;
+                    row += `<td class="h-16 cursor-pointer border-l" data-professional-id="${p.id}" data-hora="${hora}" data-date="${date}">`;
                     const item = agenda[p.id] && agenda[p.id][hora];
                     if (item) {
                         let color = 'bg-gray-100 text-gray-700';
@@ -248,7 +248,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes) {
 };
 
 let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, pacienteList, pacienteIdInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd;
-let selection = { start: null, end: null, professional: null };
+let selection = { start: null, end: null, professional: null, date: null };
 let dragging = false;
 let suppressClick = false;
 let handleMouseDown, handleMouseMove, handleDblClick, handleClick, handleMouseUp;
@@ -282,12 +282,13 @@ const addMinutes = (time, mins) => {
 };
 
 const clearSelection = (preserveProfessional = false) => {
-    document.querySelectorAll('#schedule-table td[data-professional].selected')
+    document.querySelectorAll('#schedule-table td[data-professional-id].selected')
         .forEach(c => c.classList.remove('selected', 'bg-blue-100'));
     selection = {
         start: null,
         end: null,
         professional: preserveProfessional ? selection.professional : null,
+        date: preserveProfessional ? selection.date : null,
     };
     if (hiddenStart) hiddenStart.value = '';
     if (hiddenEnd) hiddenEnd.value = '';
@@ -303,27 +304,27 @@ const isOpen = time => {
     return slot && !slot.classList.contains('text-gray-400');
 };
 
-const selectRange = (prof, start, end) => {
+const selectRange = (date, prof, start, end) => {
     clearSelection();
     const times = start === end ? [start] : nextTimes(start, end);
     for (const t of times) {
         if (!isOpen(t)) { alert('Horário fora do horário de funcionamento'); clearSelection(); return false; }
-        const cell = document.querySelector(`#schedule-table td[data-professional="${prof}"][data-time="${t}"]`);
+        const cell = document.querySelector(`#schedule-table td[data-professional-id="${prof}"][data-hora="${t}"][data-date="${date}"]`);
         cell?.classList.add('selected', 'bg-blue-100');
     }
     const finalEnd = start === end ? null : end;
-    selection = { start, end: finalEnd, professional: prof };
+    selection = { start, end: finalEnd, professional: prof, date };
     if (hiddenStart) hiddenStart.value = start;
     if (hiddenEnd) hiddenEnd.value = finalEnd || '';
     if (startInput) startInput.value = start;
     if (endInput) endInput.value = finalEnd || '';
     if (professionalInput) professionalInput.value = prof;
+    if (dateInput) dateInput.value = date;
     return true;
 };
 
 const abrirModalAgendamento = () => {
-    const root = scheduleModal?.closest('[x-data]');
-    const date = root?.__x?.$data?.selectedDate || '';
+    const date = selection.date || '';
 
     if (selection.start && !selection.end) {
         selection.end = addMinutes(selection.start, 30);
@@ -339,20 +340,21 @@ const abrirModalAgendamento = () => {
     if (dateInput) dateInput.value = date;
 
     if (summary) {
-        const th = document.querySelector(`#schedule-table thead th[data-professional="${selection.professional}"]`);
+        const th = document.querySelector(`#schedule-table thead th[data-professional-id="${selection.professional}"]`);
         const profName = th ? th.textContent.trim() : '';
         summary.textContent = `${profName} - ${date}`;
     }
 
     if (scheduleModal) {
-        scheduleModal.dataset.time = selection.start || '';
+        scheduleModal.dataset.hora = selection.start || '';
+        scheduleModal.dataset.date = date;
         scheduleModal.classList.remove('hidden');
     }
 };
 window.abrirModalAgendamento = abrirModalAgendamento;
 
-const openScheduleModal = (prof, start, end) => {
-    if (!selectRange(prof, start, end)) return;
+const openScheduleModal = (prof, start, end, date) => {
+    if (!selectRange(date, prof, start, end)) return;
     abrirModalAgendamento();
 };
 
@@ -378,40 +380,42 @@ function attachCellHandlers() {
     handleMouseDown = e => {
         // Allow multiple mousedown events; double clicks are handled in
         // handleDblClick so we don't filter them here.
-        const cell = e.target.closest('#schedule-table td[data-professional]');
+        const cell = e.target.closest('#schedule-table td[data-professional-id]');
         if (!cell || e.button !== 0 || selection.start) return;
-        const time = cell.dataset.time;
-        const prof = cell.dataset.professional;
+        const time = cell.dataset.hora;
+        const prof = cell.dataset.professionalId;
+        const date = cell.dataset.date;
         if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
         e.preventDefault();
         dragging = true;
         suppressClick = true;
-        selectRange(prof, time, time);
+        selectRange(date, prof, time, time);
     };
 
     handleMouseMove = e => {
         if (!dragging) return;
-        const cell = e.target.closest('#schedule-table td[data-professional]');
-        if (!cell || cell.dataset.professional !== selection.professional) return;
-        const time = cell.dataset.time;
+        const cell = e.target.closest('#schedule-table td[data-professional-id]');
+        if (!cell || cell.dataset.professionalId !== selection.professional || cell.dataset.date !== selection.date) return;
+        const time = cell.dataset.hora;
         if (toMinutes(time) < toMinutes(selection.start)) return;
-        selectRange(selection.professional, selection.start, time);
+        selectRange(selection.date, selection.professional, selection.start, time);
     };
 
     handleDblClick = e => {
-        const cell = e.target.closest('#schedule-table td[data-professional]');
+        const cell = e.target.closest('#schedule-table td[data-professional-id]');
         if (!cell) return;
         // Clear any pending selection so the modal is the only action taken
         // on a double click.
         clearSelection();
-        const start = cell.dataset.time;
-        const prof = cell.dataset.professional;
+        const start = cell.dataset.hora;
+        const prof = cell.dataset.professionalId;
+        const date = cell.dataset.date;
         const end = addMinutes(start, 30);
-        openScheduleModal(prof, start, end);
+        openScheduleModal(prof, start, end, date);
     };
 
     handleClick = e => {
-        const cell = e.target.closest('#schedule-table td[data-professional]');
+        const cell = e.target.closest('#schedule-table td[data-professional-id]');
 
         if (suppressClick) {
             // Skip the suppressed click (typically the first cell click)
@@ -442,34 +446,37 @@ function attachCellHandlers() {
             }
             return;
         }
-        const time = cell.dataset.time;
-        const prof = cell.dataset.professional;
+        const time = cell.dataset.hora;
+        const prof = cell.dataset.professionalId;
+        const date = cell.dataset.date;
 
         if (!selection.start) {
             if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
             selection.start = time;
             selection.professional = prof;
+            selection.date = date;
             cell.classList.add('selected', 'bg-blue-100');
             if (hiddenStart) hiddenStart.value = time;
             return;
         }
 
         if (selection.start && selection.end == null) {
-            if (prof !== selection.professional) {
+            if (prof !== selection.professional || date !== selection.date) {
                 clearSelection();
                 if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
                 selection.start = time;
                 selection.professional = prof;
+                selection.date = date;
                 cell.classList.add('selected', 'bg-blue-100');
                 if (hiddenStart) hiddenStart.value = time;
                 return;
             }
             if (toMinutes(time) < toMinutes(selection.start)) {
-                openScheduleModal(prof, time, selection.start);
+                openScheduleModal(prof, time, selection.start, date);
                 return;
             }
             selection.end = time;
-            openScheduleModal(prof, selection.start, selection.end);
+            openScheduleModal(prof, selection.start, selection.end, selection.date);
             return;
         }
 
@@ -478,6 +485,7 @@ function attachCellHandlers() {
             if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
             selection.start = time;
             selection.professional = prof;
+            selection.date = date;
             cell.classList.add('selected', 'bg-blue-100');
             if (hiddenStart) hiddenStart.value = time;
         }
@@ -488,7 +496,7 @@ function attachCellHandlers() {
         dragging = false;
 
         if (selection.start && selection.end && e.target.closest('#schedule-table')) {
-            openScheduleModal(selection.professional, selection.start, selection.end);
+            openScheduleModal(selection.professional, selection.start, selection.end, selection.date);
         } else if (!selection.end) {
             // keep partial selection
         } else {
@@ -753,7 +761,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const root = document.querySelector('[x-data]');
-                const date = root?.__x?.$data?.selectedDate;
+                const date = scheduleModal.dataset.date;
                 const url = saveBtn.dataset.storeUrl;
                 const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 fetch(url, {
@@ -779,7 +787,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (data.redirect) { window.location.href = data.redirect; }
                             return;
                         }
-                        const root = document.querySelector('[x-data]');
                         const comp = root?.__x?.$data;
                         if (comp) {
                             comp.fetchProfessionals(date).then(profs => {

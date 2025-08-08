@@ -6,7 +6,7 @@ vi.mock('@alpinejs/collapse', () => ({ default: {} }));
 
 const buildDom = () => {
   document.body.innerHTML = `
-    <div id="schedule-modal" class="hidden">
+    <div id="schedule-modal" class="hidden" data-hora="" data-date="">
       <input id="schedule-start" />
       <input id="schedule-end" />
       <input id="schedule-professional" />
@@ -22,12 +22,12 @@ const buildDom = () => {
     </div>
     <table id="schedule-table">
       <thead>
-        <tr><th data-professional="1">Prof 1</th></tr>
+        <tr><th data-professional-id="1">Prof 1</th></tr>
       </thead>
       <tbody>
-        <tr data-row="09:00"><td data-slot="09:00"></td><td data-professional="1" data-time="09:00" data-hora="09:00"></td></tr>
-        <tr data-row="09:30"><td data-slot="09:30"></td><td data-professional="1" data-time="09:30" data-hora="09:30"></td></tr>
-        <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional="1" data-time="10:00" data-hora="10:00"></td></tr>
+        <tr data-row="09:00"><td data-slot="09:00"></td><td data-professional-id="1" data-hora="09:00" data-date="2024-01-01"></td></tr>
+        <tr data-row="09:30"><td data-slot="09:30"></td><td data-professional-id="1" data-hora="09:30" data-date="2024-01-01"></td></tr>
+        <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional-id="1" data-hora="10:00" data-date="2024-01-01"></td></tr>
       </tbody>
     </table>
   `;
@@ -43,7 +43,7 @@ describe('schedule selection', () => {
   });
 
   it('opens modal with 30min duration on double click', () => {
-    const cell = document.querySelector('#schedule-table td[data-professional="1"][data-time="09:00"]');
+    const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
     cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
     const modal = document.getElementById('schedule-modal');
     expect(modal.classList.contains('hidden')).toBe(false);
@@ -52,12 +52,12 @@ describe('schedule selection', () => {
   });
 
   it('opens modal with correct start and end after two clicks', () => {
-    const first = document.querySelector('#schedule-table td[data-professional="1"][data-time="09:00"]');
+    const first = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
     first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
     first.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
     first.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
-    const second = document.querySelector('#schedule-table td[data-professional="1"][data-time="10:00"]');
+    const second = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="10:00"]');
     second.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
     second.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
     second.dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -69,7 +69,7 @@ describe('schedule selection', () => {
   });
 
   it('keeps professional info after interacting with modal fields', () => {
-    const cell = document.querySelector('#schedule-table td[data-professional="1"][data-time="09:00"]');
+    const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
     cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
 
     const profInput = document.getElementById('schedule-professional');
