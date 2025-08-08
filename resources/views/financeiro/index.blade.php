@@ -48,13 +48,6 @@
     </x-financeiro.card>
 </div>
 <div class="bg-white rounded-lg shadow p-4 mb-6">
-    <div class="mb-2">
-        <h3 class="text-lg font-semibold">Comparativo entre Clínicas</h3>
-        <p class="text-sm text-gray-500">Desempenho financeiro por unidade no mês atual</p>
-    </div>
-    <canvas id="clinicas-chart" class="w-full h-72" height="288"></canvas>
-</div>
-<div class="bg-white rounded-lg shadow p-4 mb-6">
     <h3 class="text-lg font-semibold mb-2">Formas de Pagamento</h3>
     <p class="text-sm text-gray-500">Distribuição das receitas por forma de pagamento</p>
     <canvas id="formas-chart" class="w-full h-64" height="256"></canvas>
@@ -83,10 +76,7 @@
         <p class="text-sm text-gray-500 mb-2">Despesas previstas para os próximos 7 dias</p>
         <ul class="divide-y divide-gray-200 text-sm">
             @foreach($proximosPagamentos as $p)
-            <li class="py-2 flex justify-between items-center">
-                <div>
-                    <p class="font-medium">{{ $p['nome'] }}</p>
-                    <p class="text-gray-500">{{ $p['tipo'] }} • {{ $p['unidade'] }}</p>
+@@ -97,73 +83,36 @@
                 </div>
                 <div class="text-right">
                     <p class="text-red-600">R$ {{ number_format($p['valor'],2,',','.') }}</p>
@@ -111,31 +101,6 @@
 
             new Chart(el, config);
         };
-
-        createChart('clinicas-chart', {
-            type: 'bar',
-            data: {
-                labels: @json($comparativo->pluck('clinic')),
-                datasets: [
-                    {
-                        label: 'Receita',
-                        backgroundColor: '#10b981',
-                        data: @json($comparativo->pluck('receita')),
-                    },
-                    {
-                        label: 'Despesa',
-                        backgroundColor: '#ef4444',
-                        data: @json($comparativo->pluck('despesa')),
-                    },
-                    {
-                        label: 'A Receber',
-                        backgroundColor: '#f59e0b',
-                        data: @json($comparativo->pluck('areceber')),
-                    }
-                ]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
 
         createChart('formas-chart', {
             type: 'doughnut',
