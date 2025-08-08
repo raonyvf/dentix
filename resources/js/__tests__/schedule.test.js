@@ -63,5 +63,21 @@ describe('schedule selection', () => {
     expect(document.getElementById('schedule-start').value).toBe('09:00');
     expect(document.getElementById('schedule-end').value).toBe('10:00');
   });
+
+  it('keeps professional info after interacting with modal fields', () => {
+    const cell = document.querySelector('#schedule-table td[data-professional="1"][data-time="09:00"]');
+    cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+
+    const profInput = document.getElementById('schedule-professional');
+    const summary = document.getElementById('schedule-summary');
+    expect(profInput.value).toBe('1');
+    expect(summary.textContent).toContain('Prof 1');
+
+    const start = document.getElementById('schedule-start');
+    start.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(profInput.value).toBe('1');
+    expect(summary.textContent).toContain('Prof 1');
+  });
 });
 

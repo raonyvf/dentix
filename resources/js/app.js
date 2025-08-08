@@ -280,15 +280,19 @@ const addMinutes = (time, mins) => {
     return `${hh}:${mm}`;
 };
 
-const clearSelection = () => {
+const clearSelection = (preserveProfessional = false) => {
     document.querySelectorAll('#schedule-table td[data-professional].selected')
         .forEach(c => c.classList.remove('selected', 'bg-blue-100'));
-    selection = { start: null, end: null, professional: null };
+    selection = {
+        start: null,
+        end: null,
+        professional: preserveProfessional ? selection.professional : null,
+    };
     if (hiddenStart) hiddenStart.value = '';
     if (hiddenEnd) hiddenEnd.value = '';
-    if (professionalInput) professionalInput.value = '';
-    if (dateInput) dateInput.value = '';
-    if (summary) summary.textContent = '';
+    if (!preserveProfessional && professionalInput) professionalInput.value = '';
+    if (dateInput && !preserveProfessional) dateInput.value = '';
+    if (!preserveProfessional && summary) summary.textContent = '';
 };
 
 const isOpen = time => {
@@ -409,11 +413,7 @@ function attachCellHandlers() {
         if (suppressClick || e.detail > 1) {
             if (selection.start && !e.target.closest('#schedule-table')) {
                 if (!scheduleModal || !scheduleModal.contains(e.target)) {
-                    const profVal = professionalInput?.value;
-                    const summaryText = summary?.textContent;
-                    clearSelection();
-                    if (professionalInput) professionalInput.value = profVal;
-                    if (summary) summary.textContent = summaryText;
+                    clearSelection(true);
                 }
             }
             return;
@@ -421,11 +421,7 @@ function attachCellHandlers() {
         const cell = e.target.closest('#schedule-table td[data-professional]');
         if (!cell) {
             if (selection.start && (!scheduleModal || !scheduleModal.contains(e.target))) {
-                const profVal = professionalInput?.value;
-                const summaryText = summary?.textContent;
-                clearSelection();
-                if (professionalInput) professionalInput.value = profVal;
-                if (summary) summary.textContent = summaryText;
+                clearSelection(true);
             }
             return;
         }
