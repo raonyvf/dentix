@@ -25,9 +25,9 @@ const buildDom = () => {
         <tr><th data-professional="1">Prof 1</th></tr>
       </thead>
       <tbody>
-        <tr data-row="09:00"><td data-slot="09:00"></td><td data-professional="1" data-time="09:00" data-hora="09:00"></td></tr>
-        <tr data-row="09:30"><td data-slot="09:30"></td><td data-professional="1" data-time="09:30" data-hora="09:30"></td></tr>
-        <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional="1" data-time="10:00" data-hora="10:00"></td></tr>
+        <tr data-row="09:00"><td data-slot="09:00"></td><td data-professional="1" data-time="09:00" data-hora="09:00" data-date="2024-01-01"></td></tr>
+        <tr data-row="09:30"><td data-slot="09:30"></td><td data-professional="1" data-time="09:30" data-hora="09:30" data-date="2024-01-01"></td></tr>
+        <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional="1" data-time="10:00" data-hora="10:00" data-date="2024-01-01"></td></tr>
       </tbody>
     </table>
   `;
@@ -66,6 +66,24 @@ describe('schedule selection', () => {
     expect(modal.classList.contains('hidden')).toBe(false);
     expect(document.getElementById('schedule-start').value).toBe('09:00');
     expect(document.getElementById('schedule-end').value).toBe('10:00');
+  });
+
+  it('clears selection when second click has different date', () => {
+    const first = document.querySelector('#schedule-table td[data-professional="1"][data-time="09:00"]');
+    first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    first.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+    first.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    const second = document.querySelector('#schedule-table td[data-professional="1"][data-time="10:00"]');
+    second.dataset.date = '2024-01-02';
+    second.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    second.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+    second.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    const modal = document.getElementById('schedule-modal');
+    expect(modal.classList.contains('hidden')).toBe(true);
+    expect(first.classList.contains('selected')).toBe(false);
+    expect(second.classList.contains('selected')).toBe(true);
   });
 
   it('keeps professional info after interacting with modal fields', () => {
