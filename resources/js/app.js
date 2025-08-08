@@ -407,13 +407,25 @@ function attachCellHandlers() {
     handleClick = e => {
         if (suppressClick || e.detail > 1) {
             if (selection.start && !e.target.closest('#schedule-table')) {
-                clearSelection();
+                if (!scheduleModal || !scheduleModal.contains(e.target)) {
+                    const profVal = professionalInput?.value;
+                    const summaryText = summary?.textContent;
+                    clearSelection();
+                    if (professionalInput) professionalInput.value = profVal;
+                    if (summary) summary.textContent = summaryText;
+                }
             }
             return;
         }
         const cell = e.target.closest('#schedule-table td[data-professional]');
         if (!cell) {
-            if (selection.start) clearSelection();
+            if (selection.start && (!scheduleModal || !scheduleModal.contains(e.target))) {
+                const profVal = professionalInput?.value;
+                const summaryText = summary?.textContent;
+                clearSelection();
+                if (professionalInput) professionalInput.value = profVal;
+                if (summary) summary.textContent = summaryText;
+            }
             return;
         }
         const time = cell.dataset.time;
