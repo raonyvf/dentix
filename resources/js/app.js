@@ -304,6 +304,7 @@ const isOpen = time => {
     return slot && !slot.classList.contains('text-gray-400');
 };
 
+
 const selectRange = (date, prof, start, end) => {
     clearSelection();
     const times = start === end ? [start] : nextTimes(start, end);
@@ -320,10 +321,12 @@ const selectRange = (date, prof, start, end) => {
     if (endInput) endInput.value = finalEnd || '';
     if (professionalInput) professionalInput.value = prof;
     if (dateInput) dateInput.value = date;
+
     return true;
 };
 
 const abrirModalAgendamento = () => {
+
     const date = selection.date || '';
 
     if (selection.start && !selection.end) {
@@ -355,6 +358,7 @@ window.abrirModalAgendamento = abrirModalAgendamento;
 
 const openScheduleModal = (prof, start, end, date) => {
     if (!selectRange(date, prof, start, end)) return;
+
     abrirModalAgendamento();
 };
 
@@ -382,14 +386,18 @@ function attachCellHandlers() {
         // handleDblClick so we don't filter them here.
         const cell = e.target.closest('#schedule-table td[data-professional-id]');
         if (!cell || e.button !== 0 || selection.start) return;
+
         const time = cell.dataset.hora;
         const prof = cell.dataset.professionalId;
+
         const date = cell.dataset.date;
         if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
         e.preventDefault();
         dragging = true;
         suppressClick = true;
+
         selectRange(date, prof, time, time);
+
     };
 
     handleMouseMove = e => {
@@ -398,7 +406,9 @@ function attachCellHandlers() {
         if (!cell || cell.dataset.professionalId !== selection.professional || cell.dataset.date !== selection.date) return;
         const time = cell.dataset.hora;
         if (toMinutes(time) < toMinutes(selection.start)) return;
+
         selectRange(selection.date, selection.professional, selection.start, time);
+
     };
 
     handleDblClick = e => {
@@ -407,8 +417,10 @@ function attachCellHandlers() {
         // Clear any pending selection so the modal is the only action taken
         // on a double click.
         clearSelection();
+
         const start = cell.dataset.hora;
         const prof = cell.dataset.professionalId;
+
         const date = cell.dataset.date;
         const end = addMinutes(start, 30);
         openScheduleModal(prof, start, end, date);
@@ -446,8 +458,10 @@ function attachCellHandlers() {
             }
             return;
         }
+
         const time = cell.dataset.hora;
         const prof = cell.dataset.professionalId;
+
         const date = cell.dataset.date;
 
         if (!selection.start) {
@@ -472,7 +486,9 @@ function attachCellHandlers() {
                 return;
             }
             if (toMinutes(time) < toMinutes(selection.start)) {
+
                 openScheduleModal(prof, time, selection.start, date);
+
                 return;
             }
             selection.end = time;
@@ -761,7 +777,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const root = document.querySelector('[x-data]');
+
                 const date = scheduleModal.dataset.date;
+
                 const url = saveBtn.dataset.storeUrl;
                 const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 fetch(url, {
