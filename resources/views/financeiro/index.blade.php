@@ -54,17 +54,10 @@
     </div>
     <canvas id="clinicas-chart" class="w-full h-72" height="288"></canvas>
 </div>
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-    <div class="bg-white rounded-lg shadow p-4">
-        <h3 class="text-lg font-semibold mb-2">Fluxo de Caixa</h3>
-        <p class="text-sm text-gray-500">Evolução consolidada de receitas e despesas nos últimos 6 meses</p>
-        <canvas id="fluxo-chart" class="w-full h-64" height="256"></canvas>
-    </div>
-    <div class="bg-white rounded-lg shadow p-4">
-        <h3 class="text-lg font-semibold mb-2">Formas de Pagamento</h3>
-        <p class="text-sm text-gray-500">Distribuição das receitas por forma de pagamento</p>
-        <canvas id="formas-chart" class="w-full h-64" height="256"></canvas>
-    </div>
+<div class="bg-white rounded-lg shadow p-4 mb-6">
+    <h3 class="text-lg font-semibold mb-2">Formas de Pagamento</h3>
+    <p class="text-sm text-gray-500">Distribuição das receitas por forma de pagamento</p>
+    <canvas id="formas-chart" class="w-full h-64" height="256"></canvas>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <div class="bg-white rounded-lg shadow p-4">
@@ -139,18 +132,6 @@
                         backgroundColor: '#f59e0b',
                         data: @json($comparativo->pluck('areceber')),
                     }
-                ]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-
-        createChart('fluxo-chart', {
-            type: 'bar',
-            data: {
-                labels: @json($meses->pluck('mes')),
-                datasets: [
-                    { label: 'Receita', backgroundColor: '#10b981', data: @json($meses->pluck('receita')) },
-                    { label: 'Despesa', backgroundColor: '#ef4444', data: @json($meses->pluck('despesa')) }
                 ]
             },
             options: { responsive: true, maintainAspectRatio: false }
