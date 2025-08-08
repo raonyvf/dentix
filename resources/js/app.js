@@ -370,7 +370,8 @@ function attachCellHandlers() {
     if (handleMouseUp) document.removeEventListener('mouseup', handleMouseUp);
 
     handleMouseDown = e => {
-        if (e.detail > 1) return;
+        // Allow multiple mousedown events; double clicks are handled in
+        // handleDblClick so we don't filter them here.
         const cell = e.target.closest('#schedule-table td[data-professional]');
         if (!cell || e.button !== 0) return;
         const time = cell.dataset.time;
@@ -393,6 +394,9 @@ function attachCellHandlers() {
     handleDblClick = e => {
         const cell = e.target.closest('#schedule-table td[data-professional]');
         if (!cell) return;
+        // Clear any pending selection so the modal is the only action taken
+        // on a double click.
+        clearSelection();
         const start = cell.dataset.time;
         const prof = cell.dataset.professional;
         const end = addMinutes(start, 30);
