@@ -76,10 +76,7 @@
         <p class="text-sm text-gray-500 mb-2">Despesas previstas para os próximos 7 dias</p>
         <ul class="divide-y divide-gray-200 text-sm">
             @foreach($proximosPagamentos as $p)
-            <li class="py-2 flex justify-between items-center">
-                <div>
-                    <p class="font-medium">{{ $p['nome'] }}</p>
-                    <p class="text-gray-500">{{ $p['tipo'] }} • {{ $p['unidade'] }}</p>
+@@ -97,73 +83,36 @@
                 </div>
                 <div class="text-right">
                     <p class="text-red-600">R$ {{ number_format($p['valor'],2,',','.') }}</p>

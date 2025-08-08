@@ -141,11 +141,15 @@ class AgendamentoController extends Controller
             'data' => 'required|date',
             'hora_inicio' => 'required',
             'hora_fim' => 'required',
+            'tipo' => 'nullable|string',
+            'contato' => 'nullable|string',
             'observacao' => 'nullable|string',
         ]);
 
         $data['clinica_id'] = $clinicId;
         $data['status'] = 'confirmado';
+        $data['tipo'] = $data['tipo'] ?? 'Consulta';
+        $data['contato'] = $data['contato'] ?? '';
 
         Agendamento::create($data);
         $cacheKey = "agendamentos_{$clinicId}_" . Carbon::parse($data['data'])->format('Y-m-d');
