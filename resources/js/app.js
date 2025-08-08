@@ -412,7 +412,21 @@ function attachCellHandlers() {
 
     handleClick = e => {
         const cell = e.target.closest('#schedule-table td[data-professional]');
-        if (suppressClick || (e.detail > 1 && cell === lastClickedCell)) {
+
+        if (suppressClick) {
+            // Skip the suppressed click (typically the first cell click)
+            // but immediately clear the flag so the next click is handled.
+            suppressClick = false;
+            lastClickedCell = cell;
+            if (selection.start && !e.target.closest('#schedule-table')) {
+                if (!scheduleModal || !scheduleModal.contains(e.target)) {
+                    clearSelection(true);
+                }
+            }
+            return;
+        }
+
+        if (e.detail > 1 && cell === lastClickedCell) {
             if (selection.start && !e.target.closest('#schedule-table')) {
                 if (!scheduleModal || !scheduleModal.contains(e.target)) {
                     clearSelection(true);
@@ -481,7 +495,9 @@ function attachCellHandlers() {
             clearSelection();
         }
 
-        setTimeout(() => { suppressClick = false; }, 0);
+        // Do not rely on a delayed reset; handleClick will clear the
+        // suppression on the next click so that subsequent clicks are
+        // processed immediately.
     };
 
     document.addEventListener('mousedown', handleMouseDown);
