@@ -178,6 +178,10 @@ window.updateScheduleTable = function(openTimes, start, end, closed) {
             td.classList.add('text-gray-400');
         }
     });
+    if (window.attachCellHandlers) {
+        window.attachCellHandlers();
+    }
+    document.dispatchEvent(new Event('schedule:rendered'));
 };
 
 window.renderSchedule = function (professionals, agenda, baseTimes) {
@@ -243,6 +247,9 @@ window.renderSchedule = function (professionals, agenda, baseTimes) {
     }
 
     if (emptyMsg) emptyMsg.classList.add('hidden');
+    if (window.attachCellHandlers) {
+        window.attachCellHandlers();
+    }
     document.dispatchEvent(new Event('schedule:rendered'));
 };
 
@@ -545,87 +552,90 @@ document.addEventListener('DOMContentLoaded', () => {
         window.abrirModalAgendamento = abrirModalAgendamento;
 
         const attachCellHandlers = () => {
-            document.querySelectorAll('#schedule-table td[data-professional]').forEach(td => {
-                if (td.dataset.bound) return;
-                td.dataset.bound = '1';
+            const table = document.getElementById('schedule-table');
+            if (!table || table.dataset.bound) return;
+            table.dataset.bound = '1';
 
-                td.addEventListener('mousedown', e => {
-                    if (e.button !== 0) return;
-                    const cell = e.currentTarget;
-                    const time = cell.dataset.time;
-                    const prof = cell.dataset.professional;
+            table.addEventListener('mousedown', e => {
+                const cell = e.target.closest('td[data-professional]');
+                if (!cell || e.button !== 0) return;
+                const time = cell.dataset.time;
+                const prof = cell.dataset.professional;
+                if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
+                dragging = true;
+                suppressClick = true;
+                selectRange(prof, time, time);
+            });
+
+            table.addEventListener('mouseover', e => {
+                if (!dragging) return;
+                const cell = e.target.closest('td[data-professional]');
+                if (!cell || cell.dataset.professional !== selection.professional) return;
+                const time = cell.dataset.time;
+                if (toMinutes(time) < toMinutes(selection.start)) return;
+                selectRange(selection.professional, selection.start, time);
+            });
+
+            table.addEventListener('dblclick', e => {
+                const cell = e.target.closest('td[data-professional]');
+                if (!cell) return;
+                console.log('dblclick', cell.dataset.time, cell.dataset.professional);
+                const start = cell.dataset.time;
+                const prof = cell.dataset.professional;
+                const end = addMinutes(start, 30);
+                if (!selectRange(prof, start, end)) return;
+                suppressClick = true;
+                abrirModalAgendamento();
+                setTimeout(() => { suppressClick = false; }, 0);
+            });
+
+            table.addEventListener('click', e => {
+                if (suppressClick || e.detail > 1) return;
+                const cell = e.target.closest('td[data-professional]');
+                if (!cell) return;
+                const time = cell.dataset.time;
+                const prof = cell.dataset.professional;
+
+                if (!selection.start) {
                     if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
-                    dragging = true;
-                    suppressClick = true;
-                    selectRange(prof, time, time);
-                });
+                    selection.start = time;
+                    selection.professional = prof;
+                    cell.classList.add('selected', 'bg-blue-100');
+                    if (hiddenStart) hiddenStart.value = time;
+                    return;
+                }
 
-                td.addEventListener('mouseenter', e => {
-                    if (!dragging) return;
-                    const cell = e.currentTarget;
-                    if (cell.dataset.professional !== selection.professional) return;
-                    const time = cell.dataset.time;
-                    if (toMinutes(time) < toMinutes(selection.start)) return;
-                    selectRange(selection.professional, selection.start, time);
-                });
-
-                td.addEventListener('dblclick', e => {
-                    const cell = e.currentTarget;
-                    const start = cell.dataset.time;
-                    const prof = cell.dataset.professional;
-                    const end = addMinutes(start, 30);
-                    if (!selectRange(prof, start, end)) return;
-                    suppressClick = true;
-                    abrirModalAgendamento();
-                    setTimeout(() => { suppressClick = false; }, 0);
-                });
-
-                td.addEventListener('click', e => {
-                    if (suppressClick || e.detail > 1) return;
-                    const cell = e.currentTarget;
-                    const time = cell.dataset.time;
-                    const prof = cell.dataset.professional;
-
-                    if (!selection.start) {
-                        if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
-                        selection.start = time;
-                        selection.professional = prof;
-                        cell.classList.add('selected', 'bg-blue-100');
-                        if (hiddenStart) hiddenStart.value = time;
-                        return;
-                    }
-
-                    if (selection.start && !selection.end) {
-                        if (prof !== selection.professional || toMinutes(time) < toMinutes(selection.start)) {
-                            clearSelection();
-                            if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
-                            selection.start = time;
-                            selection.professional = prof;
-                            cell.classList.add('selected', 'bg-blue-100');
-                            if (hiddenStart) hiddenStart.value = time;
-                            return;
-                        }
-                        if (!selectRange(prof, selection.start, time)) return;
-                        abrirModalAgendamento();
-                        return;
-                    }
-
-                    if (selection.start && selection.end) {
+                if (selection.start && !selection.end) {
+                    if (prof !== selection.professional || toMinutes(time) < toMinutes(selection.start)) {
                         clearSelection();
                         if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
                         selection.start = time;
                         selection.professional = prof;
                         cell.classList.add('selected', 'bg-blue-100');
                         if (hiddenStart) hiddenStart.value = time;
+                        return;
                     }
-                });
+                    if (!selectRange(prof, selection.start, time)) return;
+                    abrirModalAgendamento();
+                    return;
+                }
+
+                if (selection.start && selection.end) {
+                    clearSelection();
+                    if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
+                    selection.start = time;
+                    selection.professional = prof;
+                    cell.classList.add('selected', 'bg-blue-100');
+                    if (hiddenStart) hiddenStart.value = time;
+                }
             });
         };
 
+        window.attachCellHandlers = attachCellHandlers;
         attachCellHandlers();
-        document.addEventListener('schedule:rendered', attachCellHandlers);
 
         document.addEventListener('mouseup', e => {
+            console.log('mouseup');
             if (!dragging) return;
             dragging = false;
 
