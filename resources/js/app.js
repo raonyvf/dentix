@@ -549,6 +549,11 @@ document.addEventListener('DOMContentLoaded', () => {
             scheduleModal.classList.remove('hidden');
         };
 
+        const openScheduleModal = (prof, start, end) => {
+            if (!selectRange(prof, start, end)) return;
+            abrirModalAgendamento();
+        };
+
         window.abrirModalAgendamento = abrirModalAgendamento;
 
         const attachCellHandlers = () => {
@@ -557,6 +562,7 @@ document.addEventListener('DOMContentLoaded', () => {
             table.dataset.bound = '1';
 
             table.addEventListener('mousedown', e => {
+                if (e.detail > 1) return;
                 const cell = e.target.closest('td[data-professional]');
                 if (!cell || e.button !== 0) return;
                 const time = cell.dataset.time;
@@ -579,14 +585,10 @@ document.addEventListener('DOMContentLoaded', () => {
             table.addEventListener('dblclick', e => {
                 const cell = e.target.closest('td[data-professional]');
                 if (!cell) return;
-                console.log('dblclick', cell.dataset.time, cell.dataset.professional);
                 const start = cell.dataset.time;
                 const prof = cell.dataset.professional;
                 const end = addMinutes(start, 30);
-                if (!selectRange(prof, start, end)) return;
-                suppressClick = true;
-                abrirModalAgendamento();
-                setTimeout(() => { suppressClick = false; }, 0);
+                openScheduleModal(prof, start, end);
             });
 
             table.addEventListener('click', e => {
@@ -615,8 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (hiddenStart) hiddenStart.value = time;
                         return;
                     }
-                    if (!selectRange(prof, selection.start, time)) return;
-                    abrirModalAgendamento();
+                    openScheduleModal(prof, selection.start, time);
                     return;
                 }
 
@@ -635,7 +636,6 @@ document.addEventListener('DOMContentLoaded', () => {
         attachCellHandlers();
 
         document.addEventListener('mouseup', e => {
-            console.log('mouseup');
             if (!dragging) return;
             dragging = false;
 
@@ -645,7 +645,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (selection.start && selection.end && selection.start !== selection.end && e.target.closest('#schedule-table')) {
-                abrirModalAgendamento();
+                openScheduleModal(selection.professional, selection.start, selection.end);
             } else {
                 clearSelection();
             }
