@@ -306,11 +306,12 @@ const selectRange = (prof, start, end) => {
         const cell = document.querySelector(`#schedule-table td[data-professional="${prof}"][data-time="${t}"]`);
         cell?.classList.add('selected', 'bg-blue-100');
     }
-    selection = { start, end, professional: prof };
+    const finalEnd = start === end ? null : end;
+    selection = { start, end: finalEnd, professional: prof };
     if (hiddenStart) hiddenStart.value = start;
-    if (hiddenEnd) hiddenEnd.value = end;
+    if (hiddenEnd) hiddenEnd.value = finalEnd || '';
     if (startInput) startInput.value = start;
-    if (endInput) endInput.value = end;
+    if (endInput) endInput.value = finalEnd || '';
     if (professionalInput) professionalInput.value = prof;
     return true;
 };
@@ -373,7 +374,7 @@ function attachCellHandlers() {
         // Allow multiple mousedown events; double clicks are handled in
         // handleDblClick so we don't filter them here.
         const cell = e.target.closest('#schedule-table td[data-professional]');
-        if (!cell || e.button !== 0) return;
+        if (!cell || e.button !== 0 || selection.start) return;
         const time = cell.dataset.time;
         const prof = cell.dataset.professional;
         if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
@@ -440,7 +441,7 @@ function attachCellHandlers() {
             return;
         }
 
-        if (selection.start && !selection.end) {
+        if (selection.start && selection.end == null) {
             if (prof !== selection.professional || toMinutes(time) < toMinutes(selection.start)) {
                 clearSelection();
                 if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
@@ -450,11 +451,12 @@ function attachCellHandlers() {
                 if (hiddenStart) hiddenStart.value = time;
                 return;
             }
-            openScheduleModal(prof, selection.start, time);
+            selection.end = time;
+            openScheduleModal(prof, selection.start, selection.end);
             return;
         }
 
-        if (selection.start && selection.end) {
+        if (selection.start && selection.end != null) {
             clearSelection();
             if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
             selection.start = time;
@@ -468,13 +470,10 @@ function attachCellHandlers() {
         if (!dragging) return;
         dragging = false;
 
-        if (suppressClick && selection.start === selection.end) {
-            setTimeout(() => { suppressClick = false; }, 0);
-            return;
-        }
-
-        if (selection.start && selection.end && selection.start !== selection.end && e.target.closest('#schedule-table')) {
+        if (selection.start && selection.end && e.target.closest('#schedule-table')) {
             openScheduleModal(selection.professional, selection.start, selection.end);
+        } else if (!selection.end) {
+            // keep partial selection
         } else {
             clearSelection();
         }
