@@ -104,10 +104,10 @@
         <input type="hidden" id="hora_fim" name="hora_fim">
         <input type="hidden" id="schedule-professional">
         <input type="hidden" id="schedule-date">
-        <label class="block mb-4">
+        <label class="block mb-4 relative">
             <span class="text-sm">Paciente</span>
-            <input id="schedule-paciente" type="text" list="schedule-paciente-list" placeholder="Buscar..." data-search-url="{{ route('pacientes.search') }}" class="mt-1 w-full border rounded p-1" />
-            <datalist id="schedule-paciente-list"></datalist>
+            <input id="schedule-paciente" type="text" placeholder="Buscar..." data-search-url="{{ route('pacientes.search') }}" data-create-url="{{ route('pacientes.create') }}" class="mt-1 w-full border rounded p-1" autocomplete="off" />
+            <ul id="schedule-paciente-list" class="absolute z-10 w-full bg-white border rounded mt-1 max-h-40 overflow-auto hidden"></ul>
             <input type="hidden" id="schedule-paciente-id" />
         </label>
         <label class="block mb-4">

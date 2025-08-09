@@ -738,24 +738,49 @@ document.addEventListener('DOMContentLoaded', () => {
         let searchTimeout;
 
         if (pacienteInput && pacienteList) {
+            const createUrl = pacienteInput.dataset.createUrl;
             pacienteInput.addEventListener('input', e => {
                 clearTimeout(searchTimeout);
                 const term = e.target.value.trim();
-                const selected = Array.from(pacienteList.options).find(o => o.value === term);
-                if (selected) {
-                    if (pacienteIdInput) pacienteIdInput.value = selected.dataset.id || '';
+                if (pacienteIdInput) pacienteIdInput.value = '';
+                if (term.length < 2) {
+                    pacienteList.classList.add('hidden');
+                    pacienteList.innerHTML = '';
                     return;
                 }
-                if (pacienteIdInput) pacienteIdInput.value = '';
-                if (term.length < 2) { pacienteList.innerHTML = ''; return; }
                 searchTimeout = setTimeout(() => {
                     const url = pacienteInput.dataset.searchUrl;
                     fetch(`${url}?q=${encodeURIComponent(term)}`)
                         .then(r => r.json())
                         .then(data => {
-                            pacienteList.innerHTML = data.map(n => `<option data-id="${n.id}" value="${n.name}"></option>`).join('');
+                            pacienteList.innerHTML = '';
+                            if (!data.length) {
+                                pacienteList.innerHTML = `<li class="px-2 py-1 text-sm text-gray-600">Nenhum paciente encontrado. <button type="button" id="create-paciente-btn" class="text-primary underline">Criar novo?</button></li>`;
+                                pacienteList.classList.remove('hidden');
+                                const btn = document.getElementById('create-paciente-btn');
+                                if (btn) btn.addEventListener('click', () => { if (createUrl) window.location.href = createUrl; });
+                                return;
+                            }
+                            data.slice(0, 10).forEach(p => {
+                                const detail = p.phone || p.cpf || '';
+                                const li = document.createElement('li');
+                                li.className = 'px-2 py-1 cursor-pointer hover:bg-gray-100';
+                                li.textContent = detail ? `${p.name} - ${detail}` : p.name;
+                                li.dataset.id = p.id;
+                                li.addEventListener('click', () => {
+                                    pacienteInput.value = p.name;
+                                    if (pacienteIdInput) pacienteIdInput.value = p.id;
+                                    pacienteList.classList.add('hidden');
+                                });
+                                pacienteList.appendChild(li);
+                            });
+                            pacienteList.classList.remove('hidden');
                         });
                 }, 300);
+            });
+
+            pacienteInput.addEventListener('blur', () => {
+                setTimeout(() => pacienteList.classList.add('hidden'), 200);
             });
         }
 

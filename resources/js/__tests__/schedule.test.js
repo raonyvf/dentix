@@ -14,8 +14,8 @@ const buildDom = () => {
       <div id="schedule-summary"></div>
       <input id="hora_inicio" />
       <input id="hora_fim" />
-      <input id="schedule-paciente" data-search-url="/search" list="schedule-paciente-list" />
-      <datalist id="schedule-paciente-list"></datalist>
+      <input id="schedule-paciente" data-search-url="/search" data-create-url="/create" />
+      <ul id="schedule-paciente-list"></ul>
       <input id="schedule-paciente-id" />
       <button id="schedule-save"></button>
       <button id="schedule-cancel"></button>
@@ -25,9 +25,9 @@ const buildDom = () => {
         <tr><th data-professional-id="1">Prof 1</th></tr>
       </thead>
       <tbody>
-        <tr data-row="09:00"><td data-slot="09:00"></td><td data-professional="1" data-time="09:00" data-hora="09:00" data-date="2024-01-01"></td></tr>
-        <tr data-row="09:30"><td data-slot="09:30"></td><td data-professional="1" data-time="09:30" data-hora="09:30" data-date="2024-01-01"></td></tr>
-        <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional="1" data-time="10:00" data-hora="10:00" data-date="2024-01-01"></td></tr>
+        <tr data-row="09:00"><td data-slot="09:00"></td><td data-professional-id="1" data-hora="09:00" data-date="2024-01-01"></td></tr>
+        <tr data-row="09:30"><td data-slot="09:30"></td><td data-professional-id="1" data-hora="09:30" data-date="2024-01-01"></td></tr>
+        <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional-id="1" data-hora="10:00" data-date="2024-01-01"></td></tr>
       </tbody>
     </table>
   `;
@@ -69,12 +69,12 @@ describe('schedule selection', () => {
   });
 
   it('clears selection when second click has different date', () => {
-    const first = document.querySelector('#schedule-table td[data-professional="1"][data-time="09:00"]');
+    const first = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
     first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
     first.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
     first.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
-    const second = document.querySelector('#schedule-table td[data-professional="1"][data-time="10:00"]');
+    const second = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="10:00"]');
     second.dataset.date = '2024-01-02';
     second.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
     second.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
@@ -105,14 +105,14 @@ describe('schedule selection', () => {
   it('sets patient id when selecting from search results', async () => {
     vi.useFakeTimers();
     global.fetch = vi.fn(() =>
-      Promise.resolve({ json: () => Promise.resolve([{ id: 1, name: 'John Doe' }]) })
+      Promise.resolve({ json: () => Promise.resolve([{ id: 1, name: 'John Doe', phone: '123' }]) })
     );
     const input = document.getElementById('schedule-paciente');
     input.value = 'Jo';
     input.dispatchEvent(new Event('input', { bubbles: true }));
     await vi.runAllTimersAsync();
-    input.value = 'John Doe';
-    input.dispatchEvent(new Event('input', { bubbles: true }));
+    const item = document.querySelector('#schedule-paciente-list li');
+    item.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(document.getElementById('schedule-paciente-id').value).toBe('1');
     vi.useRealTimers();
   });
