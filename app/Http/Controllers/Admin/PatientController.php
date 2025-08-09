@@ -130,7 +130,7 @@ class PatientController extends Controller
             ])
             ->selectRaw("$digitsPhoneExpr as digits_phone, $digitsCpfExpr as digits_cpf")
             ->when($clinicId, fn($q) => $q->whereHas('clinicas', fn($q2) => $q2->where('clinica_id', $clinicId)))
-            ->where(function ($query) use ($nameExpr, $emailExpr, $normTerm, $digitTerm) {
+            ->where(function ($query) use ($nameExpr, $emailExpr, $normTerm, $digitTerm, $digitsPhoneExpr, $digitsCpfExpr) {
                 if ($normTerm !== '') {
                     $query->whereRaw("$nameExpr LIKE ?", ["{$normTerm}%"])
                         ->orWhereRaw("$nameExpr LIKE ?", ["%{$normTerm}%"])
@@ -138,8 +138,8 @@ class PatientController extends Controller
                 }
 
                 if ($digitTerm !== '') {
-                    $query->orWhere('digits_phone', 'like', "%{$digitTerm}%")
-                        ->orWhere('digits_cpf', 'like', "%{$digitTerm}%")
+                    $query->orWhereRaw("$digitsPhoneExpr LIKE ?", ["%{$digitTerm}%"])
+                        ->orWhereRaw("$digitsCpfExpr LIKE ?", ["%{$digitTerm}%"])
                         ->orWhere('pacientes.id', $digitTerm);
                 }
             })
@@ -147,7 +147,7 @@ class PatientController extends Controller
                 "CASE\n" .
                 "    WHEN $nameExpr LIKE ? THEN 0\n" .
                 "    WHEN $nameExpr LIKE ? THEN 1\n" .
-                "    WHEN $emailExpr LIKE ? OR digits_phone LIKE ? OR digits_cpf LIKE ? THEN 2\n" .
+                "    WHEN $emailExpr LIKE ? OR $digitsPhoneExpr LIKE ? OR $digitsCpfExpr LIKE ? THEN 2\n" .
                 "    ELSE 3\n" .
                 "END",
                 ["{$normTerm}%", "%{$normTerm}%", "%{$normTerm}%", "%{$digitTerm}%", "%{$digitTerm}%"]
