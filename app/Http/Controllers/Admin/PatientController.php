@@ -103,7 +103,8 @@ class PatientController extends Controller
     {
         $term = $request->get('q', '');
         $results = Patient::with('pessoa')
-            ->whereHas('pessoa', function ($q) use ($term) {
+            ->where('id', $term)
+            ->orWhereHas('pessoa', function ($q) use ($term) {
                 $q->where('primeiro_nome', 'like', "%{$term}%")
                     ->orWhere('ultimo_nome', 'like', "%{$term}%")
                     ->orWhere('phone', 'like', "%{$term}%")
