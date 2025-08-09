@@ -356,6 +356,15 @@ const abrirModalAgendamento = () => {
 };
 window.abrirModalAgendamento = abrirModalAgendamento;
 
+const abrirModalPaciente = () => {
+    const modal = document.getElementById('paciente-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+    }
+    window.dispatchEvent(new CustomEvent('abrirModalPaciente'));
+};
+window.abrirModalPaciente = abrirModalPaciente;
+
 const openScheduleModal = (prof, start, end, date) => {
     if (!selectRange(date, prof, start, end)) return;
 
@@ -766,7 +775,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 pacienteList.innerHTML = `<li class="px-2 py-1 text-sm text-gray-600">Nenhum paciente encontrado. <button type="button" id="create-paciente-btn" class="text-primary underline">Criar novo?</button></li>`;
                                 pacienteList.classList.remove('hidden');
                                 const btn = document.getElementById('create-paciente-btn');
-                                if (btn) btn.addEventListener('click', () => { if (createUrl) window.location.href = createUrl; });
+                                if (btn) btn.addEventListener('click', () => {
+                                    pacienteList.classList.add('hidden');
+                                    if (typeof window.abrirModalPaciente === 'function') {
+                                        window.abrirModalPaciente();
+                                    } else {
+                                        window.dispatchEvent(new CustomEvent('abrirModalPaciente'));
+                                    }
+                                });
                                 return;
                             }
                             data.slice(0, 10).forEach(p => {
