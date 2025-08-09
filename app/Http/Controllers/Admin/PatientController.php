@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Normalizer;
 
 class PatientController extends Controller
 {
@@ -171,7 +170,12 @@ class PatientController extends Controller
 
     private function normalize(string $value): string
     {
-        $normalized = Normalizer::normalize($value, Normalizer::FORM_D);
+        if (! class_exists('Normalizer')) {
+            logger()->warning('Intl extension not loaded; using ASCII fallback for normalization.');
+            return (string) Str::of($value)->ascii()->lower();
+        }
+
+        $normalized = \Normalizer::normalize($value, \Normalizer::FORM_D);
         $withoutAccents = preg_replace('/\pM/u', '', $normalized);
         return mb_strtolower($withoutAccents);
     }
