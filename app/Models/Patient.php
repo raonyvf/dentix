@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToOrganization;
 use App\Models\Usuario;
 use App\Models\Pessoa;
+use App\Models\Clinic;
 
 class Patient extends Model
 {
@@ -41,5 +42,10 @@ class Patient extends Model
     public function pessoa()
     {
         return $this->belongsTo(Pessoa::class);
+    }
+
+    public function clinicas()
+    {
+        return $this->belongsToMany(Clinic::class, 'clinica_paciente', 'paciente_id', 'clinica_id')->withTimestamps();
     }
 }

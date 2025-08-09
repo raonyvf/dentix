@@ -109,64 +109,61 @@ class PatientController extends Controller
         $normTerm = $this->normalize($term);
         $digitTerm = $this->digits($term);
 
-        $results = Patient::with('pessoa')->get()
-            ->map(function ($p) use ($normTerm, $digitTerm) {
-                $pessoa = $p->pessoa;
-                $name = trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? ''));
-                $email = $pessoa->email ?? '';
-                $phone = $pessoa->phone ?? '';
-                $whatsapp = $pessoa->whatsapp ?? '';
-                $cpf = $pessoa->cpf ?? '';
+        $clinicId = function_exists('clinicId') ? clinicId() : (function_exists('app') && app()->bound('clinic_id') ? app('clinic_id') : null);
 
-                $nameNorm = $this->normalize($name);
-                $emailNorm = $this->normalize($email);
-                $phoneNorm = $this->digits($phone);
-                $whatsNorm = $this->digits($whatsapp);
-                $cpfNorm = $this->digits($cpf);
+        $nameExpr = "lower(unaccent(concat(coalesce(pessoas.primeiro_nome,''),' ',coalesce(pessoas.nome_meio,''),' ',coalesce(pessoas.ultimo_nome,''))))";
+        $emailExpr = "lower(unaccent(coalesce(pessoas.email,'')))";
+        $phoneExpr = "regexp_replace(coalesce(pessoas.phone,''),'\\D','')";
+        $whatsExpr = "regexp_replace(coalesce(pessoas.whatsapp,''),'\\D','')";
+        $cpfExpr = "regexp_replace(coalesce(pessoas.cpf,''),'\\D','')";
 
-                $score = 0;
+        $patients = Patient::query()
+            ->join('pessoas', 'pacientes.pessoa_id', '=', 'pessoas.id')
+            ->when($clinicId, fn($q) => $q->whereHas('clinicas', fn($q2) => $q2->where('clinica_id', $clinicId)))
+            ->where(function ($query) use ($nameExpr, $emailExpr, $phoneExpr, $whatsExpr, $cpfExpr, $normTerm, $digitTerm) {
                 if ($normTerm !== '') {
-                    if (str_starts_with($nameNorm, $normTerm)) {
-                        $score = 3;
-                    } elseif (str_contains($nameNorm, $normTerm)) {
-                        $score = 2;
-                    } elseif (str_contains($emailNorm, $normTerm)) {
-                        $score = 1;
-                    }
+                    $query->whereRaw("$nameExpr LIKE ?", ["{$normTerm}%"])
+                        ->orWhereRaw("$nameExpr LIKE ?", ["%{$normTerm}%"])
+                        ->orWhereRaw("$emailExpr LIKE ?", ["%{$normTerm}%"]);
                 }
 
                 if ($digitTerm !== '') {
-                    if ((string) $p->id === $digitTerm) {
-                        $score = 4;
-                    } elseif (str_contains($phoneNorm, $digitTerm) || str_contains($whatsNorm, $digitTerm) || str_contains($cpfNorm, $digitTerm)) {
-                        $score = max($score, 1);
-                    }
+                    $query->orWhereRaw("$phoneExpr LIKE ?", ["%{$digitTerm}%"])
+                        ->orWhereRaw("$whatsExpr LIKE ?", ["%{$digitTerm}%"])
+                        ->orWhereRaw("$cpfExpr LIKE ?", ["%{$digitTerm}%"])
+                        ->orWhere('pacientes.id', $digitTerm);
                 }
-
-                if ($score === 0) {
-                    return null;
-                }
-
-                return [
-                    'id' => $p->id,
-                    'name' => $name,
-                    'phone' => $phone,
-                    'cpf' => $cpf,
-                    'score' => $score,
-                ];
             })
-            ->filter(fn($p) => $p !== null)
-            ->values()
-            ->toArray();
+            ->orderByRaw(
+                "CASE\n" .
+                "    WHEN $nameExpr LIKE ? THEN 0\n" .
+                "    WHEN $nameExpr LIKE ? THEN 1\n" .
+                "    WHEN $emailExpr LIKE ? OR $phoneExpr LIKE ? OR $whatsExpr LIKE ? OR $cpfExpr LIKE ? THEN 2\n" .
+                "    ELSE 3\n" .
+                "END",
+                ["{$normTerm}%", "%{$normTerm}%", "%{$normTerm}%", "%{$digitTerm}%", "%{$digitTerm}%", "%{$digitTerm}%"]
+            )
+            ->limit(10)
+            ->get([
+                'pacientes.id',
+                'pessoas.primeiro_nome',
+                'pessoas.nome_meio',
+                'pessoas.ultimo_nome',
+                'pessoas.phone',
+                'pessoas.whatsapp',
+                'pessoas.cpf',
+            ]);
 
-        usort($results, fn($a, $b) => $b['score'] <=> $a['score']);
-        $results = array_slice($results, 0, 10);
-        $results = array_map(fn($p) => [
-            'id' => $p['id'],
-            'name' => $p['name'],
-            'phone' => $p['phone'],
-            'cpf' => $p['cpf'],
-        ], $results);
+        $results = $patients->map(function ($p) {
+            $name = trim($p->primeiro_nome . ' ' . ($p->nome_meio ? $p->nome_meio . ' ' : '') . $p->ultimo_nome);
+            $phone = $p->phone ?? $p->whatsapp ?? '';
+            return [
+                'id' => $p->id,
+                'name' => $name,
+                'phone' => $phone,
+                'cpf' => $p->cpf ?? '',
+            ];
+        })->toArray();
 
         return response()->json($results);
     }
