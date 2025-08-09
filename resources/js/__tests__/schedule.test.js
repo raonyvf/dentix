@@ -116,5 +116,21 @@ describe('schedule selection', () => {
     expect(document.getElementById('schedule-paciente-id').value).toBe('1');
     vi.useRealTimers();
   });
+
+  it('calls abrirModalPaciente when clicking create new', async () => {
+    vi.useFakeTimers();
+    const spy = vi.spyOn(window, 'abrirModalPaciente');
+    global.fetch = vi.fn(() =>
+      Promise.resolve({ json: () => Promise.resolve([]) })
+    );
+    const input = document.getElementById('schedule-paciente');
+    input.value = 'Jo';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await vi.runAllTimersAsync();
+    const btn = document.getElementById('create-paciente-btn');
+    btn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(spy).toHaveBeenCalled();
+    vi.useRealTimers();
+  });
 });
 
