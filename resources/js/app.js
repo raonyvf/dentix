@@ -736,6 +736,7 @@ document.addEventListener('DOMContentLoaded', () => {
         hiddenStart = document.getElementById('hora_inicio');
         hiddenEnd = document.getElementById('hora_fim');
         let searchTimeout;
+        let searchController;
 
         if (pacienteInput && pacienteList) {
             const createUrl = pacienteInput.dataset.createUrl;
@@ -748,11 +749,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     pacienteList.innerHTML = '';
                     return;
                 }
+
                 searchTimeout = setTimeout(() => {
                     const url = pacienteInput.dataset.searchUrl;
-                    fetch(`${url}?q=${encodeURIComponent(term)}`)
+                    const searchTerm = term;
+                    if (searchController) {
+                        searchController.abort();
+                    }
+                    searchController = new AbortController();
+                    fetch(`${url}?q=${encodeURIComponent(searchTerm)}`, { signal: searchController.signal })
                         .then(r => r.json())
                         .then(data => {
+                            if (pacienteInput.value.trim() !== searchTerm) return;
                             pacienteList.innerHTML = '';
                             if (!data.length) {
                                 pacienteList.innerHTML = `<li class="px-2 py-1 text-sm text-gray-600">Nenhum paciente encontrado. <button type="button" id="create-paciente-btn" class="text-primary underline">Criar novo?</button></li>`;
@@ -775,6 +783,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 pacienteList.appendChild(li);
                             });
                             pacienteList.classList.remove('hidden');
+                        })
+                        .catch(err => {
+                            if (err.name !== 'AbortError') console.error(err);
                         });
                 }, 300);
             });
