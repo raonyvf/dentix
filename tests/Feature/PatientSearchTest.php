@@ -19,6 +19,16 @@ namespace App\Models {
             return $this;
         }
 
+        public function select($columns): self
+        {
+            return $this;
+        }
+
+        public function selectRaw($expression): self
+        {
+            return $this;
+        }
+
         public function when($value, $callback): self
         {
             if ($value) {
@@ -46,10 +56,24 @@ namespace App\Models {
             return $this;
         }
 
-        public function orWhere($field, $value): self
+        public function orWhere($field, $operator = null, $value = null): self
         {
             if ($field === 'pacientes.id') {
-                $matches = array_filter($this->base, fn($p) => $p->id == $value);
+                $matches = array_filter($this->base, fn($p) => $p->id == $operator);
+                $this->results = array_values(array_unique(array_merge($this->results, $matches), SORT_REGULAR));
+            } elseif ($field === 'digits_phone' && $operator === 'like') {
+                $term = trim($value, '%');
+                $matches = array_filter($this->base, function ($p) use ($term) {
+                    $digits = self::digits(($p->phone ?? '') . ($p->whatsapp ?? ''));
+                    return str_contains($digits, $term);
+                });
+                $this->results = array_values(array_unique(array_merge($this->results, $matches), SORT_REGULAR));
+            } elseif ($field === 'digits_cpf' && $operator === 'like') {
+                $term = trim($value, '%');
+                $matches = array_filter($this->base, function ($p) use ($term) {
+                    $digits = self::digits($p->cpf ?? '');
+                    return str_contains($digits, $term);
+                });
                 $this->results = array_values(array_unique(array_merge($this->results, $matches), SORT_REGULAR));
             }
             return $this;
@@ -65,7 +89,7 @@ namespace App\Models {
             return $this;
         }
 
-        public function get($columns)
+        public function get($columns = ['*'])
         {
             return collect($this->results);
         }
@@ -99,6 +123,11 @@ namespace App\Models {
             $normalized = Normalizer::normalize($value, Normalizer::FORM_D);
             $withoutAccents = preg_replace('/\pM/u', '', $normalized);
             return mb_strtolower($withoutAccents);
+        }
+
+        private static function digits(string $value): string
+        {
+            return preg_replace('/\D/', '', $value);
         }
     }
 
@@ -188,11 +217,63 @@ namespace {
                 ['id' => 1, 'name' => 'Matéus Silva', 'phone' => '', 'cpf' => ''],
             ], $result);
         }
+
+        public function test_phone_search_matches_varied_formats(): void
+        {
+            $patients = [
+                (object) ['id' => 1, 'primeiro_nome' => 'Ana', 'nome_meio' => null, 'ultimo_nome' => 'Silva', 'phone' => '(11) 91234-5678', 'whatsapp' => '', 'cpf' => '', 'email' => null],
+                (object) ['id' => 2, 'primeiro_nome' => 'Bia', 'nome_meio' => null, 'ultimo_nome' => 'Smith', 'phone' => '21987654321', 'whatsapp' => '', 'cpf' => '', 'email' => null],
+            ];
+            \App\Models\Patient::setCollection($patients);
+
+            $controller = new PatientController();
+
+            $request = new \Illuminate\Http\Request(['q' => '11912345678']);
+            $result = $controller->search($request);
+
+            $this->assertSame([
+                ['id' => 1, 'name' => 'Ana Silva', 'phone' => '(11) 91234-5678', 'cpf' => ''],
+            ], $result);
+
+            $request = new \Illuminate\Http\Request(['q' => '(21) 98765-4321']);
+            $result = $controller->search($request);
+
+            $this->assertSame([
+                ['id' => 2, 'name' => 'Bia Smith', 'phone' => '21987654321', 'cpf' => ''],
+            ], $result);
+        }
+
+        public function test_cpf_search_matches_varied_formats(): void
+        {
+            $patients = [
+                (object) ['id' => 1, 'primeiro_nome' => 'Carlos', 'nome_meio' => null, 'ultimo_nome' => 'Ferreira', 'phone' => '', 'whatsapp' => '', 'cpf' => '123.456.789-00', 'email' => null],
+                (object) ['id' => 2, 'primeiro_nome' => 'Daniela', 'nome_meio' => null, 'ultimo_nome' => 'Costa', 'phone' => '', 'whatsapp' => '', 'cpf' => '98765432100', 'email' => null],
+            ];
+            \App\Models\Patient::setCollection($patients);
+
+            $controller = new PatientController();
+
+            $request = new \Illuminate\Http\Request(['q' => '12345678900']);
+            $result = $controller->search($request);
+
+            $this->assertSame([
+                ['id' => 1, 'name' => 'Carlos Ferreira', 'phone' => '', 'cpf' => '123.456.789-00'],
+            ], $result);
+
+            $request = new \Illuminate\Http\Request(['q' => '987.654.321-00']);
+            $result = $controller->search($request);
+
+            $this->assertSame([
+                ['id' => 2, 'name' => 'Daniela Costa', 'phone' => '', 'cpf' => '98765432100'],
+            ], $result);
+        }
     }
 
     $test = new PatientSearchTest();
     $test->test_search_returns_patient_by_id();
     $test->test_accented_name_matches();
+    $test->test_phone_search_matches_varied_formats();
+    $test->test_cpf_search_matches_varied_formats();
     echo "Test passed\n";
 }
 

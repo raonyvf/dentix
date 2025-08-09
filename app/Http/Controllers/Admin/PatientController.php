@@ -114,38 +114,12 @@ class PatientController extends Controller
 
         $nameExpr = "lower(unaccent(concat(coalesce(pessoas.primeiro_nome,''),' ',coalesce(pessoas.nome_meio,''),' ',coalesce(pessoas.ultimo_nome,''))))";
         $emailExpr = "lower(unaccent(coalesce(pessoas.email,'')))";
-        $phoneExpr = "regexp_replace(coalesce(pessoas.phone,''),'\\D','')";
-        $whatsExpr = "regexp_replace(coalesce(pessoas.whatsapp,''),'\\D','')";
-        $cpfExpr = "regexp_replace(coalesce(pessoas.cpf,''),'\\D','')";
+        $digitsPhoneExpr = "regexp_replace(coalesce(pessoas.phone,'') || coalesce(pessoas.whatsapp,''),'\\D','')";
+        $digitsCpfExpr = "regexp_replace(coalesce(pessoas.cpf,''),'\\D','')";
 
         $patients = Patient::query()
             ->join('pessoas', 'pacientes.pessoa_id', '=', 'pessoas.id')
-            ->when($clinicId, fn($q) => $q->whereHas('clinicas', fn($q2) => $q2->where('clinica_id', $clinicId)))
-            ->where(function ($query) use ($nameExpr, $emailExpr, $phoneExpr, $whatsExpr, $cpfExpr, $normTerm, $digitTerm) {
-                if ($normTerm !== '') {
-                    $query->whereRaw("$nameExpr LIKE ?", ["{$normTerm}%"])
-                        ->orWhereRaw("$nameExpr LIKE ?", ["%{$normTerm}%"])
-                        ->orWhereRaw("$emailExpr LIKE ?", ["%{$normTerm}%"]);
-                }
-
-                if ($digitTerm !== '') {
-                    $query->orWhereRaw("$phoneExpr LIKE ?", ["%{$digitTerm}%"])
-                        ->orWhereRaw("$whatsExpr LIKE ?", ["%{$digitTerm}%"])
-                        ->orWhereRaw("$cpfExpr LIKE ?", ["%{$digitTerm}%"])
-                        ->orWhere('pacientes.id', $digitTerm);
-                }
-            })
-            ->orderByRaw(
-                "CASE\n" .
-                "    WHEN $nameExpr LIKE ? THEN 0\n" .
-                "    WHEN $nameExpr LIKE ? THEN 1\n" .
-                "    WHEN $emailExpr LIKE ? OR $phoneExpr LIKE ? OR $whatsExpr LIKE ? OR $cpfExpr LIKE ? THEN 2\n" .
-                "    ELSE 3\n" .
-                "END",
-                ["{$normTerm}%", "%{$normTerm}%", "%{$normTerm}%", "%{$digitTerm}%", "%{$digitTerm}%", "%{$digitTerm}%"]
-            )
-            ->limit(10)
-            ->get([
+            ->select([
                 'pacientes.id',
                 'pessoas.primeiro_nome',
                 'pessoas.nome_meio',
@@ -153,7 +127,33 @@ class PatientController extends Controller
                 'pessoas.phone',
                 'pessoas.whatsapp',
                 'pessoas.cpf',
-            ]);
+            ])
+            ->selectRaw("$digitsPhoneExpr as digits_phone, $digitsCpfExpr as digits_cpf")
+            ->when($clinicId, fn($q) => $q->whereHas('clinicas', fn($q2) => $q2->where('clinica_id', $clinicId)))
+            ->where(function ($query) use ($nameExpr, $emailExpr, $normTerm, $digitTerm) {
+                if ($normTerm !== '') {
+                    $query->whereRaw("$nameExpr LIKE ?", ["{$normTerm}%"])
+                        ->orWhereRaw("$nameExpr LIKE ?", ["%{$normTerm}%"])
+                        ->orWhereRaw("$emailExpr LIKE ?", ["%{$normTerm}%"]);
+                }
+
+                if ($digitTerm !== '') {
+                    $query->orWhere('digits_phone', 'like', "%{$digitTerm}%")
+                        ->orWhere('digits_cpf', 'like', "%{$digitTerm}%")
+                        ->orWhere('pacientes.id', $digitTerm);
+                }
+            })
+            ->orderByRaw(
+                "CASE\n" .
+                "    WHEN $nameExpr LIKE ? THEN 0\n" .
+                "    WHEN $nameExpr LIKE ? THEN 1\n" .
+                "    WHEN $emailExpr LIKE ? OR digits_phone LIKE ? OR digits_cpf LIKE ? THEN 2\n" .
+                "    ELSE 3\n" .
+                "END",
+                ["{$normTerm}%", "%{$normTerm}%", "%{$normTerm}%", "%{$digitTerm}%", "%{$digitTerm}%"]
+            )
+            ->limit(10)
+            ->get();
 
         $results = $patients->map(function ($p) {
             $name = trim($p->primeiro_nome . ' ' . ($p->nome_meio ? $p->nome_meio . ' ' : '') . $p->ultimo_nome);
