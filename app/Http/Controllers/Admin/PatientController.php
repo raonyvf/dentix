@@ -101,29 +101,88 @@ class PatientController extends Controller
 
     public function search(Request $request)
     {
-        $term = $request->get('q', '');
-        $results = Patient::with('pessoa')
-            ->where('id', $term)
-            ->orWhereHas('pessoa', function ($q) use ($term) {
-                $q->where('primeiro_nome', 'like', "%{$term}%")
-                    ->orWhere('ultimo_nome', 'like', "%{$term}%")
-                    ->orWhere('phone', 'like', "%{$term}%")
-                    ->orWhere('whatsapp', 'like', "%{$term}%")
-                    ->orWhere('email', 'like', "%{$term}%")
-                    ->orWhere('cpf', 'like', "%{$term}%");
-            })
-            ->limit(10)
-            ->get()
-            ->map(function ($p) {
+        $term = trim($request->get('q', ''));
+        if ($term === '') {
+            return response()->json([]);
+        }
+
+        $normTerm = $this->normalize($term);
+        $digitTerm = $this->digits($term);
+
+        $results = Patient::with('pessoa')->get()
+            ->map(function ($p) use ($normTerm, $digitTerm) {
                 $pessoa = $p->pessoa;
+                $name = trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? ''));
+                $email = $pessoa->email ?? '';
+                $phone = $pessoa->phone ?? '';
+                $whatsapp = $pessoa->whatsapp ?? '';
+                $cpf = $pessoa->cpf ?? '';
+
+                $nameNorm = $this->normalize($name);
+                $emailNorm = $this->normalize($email);
+                $phoneNorm = $this->digits($phone);
+                $whatsNorm = $this->digits($whatsapp);
+                $cpfNorm = $this->digits($cpf);
+
+                $score = 0;
+                if ($normTerm !== '') {
+                    if (str_starts_with($nameNorm, $normTerm)) {
+                        $score = 3;
+                    } elseif (str_contains($nameNorm, $normTerm)) {
+                        $score = 2;
+                    } elseif (str_contains($emailNorm, $normTerm)) {
+                        $score = 1;
+                    }
+                }
+
+                if ($digitTerm !== '') {
+                    if ((string) $p->id === $digitTerm) {
+                        $score = 4;
+                    } elseif (str_contains($phoneNorm, $digitTerm) || str_contains($whatsNorm, $digitTerm) || str_contains($cpfNorm, $digitTerm)) {
+                        $score = max($score, 1);
+                    }
+                }
+
+                if ($score === 0) {
+                    return null;
+                }
+
                 return [
                     'id' => $p->id,
-                    'name' => trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')),
+                    'name' => $name,
+                    'phone' => $phone,
+                    'cpf' => $cpf,
+                    'score' => $score,
                 ];
             })
-            ->values();
+            ->filter(fn($p) => $p !== null)
+            ->values()
+            ->toArray();
+
+        usort($results, fn($a, $b) => $b['score'] <=> $a['score']);
+        $results = array_slice($results, 0, 10);
+        $results = array_map(fn($p) => [
+            'id' => $p['id'],
+            'name' => $p['name'],
+            'phone' => $p['phone'],
+            'cpf' => $p['cpf'],
+        ], $results);
 
         return response()->json($results);
+    }
+
+    private function normalize(string $value): string
+    {
+        $converted = @iconv('UTF-8', 'ASCII//TRANSLIT', $value);
+        if ($converted === false) {
+            $converted = $value;
+        }
+        return mb_strtolower($converted);
+    }
+
+    private function digits(string $value): string
+    {
+        return preg_replace('/\D/', '', $value);
     }
 
     private function validateData(Request $request): array

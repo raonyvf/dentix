@@ -93,7 +93,7 @@ namespace {
             $result = $controller->search($request);
 
             $this->assertSame([
-                ['id' => 2, 'name' => 'Bob Jones'],
+                ['id' => 2, 'name' => 'Bob Jones', 'phone' => '', 'cpf' => ''],
             ], $result);
         }
     }
