@@ -75,11 +75,14 @@
                 <tr class="border-t" data-row="{{ $hora }}">
                     <td class="bg-gray-50 w-24 min-w-[6rem] h-16 align-middle" data-slot="{{ $hora }}" data-hora="{{ $hora }}"><x-agenda.horario :time="$hora" /></td>
                     @foreach($professionals as $prof)
-                        <td class="h-16 cursor-pointer border-l" data-professional-id="{{ $prof['id'] }}" data-hora="{{ $hora }}" data-date="{{ $date }}">
-                            @isset($agenda[$prof['id']][$hora])
-                                @php $item = $agenda[$prof['id']][$hora]; @endphp
-                                <x-agenda.agendamento :paciente="$item['paciente']" :tipo="$item['tipo']" :contato="$item['contato']" :status="$item['status']" />
-                            @endisset
+                        @php $item = $agenda[$prof['id']][$hora] ?? null; @endphp
+                        @if($item && ($item['skip'] ?? false))
+                            @continue
+                        @endif
+                        <td class="h-16 cursor-pointer border-l" data-professional-id="{{ $prof['id'] }}" data-hora="{{ $hora }}" data-date="{{ $date }}" @if($item && isset($item['rowspan'])) rowspan="{{ $item['rowspan'] }}" @endif>
+                            @if($item)
+                                <x-agenda.agendamento :paciente="$item['paciente']" :observacao="$item['observacao']" :status="$item['status']" />
+                            @endif
                         </td>
                     @endforeach
                 </tr>

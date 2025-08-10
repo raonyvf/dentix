@@ -226,13 +226,18 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
             baseTimes.forEach(hora => {
                 let row = `<tr class="border-t" data-row="${hora}"><td class="bg-gray-50 w-24 min-w-[6rem] h-16 align-middle" data-slot="${hora}" data-hora="${hora}"><div class="h-full flex items-center justify-end px-2 text-xs text-gray-500 whitespace-nowrap">${hora}</div></td>`;
                 professionals.forEach(p => {
-                    row += `<td class="h-16 cursor-pointer border-l" data-professional-id="${p.id}" data-hora="${hora}" data-date="${date}">`;
                     const item = agenda[p.id] && agenda[p.id][hora];
+                    if (item && item.skip) return;
+                    row += `<td class="h-16 cursor-pointer border-l" data-professional-id="${p.id}" data-hora="${hora}" data-date="${date}"`;
+                    if (item && item.rowspan) {
+                        row += ` rowspan="${item.rowspan}"`;
+                    }
+                    row += '>';
                     if (item) {
-                        let color = 'bg-gray-100 text-gray-700';
-                        if (item.status === 'confirmado') color = 'bg-green-100 text-green-700';
-                        else if (item.status === 'cancelado') color = 'bg-red-100 text-red-700';
-                        row += `<div class="rounded p-2 text-xs ${color}"><div class="font-semibold">${item.paciente}</div><div>${item.tipo}</div><div class="text-[10px]">${item.contato}</div></div>`;
+                        const color = item.status === 'confirmado'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-gray-100 text-gray-700';
+                        row += `<div class="rounded p-2 text-xs ${color}"><div class="font-semibold">${item.paciente}</div><div>${item.observacao || ''}</div></div>`;
                     }
                     row += '</td>';
                 });
