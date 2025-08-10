@@ -100,12 +100,11 @@ class PatientController extends Controller
 
     public function search(Request $request)
     {
-        $q = trim($request->query('q', ''));
+        $q = trim($request->query('query', ''));
 
         if ($q === '') {
             return response()->json([]);
         }
-
         $normalized = Str::of($q)->ascii()->lower();
         $digits = preg_replace('/\D/', '', $q);
 
@@ -124,6 +123,8 @@ class PatientController extends Controller
             'id' => $p->id,
             'nome' => $p->pessoa->full_name,
             'email' => $p->pessoa->email,
+            'telefone' => $p->pessoa->phone,
+            'cpf' => $p->pessoa->cpf,
         ]);
 
         return response()->json($result);

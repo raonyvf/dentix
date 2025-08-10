@@ -269,29 +269,35 @@ function initPatientSearch() {
         if (q.length < 2) {
             patientResults.innerHTML = '';
             notFoundMsg?.classList.add('hidden');
+            if (saveBtn) saveBtn.disabled = true;
             return;
         }
         timeout = setTimeout(() => {
             const url = new URL(searchUrl, window.location.origin);
-            url.searchParams.set('q', q);
+            const digits = q.replace(/\D/g, '');
+            url.searchParams.set('query', q);
+            if (digits) url.searchParams.set('digits', digits);
             fetch(url.toString(), { credentials: 'same-origin' })
                 .then(r => r.json())
                 .then(data => {
                     patientResults.innerHTML = '';
-                    if (!data.length) {
+                    if (!Array.isArray(data) || !data.length) {
                         notFoundMsg?.classList.remove('hidden');
+                        if (saveBtn) saveBtn.disabled = true;
                         return;
                     }
                     notFoundMsg?.classList.add('hidden');
                     data.forEach(p => {
                         const li = document.createElement('li');
-                        li.textContent = p.nome || p.text || '';
+                        li.innerHTML = `<div class="font-medium">${p.nome || ''}</div>` +
+                            `<div class="text-xs text-gray-500">${p.email || ''}</div>`;
                         li.className = 'p-2 cursor-pointer hover:bg-gray-100';
                         li.addEventListener('click', () => {
                             pacienteInput.value = p.id;
-                            selectedPatientName.textContent = p.nome || p.text || '';
+                            selectedPatientName.textContent = p.nome || '';
                             step1.classList.add('hidden');
                             step2.classList.remove('hidden');
+                            if (saveBtn) saveBtn.disabled = false;
                         });
                         patientResults.appendChild(li);
                     });
@@ -422,6 +428,7 @@ const abrirModalAgendamento = () => {
             step1.classList.remove('hidden');
             step2.classList.add('hidden');
         }
+        if (saveBtn) saveBtn.disabled = true;
         initPatientSearch();
         scheduleModal.classList.remove('hidden');
     }
@@ -826,6 +833,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cancel.addEventListener('click', () => {
                 scheduleModal.classList.add('hidden');
                 clearSelection();
+                if (saveBtn) saveBtn.disabled = true;
             });
         }
         if (saveBtn) {
@@ -887,6 +895,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === scheduleModal) {
                 scheduleModal.classList.add('hidden');
                 clearSelection();
+                if (saveBtn) saveBtn.disabled = true;
             }
         });
     }
