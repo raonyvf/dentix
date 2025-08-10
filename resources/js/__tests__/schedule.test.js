@@ -3,8 +3,23 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 vi.mock('alpinejs', () => ({ default: { plugin: vi.fn(), start: vi.fn() } }));
 vi.mock('@alpinejs/collapse', () => ({ default: {} }));
+vi.mock('tom-select', () => ({
+  default: class {
+    constructor(el, opts) {
+      this.el = el;
+      this.opts = opts;
+      this.events = {};
+      el.tomselect = this;
+    }
+    on(event, cb) {
+      this.events[event] = cb;
+    }
+    load() {}
+  }
+}));
 
 const buildDom = () => {
+  document.head.innerHTML = '<meta name="csrf-token" content="token">';
   document.body.innerHTML = `
     <div id="schedule-modal" class="hidden" data-hora="" data-date="">
       <input id="schedule-start" />
@@ -14,10 +29,11 @@ const buildDom = () => {
       <div id="schedule-summary"></div>
       <input id="hora_inicio" />
       <input id="hora_fim" />
-      <input id="schedule-paciente" data-search-url="/search" data-create-url="/create" />
-      <ul id="schedule-paciente-list"></ul>
-      <input id="schedule-paciente-id" />
-      <button id="schedule-save"></button>
+      <select id="schedule-paciente" data-search-url="/search">
+        <option value=""></option>
+        <option value="1">John Doe</option>
+      </select>
+      <button id="schedule-save" data-store-url="/save"></button>
       <button id="schedule-cancel"></button>
     </div>
     <table id="schedule-table">
@@ -102,35 +118,19 @@ describe('schedule selection', () => {
     expect(summary.textContent).toContain('Prof 1');
   });
 
-  it('sets patient id when selecting from search results', async () => {
-    vi.useFakeTimers();
+  it('sends selected patient id on save', async () => {
+    const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
+    cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    const select = document.getElementById('schedule-paciente');
+    select.value = '1';
     global.fetch = vi.fn(() =>
-      Promise.resolve({ json: () => Promise.resolve([{ id: 1, name: 'John Doe', phone: '123' }]) })
+      Promise.resolve({ ok: true, json: () => Promise.resolve({}) })
     );
-    const input = document.getElementById('schedule-paciente');
-    input.value = 'Jo';
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    await vi.runAllTimersAsync();
-    const item = document.querySelector('#schedule-paciente-list li');
-    item.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    expect(document.getElementById('schedule-paciente-id').value).toBe('1');
-    vi.useRealTimers();
-  });
-
-  it('calls abrirModalPaciente when clicking create new', async () => {
-    vi.useFakeTimers();
-    const spy = vi.spyOn(window, 'abrirModalPaciente');
-    global.fetch = vi.fn(() =>
-      Promise.resolve({ json: () => Promise.resolve([]) })
-    );
-    const input = document.getElementById('schedule-paciente');
-    input.value = 'Jo';
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    await vi.runAllTimersAsync();
-    const btn = document.getElementById('create-paciente-btn');
-    btn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    expect(spy).toHaveBeenCalled();
-    vi.useRealTimers();
+    const save = document.getElementById('schedule-save');
+    save.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(fetch).toHaveBeenCalled();
+    const body = JSON.parse(fetch.mock.calls[0][1].body);
+    expect(body.paciente_id).toBe('1');
   });
 });
 

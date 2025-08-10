@@ -106,9 +106,7 @@
         <input type="hidden" id="schedule-date">
         <label class="block mb-4 relative">
             <span class="text-sm">Paciente</span>
-            <input id="schedule-paciente" type="text" placeholder="Buscar..." data-search-url="{{ route('pacientes.search') }}" data-create-url="{{ route('pacientes.create') }}" class="mt-1 w-full border rounded p-1" autocomplete="off" />
-            <ul id="schedule-paciente-list" class="absolute z-10 w-full bg-white border rounded mt-1 max-h-40 overflow-auto hidden"></ul>
-            <input type="hidden" id="schedule-paciente-id" />
+            <select id="schedule-paciente" data-search-url="{{ route('pacientes.search') }}" placeholder="Buscar..." class="mt-1 w-full border rounded p-1"></select>
         </label>
         <label class="block mb-4">
             <span class="text-sm">Observação</span>
