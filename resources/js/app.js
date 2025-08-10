@@ -307,6 +307,17 @@ let dragging = false;
 let suppressClick = false;
 let handleMouseDown, handleMouseMove, handleDblClick, handleClick, handleMouseUp;
 let lastClickedCell = null;
+let slotMinutes = 30;
+
+const updateSlotMinutes = () => {
+    const rows = document.querySelectorAll('#schedule-table tbody tr[data-row]');
+    if (rows.length >= 2) {
+        const first = rows[0].dataset.row;
+        const second = rows[1].dataset.row;
+        const diff = toMinutes(second) - toMinutes(first);
+        if (diff > 0) slotMinutes = diff;
+    }
+};
 
 const toMinutes = t => {
     if (!t) return null;
@@ -322,7 +333,7 @@ const nextTimes = (start, end) => {
         const h = String(Math.floor(cur / 60)).padStart(2, '0');
         const m = String(cur % 60).padStart(2, '0');
         times.push(`${h}:${m}`);
-        cur += 30;
+        cur += slotMinutes;
     }
     return times;
 };
@@ -384,7 +395,7 @@ const abrirModalAgendamento = () => {
     const date = selection.date || '';
 
     if (selection.start && !selection.end) {
-        selection.end = addMinutes(selection.start, 30);
+        selection.end = addMinutes(selection.start, slotMinutes);
     }
     if (startInput) startInput.value = selection.start || '';
     if (endInput) endInput.value = selection.end || '';
@@ -437,6 +448,8 @@ function attachCellHandlers() {
     hiddenStart = document.getElementById('hora_inicio');
     hiddenEnd = document.getElementById('hora_fim');
 
+    updateSlotMinutes();
+
     if (handleMouseDown) document.removeEventListener('mousedown', handleMouseDown);
     if (handleMouseMove) document.removeEventListener('mousemove', handleMouseMove);
     if (handleDblClick) document.removeEventListener('dblclick', handleDblClick);
@@ -469,7 +482,7 @@ function attachCellHandlers() {
         const time = cell.dataset.hora;
         if (toMinutes(time) < toMinutes(selection.start)) return;
 
-        selectRange(selection.date, selection.professional, selection.start, time);
+        selectRange(selection.date, selection.professional, selection.start, addMinutes(time, slotMinutes));
 
     };
 
@@ -484,7 +497,7 @@ function attachCellHandlers() {
         const prof = cell.dataset.professionalId;
 
         const date = cell.dataset.date;
-        const end = addMinutes(start, 30);
+        const end = addMinutes(start, slotMinutes);
         openScheduleModal(prof, start, end, date);
     };
 
@@ -547,14 +560,16 @@ function attachCellHandlers() {
                 if (hiddenStart) hiddenStart.value = time;
                 return;
             }
+            const slotEnd = addMinutes(time, slotMinutes);
             if (toMinutes(time) < toMinutes(selection.start)) {
-
-                openScheduleModal(prof, time, selection.start, date);
-
+                const startTime = time;
+                const endTime = addMinutes(selection.start, slotMinutes);
+                openScheduleModal(prof, startTime, endTime, date);
                 return;
             }
-            selection.end = time;
-            openScheduleModal(prof, selection.start, selection.end, selection.date);
+            const startTime = selection.start;
+            const endTime = slotEnd;
+            openScheduleModal(prof, startTime, endTime, selection.date);
             return;
         }
 
