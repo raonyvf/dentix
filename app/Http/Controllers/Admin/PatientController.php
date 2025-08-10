@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
 {
@@ -111,10 +112,9 @@ class PatientController extends Controller
 
         $clinicId = function_exists('clinicId') ? clinicId() : (function_exists('app') && app()->bound('clinic_id') ? app('clinic_id') : null);
 
-        $nameExpr = "lower(unaccent(concat(coalesce(pessoas.primeiro_nome,''),' ',coalesce(pessoas.nome_meio,''),' ',coalesce(pessoas.ultimo_nome,''))))";
-        $emailExpr = "lower(unaccent(coalesce(pessoas.email,'')))";
-        $digitsPhoneExpr = "regexp_replace(coalesce(pessoas.phone,'') || coalesce(pessoas.whatsapp,''),'\\D','')";
-        $digitsCpfExpr = "regexp_replace(coalesce(pessoas.cpf,''),'\\D','')";
+        $emailExpr = DB::getDriverName() === 'pgsql'
+            ? "lower(unaccent(coalesce(pessoas.email,'')))"
+            : "lower(coalesce(pessoas.email,''))";
 
         $patients = Patient::query()
             ->join('pessoas', 'pacientes.pessoa_id', '=', 'pessoas.id')
@@ -127,29 +127,29 @@ class PatientController extends Controller
                 'pessoas.whatsapp',
                 'pessoas.cpf',
             ])
-            ->selectRaw("$digitsPhoneExpr as digits_phone, $digitsCpfExpr as digits_cpf")
             ->when($clinicId, fn($q) => $q->whereHas('clinicas', fn($q2) => $q2->where('clinica_id', $clinicId)))
-            ->where(function ($query) use ($nameExpr, $emailExpr, $normTerm, $digitTerm, $digitsPhoneExpr, $digitsCpfExpr) {
+            ->where(function ($query) use ($normTerm, $digitTerm, $emailExpr) {
                 if ($normTerm !== '') {
-                    $query->whereRaw("$nameExpr LIKE ?", ["{$normTerm}%"])
-                        ->orWhereRaw("$nameExpr LIKE ?", ["%{$normTerm}%"])
+                    $query->where('pessoas.normalized_name', 'like', "{$normTerm}%")
+                        ->orWhere('pessoas.normalized_name', 'like', "%{$normTerm}%")
                         ->orWhereRaw("$emailExpr LIKE ?", ["%{$normTerm}%"]);
                 }
 
                 if ($digitTerm !== '') {
-                    $query->orWhereRaw("$digitsPhoneExpr LIKE ?", ["%{$digitTerm}%"])
-                        ->orWhereRaw("$digitsCpfExpr LIKE ?", ["%{$digitTerm}%"])
+                    $query->orWhere('pessoas.digits_phone', 'like', "%{$digitTerm}%")
+                        ->orWhere('pessoas.digits_whatsapp', 'like', "%{$digitTerm}%")
+                        ->orWhere('pessoas.digits_cpf', 'like', "%{$digitTerm}%")
                         ->orWhere('pacientes.id', $digitTerm);
                 }
             })
             ->orderByRaw(
                 "CASE\n" .
-                "    WHEN $nameExpr LIKE ? THEN 0\n" .
-                "    WHEN $nameExpr LIKE ? THEN 1\n" .
-                "    WHEN $emailExpr LIKE ? OR $digitsPhoneExpr LIKE ? OR $digitsCpfExpr LIKE ? THEN 2\n" .
+                "    WHEN pessoas.normalized_name LIKE ? THEN 0\n" .
+                "    WHEN pessoas.normalized_name LIKE ? THEN 1\n" .
+                "    WHEN $emailExpr LIKE ? OR pessoas.digits_phone LIKE ? OR pessoas.digits_whatsapp LIKE ? OR pessoas.digits_cpf LIKE ? THEN 2\n" .
                 "    ELSE 3\n" .
                 "END",
-                ["{$normTerm}%", "%{$normTerm}%", "%{$normTerm}%", "%{$digitTerm}%", "%{$digitTerm}%"]
+                ["{$normTerm}%", "%{$normTerm}%", "%{$normTerm}%", "%{$digitTerm}%", "%{$digitTerm}%", "%{$digitTerm}%"]
             )
             ->limit(10)
             ->get();
