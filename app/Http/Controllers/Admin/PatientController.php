@@ -111,10 +111,13 @@ class PatientController extends Controller
         $patients = Patient::with('pessoa')
             ->whereHas('pessoa', function ($query) use ($normalized, $q, $digits) {
                 $query->where('normalized_name', 'like', "%$normalized%")
-                    ->orWhere('email', 'like', "%$q%")
-                    ->orWhere('digits_cpf', 'like', "%$digits%")
-                    ->orWhere('digits_phone', 'like', "%$digits%")
-                    ->orWhere('digits_whatsapp', 'like', "%$digits%");
+                    ->orWhere('email', 'like', "%$q%");
+
+                if ($digits !== '') {
+                    $query->orWhere('digits_cpf', 'like', "%$digits%")
+                        ->orWhere('digits_phone', 'like', "%$digits%")
+                        ->orWhere('digits_whatsapp', 'like', "%$digits%");
+                }
             })
             ->limit(10)
             ->get();
