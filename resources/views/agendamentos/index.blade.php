@@ -90,7 +90,10 @@
     <div class="bg-white rounded p-4 w-[32rem]">
         <div id="step-1">
             <h2 class="text-lg font-semibold mb-2">Buscar Paciente</h2>
-            <input id="patient-search" type="text" data-search-url="{{ route('pacientes.search') }}" placeholder="Nome, e-mail, CPF ou telefone" class="mt-1 w-full border rounded p-2" />
+            <div class="flex gap-2">
+                <input id="patient-search" type="text" data-search-url="{{ route('pacientes.search') }}" placeholder="Nome, e-mail, CPF ou telefone" class="mt-1 w-full border rounded p-2 flex-1" />
+                <button id="patient-search-btn" type="button" class="mt-1 px-3 py-2 bg-primary text-white rounded">Pesquisar</button>
+            </div>
             <ul id="patient-results" class="mt-2 max-h-60 overflow-auto border rounded"></ul>
             <div id="patient-notfound" class="mt-2 text-sm text-red-600 hidden">Paciente não encontrado</div>
         </div>

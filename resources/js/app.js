@@ -247,7 +247,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
     document.dispatchEvent(new Event('schedule:rendered'));
 };
 
-let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd, patientSearch, patientResults, step1, step2, selectedPatientName, notFoundMsg;
+let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd, patientSearch, patientResults, step1, step2, selectedPatientName, notFoundMsg, searchBtn;
 
 function initPatientSearch() {
     patientSearch = document.getElementById('patient-search');
@@ -258,51 +258,48 @@ function initPatientSearch() {
     notFoundMsg = document.getElementById('patient-notfound');
     pacienteInput = document.getElementById('schedule-paciente');
     scheduleModal = document.getElementById('schedule-modal');
-    if (!patientSearch || !patientResults || !scheduleModal) return;
+    searchBtn = document.getElementById('patient-search-btn');
+    if (!patientSearch || !patientResults || !scheduleModal || !searchBtn) return;
 
-    let timeout;
     const searchUrl = patientSearch.dataset.searchUrl;
 
-    patientSearch.oninput = e => {
-        clearTimeout(timeout);
-        const q = e.target.value.trim();
+    searchBtn.onclick = () => {
+        const q = patientSearch.value.trim();
+        patientResults.innerHTML = '';
         if (q.length < 2) {
-            patientResults.innerHTML = '';
             notFoundMsg?.classList.add('hidden');
             if (saveBtn) saveBtn.disabled = true;
             return;
         }
-        timeout = setTimeout(() => {
-            const url = new URL(searchUrl, window.location.origin);
-            const digits = q.replace(/\D/g, '');
-            url.searchParams.set('query', q);
-            if (digits) url.searchParams.set('digits', digits);
-            fetch(url.toString(), { credentials: 'same-origin' })
-                .then(r => r.json())
-                .then(data => {
-                    patientResults.innerHTML = '';
-                    if (!Array.isArray(data) || !data.length) {
-                        notFoundMsg?.classList.remove('hidden');
-                        if (saveBtn) saveBtn.disabled = true;
-                        return;
-                    }
-                    notFoundMsg?.classList.add('hidden');
-                    data.forEach(p => {
-                        const li = document.createElement('li');
-                        li.innerHTML = `<div class="font-medium">${p.nome || ''}</div>` +
-                            `<div class="text-xs text-gray-500">${p.email || ''}</div>`;
-                        li.className = 'p-2 cursor-pointer hover:bg-gray-100';
-                        li.addEventListener('click', () => {
-                            pacienteInput.value = p.id;
-                            selectedPatientName.textContent = p.nome || '';
-                            step1.classList.add('hidden');
-                            step2.classList.remove('hidden');
-                            if (saveBtn) saveBtn.disabled = false;
-                        });
-                        patientResults.appendChild(li);
+        const url = new URL(searchUrl, window.location.origin);
+        const digits = q.replace(/\D/g, '');
+        url.searchParams.set('query', q);
+        if (digits) url.searchParams.set('digits', digits);
+        fetch(url.toString(), { credentials: 'same-origin' })
+            .then(r => r.json())
+            .then(data => {
+                patientResults.innerHTML = '';
+                if (!Array.isArray(data) || !data.length) {
+                    notFoundMsg?.classList.remove('hidden');
+                    if (saveBtn) saveBtn.disabled = true;
+                    return;
+                }
+                notFoundMsg?.classList.add('hidden');
+                data.forEach(p => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<div class="font-medium">${p.nome || ''}</div>` +
+                        `<div class="text-xs text-gray-500">${p.email || ''}</div>`;
+                    li.className = 'p-2 cursor-pointer hover:bg-gray-100';
+                    li.addEventListener('click', () => {
+                        pacienteInput.value = p.id;
+                        selectedPatientName.textContent = p.nome || '';
+                        step1.classList.add('hidden');
+                        step2.classList.remove('hidden');
+                        if (saveBtn) saveBtn.disabled = false;
                     });
+                    patientResults.appendChild(li);
                 });
-        }, 300);
+            });
     };
 }
 let selection = { start: null, end: null, professional: null, date: null };
