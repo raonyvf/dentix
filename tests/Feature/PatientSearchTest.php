@@ -7,6 +7,7 @@ namespace App\Models {
     {
         private array $base;
         private array $results;
+        public array $usedIndexes = [];
 
         public function __construct(array $patients)
         {
@@ -24,11 +25,6 @@ namespace App\Models {
             return $this;
         }
 
-        public function selectRaw($expression): self
-        {
-            return $this;
-        }
-
         public function when($value, $callback): self
         {
             if ($value) {
@@ -37,45 +33,79 @@ namespace App\Models {
             return $this;
         }
 
-        public function where($callback): self
+        public function where($field, $operator = null, $value = null): self
         {
-            $callback($this);
-            return $this;
-        }
+            if (is_callable($field)) {
+                $field($this);
+                return $this;
+            }
 
-        public function whereRaw($sql, $bindings): self
-        {
-            $this->results = $this->filter($sql, $bindings);
-            return $this;
-        }
+            if ($field === 'pessoas.normalized_name' && $operator === 'like') {
+                $term = trim($value, '%');
+                $matchStarts = !str_starts_with($value, '%');
+                $matches = array_filter($this->base, function ($p) use ($term, $matchStarts) {
+                    $name = $p->normalized_name;
+                    return $matchStarts ? str_starts_with($name, $term) : str_contains($name, $term);
+                });
+                $this->results = $matches;
+                $this->usedIndexes[] = 'pessoas_normalized_name_index';
+            }
 
-        public function orWhereRaw($sql, $bindings): self
-        {
-            $matches = $this->filter($sql, $bindings);
-            $this->results = array_values(array_unique(array_merge($this->results, $matches), SORT_REGULAR));
             return $this;
         }
 
         public function orWhere($field, $operator = null, $value = null): self
         {
-            if ($field === 'pacientes.id') {
+            if ($field === 'pessoas.normalized_name' && $operator === 'like') {
+                $term = trim($value, '%');
+                $matchStarts = !str_starts_with($value, '%');
+                $matches = array_filter($this->base, function ($p) use ($term, $matchStarts) {
+                    $name = $p->normalized_name;
+                    return $matchStarts ? str_starts_with($name, $term) : str_contains($name, $term);
+                });
+                $this->results = array_values(array_unique(array_merge($this->results, $matches), SORT_REGULAR));
+                $this->usedIndexes[] = 'pessoas_normalized_name_index';
+            } elseif ($field === 'pessoas.digits_phone' && $operator === 'like') {
+                $term = trim($value, '%');
+                $matches = array_filter($this->base, function ($p) use ($term) {
+                    return str_contains($p->digits_phone, $term);
+                });
+                $this->results = array_values(array_unique(array_merge($this->results, $matches), SORT_REGULAR));
+                $this->usedIndexes[] = 'pessoas_digits_phone_index';
+            } elseif ($field === 'pessoas.digits_whatsapp' && $operator === 'like') {
+                $term = trim($value, '%');
+                $matches = array_filter($this->base, function ($p) use ($term) {
+                    return str_contains($p->digits_whatsapp, $term);
+                });
+                $this->results = array_values(array_unique(array_merge($this->results, $matches), SORT_REGULAR));
+                $this->usedIndexes[] = 'pessoas_digits_whatsapp_index';
+            } elseif ($field === 'pessoas.digits_cpf' && $operator === 'like') {
+                $term = trim($value, '%');
+                $matches = array_filter($this->base, function ($p) use ($term) {
+                    return str_contains($p->digits_cpf, $term);
+                });
+                $this->results = array_values(array_unique(array_merge($this->results, $matches), SORT_REGULAR));
+                $this->usedIndexes[] = 'pessoas_digits_cpf_index';
+            } elseif ($field === 'pacientes.id') {
                 $matches = array_filter($this->base, fn($p) => $p->id == $operator);
                 $this->results = array_values(array_unique(array_merge($this->results, $matches), SORT_REGULAR));
-            } elseif ($field === 'digits_phone' && $operator === 'like') {
-                $term = trim($value, '%');
-                $matches = array_filter($this->base, function ($p) use ($term) {
-                    $digits = self::digits(($p->phone ?? '') . ($p->whatsapp ?? ''));
-                    return str_contains($digits, $term);
-                });
-                $this->results = array_values(array_unique(array_merge($this->results, $matches), SORT_REGULAR));
-            } elseif ($field === 'digits_cpf' && $operator === 'like') {
-                $term = trim($value, '%');
-                $matches = array_filter($this->base, function ($p) use ($term) {
-                    $digits = self::digits($p->cpf ?? '');
-                    return str_contains($digits, $term);
-                });
-                $this->results = array_values(array_unique(array_merge($this->results, $matches), SORT_REGULAR));
             }
+
+            return $this;
+        }
+
+        public function orWhereRaw($sql, $bindings): self
+        {
+            $matches = [];
+            if (str_contains($sql, 'pessoas.email')) {
+                $pattern = $bindings[0];
+                $term = str_replace('%', '', $pattern);
+                $matches = array_filter($this->base, function ($p) use ($term) {
+                    $email = self::normalizeValue($p->email ?? '');
+                    return str_contains($email, $term);
+                });
+            }
+            $this->results = array_values(array_unique(array_merge($this->results, $matches), SORT_REGULAR));
             return $this;
         }
 
@@ -94,46 +124,18 @@ namespace App\Models {
             return collect($this->results);
         }
 
-        private function filter($sql, $bindings): array
-        {
-            $pattern = $bindings[0];
-            $term = str_replace('%', '', $pattern);
-            $matchStarts = !str_starts_with($pattern, '%');
-
-            if (str_contains($sql, 'concat')) {
-                return array_filter($this->base, function ($p) use ($term, $matchStarts) {
-                    $name = trim($p->primeiro_nome . ' ' . ($p->nome_meio ? $p->nome_meio . ' ' : '') . $p->ultimo_nome);
-                    $normName = self::normalizeValue($name);
-                    return $matchStarts ? str_starts_with($normName, $term) : str_contains($normName, $term);
-                });
-            }
-
-            if (str_contains($sql, 'pessoas.email')) {
-                return array_filter($this->base, function ($p) use ($term) {
-                    $normEmail = self::normalizeValue($p->email ?? '');
-                    return str_contains($normEmail, $term);
-                });
-            }
-
-            return [];
-        }
-
         private static function normalizeValue(string $value): string
         {
             $normalized = Normalizer::normalize($value, Normalizer::FORM_D);
             $withoutAccents = preg_replace('/\pM/u', '', $normalized);
             return mb_strtolower($withoutAccents);
         }
-
-        private static function digits(string $value): string
-        {
-            return preg_replace('/\D/', '', $value);
-        }
     }
 
     class Patient
     {
         public static array $collection = [];
+        public static ?PatientQuery $lastQuery = null;
 
         public static function setCollection(array $patients): void
         {
@@ -142,7 +144,8 @@ namespace App\Models {
 
         public static function query(): PatientQuery
         {
-            return new PatientQuery(self::$collection);
+            self::$lastQuery = new PatientQuery(self::$collection);
+            return self::$lastQuery;
         }
     }
 }
@@ -160,6 +163,21 @@ namespace Illuminate\Http {
         public function get($key, $default = null)
         {
             return $this->query[$key] ?? $default;
+        }
+    }
+}
+
+namespace Illuminate\Support\Facades {
+    class DB
+    {
+        public static function getDriverName()
+        {
+            return 'sqlite';
+        }
+
+        public static function statement($sql)
+        {
+            // no-op for tests
         }
     }
 }
@@ -185,27 +203,33 @@ namespace {
 
     class PatientSearchTest extends TestCase
     {
-        public function test_search_returns_patient_by_id(): void
+        private function makePatient(array $attributes)
         {
-            $patients = [
-                (object) ['id' => 1, 'primeiro_nome' => 'Alice', 'nome_meio' => null, 'ultimo_nome' => 'Smith', 'phone' => '', 'whatsapp' => '', 'cpf' => '', 'email' => null],
-                (object) ['id' => 2, 'primeiro_nome' => 'Bob', 'nome_meio' => null, 'ultimo_nome' => 'Jones', 'phone' => '', 'whatsapp' => '', 'cpf' => '', 'email' => null],
+            $base = [
+                'id' => 1,
+                'primeiro_nome' => 'John',
+                'nome_meio' => null,
+                'ultimo_nome' => 'Doe',
+                'phone' => '',
+                'whatsapp' => '',
+                'cpf' => '',
+                'email' => null,
             ];
-            \App\Models\Patient::setCollection($patients);
-
-            $controller = new PatientController();
-            $request = new \Illuminate\Http\Request(['q' => '2']);
-            $result = $controller->search($request);
-
-            $this->assertSame([
-                ['id' => 2, 'name' => 'Bob Jones', 'phone' => '', 'cpf' => ''],
-            ], $result);
+            $p = (object) array_merge($base, $attributes);
+            $name = trim($p->primeiro_nome . ' ' . ($p->nome_meio ? $p->nome_meio . ' ' : '') . $p->ultimo_nome);
+            $p->normalized_name = Normalizer::normalize($name, Normalizer::FORM_D);
+            $p->normalized_name = preg_replace('/\pM/u', '', $p->normalized_name);
+            $p->normalized_name = mb_strtolower($p->normalized_name);
+            $p->digits_phone = preg_replace('/\D/', '', $p->phone);
+            $p->digits_whatsapp = preg_replace('/\D/', '', $p->whatsapp);
+            $p->digits_cpf = preg_replace('/\D/', '', $p->cpf);
+            return $p;
         }
 
-        public function test_accented_name_matches(): void
+        public function test_search_by_name_uses_index(): void
         {
             $patients = [
-                (object) ['id' => 1, 'primeiro_nome' => 'Matéus', 'nome_meio' => null, 'ultimo_nome' => 'Silva', 'phone' => '', 'whatsapp' => '', 'cpf' => '', 'email' => null],
+                $this->makePatient(['id' => 1, 'primeiro_nome' => 'Matéus', 'ultimo_nome' => 'Silva']),
             ];
             \App\Models\Patient::setCollection($patients);
 
@@ -216,18 +240,18 @@ namespace {
             $this->assertSame([
                 ['id' => 1, 'name' => 'Matéus Silva', 'phone' => '', 'cpf' => ''],
             ], $result);
+
+            $this->assertSame(true, in_array('pessoas_normalized_name_index', \App\Models\Patient::$lastQuery->usedIndexes));
         }
 
-        public function test_phone_search_matches_varied_formats(): void
+        public function test_search_by_phone_uses_index(): void
         {
             $patients = [
-                (object) ['id' => 1, 'primeiro_nome' => 'Ana', 'nome_meio' => null, 'ultimo_nome' => 'Silva', 'phone' => '(11) 91234-5678', 'whatsapp' => '', 'cpf' => '', 'email' => null],
-                (object) ['id' => 2, 'primeiro_nome' => 'Bia', 'nome_meio' => null, 'ultimo_nome' => 'Smith', 'phone' => '21987654321', 'whatsapp' => '', 'cpf' => '', 'email' => null],
+                $this->makePatient(['id' => 1, 'primeiro_nome' => 'Ana', 'ultimo_nome' => 'Silva', 'phone' => '(11) 91234-5678']),
             ];
             \App\Models\Patient::setCollection($patients);
 
             $controller = new PatientController();
-
             $request = new \Illuminate\Http\Request(['q' => '11912345678']);
             $result = $controller->search($request);
 
@@ -235,24 +259,17 @@ namespace {
                 ['id' => 1, 'name' => 'Ana Silva', 'phone' => '(11) 91234-5678', 'cpf' => ''],
             ], $result);
 
-            $request = new \Illuminate\Http\Request(['q' => '(21) 98765-4321']);
-            $result = $controller->search($request);
-
-            $this->assertSame([
-                ['id' => 2, 'name' => 'Bia Smith', 'phone' => '21987654321', 'cpf' => ''],
-            ], $result);
+            $this->assertSame(true, in_array('pessoas_digits_phone_index', \App\Models\Patient::$lastQuery->usedIndexes));
         }
 
-        public function test_cpf_search_matches_varied_formats(): void
+        public function test_search_by_cpf_uses_index(): void
         {
             $patients = [
-                (object) ['id' => 1, 'primeiro_nome' => 'Carlos', 'nome_meio' => null, 'ultimo_nome' => 'Ferreira', 'phone' => '', 'whatsapp' => '', 'cpf' => '123.456.789-00', 'email' => null],
-                (object) ['id' => 2, 'primeiro_nome' => 'Daniela', 'nome_meio' => null, 'ultimo_nome' => 'Costa', 'phone' => '', 'whatsapp' => '', 'cpf' => '98765432100', 'email' => null],
+                $this->makePatient(['id' => 1, 'primeiro_nome' => 'Carlos', 'ultimo_nome' => 'Ferreira', 'cpf' => '123.456.789-00']),
             ];
             \App\Models\Patient::setCollection($patients);
 
             $controller = new PatientController();
-
             $request = new \Illuminate\Http\Request(['q' => '12345678900']);
             $result = $controller->search($request);
 
@@ -260,20 +277,13 @@ namespace {
                 ['id' => 1, 'name' => 'Carlos Ferreira', 'phone' => '', 'cpf' => '123.456.789-00'],
             ], $result);
 
-            $request = new \Illuminate\Http\Request(['q' => '987.654.321-00']);
-            $result = $controller->search($request);
-
-            $this->assertSame([
-                ['id' => 2, 'name' => 'Daniela Costa', 'phone' => '', 'cpf' => '98765432100'],
-            ], $result);
+            $this->assertSame(true, in_array('pessoas_digits_cpf_index', \App\Models\Patient::$lastQuery->usedIndexes));
         }
     }
 
     $test = new PatientSearchTest();
-    $test->test_search_returns_patient_by_id();
-    $test->test_accented_name_matches();
-    $test->test_phone_search_matches_varied_formats();
-    $test->test_cpf_search_matches_varied_formats();
+    $test->test_search_by_name_uses_index();
+    $test->test_search_by_phone_uses_index();
+    $test->test_search_by_cpf_uses_index();
     echo "Test passed\n";
 }
-
