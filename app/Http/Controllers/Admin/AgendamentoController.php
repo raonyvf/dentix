@@ -42,15 +42,21 @@ class AgendamentoController extends Controller
 
             foreach ($agendamentos as $ag) {
                 $pessoa = optional($ag->paciente)->pessoa;
-                // banco armazena hora com segundos; para correlacionar com as células da tabela
-                // que usam formato HH:MM, normalizamos o valor removendo os segundos
-                $hora = substr($ag->hora_inicio, 0, 5);
+                $start = Carbon::parse($ag->hora_inicio);
+                $end = Carbon::parse($ag->hora_fim);
+                $hora = $start->format('H:i');
+                $rowspan = max(1, intdiv($start->diffInMinutes($end), 30));
+
                 $agenda[$ag->profissional_id][$hora] = [
                     'paciente' => $pessoa ? trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')) : '',
-                    'tipo' => $ag->tipo ?? '',
-                    'contato' => $ag->contato ?? '',
-                    'status' => $ag->status ?? 'confirmado',
+                    'observacao' => $ag->observacao ?? '',
+                    'status' => $ag->status ?? 'pendente',
+                    'rowspan' => $rowspan,
                 ];
+
+                for ($t = $start->copy()->addMinutes(30); $t < $end; $t->addMinutes(30)) {
+                    $agenda[$ag->profissional_id][$t->format('H:i')] = ['skip' => true];
+                }
             }
         }
 
@@ -112,14 +118,21 @@ class AgendamentoController extends Controller
                 ->get();
             foreach ($agendamentos as $ag) {
                 $pessoa = optional($ag->paciente)->pessoa;
-                // hora_inicio vem como HH:MM:SS; usamos apenas HH:MM para coincidir com a tabela
-                $hora = substr($ag->hora_inicio, 0, 5);
+                $start = Carbon::parse($ag->hora_inicio);
+                $end = Carbon::parse($ag->hora_fim);
+                $hora = $start->format('H:i');
+                $rowspan = max(1, intdiv($start->diffInMinutes($end), 30));
+
                 $agenda[$ag->profissional_id][$hora] = [
                     'paciente' => $pessoa ? trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')) : '',
-                    'tipo' => $ag->tipo ?? '',
-                    'contato' => $ag->contato ?? '',
-                    'status' => $ag->status ?? 'confirmado',
+                    'observacao' => $ag->observacao ?? '',
+                    'status' => $ag->status ?? 'pendente',
+                    'rowspan' => $rowspan,
                 ];
+
+                for ($t = $start->copy()->addMinutes(30); $t < $end; $t->addMinutes(30)) {
+                    $agenda[$ag->profissional_id][$t->format('H:i')] = ['skip' => true];
+                }
             }
         }
 
