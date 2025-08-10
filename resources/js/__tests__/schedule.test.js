@@ -3,21 +3,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 vi.mock('alpinejs', () => ({ default: { plugin: vi.fn(), start: vi.fn() } }));
 vi.mock('@alpinejs/collapse', () => ({ default: {} }));
-vi.mock('tom-select', () => ({
-  default: class {
-    constructor(el, opts) {
-      this.el = el;
-      this.opts = opts;
-      this.events = {};
-      el.tomselect = this;
-    }
-    on(event, cb) {
-      this.events[event] = cb;
-    }
-    load() {}
-  }
-}));
-
 const buildDom = () => {
   document.head.innerHTML = '<meta name="csrf-token" content="token">';
   document.body.innerHTML = `
@@ -148,6 +133,27 @@ describe('schedule selection', () => {
     expect(fetch).toHaveBeenCalled();
     const body = JSON.parse(fetch.mock.calls[0][1].body);
     expect(body.paciente_id).toBe('1');
+  });
+
+  it.each(['John', '12345678900', '5551234'])('fetches patients when typing %s', async term => {
+    const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ json: () => [] })
+      .mockResolvedValue({ json: () => [{ id: 1, name: 'Paciente X' }] });
+    cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    const select = document.getElementById('schedule-paciente');
+    const input = select.previousElementSibling;
+    const list = select.tomselect.list;
+    vi.useFakeTimers();
+    input.value = term;
+    input.dispatchEvent(new Event('input'));
+    await vi.advanceTimersByTimeAsync(350);
+    vi.useRealTimers();
+    await new Promise(r => setTimeout(r, 0));
+    await new Promise(r => setTimeout(r, 0));
+    expect(fetch).toHaveBeenLastCalledWith(expect.stringContaining(`q=${encodeURIComponent(term)}`));
+    expect(list.textContent).toContain('Paciente X');
   });
 });
 
