@@ -21,6 +21,7 @@ vi.mock('tom-select', () => ({
 const buildDom = () => {
   document.head.innerHTML = '<meta name="csrf-token" content="token">';
   document.body.innerHTML = `
+    <div id="schedule-success" class="hidden"></div>
     <div id="schedule-modal" class="hidden" data-hora="" data-date="">
       <input id="schedule-start" />
       <input id="schedule-end" />
@@ -148,6 +149,21 @@ describe('schedule selection', () => {
     expect(fetch).toHaveBeenCalled();
     const body = JSON.parse(fetch.mock.calls[0][1].body);
     expect(body.paciente_id).toBe('1');
+  });
+
+  it('shows success alert after saving', async () => {
+    const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
+    cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    const select = document.getElementById('schedule-paciente');
+    select.value = '1';
+    global.fetch = vi.fn(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve({}) })
+    );
+    const save = document.getElementById('schedule-save');
+    save.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await new Promise(r => setTimeout(r, 0));
+    const success = document.getElementById('schedule-success');
+    expect(success.classList.contains('hidden')).toBe(false);
   });
 });
 

@@ -879,6 +879,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (data.redirect) { window.location.href = data.redirect; }
                             return;
                         }
+                        const success = document.getElementById('schedule-success');
+                        if (success) {
+                            success.textContent = 'Agendamento salvo com sucesso';
+                            success.classList.remove('hidden');
+                            setTimeout(() => success.classList.add('hidden'), 3000);
+                        }
                         const comp = root?.__x?.$data;
                         if (comp) {
                             comp.fetchProfessionals(date).then(profs => {
