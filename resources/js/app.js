@@ -1,6 +1,5 @@
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
-import TomSelect from './paciente-select';
 
 Alpine.plugin(collapse);
 window.Alpine = Alpine;
@@ -248,59 +247,57 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
     document.dispatchEvent(new Event('schedule:rendered'));
 };
 
-let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteSelect, pacienteTS, professionalInput, dateInput, summary, hiddenStart, hiddenEnd;
+let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd, patientSearch, patientResults, step1, step2, selectedPatientName, notFoundMsg;
 
-function initPacienteSelect() {
-    pacienteSelect = document.getElementById('schedule-paciente');
+function initPatientSearch() {
+    patientSearch = document.getElementById('patient-search');
+    patientResults = document.getElementById('patient-results');
+    step1 = document.getElementById('step-1');
+    step2 = document.getElementById('step-2');
+    selectedPatientName = document.getElementById('selected-patient-name');
+    notFoundMsg = document.getElementById('patient-notfound');
+    pacienteInput = document.getElementById('schedule-paciente');
     scheduleModal = document.getElementById('schedule-modal');
-    if (!pacienteSelect || !scheduleModal) return;
+    if (!patientSearch || !patientResults || !scheduleModal) return;
 
-    if (pacienteTS && pacienteTS.destroy) {
-        pacienteTS.destroy();
-        pacienteTS = null;
-    }
+    let timeout;
+    const searchUrl = patientSearch.dataset.searchUrl;
 
-    scheduleModal.style.zIndex = '999999';
-    scheduleModal.style.overflow = 'visible';
-
-    let ancestor = scheduleModal.parentElement;
-    while (ancestor) {
-        const style = getComputedStyle(ancestor);
-        if (style.overflow === 'hidden' || style.overflowX === 'hidden' || style.overflowY === 'hidden') {
-            ancestor.style.overflow = 'visible';
-            ancestor.style.overflowX = 'visible';
-            ancestor.style.overflowY = 'visible';
+    patientSearch.oninput = e => {
+        clearTimeout(timeout);
+        const q = e.target.value.trim();
+        if (q.length < 2) {
+            patientResults.innerHTML = '';
+            notFoundMsg?.classList.add('hidden');
+            return;
         }
-        ancestor = ancestor.parentElement;
-    }
-
-    const searchUrl = pacienteSelect.dataset.searchUrl;
-    let initialLoaded = false;
-    pacienteTS = new TomSelect(pacienteSelect, {
-        valueField: 'id',
-        labelField: 'name',
-        searchField: ['name', 'cpf', 'phone'],
-        loadThrottle: 300,
-        placeholder: 'Buscar...',
-        dropdownParent: scheduleModal,
-        zIndex: 999999,
-        load(query, callback) {
-            if (query.length && query.length < 2) return callback();
+        timeout = setTimeout(() => {
             const url = new URL(searchUrl, window.location.origin);
-            url.searchParams.set('q', query);
+            url.searchParams.set('q', q);
             fetch(url.toString())
                 .then(r => r.json())
-                .then(data => callback(data))
-                .catch(() => callback());
-        },
-    });
-    pacienteTS.on('dropdown_open', () => {
-        if (!initialLoaded) {
-            pacienteTS.load('');
-            initialLoaded = true;
-        }
-    });
-    pacienteTS.input.focus();
+                .then(data => {
+                    patientResults.innerHTML = '';
+                    if (!data.length) {
+                        notFoundMsg?.classList.remove('hidden');
+                        return;
+                    }
+                    notFoundMsg?.classList.add('hidden');
+                    data.forEach(p => {
+                        const li = document.createElement('li');
+                        li.textContent = p.nome || p.text || '';
+                        li.className = 'p-2 cursor-pointer hover:bg-gray-100';
+                        li.addEventListener('click', () => {
+                            pacienteInput.value = p.id;
+                            selectedPatientName.textContent = p.nome || p.text || '';
+                            step1.classList.add('hidden');
+                            step2.classList.remove('hidden');
+                        });
+                        patientResults.appendChild(li);
+                    });
+                });
+        }, 300);
+    };
 }
 let selection = { start: null, end: null, professional: null, date: null };
 let dragging = false;
@@ -416,7 +413,16 @@ const abrirModalAgendamento = () => {
     if (scheduleModal) {
         scheduleModal.dataset.hora = selection.start || '';
         scheduleModal.dataset.date = date;
-        initPacienteSelect();
+        if (patientSearch) patientSearch.value = '';
+        if (patientResults) patientResults.innerHTML = '';
+        if (notFoundMsg) notFoundMsg.classList.add('hidden');
+        if (pacienteInput) pacienteInput.value = '';
+        if (selectedPatientName) selectedPatientName.textContent = '';
+        if (step1 && step2) {
+            step1.classList.remove('hidden');
+            step2.classList.add('hidden');
+        }
+        initPatientSearch();
         scheduleModal.classList.remove('hidden');
     }
 };
@@ -441,12 +447,18 @@ function attachCellHandlers() {
     scheduleModal = document.getElementById('schedule-modal');
     startInput = document.getElementById('schedule-start');
     endInput = document.getElementById('schedule-end');
-    pacienteSelect = document.getElementById('schedule-paciente');
+    pacienteInput = document.getElementById('schedule-paciente');
     professionalInput = document.getElementById('schedule-professional');
     dateInput = document.getElementById('schedule-date');
     summary = document.getElementById('schedule-summary');
     hiddenStart = document.getElementById('hora_inicio');
     hiddenEnd = document.getElementById('hora_fim');
+    step1 = document.getElementById('step-1');
+    step2 = document.getElementById('step-2');
+    patientSearch = document.getElementById('patient-search');
+    patientResults = document.getElementById('patient-results');
+    selectedPatientName = document.getElementById('selected-patient-name');
+    notFoundMsg = document.getElementById('patient-notfound');
 
     updateSlotMinutes();
 
@@ -814,12 +826,11 @@ document.addEventListener('DOMContentLoaded', () => {
             cancel.addEventListener('click', () => {
                 scheduleModal.classList.add('hidden');
                 clearSelection();
-                if (pacienteTS?.destroy) { pacienteTS.destroy(); pacienteTS = null; }
             });
         }
         if (saveBtn) {
             saveBtn.addEventListener('click', () => {
-                if (!pacienteSelect?.value) {
+                if (!pacienteInput?.value) {
                     alert('Selecione um paciente');
                     return;
                 }
@@ -844,7 +855,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         data: date,
                         hora_inicio: startInput.value,
                         hora_fim: endInput.value,
-                        paciente_id: pacienteSelect.value,
+                        paciente_id: pacienteInput.value,
                         observacao: document.getElementById('schedule-observacao')?.value || '',
                         profissional_id: selection.professional,
                     }),
@@ -870,14 +881,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 scheduleModal.classList.add('hidden');
                 clearSelection();
-                if (pacienteTS?.destroy) { pacienteTS.destroy(); pacienteTS = null; }
             });
         }
         scheduleModal.addEventListener('click', e => {
             if (e.target === scheduleModal) {
                 scheduleModal.classList.add('hidden');
                 clearSelection();
-                if (pacienteTS?.destroy) { pacienteTS.destroy(); pacienteTS = null; }
             }
         });
     }

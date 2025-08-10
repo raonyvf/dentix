@@ -100,13 +100,30 @@ class PatientController extends Controller
 
     public function search(Request $request)
     {
-        $q = $request->query('q');
+        $q = trim($request->query('q', ''));
 
-        $patients = Patient::where('name', 'like', '%' . $q . '%')->get();
+        if ($q === '') {
+            return response()->json([]);
+        }
+
+        $normalized = Str::of($q)->ascii()->lower();
+        $digits = preg_replace('/\D/', '', $q);
+
+        $patients = Patient::with('pessoa')
+            ->whereHas('pessoa', function ($query) use ($normalized, $q, $digits) {
+                $query->where('normalized_name', 'like', "%$normalized%")
+                    ->orWhere('email', 'like', "%$q%")
+                    ->orWhere('digits_cpf', 'like', "%$digits%")
+                    ->orWhere('digits_phone', 'like', "%$digits%")
+                    ->orWhere('digits_whatsapp', 'like', "%$digits%");
+            })
+            ->limit(10)
+            ->get();
 
         $result = $patients->map(fn ($p) => [
             'id' => $p->id,
-            'text' => $p->name,
+            'nome' => $p->pessoa->full_name,
+            'email' => $p->pessoa->email,
         ]);
 
         return response()->json($result);
