@@ -299,6 +299,12 @@ function initPatientSearch() {
                     });
                     patientResults.appendChild(li);
                 });
+            })
+            .catch(err => {
+                console.error(err);
+                patientResults.innerHTML = '';
+                notFoundMsg?.classList.remove('hidden');
+                if (saveBtn) saveBtn.disabled = true;
             });
     };
 }
