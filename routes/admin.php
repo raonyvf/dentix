@@ -34,7 +34,7 @@ Route::resource('profissionais', ProfessionalController::class)
     ->parameters(['profissionais' => 'profissional']);
 
 Route::resource('formularios', FormularioController::class);
-Route::get('pacientes/buscar', [PatientController::class, 'search'])->name('pacientes.search');
+Route::get('pacientes/search', [PatientController::class, 'search'])->name('pacientes.search');
 Route::resource('pacientes', PatientController::class)
     ->parameters(['pacientes' => 'paciente']);
 
