@@ -1,5 +1,6 @@
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
+import TomSelect from './paciente-select';
 
 Alpine.plugin(collapse);
 window.Alpine = Alpine;
@@ -247,7 +248,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
     document.dispatchEvent(new Event('schedule:rendered'));
 };
 
-let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, pacienteList, pacienteIdInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd;
+let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteSelect, pacienteTS, professionalInput, dateInput, summary, hiddenStart, hiddenEnd;
 let selection = { start: null, end: null, professional: null, date: null };
 let dragging = false;
 let suppressClick = false;
@@ -375,9 +376,7 @@ function attachCellHandlers() {
     scheduleModal = document.getElementById('schedule-modal');
     startInput = document.getElementById('schedule-start');
     endInput = document.getElementById('schedule-end');
-    pacienteInput = document.getElementById('schedule-paciente');
-    pacienteList = document.getElementById('schedule-paciente-list');
-    pacienteIdInput = document.getElementById('schedule-paciente-id');
+    pacienteSelect = document.getElementById('schedule-paciente');
     professionalInput = document.getElementById('schedule-professional');
     dateInput = document.getElementById('schedule-date');
     summary = document.getElementById('schedule-summary');
@@ -736,78 +735,36 @@ document.addEventListener('DOMContentLoaded', () => {
         startInput = document.getElementById('schedule-start');
         endInput = document.getElementById('schedule-end');
         saveBtn = document.getElementById('schedule-save');
-        pacienteInput = document.getElementById('schedule-paciente');
-        pacienteList = document.getElementById('schedule-paciente-list');
-        pacienteIdInput = document.getElementById('schedule-paciente-id');
+        pacienteSelect = document.getElementById('schedule-paciente');
         professionalInput = document.getElementById('schedule-professional');
         dateInput = document.getElementById('schedule-date');
         summary = document.getElementById('schedule-summary');
         hiddenStart = document.getElementById('hora_inicio');
         hiddenEnd = document.getElementById('hora_fim');
-        let searchTimeout;
-        let searchController;
 
-        if (pacienteInput && pacienteList) {
-            const createUrl = pacienteInput.dataset.createUrl;
-            pacienteInput.addEventListener('input', e => {
-                clearTimeout(searchTimeout);
-                const term = e.target.value.trim();
-                if (pacienteIdInput) pacienteIdInput.value = '';
-                if (term.length < 2) {
-                    pacienteList.classList.add('hidden');
-                    pacienteList.innerHTML = '';
-                    return;
-                }
-
-                searchTimeout = setTimeout(() => {
-                    const url = pacienteInput.dataset.searchUrl;
-                    const searchTerm = term;
-                    if (searchController) {
-                        searchController.abort();
-                    }
-                    searchController = new AbortController();
-                    fetch(`${url}?q=${encodeURIComponent(searchTerm)}`, { signal: searchController.signal })
+        if (pacienteSelect) {
+            const searchUrl = pacienteSelect.dataset.searchUrl;
+            let initialLoaded = false;
+            pacienteTS = new TomSelect(pacienteSelect, {
+                valueField: 'id',
+                labelField: 'name',
+                searchField: ['name'],
+                loadThrottle: 300,
+                placeholder: 'Buscar...',
+                dropdownParent: document.getElementById('schedule-modal'),
+                load(query, callback) {
+                    if (query.length && query.length < 2) return callback();
+                    fetch(`${searchUrl}?q=${encodeURIComponent(query)}`)
                         .then(r => r.json())
-                        .then(data => {
-                            if (pacienteInput.value.trim() !== searchTerm) return;
-                            pacienteList.innerHTML = '';
-                            if (!data.length) {
-                                pacienteList.innerHTML = `<li class="px-2 py-1 text-sm text-gray-600">Nenhum paciente encontrado. <button type="button" id="create-paciente-btn" class="text-primary underline">Criar novo?</button></li>`;
-                                pacienteList.classList.remove('hidden');
-                                const btn = document.getElementById('create-paciente-btn');
-                                if (btn) btn.addEventListener('click', () => {
-                                    pacienteList.classList.add('hidden');
-                                    if (typeof window.abrirModalPaciente === 'function') {
-                                        window.abrirModalPaciente();
-                                    } else {
-                                        window.dispatchEvent(new CustomEvent('abrirModalPaciente'));
-                                    }
-                                });
-                                return;
-                            }
-                            data.slice(0, 10).forEach(p => {
-                                const detail = p.phone || p.cpf || '';
-                                const li = document.createElement('li');
-                                li.className = 'px-2 py-1 cursor-pointer hover:bg-gray-100';
-                                li.textContent = detail ? `${p.name} - ${detail}` : p.name;
-                                li.dataset.id = p.id;
-                                li.addEventListener('click', () => {
-                                    pacienteInput.value = p.name;
-                                    if (pacienteIdInput) pacienteIdInput.value = p.id;
-                                    pacienteList.classList.add('hidden');
-                                });
-                                pacienteList.appendChild(li);
-                            });
-                            pacienteList.classList.remove('hidden');
-                        })
-                        .catch(err => {
-                            if (err.name !== 'AbortError') console.error(err);
-                        });
-                }, 300);
+                        .then(data => callback(data))
+                        .catch(() => callback());
+                },
             });
-
-            pacienteInput.addEventListener('blur', () => {
-                setTimeout(() => pacienteList.classList.add('hidden'), 200);
+            pacienteTS.on('dropdown_open', () => {
+                if (!initialLoaded) {
+                    pacienteTS.load('');
+                    initialLoaded = true;
+                }
             });
         }
 
@@ -819,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (saveBtn) {
             saveBtn.addEventListener('click', () => {
-                if (!pacienteIdInput?.value) {
+                if (!pacienteSelect?.value) {
                     alert('Selecione um paciente');
                     return;
                 }
@@ -844,7 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         data: date,
                         hora_inicio: startInput.value,
                         hora_fim: endInput.value,
-                        paciente_id: pacienteIdInput.value,
+                        paciente_id: pacienteSelect.value,
                         observacao: document.getElementById('schedule-observacao')?.value || '',
                         profissional_id: selection.professional,
                     }),
