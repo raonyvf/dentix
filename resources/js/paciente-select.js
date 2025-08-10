@@ -97,6 +97,7 @@ export default class PacienteSelect {
         option.selected = true;
         this.el.appendChild(option);
         this.el.value = val;
+        this.el.dispatchEvent(new Event('change'));
         this.input.value = label;
         this.list.classList.add('hidden');
       });
