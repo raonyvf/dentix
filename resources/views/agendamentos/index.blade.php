@@ -119,7 +119,7 @@
             </label>
             <div class="flex justify-end gap-2">
                 <button id="schedule-cancel" class="px-3 py-1 border rounded">Cancelar</button>
-                <button id="schedule-save" data-store-url="{{ route('agendamentos.store') }}" class="px-3 py-1 bg-primary text-white rounded">Salvar</button>
+                <button id="schedule-save" data-store-url="{{ route('agendamentos.store') }}" class="px-3 py-1 bg-primary text-white rounded" disabled>Salvar</button>
             </div>
         </div>
     </div>
