@@ -26,7 +26,7 @@
             </aside>
         @endunless
     @endauth
-    <div class="flex flex-col flex-1 h-screen overflow-hidden min-h-0">
+    <div class="flex flex-col flex-1 h-screen min-h-0">
         @auth
             @unless(isset($hideNav) && $hideNav)
                 @include('partials.topbar')
