@@ -81,7 +81,24 @@ describe('schedule selection', () => {
     const modal = document.getElementById('schedule-modal');
     expect(modal.classList.contains('hidden')).toBe(false);
     expect(document.getElementById('schedule-start').value).toBe('09:00');
-    expect(document.getElementById('schedule-end').value).toBe('10:00');
+    expect(document.getElementById('schedule-end').value).toBe('10:30');
+  });
+
+  it('normalizes selection when clicks are in reverse order', () => {
+    const first = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="10:00"]');
+    first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    first.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+    first.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    const second = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
+    second.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    second.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+    second.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    const modal = document.getElementById('schedule-modal');
+    expect(modal.classList.contains('hidden')).toBe(false);
+    expect(document.getElementById('schedule-start').value).toBe('09:00');
+    expect(document.getElementById('schedule-end').value).toBe('10:30');
   });
 
   it('clears selection when second click has different date', () => {
