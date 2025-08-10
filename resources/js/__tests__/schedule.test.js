@@ -140,7 +140,7 @@ describe('schedule selection', () => {
     global.fetch = vi
       .fn()
       .mockResolvedValueOnce({ json: () => [] })
-      .mockResolvedValue({ json: () => [{ id: 1, name: 'Paciente X' }] });
+      .mockResolvedValue({ json: () => [{ id: 1, text: 'Paciente X' }] });
     cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
     const select = document.getElementById('schedule-paciente');
     const input = select.previousElementSibling;
