@@ -151,6 +151,9 @@ class AgendamentoController extends Controller
             'observacao' => 'nullable|string',
         ]);
 
+        $data['hora_inicio'] = Carbon::parse($data['hora_inicio'])->format('H:i:s');
+        $data['hora_fim'] = Carbon::parse($data['hora_fim'])->format('H:i:s');
+
         $data['clinica_id'] = $clinicId;
         $data['status'] = 'confirmado';
         $data['tipo'] = $data['tipo'] ?? 'Consulta';
