@@ -263,6 +263,17 @@ function initPacienteSelect() {
     scheduleModal.style.zIndex = '999999';
     scheduleModal.style.overflow = 'visible';
 
+    let ancestor = scheduleModal.parentElement;
+    while (ancestor) {
+        const style = getComputedStyle(ancestor);
+        if (style.overflow === 'hidden' || style.overflowX === 'hidden' || style.overflowY === 'hidden') {
+            ancestor.style.overflow = 'visible';
+            ancestor.style.overflowX = 'visible';
+            ancestor.style.overflowY = 'visible';
+        }
+        ancestor = ancestor.parentElement;
+    }
+
     const searchUrl = pacienteSelect.dataset.searchUrl;
     let initialLoaded = false;
     pacienteTS = new TomSelect(pacienteSelect, {
