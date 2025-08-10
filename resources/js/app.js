@@ -855,7 +855,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                const root = document.querySelector('[x-data]');
+                const root = scheduleModal.closest('[x-data]');
 
                 const date = scheduleModal.dataset.date;
 
@@ -891,7 +891,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             setTimeout(() => success.classList.add('hidden'), 3000);
                         }
                         const comp = root?.__x?.$data;
-                        if (comp) {
+                        if (comp?.fetchProfessionals && comp?.fetchHorarios) {
                             comp.fetchProfessionals(date).then(profs => {
                                 if (profs && profs.length) {
                                     comp.fetchHorarios(date);
