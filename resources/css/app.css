@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] { display: none !important; }
+
+.flatpickr-input {
+    background-image: none !important;
+}
+
+.flatpickr-input::-webkit-calendar-picker-indicator {
+    display: none !important;
+}
