@@ -284,14 +284,10 @@ function initPacienteSelect() {
         placeholder: 'Buscar...',
         dropdownParent: scheduleModal,
         zIndex: 999999,
-        load(query, callback) {
-            if (query.length && query.length < 2) return callback();
+        load(query) {
             const url = new URL(searchUrl, window.location.origin);
             url.searchParams.set('q', query);
-            fetch(url.toString())
-                .then(r => r.json())
-                .then(data => callback(data))
-                .catch(() => callback());
+            return fetch(url.toString()).then(r => r.json());
         },
     });
     pacienteTS.on('dropdown_open', () => {

@@ -1,4 +1,4 @@
-export default class TomSelect {
+export default class PacienteSelect {
   constructor(el, opts = {}) {
     this.el = el;
     this.opts = opts;
@@ -13,6 +13,7 @@ export default class TomSelect {
     this.input.className = el.className;
     this.input.placeholder = opts.placeholder || '';
     el.parentNode.insertBefore(this.input, el);
+    el.tomselect = this;
     this.list = document.createElement('ul');
     this.list.className = 'absolute w-full bg-white border rounded mt-1 max-h-40 overflow-auto hidden';
     this.list.style.zIndex = opts.zIndex || '999999';
@@ -24,7 +25,7 @@ export default class TomSelect {
     this.timer = null;
     this.input.addEventListener('input', e => {
       const term = e.target.value.trim();
-      if (term.length < 2) {
+      if (term.length < 1) {
         this.list.classList.add('hidden');
         this.list.innerHTML = '';
         return;
@@ -32,7 +33,11 @@ export default class TomSelect {
       clearTimeout(this.timer);
       this.timer = setTimeout(() => {
         if (this.opts.load) {
-          this.opts.load(term, items => this.render(items));
+          this.showLoading();
+          this.opts
+            .load(term)
+            .then(items => this.render(items))
+            .catch(() => this.showError());
         }
       }, this.opts.loadThrottle || 300);
     });
@@ -58,8 +63,22 @@ export default class TomSelect {
   }
   load(query) {
     if (this.opts.load) {
-      this.opts.load(query, items => this.render(items));
+      this.showLoading();
+      this.opts
+        .load(query)
+        .then(items => this.render(items))
+        .catch(() => this.showError());
     }
+  }
+
+  showLoading() {
+    this.list.innerHTML = '<li class="px-2 py-1 text-gray-500">Carregando...</li>';
+    this.list.classList.remove('hidden');
+  }
+
+  showError() {
+    this.list.innerHTML = '<li class="px-2 py-1 text-red-500">Erro ao buscar pacientes</li>';
+    this.list.classList.remove('hidden');
   }
   render(items) {
     this.list.innerHTML = '';
