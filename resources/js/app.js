@@ -274,7 +274,7 @@ function initPatientSearch() {
         timeout = setTimeout(() => {
             const url = new URL(searchUrl, window.location.origin);
             url.searchParams.set('q', q);
-            fetch(url.toString())
+            fetch(url.toString(), { credentials: 'same-origin' })
                 .then(r => r.json())
                 .then(data => {
                     patientResults.innerHTML = '';
