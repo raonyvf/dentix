@@ -3,6 +3,7 @@ export default function pacienteSelect(el, opts = {}) {
   el.style.display = 'none';
   const parent = opts.dropdownParent || el.parentNode;
   parent.style.position = parent.style.position || 'relative';
+  parent.style.overflow = 'visible';
 
   const input = document.createElement('input');
   input.type = 'text';
@@ -11,10 +12,18 @@ export default function pacienteSelect(el, opts = {}) {
   parent.insertBefore(input, el);
 
   const list = document.createElement('ul');
-  list.className = 'absolute z-50 w-full bg-white border rounded mt-1 max-h-40 overflow-auto hidden';
+  list.className = 'absolute z-50 bg-white border rounded max-h-40 overflow-auto hidden';
   parent.appendChild(list);
 
   let timer = null;
+
+  function positionList() {
+    const inputRect = input.getBoundingClientRect();
+    const parentRect = parent.getBoundingClientRect();
+    list.style.top = `${inputRect.bottom - parentRect.top}px`;
+    list.style.left = `${inputRect.left - parentRect.left}px`;
+    list.style.width = `${inputRect.width}px`;
+  }
 
   function fetchItems(term) {
     if (typeof opts.load === 'function') {
@@ -30,6 +39,7 @@ export default function pacienteSelect(el, opts = {}) {
   function showMessage(msg, cls = 'text-gray-500') {
     list.innerHTML = `<li class="px-2 py-1 ${cls}">${msg}</li>`;
     list.classList.remove('hidden');
+    positionList();
   }
 
   function render(items) {
@@ -58,6 +68,7 @@ export default function pacienteSelect(el, opts = {}) {
       list.appendChild(li);
     });
     list.classList.remove('hidden');
+    positionList();
   }
 
   function search(term) {
@@ -78,6 +89,7 @@ export default function pacienteSelect(el, opts = {}) {
   });
 
   input.addEventListener('focus', () => {
+    positionList();
     if (!input.value) {
       search('');
     }
@@ -87,10 +99,15 @@ export default function pacienteSelect(el, opts = {}) {
     setTimeout(() => list.classList.add('hidden'), 200);
   });
 
+  window.addEventListener('resize', positionList);
+  window.addEventListener('scroll', positionList, true);
+
   const api = {
     input,
     list,
     destroy() {
+      window.removeEventListener('resize', positionList);
+      window.removeEventListener('scroll', positionList, true);
       input.remove();
       list.remove();
       el.style.display = '';
