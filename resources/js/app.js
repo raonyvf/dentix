@@ -4,6 +4,7 @@ import TomSelect from './paciente-select';
 
 Alpine.plugin(collapse);
 window.Alpine = Alpine;
+window.TomSelect = TomSelect;
 
 // expose agendaCalendar to Alpine in Blade templates before Alpine.start()
 window.agendaCalendar = function agendaCalendar() {
