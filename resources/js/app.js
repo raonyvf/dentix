@@ -279,25 +279,13 @@ function initPacienteSelect() {
     }
 
     const searchUrl = pacienteSelect.dataset.searchUrl || '/admin/pacientes/search';
-    let initialLoaded = false;
-    pacienteTS = new TomSelect(pacienteSelect, {
+    pacienteTS = TomSelect(pacienteSelect, {
+        searchUrl,
         valueField: 'id',
         labelField: 'text',
-        searchField: ['text'],
         loadThrottle: 300,
         placeholder: 'Buscar...',
         dropdownParent: scheduleModal,
-        zIndex: 999999,
-        load(query) {
-            const url = `${searchUrl}?q=${encodeURIComponent(query)}`;
-            return fetch(url).then(r => r.json());
-        },
-    });
-    pacienteTS.on('dropdown_open', () => {
-        if (!initialLoaded) {
-            pacienteTS.load('');
-            initialLoaded = true;
-        }
     });
     pacienteTS.input.focus();
     pacienteChangeHandler = e => {
