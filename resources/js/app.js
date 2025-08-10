@@ -249,6 +249,48 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
 };
 
 let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteSelect, pacienteTS, professionalInput, dateInput, summary, hiddenStart, hiddenEnd;
+
+function initPacienteSelect() {
+    pacienteSelect = document.getElementById('schedule-paciente');
+    scheduleModal = document.getElementById('schedule-modal');
+    if (!pacienteSelect || !scheduleModal) return;
+
+    if (pacienteTS && pacienteTS.destroy) {
+        pacienteTS.destroy();
+        pacienteTS = null;
+    }
+
+    scheduleModal.style.zIndex = '999999';
+    scheduleModal.style.overflow = 'visible';
+
+    const searchUrl = pacienteSelect.dataset.searchUrl;
+    let initialLoaded = false;
+    pacienteTS = new TomSelect(pacienteSelect, {
+        valueField: 'id',
+        labelField: 'name',
+        searchField: ['name', 'cpf', 'phone'],
+        loadThrottle: 300,
+        placeholder: 'Buscar...',
+        dropdownParent: scheduleModal,
+        zIndex: 999999,
+        load(query, callback) {
+            if (query.length && query.length < 2) return callback();
+            const url = new URL(searchUrl, window.location.origin);
+            url.searchParams.set('q', query);
+            fetch(url.toString())
+                .then(r => r.json())
+                .then(data => callback(data))
+                .catch(() => callback());
+        },
+    });
+    pacienteTS.on('dropdown_open', () => {
+        if (!initialLoaded) {
+            pacienteTS.load('');
+            initialLoaded = true;
+        }
+    });
+    pacienteTS.input.focus();
+}
 let selection = { start: null, end: null, professional: null, date: null };
 let dragging = false;
 let suppressClick = false;
@@ -352,6 +394,7 @@ const abrirModalAgendamento = () => {
     if (scheduleModal) {
         scheduleModal.dataset.hora = selection.start || '';
         scheduleModal.dataset.date = date;
+        initPacienteSelect();
         scheduleModal.classList.remove('hidden');
     }
 };
@@ -735,43 +778,17 @@ document.addEventListener('DOMContentLoaded', () => {
         startInput = document.getElementById('schedule-start');
         endInput = document.getElementById('schedule-end');
         saveBtn = document.getElementById('schedule-save');
-        pacienteSelect = document.getElementById('schedule-paciente');
         professionalInput = document.getElementById('schedule-professional');
         dateInput = document.getElementById('schedule-date');
         summary = document.getElementById('schedule-summary');
         hiddenStart = document.getElementById('hora_inicio');
         hiddenEnd = document.getElementById('hora_fim');
 
-        if (pacienteSelect) {
-            const searchUrl = pacienteSelect.dataset.searchUrl;
-            let initialLoaded = false;
-            pacienteTS = new TomSelect(pacienteSelect, {
-                valueField: 'id',
-                labelField: 'name',
-                searchField: ['name'],
-                loadThrottle: 300,
-                placeholder: 'Buscar...',
-                dropdownParent: document.getElementById('schedule-modal'),
-                load(query, callback) {
-                    if (query.length && query.length < 2) return callback();
-                    fetch(`${searchUrl}?q=${encodeURIComponent(query)}`)
-                        .then(r => r.json())
-                        .then(data => callback(data))
-                        .catch(() => callback());
-                },
-            });
-            pacienteTS.on('dropdown_open', () => {
-                if (!initialLoaded) {
-                    pacienteTS.load('');
-                    initialLoaded = true;
-                }
-            });
-        }
-
         if (cancel) {
             cancel.addEventListener('click', () => {
                 scheduleModal.classList.add('hidden');
                 clearSelection();
+                if (pacienteTS?.destroy) { pacienteTS.destroy(); pacienteTS = null; }
             });
         }
         if (saveBtn) {
@@ -827,12 +844,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 scheduleModal.classList.add('hidden');
                 clearSelection();
+                if (pacienteTS?.destroy) { pacienteTS.destroy(); pacienteTS = null; }
             });
         }
         scheduleModal.addEventListener('click', e => {
             if (e.target === scheduleModal) {
                 scheduleModal.classList.add('hidden');
                 clearSelection();
+                if (pacienteTS?.destroy) { pacienteTS.destroy(); pacienteTS = null; }
             }
         });
     }
