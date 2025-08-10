@@ -2,7 +2,9 @@ export default function pacienteSelect(el, opts = {}) {
   // hide original select and create text input
   el.style.display = 'none';
   const parent = opts.dropdownParent || el.parentNode;
-  parent.style.position = parent.style.position || 'relative';
+  if (getComputedStyle(parent).position === 'static') {
+    parent.style.position = 'relative';
+  }
   parent.style.overflow = 'visible';
 
   const input = document.createElement('input');
