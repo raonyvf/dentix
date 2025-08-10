@@ -10,8 +10,6 @@ use App\Models\Pessoa;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
 {
@@ -102,87 +100,16 @@ class PatientController extends Controller
 
     public function search(Request $request)
     {
-        $term = trim($request->get('q', ''));
-        if ($term === '') {
-            return response()->json([]);
-        }
+        $q = $request->query('q');
 
-        $normTerm = $this->normalize($term);
-        $digitTerm = $this->digits($term);
+        $patients = Patient::where('name', 'like', '%' . $q . '%')->get();
 
-        $clinicId = function_exists('clinicId') ? clinicId() : (function_exists('app') && app()->bound('clinic_id') ? app('clinic_id') : null);
+        $result = $patients->map(fn ($p) => [
+            'id' => $p->id,
+            'text' => $p->name,
+        ]);
 
-        $emailExpr = DB::getDriverName() === 'pgsql'
-            ? "lower(unaccent(coalesce(pessoas.email,'')))"
-            : "lower(coalesce(pessoas.email,''))";
-
-        $patients = Patient::query()
-            ->join('pessoas', 'pacientes.pessoa_id', '=', 'pessoas.id')
-            ->select([
-                'pacientes.id',
-                'pessoas.primeiro_nome',
-                'pessoas.nome_meio',
-                'pessoas.ultimo_nome',
-                'pessoas.phone',
-                'pessoas.whatsapp',
-                'pessoas.cpf',
-            ])
-            ->when($clinicId, fn($q) => $q->whereHas('clinicas', fn($q2) => $q2->where('clinica_id', $clinicId)))
-            ->where(function ($query) use ($normTerm, $digitTerm, $emailExpr) {
-                if ($normTerm !== '') {
-                    $query->where('pessoas.normalized_name', 'like', "{$normTerm}%")
-                        ->orWhere('pessoas.normalized_name', 'like', "%{$normTerm}%")
-                        ->orWhereRaw("$emailExpr LIKE ?", ["%{$normTerm}%"]);
-                }
-
-                if ($digitTerm !== '') {
-                    $query->orWhere('pessoas.digits_phone', 'like', "%{$digitTerm}%")
-                        ->orWhere('pessoas.digits_whatsapp', 'like', "%{$digitTerm}%")
-                        ->orWhere('pessoas.digits_cpf', 'like', "%{$digitTerm}%")
-                        ->orWhere('pacientes.id', $digitTerm);
-                }
-            })
-            ->orderByRaw(
-                "CASE\n" .
-                "    WHEN pessoas.normalized_name LIKE ? THEN 0\n" .
-                "    WHEN pessoas.normalized_name LIKE ? THEN 1\n" .
-                "    WHEN $emailExpr LIKE ? OR pessoas.digits_phone LIKE ? OR pessoas.digits_whatsapp LIKE ? OR pessoas.digits_cpf LIKE ? THEN 2\n" .
-                "    ELSE 3\n" .
-                "END",
-                ["{$normTerm}%", "%{$normTerm}%", "%{$normTerm}%", "%{$digitTerm}%", "%{$digitTerm}%", "%{$digitTerm}%"]
-            )
-            ->limit(10)
-            ->get();
-
-        $results = $patients->map(function ($p) {
-            $name = trim($p->primeiro_nome . ' ' . ($p->nome_meio ? $p->nome_meio . ' ' : '') . $p->ultimo_nome);
-            $phone = $p->phone ?? $p->whatsapp ?? '';
-            return [
-                'id' => $p->id,
-                'name' => $name,
-                'phone' => $phone,
-                'cpf' => $p->cpf ?? '',
-            ];
-        })->toArray();
-
-        return response()->json($results);
-    }
-
-    private function normalize(string $value): string
-    {
-        if (! class_exists('Normalizer')) {
-            logger()->warning('Intl extension not loaded; using ASCII fallback for normalization.');
-            return (string) Str::of($value)->ascii()->lower();
-        }
-
-        $normalized = \Normalizer::normalize($value, \Normalizer::FORM_D);
-        $withoutAccents = preg_replace('/\pM/u', '', $normalized);
-        return mb_strtolower($withoutAccents);
-    }
-
-    private function digits(string $value): string
-    {
-        return preg_replace('/\D/', '', $value);
+        return response()->json($result);
     }
 
     private function validateData(Request $request): array
