@@ -24,9 +24,18 @@
         'cancelado' => 'bg-red-100 text-red-700',
         default => 'bg-gray-100 text-gray-700',
     };
+    $titleParts = [$paciente];
+    if($inicio && $fim) {
+        $titleParts[] = "$inicio - $fim";
+    }
+    if($observacao) {
+        $titleParts[] = $observacao;
+    }
+    $titleParts[] = $statusLabel;
+    $title = implode(' | ', $titleParts);
 @endphp
 {{-- Additional data-* attributes are forwarded to the root div --}}
-<div {{ $attributes->merge(['class' => "rounded p-2 text-xs $color", 'style' => "border: 2px solid $borderColor"]) }}>
+<div {{ $attributes->merge(['class' => "rounded p-2 text-xs $color overflow-hidden break-words", 'style' => "border: 2px solid $borderColor", 'title' => $title]) }}>
     <div class="font-bold text-sm">{{ $paciente }}</div>
     @if($inicio && $fim)
         <div>{{ $inicio }} - {{ $fim }}</div>
