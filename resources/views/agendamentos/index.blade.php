@@ -81,7 +81,7 @@
                         @endif
                         <td class="h-16 cursor-pointer border-l" data-professional-id="{{ $prof['id'] }}" data-hora="{{ $hora }}" data-date="{{ $date }}" @if($item && isset($item['rowspan'])) rowspan="{{ $item['rowspan'] }}" @endif>
                             @if($item)
-                                <x-agenda.agendamento :paciente="$item['paciente']" :observacao="$item['observacao']" :status="$item['status']"
+                                <x-agenda.agendamento :paciente="$item['paciente']" :inicio="$item['hora_inicio']" :fim="$item['hora_fim']" :observacao="$item['observacao']" :status="$item['status']"
                                     data-id="{{ $item['id'] }}"
                                     data-inicio="{{ $item['hora_inicio'] }}"
                                     data-fim="{{ $item['hora_fim'] }}"
