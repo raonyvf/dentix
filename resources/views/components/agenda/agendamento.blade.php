@@ -4,6 +4,7 @@
         ? 'bg-green-100 text-green-700'
         : 'bg-gray-100 text-gray-700';
 @endphp
+{{-- Additional data-* attributes are forwarded to the root div --}}
 <div {{ $attributes->merge(['class' => "rounded p-2 text-xs $color"]) }}>
     <div class="font-semibold">{{ $paciente }}</div>
     <div>{{ $observacao }}</div>

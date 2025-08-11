@@ -21,6 +21,7 @@ Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
 Route::get('agenda', [AgendaController::class, 'index'])->name('agenda.index');
 Route::get('agendamentos', [AgendamentoController::class, 'index'])->name('agendamentos.index');
 Route::post('agendamentos', [AgendamentoController::class, 'store'])->name('agendamentos.store');
+Route::put('agendamentos/{agendamento}', [AgendamentoController::class, 'update'])->name('agendamentos.update');
 Route::get('agendamentos/horarios', [AgendaController::class, 'horarios'])->name('agendamentos.horarios');
 Route::get('agendamentos/profissionais', [AgendamentoController::class, 'professionals'])->name('agendamentos.professionals');
 

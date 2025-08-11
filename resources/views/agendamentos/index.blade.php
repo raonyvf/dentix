@@ -81,7 +81,14 @@
                         @endif
                         <td class="h-16 cursor-pointer border-l" data-professional-id="{{ $prof['id'] }}" data-hora="{{ $hora }}" data-date="{{ $date }}" @if($item && isset($item['rowspan'])) rowspan="{{ $item['rowspan'] }}" @endif>
                             @if($item)
-                                <x-agenda.agendamento :paciente="$item['paciente']" :observacao="$item['observacao']" :status="$item['status']" />
+                                <x-agenda.agendamento :paciente="$item['paciente']" :observacao="$item['observacao']" :status="$item['status']"
+                                    data-id="{{ $item['id'] }}"
+                                    data-inicio="{{ $item['hora_inicio'] }}"
+                                    data-fim="{{ $item['hora_fim'] }}"
+                                    data-observacao="{{ $item['observacao'] }}"
+                                    data-date="{{ $date }}"
+                                    data-profissional-id="{{ $prof['id'] }}"
+                                />
                             @endif
                         </td>
                     @endforeach
@@ -120,13 +127,14 @@
             <input type="hidden" id="schedule-professional">
             <input type="hidden" id="schedule-date">
             <input type="hidden" id="schedule-paciente">
+            <input type="hidden" id="agendamento-id">
             <label class="block mb-4">
                 <span class="text-sm">Observação</span>
                 <textarea id="schedule-observacao" class="mt-1 w-full border rounded p-1" placeholder="Digite aqui"></textarea>
             </label>
             <div class="flex justify-end gap-2">
                 <button id="schedule-cancel" class="px-3 py-1 border rounded">Cancelar</button>
-                <button id="schedule-save" data-store-url="{{ route('agendamentos.store') }}" class="px-3 py-1 bg-primary text-white rounded" disabled>Salvar</button>
+                <button id="schedule-save" data-store-url="{{ route('agendamentos.store') }}" data-update-url="{{ url('admin/agendamentos') }}" class="px-3 py-1 bg-primary text-white rounded" disabled>Salvar</button>
             </div>
         </div>
     </div>
