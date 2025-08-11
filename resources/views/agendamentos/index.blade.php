@@ -75,22 +75,29 @@
                 <tr class="border-t" data-row="{{ $hora }}">
                     <td class="bg-gray-50 w-24 min-w-[6rem] h-16 align-middle" data-slot="{{ $hora }}" data-hora="{{ $hora }}"><x-agenda.horario :time="$hora" /></td>
                     @foreach($professionals as $prof)
-                        @php $item = $agenda[$prof['id']][$hora] ?? null; @endphp
-                        @if($item && ($item['skip'] ?? false))
+                        @php
+                            $items = $agenda[$prof['id']][$hora] ?? [];
+                            $display = collect($items)->reject(fn($i) => $i['skip'] ?? false);
+                        @endphp
+                        @if($display->isEmpty())
                             @continue
                         @endif
-                        <td class="h-16 cursor-pointer border-l" data-professional-id="{{ $prof['id'] }}" data-hora="{{ $hora }}" data-date="{{ $date }}" @if($item && isset($item['rowspan'])) rowspan="{{ $item['rowspan'] }}" @endif>
-                            @if($item)
-                                <x-agenda.agendamento :paciente="$item['paciente']" :inicio="$item['hora_inicio']" :fim="$item['hora_fim']" :observacao="$item['observacao']" :status="$item['status']"
-                                    data-id="{{ $item['id'] }}"
-                                    data-inicio="{{ $item['hora_inicio'] }}"
-                                    data-fim="{{ $item['hora_fim'] }}"
-                                    data-observacao="{{ $item['observacao'] }}"
-                                    data-status="{{ $item['status'] }}"
-                                    data-date="{{ $date }}"
-                                    data-profissional-id="{{ $prof['id'] }}"
-                                />
-                            @endif
+                        @php $rowspan = $display->max('rowspan'); @endphp
+                        <td class="h-16 cursor-pointer border-l" data-professional-id="{{ $prof['id'] }}" data-hora="{{ $hora }}" data-date="{{ $date }}" @if($rowspan > 1) rowspan="{{ $rowspan }}" @endif>
+                            <div class="h-full flex flex-col lg:flex-row gap-0.5">
+                                @foreach($display as $item)
+                                    <x-agenda.agendamento :paciente="$item['paciente']" :inicio="$item['hora_inicio']" :fim="$item['hora_fim']" :observacao="$item['observacao']" :status="$item['status']"
+                                        class="flex-1 h-full m-0"
+                                        data-id="{{ $item['id'] }}"
+                                        data-inicio="{{ $item['hora_inicio'] }}"
+                                        data-fim="{{ $item['hora_fim'] }}"
+                                        data-observacao="{{ $item['observacao'] }}"
+                                        data-status="{{ $item['status'] }}"
+                                        data-date="{{ $date }}"
+                                        data-profissional-id="{{ $prof['id'] }}"
+                                    />
+                                @endforeach
+                            </div>
                         </td>
                     @endforeach
                 </tr>

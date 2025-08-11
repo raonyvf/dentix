@@ -102,7 +102,7 @@
                         <td class="w-40 h-16 border-l">
                             @isset($agenda[$prof['id']][$hora])
                                 @php $item = $agenda[$prof['id']][$hora]; @endphp
-                                <x-agenda.agendamento :paciente="$item['paciente']" :tipo="$item['tipo']" :contato="$item['contato']" :status="$item['status']" />
+                                <x-agenda.agendamento :paciente="$item['paciente']" :tipo="$item['tipo']" :contato="$item['contato']" :status="$item['status']" class="m-0.5" />
                             @endisset
                         </td>
                     @endforeach
