@@ -237,7 +237,10 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
                         const color = item.status === 'confirmado'
                             ? 'bg-green-100 text-green-700'
                             : 'bg-gray-100 text-gray-700';
-                        row += `<div class="rounded p-2 text-xs ${color}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-semibold">${item.paciente}</div><div>${item.observacao || ''}</div></div>`;
+                        const statusLabel = item.status === 'confirmado'
+                            ? 'Confirmado'
+                            : (item.status === 'cancelado' ? 'Cancelado' : 'Sem confirmação');
+                        row += `<div class="rounded p-2 text-xs border border-green-800 ${color}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${statusLabel}</div></div>`;
                     }
                     row += '</td>';
                 });
