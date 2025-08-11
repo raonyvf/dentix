@@ -360,6 +360,24 @@ const addMinutes = (time, mins) => {
     return `${hh}:${mm}`;
 };
 
+const existeConflitoNaoCancelado = (prof, start, end) => {
+    const startMin = toMinutes(start);
+    const endMin = toMinutes(end);
+    const appts = document.querySelectorAll(
+        `#schedule-table div[data-profissional-id="${prof}"]`
+    );
+    for (const appt of appts) {
+        if ((appt.dataset.status || '') === 'cancelado') continue;
+        const agStart = toMinutes(appt.dataset.inicio);
+        const agEnd = toMinutes(appt.dataset.fim);
+        if (agStart < endMin && agEnd > startMin) {
+            return true;
+        }
+    }
+    return false;
+};
+window.existeConflitoNaoCancelado = existeConflitoNaoCancelado;
+
 const clearSelection = (preserveProfessional = false) => {
     document.querySelectorAll('#schedule-table td[data-professional-id].selected')
         .forEach(c => c.classList.remove('selected', 'bg-blue-100'));
@@ -484,6 +502,23 @@ const openScheduleModal = (prof, start, end, date, ag = null) => {
     abrirModalAgendamento(ag);
 };
 
+const openEditModal = id => {
+    const appt = document.querySelector(`#schedule-table div[data-id="${id}"]`);
+    if (!appt) return;
+    const ag = {
+        id: appt.dataset.id,
+        inicio: appt.dataset.inicio,
+        fim: appt.dataset.fim,
+        observacao: appt.dataset.observacao || '',
+        date: appt.dataset.date,
+        profissional: appt.dataset.profissionalId,
+        paciente: appt.querySelector('.font-bold, .font-semibold')?.textContent || '',
+        status: appt.dataset.status || '',
+    };
+    openScheduleModal(ag.profissional, ag.inicio, ag.fim, ag.date, ag);
+};
+window.openEditModal = openEditModal;
+
 function attachCellHandlers() {
     scheduleModal = document.getElementById('schedule-modal');
     startInput = document.getElementById('schedule-start');
@@ -540,33 +575,23 @@ function attachCellHandlers() {
     };
 
     handleDblClick = e => {
-        const cell = e.target.closest('#schedule-table td[data-professional-id]');
-        if (!cell) return;
-        // Clear any pending selection so the modal is the only action taken
-        // on a double click.
-        clearSelection();
-
-        const prof = cell.dataset.professionalId;
-        const date = cell.dataset.date;
-        const appt = cell.querySelector('div[data-id]');
-
+        const appt = e.target.closest('div[data-id]');
         if (appt) {
-                const ag = {
-                    id: appt.dataset.id,
-                    inicio: appt.dataset.inicio,
-                    fim: appt.dataset.fim,
-                    observacao: appt.dataset.observacao || '',
-                    date: appt.dataset.date || date,
-                    profissional: appt.dataset.profissionalId || prof,
-                    paciente: appt.querySelector('.font-semibold')?.textContent || '',
-                    status: appt.dataset.status || ''
-                };
-            openScheduleModal(ag.profissional, ag.inicio, ag.fim, ag.date, ag);
+            clearSelection();
+            openEditModal(appt.dataset.id);
             return;
         }
-
+        const cell = e.target.closest('#schedule-table td[data-professional-id]');
+        if (!cell) return;
+        clearSelection();
+        const prof = cell.dataset.professionalId;
+        const date = cell.dataset.date;
         const start = cell.dataset.hora;
         const end = addMinutes(start, slotMinutes);
+        if (existeConflitoNaoCancelado(prof, start, end)) {
+            alert('Existe agendamento ativo nessa faixa de horário.');
+            return;
+        }
         openScheduleModal(prof, start, end, date);
     };
 
