@@ -11,3 +11,11 @@
 .flatpickr-input::-webkit-calendar-picker-indicator {
     display: none !important;
 }
+
+/* Ensure schedule guide overlays do not block interactions */
+#schedule-table td::before,
+#schedule-table td::after,
+#schedule-table td > div::before,
+#schedule-table td > div::after {
+    pointer-events: none;
+}
