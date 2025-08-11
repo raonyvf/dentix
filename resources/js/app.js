@@ -234,13 +234,13 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
                     }
                     row += '>';
                     if (item) {
-                        const color = item.status === 'confirmado'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-gray-100 text-gray-700';
-                        const statusLabel = item.status === 'confirmado'
-                            ? 'Confirmado'
-                            : (item.status === 'cancelado' ? 'Cancelado' : 'Sem confirmação');
-                        row += `<div class="rounded p-2 text-xs border border-green-800 ${color}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${statusLabel}</div></div>`;
+                        const statusClasses = {
+                            confirmado: { color: 'bg-green-100 text-green-700 border-green-800', label: 'Confirmado' },
+                            pendente: { color: 'bg-yellow-100 text-yellow-700 border-yellow-800', label: 'Pendente' },
+                            cancelado: { color: 'bg-red-100 text-red-700 border-red-800', label: 'Cancelado' },
+                        };
+                        const { color, label } = statusClasses[item.status] || { color: 'bg-gray-100 text-gray-700 border-gray-800', label: 'Sem confirmação' };
+                        row += `<div class="rounded p-2 text-xs border ${color}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${label}</div></div>`;
                     }
                     row += '</td>';
                 });
@@ -255,7 +255,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
     document.dispatchEvent(new Event('schedule:rendered'));
 };
 
-let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd, patientSearch, patientResults, step1, step2, selectedPatientName, notFoundMsg, searchBtn;
+let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd, patientSearch, patientResults, step1, step2, selectedPatientName, notFoundMsg, searchBtn, statusSelect;
 
 function initPatientSearch() {
     patientSearch = document.getElementById('patient-search');
@@ -431,11 +431,13 @@ const abrirModalAgendamento = ag => {
         scheduleModal.dataset.hora = selection.start || '';
         scheduleModal.dataset.date = date;
         const obs = document.getElementById('schedule-observacao');
+        const statusSel = statusSelect || document.getElementById('schedule-status');
         if (ag) {
             document.getElementById('agendamento-id').value = ag.id || '';
             if (pacienteInput) pacienteInput.value = ag.paciente_id || '';
             if (selectedPatientName) selectedPatientName.textContent = ag.paciente || '';
             if (obs) obs.value = ag.observacao || '';
+            if (statusSel) statusSel.value = ag.status || 'confirmado';
             if (step1 && step2) {
                 step1.classList.add('hidden');
                 step2.classList.remove('hidden');
@@ -451,6 +453,7 @@ const abrirModalAgendamento = ag => {
             if (pacienteInput) pacienteInput.value = '';
             if (selectedPatientName) selectedPatientName.textContent = '';
             if (obs) obs.value = '';
+            if (statusSel) statusSel.value = 'confirmado';
             if (step1 && step2) {
                 step1.classList.remove('hidden');
                 step2.classList.add('hidden');
@@ -548,15 +551,16 @@ function attachCellHandlers() {
         const appt = cell.querySelector('div[data-id]');
 
         if (appt) {
-            const ag = {
-                id: appt.dataset.id,
-                inicio: appt.dataset.inicio,
-                fim: appt.dataset.fim,
-                observacao: appt.dataset.observacao || '',
-                date: appt.dataset.date || date,
-                profissional: appt.dataset.profissionalId || prof,
-                paciente: appt.querySelector('.font-semibold')?.textContent || ''
-            };
+                const ag = {
+                    id: appt.dataset.id,
+                    inicio: appt.dataset.inicio,
+                    fim: appt.dataset.fim,
+                    observacao: appt.dataset.observacao || '',
+                    date: appt.dataset.date || date,
+                    profissional: appt.dataset.profissionalId || prof,
+                    paciente: appt.querySelector('.font-semibold')?.textContent || '',
+                    status: appt.dataset.status || ''
+                };
             openScheduleModal(ag.profissional, ag.inicio, ag.fim, ag.date, ag);
             return;
         }
@@ -874,6 +878,7 @@ document.addEventListener('DOMContentLoaded', () => {
         summary = document.getElementById('schedule-summary');
         hiddenStart = document.getElementById('hora_inicio');
         hiddenEnd = document.getElementById('hora_fim');
+        statusSelect = document.getElementById('schedule-status');
 
         if (cancel) {
             cancel.addEventListener('click', () => {
@@ -905,7 +910,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     data: date,
                     hora_inicio: startInput.value,
                     hora_fim: endInput.value,
-                    observacao: document.getElementById('schedule-observacao')?.value || ''
+                    observacao: document.getElementById('schedule-observacao')?.value || '',
+                    status: statusSelect?.value || 'confirmado'
                 };
                 if (action === 'store') {
                     body.paciente_id = pacienteInput.value;

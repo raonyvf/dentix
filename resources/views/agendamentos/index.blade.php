@@ -86,6 +86,7 @@
                                     data-inicio="{{ $item['hora_inicio'] }}"
                                     data-fim="{{ $item['hora_fim'] }}"
                                     data-observacao="{{ $item['observacao'] }}"
+                                    data-status="{{ $item['status'] }}"
                                     data-date="{{ $date }}"
                                     data-profissional-id="{{ $prof['id'] }}"
                                 />
@@ -131,6 +132,14 @@
             <label class="block mb-4">
                 <span class="text-sm">Observação</span>
                 <textarea id="schedule-observacao" class="mt-1 w-full border rounded p-1" placeholder="Digite aqui"></textarea>
+            </label>
+            <label class="block mb-4">
+                <span class="text-sm">Status</span>
+                <select id="schedule-status" class="mt-1 w-full border rounded p-1">
+                    <option value="confirmado">Confirmado</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="cancelado">Cancelado</option>
+                </select>
             </label>
             <div class="flex justify-end gap-2">
                 <button id="schedule-cancel" class="px-3 py-1 border rounded">Cancelar</button>

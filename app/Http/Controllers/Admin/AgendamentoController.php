@@ -170,13 +170,13 @@ class AgendamentoController extends Controller
             'tipo' => 'nullable|string',
             'contato' => 'nullable|string',
             'observacao' => 'nullable|string',
+            'status' => 'required|in:confirmado,pendente,cancelado',
         ]);
 
         $data['hora_inicio'] = Carbon::parse($data['hora_inicio'])->format('H:i:s');
         $data['hora_fim'] = Carbon::parse($data['hora_fim'])->format('H:i:s');
 
         $data['clinica_id'] = $clinicId;
-        $data['status'] = 'confirmado';
         $data['tipo'] = $data['tipo'] ?? 'Consulta';
         $data['contato'] = $data['contato'] ?? '';
 
@@ -196,6 +196,7 @@ class AgendamentoController extends Controller
             'hora_inicio' => 'required',
             'hora_fim' => 'required',
             'observacao' => 'nullable|string',
+            'status' => 'required|in:confirmado,pendente,cancelado',
         ]);
 
         $data['hora_inicio'] = Carbon::parse($data['hora_inicio'])->format('H:i:s');
