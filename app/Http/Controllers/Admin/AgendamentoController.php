@@ -180,6 +180,22 @@ class AgendamentoController extends Controller
         $data['tipo'] = $data['tipo'] ?? 'Consulta';
         $data['contato'] = $data['contato'] ?? '';
 
+        $conflict = Agendamento::where('profissional_id', $data['profissional_id'])
+            ->whereDate('data', $data['data'])
+            ->where('status', '!=', 'cancelado')
+            ->where(function ($q) use ($data) {
+                $q->where('hora_inicio', '<', $data['hora_fim'])
+                    ->where('hora_fim', '>', $data['hora_inicio']);
+            })
+            ->exists();
+
+        if ($conflict) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Existe agendamento ativo nessa faixa de horário.',
+            ], 409);
+        }
+
         Agendamento::create($data);
         $cacheKey = "agendamentos_{$clinicId}_" . Carbon::parse($data['data'])->format('Y-m-d');
         Cache::forget($cacheKey);
@@ -201,6 +217,23 @@ class AgendamentoController extends Controller
 
         $data['hora_inicio'] = Carbon::parse($data['hora_inicio'])->format('H:i:s');
         $data['hora_fim'] = Carbon::parse($data['hora_fim'])->format('H:i:s');
+
+        $conflict = Agendamento::where('profissional_id', $agendamento->profissional_id)
+            ->whereDate('data', $data['data'])
+            ->where('id', '!=', $agendamento->id)
+            ->where('status', '!=', 'cancelado')
+            ->where(function ($q) use ($data) {
+                $q->where('hora_inicio', '<', $data['hora_fim'])
+                    ->where('hora_fim', '>', $data['hora_inicio']);
+            })
+            ->exists();
+
+        if ($conflict) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Existe agendamento ativo nessa faixa de horário.',
+            ], 409);
+        }
 
         $agendamento->update($data);
 
