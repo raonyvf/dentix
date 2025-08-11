@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->foreignId('paciente_id')->nullable()->constrained('pacientes');
             $table->string('tipo');
             $table->string('contato')->nullable();
-            $table->string('status')->default('agendado');
+            $table->string('status')->default('pendente');
             $table->date('data');
             $table->time('hora_inicio');
             $table->time('hora_fim');
