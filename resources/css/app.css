@@ -19,3 +19,10 @@
 #schedule-table td > div::after {
     pointer-events: none;
 }
+
+.minute-grid {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(to bottom, #e5e7eb 0, #e5e7eb 1px, transparent 1px, transparent 30px);
+}
