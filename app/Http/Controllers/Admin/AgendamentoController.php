@@ -47,7 +47,7 @@ class AgendamentoController extends Controller
                 $hora = $start->format('H:i');
                 $rowspan = max(1, intdiv($start->diffInMinutes($end), 30));
 
-                $agenda[$ag->profissional_id][$hora] = [
+                $agenda[$ag->profissional_id][$hora][] = [
                     'id' => $ag->id,
                     'hora_inicio' => $start->format('H:i'),
                     'hora_fim' => $end->format('H:i'),
@@ -59,7 +59,7 @@ class AgendamentoController extends Controller
                 ];
 
                 for ($t = $start->copy()->addMinutes(30); $t < $end; $t->addMinutes(30)) {
-                    $agenda[$ag->profissional_id][$t->format('H:i')] = ['skip' => true];
+                    $agenda[$ag->profissional_id][$t->format('H:i')][] = ['skip' => true];
                 }
             }
         }
@@ -127,7 +127,7 @@ class AgendamentoController extends Controller
                 $hora = $start->format('H:i');
                 $rowspan = max(1, intdiv($start->diffInMinutes($end), 30));
 
-                $agenda[$ag->profissional_id][$hora] = [
+                $agenda[$ag->profissional_id][$hora][] = [
                     'id' => $ag->id,
                     'hora_inicio' => $start->format('H:i'),
                     'hora_fim' => $end->format('H:i'),
@@ -139,7 +139,7 @@ class AgendamentoController extends Controller
                 ];
 
                 for ($t = $start->copy()->addMinutes(30); $t < $end; $t->addMinutes(30)) {
-                    $agenda[$ag->profissional_id][$t->format('H:i')] = ['skip' => true];
+                    $agenda[$ag->profissional_id][$t->format('H:i')][] = ['skip' => true];
                 }
             }
         }

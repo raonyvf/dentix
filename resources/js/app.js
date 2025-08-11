@@ -226,23 +226,25 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
             baseTimes.forEach(hora => {
                 let row = `<tr class="border-t" data-row="${hora}"><td class="bg-gray-50 w-24 min-w-[6rem] h-16 align-middle" data-slot="${hora}" data-hora="${hora}"><div class="h-full flex items-center justify-end px-2 text-xs text-gray-500 whitespace-nowrap">${hora}</div></td>`;
                 professionals.forEach(p => {
-                    const item = agenda[p.id] && agenda[p.id][hora];
-                    if (item && item.skip) return;
+                    const cellItems = (agenda[p.id] && agenda[p.id][hora]) || [];
+                    const items = cellItems.filter(it => !it.skip);
+                    if (!items.length) return;
+                    const rowsp = Math.max(...items.map(it => it.rowspan || 1));
                     row += `<td class="h-16 cursor-pointer border-l" data-professional-id="${p.id}" data-hora="${hora}" data-date="${date}"`;
-                    if (item && item.rowspan) {
-                        row += ` rowspan="${item.rowspan}"`;
+                    if (rowsp > 1) {
+                        row += ` rowspan="${rowsp}"`;
                     }
-                    row += '>';
-                    if (item) {
+                    row += '><div class="h-full flex flex-col lg:flex-row gap-0.5">';
+                    items.forEach(item => {
                         const statusClasses = {
                             confirmado: { color: 'bg-green-100 text-green-700 border-green-800', label: 'Confirmado' },
                             pendente: { color: 'bg-yellow-100 text-yellow-700 border-yellow-800', label: 'Pendente' },
                             cancelado: { color: 'bg-red-100 text-red-700 border-red-800', label: 'Cancelado' },
                         };
                         const { color, label } = statusClasses[item.status] || { color: 'bg-gray-100 text-gray-700 border-gray-800', label: 'Sem confirmação' };
-                        row += `<div class="rounded p-2 text-xs border ${color}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${label}</div></div>`;
-                    }
-                    row += '</td>';
+                        row += `<div class="rounded p-2 text-xs border ${color} flex-1 h-full" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${label}</div></div>`;
+                    });
+                    row += '</div></td>';
                 });
                 row += '</tr>';
                 tbody.insertAdjacentHTML('beforeend', row);
