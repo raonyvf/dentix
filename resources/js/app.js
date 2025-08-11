@@ -341,6 +341,8 @@ const updateSlotMinutes = () => {
     }
 };
 
+const MIN_CARD_PX = 24;
+
 const toMinutes = t => {
     if (!t) return null;
     const [h, m] = t.split(':');
@@ -388,7 +390,7 @@ window.existeConflitoNaoCancelado = existeConflitoNaoCancelado;
 
 const positionAppointments = () => {
     updateSlotMinutes();
-    const firstRow = document.querySelector('#schedule-table tbody tr');
+    const firstRow = document.querySelector('#schedule-table tbody tr[data-row]:not(.hidden)');
     if (!firstRow) return;
     const cellHeight = firstRow.offsetHeight;
     const pxPerMinute = cellHeight / slotMinutes;
@@ -398,7 +400,7 @@ const positionAppointments = () => {
             const start = toMinutes(appt.dataset.inicio);
             const end = toMinutes(appt.dataset.fim);
             const topPx = (start - cellStart) * pxPerMinute;
-            const heightPx = (end - start) * pxPerMinute;
+            const heightPx = Math.max((end - start) * pxPerMinute, MIN_CARD_PX);
             appt.style.top = `${topPx}px`;
             appt.style.height = `${heightPx}px`;
         });
