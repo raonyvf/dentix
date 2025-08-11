@@ -79,13 +79,10 @@
                             $items = $agenda[$prof['id']][$hora] ?? [];
                             $display = collect($items)->reject(fn($i) => $i['skip'] ?? false);
                         @endphp
-                        @if($display->isEmpty())
-                            @continue
-                        @endif
                         @php $rowspan = $display->max('rowspan'); @endphp
                         <td class="h-16 cursor-pointer border-l" data-professional-id="{{ $prof['id'] }}" data-hora="{{ $hora }}" data-date="{{ $date }}" @if($rowspan > 1) rowspan="{{ $rowspan }}" @endif>
                             <div class="h-full flex flex-col lg:flex-row gap-0.5">
-                                @foreach($display as $item)
+                                @forelse($display as $item)
                                     <div class="relative lg:flex-1">
                                         <x-agenda.agendamento :paciente="$item['paciente']" :inicio="$item['hora_inicio']" :fim="$item['hora_fim']" :observacao="$item['observacao']" :status="$item['status']"
                                             class="absolute w-full m-0"
@@ -98,7 +95,9 @@
                                             data-profissional-id="{{ $prof['id'] }}"
                                         />
                                     </div>
-                                @endforeach
+                                @empty
+                                    <div class="relative lg:flex-1"></div>
+                                @endforelse
                             </div>
                         </td>
                     @endforeach
