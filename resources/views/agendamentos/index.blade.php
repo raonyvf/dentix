@@ -66,7 +66,7 @@
             <tr>
                 <th class="p-2 bg-gray-50 w-24 min-w-[6rem]"></th>
                 @foreach($professionals as $prof)
-                    <th class="p-2 bg-gray-50 text-left whitespace-nowrap border-l w-48 min-w-[12rem]" data-professional-id="{{ $prof['id'] }}">{{ $prof['name'] }}</th>
+                    <th class="p-2 bg-gray-50 text-left whitespace-nowrap border-l" data-professional-id="{{ $prof['id'] }}">{{ $prof['name'] }}</th>
                 @endforeach
             </tr>
         </thead>
@@ -79,19 +79,21 @@
                         @if($slot && ($slot['skip'] ?? false))
                             @continue
                         @endif
-                        <td class="h-16 cursor-pointer border-l relative w-48 min-w-[12rem]" data-professional-id="{{ $prof['id'] }}" data-hora="{{ $hora }}" data-date="{{ $date }}" @if($slot && isset($slot[0]['rowspan'])) rowspan="{{ $slot[0]['rowspan'] }}" @endif>
+                        <td class="h-16 cursor-pointer border-l" data-professional-id="{{ $prof['id'] }}" data-hora="{{ $hora }}" data-date="{{ $date }}" @if($slot && isset($slot[0]['rowspan'])) rowspan="{{ $slot[0]['rowspan'] }}" @endif>
                             @if($slot)
-                                @foreach($slot as $item)
-                                    <x-agenda.agendamento :paciente="$item['paciente']" :inicio="$item['hora_inicio']" :fim="$item['hora_fim']" :observacao="$item['observacao']" :status="$item['status']"
-                                        data-id="{{ $item['id'] }}"
-                                        data-inicio="{{ $item['hora_inicio'] }}"
-                                        data-fim="{{ $item['hora_fim'] }}"
-                                        data-observacao="{{ $item['observacao'] }}"
-                                        data-status="{{ $item['status'] }}"
-                                        data-date="{{ $date }}"
-                                        data-profissional-id="{{ $prof['id'] }}"
-                                    />
-                                @endforeach
+                                <div class="h-full flex flex-col gap-1 lg:flex-row lg:gap-1">
+                                    @foreach($slot as $item)
+                                        <x-agenda.agendamento :paciente="$item['paciente']" :inicio="$item['hora_inicio']" :fim="$item['hora_fim']" :observacao="$item['observacao']" :status="$item['status']" class="flex-1"
+                                            data-id="{{ $item['id'] }}"
+                                            data-inicio="{{ $item['hora_inicio'] }}"
+                                            data-fim="{{ $item['hora_fim'] }}"
+                                            data-observacao="{{ $item['observacao'] }}"
+                                            data-status="{{ $item['status'] }}"
+                                            data-date="{{ $date }}"
+                                            data-profissional-id="{{ $prof['id'] }}"
+                                        />
+                                    @endforeach
+                                </div>
                             @endif
                         </td>
                     @endforeach
