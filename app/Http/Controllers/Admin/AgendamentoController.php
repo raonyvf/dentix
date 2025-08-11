@@ -47,7 +47,7 @@ class AgendamentoController extends Controller
                 $hora = $start->format('H:i');
                 $rowspan = max(1, intdiv($start->diffInMinutes($end), 30));
 
-                $agenda[$ag->profissional_id][$hora][] = [
+                $agenda[$ag->profissional_id][$hora] = [
                     'id' => $ag->id,
                     'hora_inicio' => $start->format('H:i'),
                     'hora_fim' => $end->format('H:i'),
@@ -127,7 +127,7 @@ class AgendamentoController extends Controller
                 $hora = $start->format('H:i');
                 $rowspan = max(1, intdiv($start->diffInMinutes($end), 30));
 
-                $agenda[$ag->profissional_id][$hora][] = [
+                $agenda[$ag->profissional_id][$hora] = [
                     'id' => $ag->id,
                     'hora_inicio' => $start->format('H:i'),
                     'hora_fim' => $end->format('H:i'),

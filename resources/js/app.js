@@ -226,25 +226,21 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
             baseTimes.forEach(hora => {
                 let row = `<tr class="border-t" data-row="${hora}"><td class="bg-gray-50 w-24 min-w-[6rem] h-16 align-middle" data-slot="${hora}" data-hora="${hora}"><div class="h-full flex items-center justify-end px-2 text-xs text-gray-500 whitespace-nowrap">${hora}</div></td>`;
                 professionals.forEach(p => {
-                    const slot = agenda[p.id] && agenda[p.id][hora];
-                    if (slot && slot.skip) return;
+                    const item = agenda[p.id] && agenda[p.id][hora];
+                    if (item && item.skip) return;
                     row += `<td class="h-16 cursor-pointer border-l" data-professional-id="${p.id}" data-hora="${hora}" data-date="${date}"`;
-                    if (Array.isArray(slot) && slot[0] && slot[0].rowspan) {
-                        row += ` rowspan="${slot[0].rowspan}"`;
+                    if (item && item.rowspan) {
+                        row += ` rowspan="${item.rowspan}"`;
                     }
                     row += '>';
-                    if (Array.isArray(slot)) {
+                    if (item) {
                         const statusClasses = {
                             confirmado: { color: 'bg-green-100 text-green-700 border-green-800', label: 'Confirmado' },
                             pendente: { color: 'bg-yellow-100 text-yellow-700 border-yellow-800', label: 'Pendente' },
                             cancelado: { color: 'bg-red-100 text-red-700 border-red-800', label: 'Cancelado' },
                         };
-                        row += '<div class="h-full flex flex-col gap-1 lg:flex-row lg:gap-1">';
-                        slot.forEach(item => {
-                            const { color, label } = statusClasses[item.status] || { color: 'bg-gray-100 text-gray-700 border-gray-800', label: 'Sem confirmação' };
-                            row += `<div class="flex-1 rounded p-2 text-xs border ${color}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${label}</div></div>`;
-                        });
-                        row += '</div>';
+                        const { color, label } = statusClasses[item.status] || { color: 'bg-gray-100 text-gray-700 border-gray-800', label: 'Sem confirmação' };
+                        row += `<div class="rounded p-2 text-xs border ${color}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${label}</div></div>`;
                     }
                     row += '</td>';
                 });
