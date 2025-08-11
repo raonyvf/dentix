@@ -26,7 +26,7 @@
     };
 @endphp
 {{-- Additional data-* attributes are forwarded to the root div --}}
-<div {{ $attributes->merge(['class' => "rounded p-2 text-xs m-0.5 $color", 'style' => "border: 2px solid $borderColor"]) }}>
+<div {{ $attributes->merge(['class' => "rounded p-2 text-xs $color", 'style' => "border: 2px solid $borderColor; margin:5cm; position:absolute;"]) }}>
     <div class="font-bold text-sm">{{ $paciente }}</div>
     @if($inicio && $fim)
         <div>{{ $inicio }} - {{ $fim }}</div>

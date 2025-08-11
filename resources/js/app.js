@@ -217,7 +217,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
             professionals.forEach(p => {
                 theadRow.insertAdjacentHTML(
                     'beforeend',
-                    `<th class="p-2 bg-gray-50 text-left whitespace-nowrap border-l" data-professional-id="${p.id}">${p.name}</th>`
+                    `<th class="p-2 bg-gray-50 text-left whitespace-nowrap border-l w-48 min-w-[12rem]" data-professional-id="${p.id}">${p.name}</th>`
                 );
             });
         }
@@ -228,7 +228,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
                 professionals.forEach(p => {
                     const slot = agenda[p.id] && agenda[p.id][hora];
                     if (slot && slot.skip) return;
-                    row += `<td class="h-16 cursor-pointer border-l" data-professional-id="${p.id}" data-hora="${hora}" data-date="${date}"`;
+                    row += `<td class="h-16 cursor-pointer border-l relative w-48 min-w-[12rem]" data-professional-id="${p.id}" data-hora="${hora}" data-date="${date}"`;
                     if (Array.isArray(slot) && slot[0] && slot[0].rowspan) {
                         row += ` rowspan="${slot[0].rowspan}"`;
                     }
@@ -239,12 +239,10 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
                             pendente: { color: 'bg-yellow-100 text-yellow-700 border-yellow-800', label: 'Pendente' },
                             cancelado: { color: 'bg-red-100 text-red-700 border-red-800', label: 'Cancelado' },
                         };
-                        row += '<div class="h-full flex flex-col gap-1 lg:flex-row lg:gap-1">';
                         slot.forEach(item => {
                             const { color, label } = statusClasses[item.status] || { color: 'bg-gray-100 text-gray-700 border-gray-800', label: 'Sem confirmação' };
-                            row += `<div class="flex-1 rounded p-2 text-xs border ${color}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${label}</div></div>`;
+                            row += `<div class="rounded p-2 text-xs border ${color}" style="position:absolute;margin:5cm;" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${label}</div></div>`;
                         });
-                        row += '</div>';
                     }
                     row += '</td>';
                 });
@@ -709,6 +707,21 @@ function attachCellHandlers() {
 window.attachCellHandlers = attachCellHandlers;
 document.addEventListener('DOMContentLoaded', attachCellHandlers);
 document.addEventListener('schedule:rendered', attachCellHandlers);
+
+document.addEventListener('schedule:rendered', () => {
+    document.querySelectorAll('#schedule-table td[data-professional-id]').forEach(td => {
+        const cards = td.querySelectorAll('div[data-id]');
+        const count = cards.length;
+        if (count) {
+            const width = 100 / count;
+            cards.forEach((card, index) => {
+                card.style.left = `${index * width}%`;
+                card.style.width = `${width}%`;
+                card.style.position = 'absolute';
+            });
+        }
+    });
+});
 
 Alpine.start();
 
