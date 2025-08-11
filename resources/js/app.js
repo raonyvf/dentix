@@ -242,7 +242,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
                             cancelado: { color: 'bg-red-100 text-red-700 border-red-800', label: 'Cancelado' },
                         };
                         const { color, label } = statusClasses[item.status] || { color: 'bg-gray-100 text-gray-700 border-gray-800', label: 'Sem confirmação' };
-                        row += `<div class="rounded p-2 text-xs border ${color} flex-1 h-full" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${label}</div></div>`;
+                        row += `<div class="relative lg:flex-1"><div class="rounded p-2 text-xs border ${color} absolute w-full" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${label}</div></div></div>`;
                     });
                     row += '</div></td>';
                 });
@@ -379,6 +379,25 @@ const existeConflitoNaoCancelado = (prof, start, end) => {
     return false;
 };
 window.existeConflitoNaoCancelado = existeConflitoNaoCancelado;
+
+const positionAppointments = () => {
+    updateSlotMinutes();
+    const firstRow = document.querySelector('#schedule-table tbody tr');
+    if (!firstRow) return;
+    const cellHeight = firstRow.offsetHeight;
+    const pxPerMinute = cellHeight / slotMinutes;
+    document.querySelectorAll('#schedule-table td[data-hora]').forEach(cell => {
+        const cellStart = toMinutes(cell.dataset.hora);
+        cell.querySelectorAll('div[data-id]').forEach(appt => {
+            const start = toMinutes(appt.dataset.inicio);
+            const end = toMinutes(appt.dataset.fim);
+            const topPx = (start - cellStart) * pxPerMinute;
+            const heightPx = (end - start) * pxPerMinute;
+            appt.style.top = `${topPx}px`;
+            appt.style.height = `${heightPx}px`;
+        });
+    });
+};
 
 const clearSelection = (preserveProfessional = false) => {
     document.querySelectorAll('#schedule-table td[data-professional-id].selected')
@@ -707,6 +726,8 @@ function attachCellHandlers() {
 window.attachCellHandlers = attachCellHandlers;
 document.addEventListener('DOMContentLoaded', attachCellHandlers);
 document.addEventListener('schedule:rendered', attachCellHandlers);
+document.addEventListener('DOMContentLoaded', positionAppointments);
+document.addEventListener('schedule:rendered', positionAppointments);
 
 Alpine.start();
 

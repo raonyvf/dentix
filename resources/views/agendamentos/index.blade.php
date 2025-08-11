@@ -86,16 +86,18 @@
                         <td class="h-16 cursor-pointer border-l" data-professional-id="{{ $prof['id'] }}" data-hora="{{ $hora }}" data-date="{{ $date }}" @if($rowspan > 1) rowspan="{{ $rowspan }}" @endif>
                             <div class="h-full flex flex-col lg:flex-row gap-0.5">
                                 @foreach($display as $item)
-                                    <x-agenda.agendamento :paciente="$item['paciente']" :inicio="$item['hora_inicio']" :fim="$item['hora_fim']" :observacao="$item['observacao']" :status="$item['status']"
-                                        class="flex-1 h-full m-0"
-                                        data-id="{{ $item['id'] }}"
-                                        data-inicio="{{ $item['hora_inicio'] }}"
-                                        data-fim="{{ $item['hora_fim'] }}"
-                                        data-observacao="{{ $item['observacao'] }}"
-                                        data-status="{{ $item['status'] }}"
-                                        data-date="{{ $date }}"
-                                        data-profissional-id="{{ $prof['id'] }}"
-                                    />
+                                    <div class="relative lg:flex-1">
+                                        <x-agenda.agendamento :paciente="$item['paciente']" :inicio="$item['hora_inicio']" :fim="$item['hora_fim']" :observacao="$item['observacao']" :status="$item['status']"
+                                            class="absolute w-full m-0"
+                                            data-id="{{ $item['id'] }}"
+                                            data-inicio="{{ $item['hora_inicio'] }}"
+                                            data-fim="{{ $item['hora_fim'] }}"
+                                            data-observacao="{{ $item['observacao'] }}"
+                                            data-status="{{ $item['status'] }}"
+                                            data-date="{{ $date }}"
+                                            data-profissional-id="{{ $prof['id'] }}"
+                                        />
+                                    </div>
                                 @endforeach
                             </div>
                         </td>
