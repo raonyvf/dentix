@@ -48,6 +48,10 @@ class AgendamentoController extends Controller
                 $rowspan = max(1, intdiv($start->diffInMinutes($end), 30));
 
                 $agenda[$ag->profissional_id][$hora] = [
+                    'id' => $ag->id,
+                    'hora_inicio' => $start->format('H:i'),
+                    'hora_fim' => $end->format('H:i'),
+                    'paciente_id' => $ag->paciente_id,
                     'paciente' => $pessoa ? trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')) : '',
                     'observacao' => $ag->observacao ?? '',
                     'status' => $ag->status ?? 'pendente',
@@ -124,6 +128,10 @@ class AgendamentoController extends Controller
                 $rowspan = max(1, intdiv($start->diffInMinutes($end), 30));
 
                 $agenda[$ag->profissional_id][$hora] = [
+                    'id' => $ag->id,
+                    'hora_inicio' => $start->format('H:i'),
+                    'hora_fim' => $end->format('H:i'),
+                    'paciente_id' => $ag->paciente_id,
                     'paciente' => $pessoa ? trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')) : '',
                     'observacao' => $ag->observacao ?? '',
                     'status' => $ag->status ?? 'pendente',
@@ -175,6 +183,30 @@ class AgendamentoController extends Controller
         Agendamento::create($data);
         $cacheKey = "agendamentos_{$clinicId}_" . Carbon::parse($data['data'])->format('Y-m-d');
         Cache::forget($cacheKey);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function update(Request $request, Agendamento $agendamento)
+    {
+        $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
+
+        $data = $request->validate([
+            'data' => 'required|date',
+            'hora_inicio' => 'required',
+            'hora_fim' => 'required',
+            'observacao' => 'nullable|string',
+        ]);
+
+        $data['hora_inicio'] = Carbon::parse($data['hora_inicio'])->format('H:i:s');
+        $data['hora_fim'] = Carbon::parse($data['hora_fim'])->format('H:i:s');
+
+        $agendamento->update($data);
+
+        if ($clinicId) {
+            $cacheKey = "agendamentos_{$clinicId}_" . Carbon::parse($data['data'])->format('Y-m-d');
+            Cache::forget($cacheKey);
+        }
 
         return response()->json(['success' => true]);
     }

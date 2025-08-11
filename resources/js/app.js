@@ -237,7 +237,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
                         const color = item.status === 'confirmado'
                             ? 'bg-green-100 text-green-700'
                             : 'bg-gray-100 text-gray-700';
-                        row += `<div class="rounded p-2 text-xs ${color}"><div class="font-semibold">${item.paciente}</div><div>${item.observacao || ''}</div></div>`;
+                        row += `<div class="rounded p-2 text-xs ${color}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-semibold">${item.paciente}</div><div>${item.observacao || ''}</div></div>`;
                     }
                     row += '</td>';
                 });
@@ -401,7 +401,7 @@ const selectRange = (date, prof, start, end) => {
     return true;
 };
 
-const abrirModalAgendamento = () => {
+const abrirModalAgendamento = ag => {
 
     const date = selection.date || '';
 
@@ -427,17 +427,37 @@ const abrirModalAgendamento = () => {
     if (scheduleModal) {
         scheduleModal.dataset.hora = selection.start || '';
         scheduleModal.dataset.date = date;
-        if (patientSearch) patientSearch.value = '';
-        if (patientResults) patientResults.innerHTML = '';
-        if (notFoundMsg) notFoundMsg.classList.add('hidden');
-        if (pacienteInput) pacienteInput.value = '';
-        if (selectedPatientName) selectedPatientName.textContent = '';
-        if (step1 && step2) {
-            step1.classList.remove('hidden');
-            step2.classList.add('hidden');
+        const obs = document.getElementById('schedule-observacao');
+        if (ag) {
+            document.getElementById('agendamento-id').value = ag.id || '';
+            if (pacienteInput) pacienteInput.value = ag.paciente_id || '';
+            if (selectedPatientName) selectedPatientName.textContent = ag.paciente || '';
+            if (obs) obs.value = ag.observacao || '';
+            if (step1 && step2) {
+                step1.classList.add('hidden');
+                step2.classList.remove('hidden');
+            }
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.dataset.action = 'update';
+            }
+        } else {
+            if (patientSearch) patientSearch.value = '';
+            if (patientResults) patientResults.innerHTML = '';
+            if (notFoundMsg) notFoundMsg.classList.add('hidden');
+            if (pacienteInput) pacienteInput.value = '';
+            if (selectedPatientName) selectedPatientName.textContent = '';
+            if (obs) obs.value = '';
+            if (step1 && step2) {
+                step1.classList.remove('hidden');
+                step2.classList.add('hidden');
+            }
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.dataset.action = 'store';
+            }
+            initPatientSearch();
         }
-        if (saveBtn) saveBtn.disabled = true;
-        initPatientSearch();
         scheduleModal.classList.remove('hidden');
     }
 };
@@ -452,10 +472,10 @@ const abrirModalPaciente = () => {
 };
 window.abrirModalPaciente = abrirModalPaciente;
 
-const openScheduleModal = (prof, start, end, date) => {
+const openScheduleModal = (prof, start, end, date, ag = null) => {
     if (!selectRange(date, prof, start, end)) return;
 
-    abrirModalAgendamento();
+    abrirModalAgendamento(ag);
 };
 
 function attachCellHandlers() {
@@ -520,10 +540,25 @@ function attachCellHandlers() {
         // on a double click.
         clearSelection();
 
-        const start = cell.dataset.hora;
         const prof = cell.dataset.professionalId;
-
         const date = cell.dataset.date;
+        const appt = cell.querySelector('div[data-id]');
+
+        if (appt) {
+            const ag = {
+                id: appt.dataset.id,
+                inicio: appt.dataset.inicio,
+                fim: appt.dataset.fim,
+                observacao: appt.dataset.observacao || '',
+                date: appt.dataset.date || date,
+                profissional: appt.dataset.profissionalId || prof,
+                paciente: appt.querySelector('.font-semibold')?.textContent || ''
+            };
+            openScheduleModal(ag.profissional, ag.inicio, ag.fim, ag.date, ag);
+            return;
+        }
+
+        const start = cell.dataset.hora;
         const end = addMinutes(start, slotMinutes);
         openScheduleModal(prof, start, end, date);
     };
@@ -846,7 +881,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (saveBtn) {
             saveBtn.addEventListener('click', () => {
-                if (!pacienteInput?.value) {
+                const action = saveBtn.dataset.action || 'store';
+                if (action === 'store' && !pacienteInput?.value) {
                     alert('Selecione um paciente');
                     return;
                 }
@@ -859,22 +895,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const date = scheduleModal.dataset.date;
 
-                const url = saveBtn.dataset.storeUrl;
                 const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                let url = saveBtn.dataset.storeUrl;
+                let method = 'POST';
+                const body = {
+                    data: date,
+                    hora_inicio: startInput.value,
+                    hora_fim: endInput.value,
+                    observacao: document.getElementById('schedule-observacao')?.value || ''
+                };
+                if (action === 'store') {
+                    body.paciente_id = pacienteInput.value;
+                    body.profissional_id = selection.professional;
+                } else {
+                    const id = document.getElementById('agendamento-id').value;
+                    url = `${saveBtn.dataset.updateUrl}/${id}`;
+                    method = 'PUT';
+                }
                 fetch(url, {
-                    method: 'POST',
+                    method,
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': token,
                     },
-                    body: JSON.stringify({
-                        data: date,
-                        hora_inicio: startInput.value,
-                        hora_fim: endInput.value,
-                        paciente_id: pacienteInput.value,
-                        observacao: document.getElementById('schedule-observacao')?.value || '',
-                        profissional_id: selection.professional,
-                    }),
+                    body: JSON.stringify(body),
                 })
                     .then(async response => {
                         if (!response.ok) {
