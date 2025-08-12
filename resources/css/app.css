@@ -24,5 +24,13 @@
     pointer-events: none;
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(to bottom, #e5e7eb 0, #e5e7eb 1px, transparent 1px, transparent 60px);
+    background: linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 50%,
+        #e5e7eb 50%,
+        #e5e7eb 51%,
+        transparent 51%,
+        transparent 100%
+    );
 }
