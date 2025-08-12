@@ -8,12 +8,6 @@
 <div class="mb-6 flex flex-wrap justify-between items-center gap-4">
     <h1 class="text-2xl font-bold">Escalas de Trabalho</h1>
     <div class="flex gap-2">
-        <button id="open-copy-modal" class="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16h8M8 12h8m-5 8h2a2 2 0 002-2V6a2 2 0 00-2-2H9a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span>Copiar Escala</span>
-        </button>
         <button id="open-modal" class="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -93,29 +87,6 @@
         </table>
     </div>
 @endforeach
-<div id="copy-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
-    <div class="bg-white rounded p-4 w-80">
-        <form method="POST" action="{{ route('escalas.copy') }}" class="space-y-4">
-            @csrf
-            <input type="hidden" name="clinic_id" value="{{ $clinicId }}">
-            <input type="hidden" name="month" id="monthDestino">
-            <div>
-                <label class="block text-sm mb-1">Copiar do mês</label>
-                <select name="source_month" class="w-full border rounded px-2 py-1">
-                    @foreach($mesesDisponiveis as $mes)
-                        @if(!$mes->equalTo($month))
-                            <option value="{{ $mes->format('Y-m') }}">{{ $mes->translatedFormat('F Y') }}</option>
-                        @endif
-                    @endforeach
-                </select>
-            </div>
-            <div class="text-right space-x-2">
-                <button type="button" id="copy-cancel" class="px-3 py-1 border rounded">Cancelar</button>
-                <button class="px-3 py-1 bg-blue-600 text-white rounded">Copiar</button>
-            </div>
-        </form>
-    </div>
-</div>
 <div id="escala-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
     <div class="bg-white rounded p-4 w-96">
         <form method="POST" action="{{ route('escalas.store') }}" class="space-y-4">
@@ -200,28 +171,11 @@
     const escalaModal = document.getElementById('escala-modal');
     const escalaForm = escalaModal.querySelector('form');
     const deleteBtn = document.getElementById('escala-delete');
-    const copyModal = document.getElementById('copy-modal');
-    const openCopyBtn = document.getElementById('open-copy-modal');
-    const copyCancel = document.getElementById('copy-cancel');
     const monthSelectTop = document.getElementById('mesSelecionado');
     const yearInputTop = document.getElementById('anoSelecionado');
     const prevNav = document.getElementById('prev-month-btn');
     const nextNav = document.getElementById('next-month-btn');
     const applyYear = document.getElementById('apply-year');
-
-    if (openCopyBtn && copyModal && copyCancel) {
-        openCopyBtn.addEventListener('click', () => {
-            const monthInput = document.getElementById('monthDestino');
-            if (monthSelectTop && yearInputTop && monthInput) {
-                const value = `${yearInputTop.value}-${String(monthSelectTop.value).padStart(2,'0')}`;
-                monthInput.value = value;
-            }
-            copyModal.classList.remove('hidden');
-        });
-        copyCancel.addEventListener('click', () => {
-            copyModal.classList.add('hidden');
-        });
-    }
 
     if (prevNav && nextNav && monthSelectTop && yearInputTop) {
         function changeMonth(delta) {
