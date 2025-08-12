@@ -239,7 +239,8 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
                                     cancelado: { color: 'bg-red-100 text-red-700 border-red-800', label: 'Cancelado' },
                                 };
                                 const { color, label } = statusClasses[item.status] || { color: 'bg-gray-100 text-gray-700 border-gray-800', label: 'Sem confirmação' };
-                                row += `<div class="relative lg:flex-1"><div class="rounded p-2 text-xs border ${color} absolute w-full z-10" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${label}</div></div></div>`;
+                                const title = [item.paciente, `${item.hora_inicio} - ${item.hora_fim}`, item.observacao, label].filter(Boolean).join('\n');
+                                row += `<div class="relative lg:flex-1"><div class="rounded p-2 text-xs border ${color} absolute w-full z-10" title="${title}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${label}</div></div></div>`;
                             }
                         });
                     } else {
