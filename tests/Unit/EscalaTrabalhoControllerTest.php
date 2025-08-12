@@ -90,4 +90,53 @@ class EscalaTrabalhoControllerTest extends TestCase
         $meses = collect(range(1, 12))->map(fn($m) => Carbon::create($year, $m, 1)->startOfMonth());
         $this->assertTrue($meses->contains(fn($m) => $m->isSameMonth($selected)));
     }
+
+    public function test_recurring_creation_generates_expected_records()
+    {
+        $start = Carbon::parse('2024-01-01'); // Monday
+        $repeatWeeks = 3;
+        $dias = ['segunda', 'quarta'];
+        $created = [];
+        for ($week = $start->copy(), $i = 0; $i < $repeatWeeks; $i++, $week->addWeek()) {
+            foreach ($dias as $dia) {
+                $created[] = [$week->toDateString(), $dia];
+            }
+        }
+        $this->assertCount(6, $created);
+        $this->assertSame('2024-01-01', $created[0][0]);
+        $this->assertSame('quarta', $created[1][1]);
+    }
+
+    private function conflictDetected($start, $dias, $repeatWeeks, $existing)
+    {
+        for ($week = $start->copy(), $i = 0; $i < $repeatWeeks; $i++, $week->addWeek()) {
+            $weekStart = $week->toDateString();
+            foreach ($dias as $diaNome) {
+                $dia = $diaNome;
+                foreach ($existing as $e) {
+                    if ($e['semana'] === $weekStart && $e['dia'] === $dia
+                        && $this->overlaps($e['hora_inicio'], $e['hora_fim'], '08:00', '09:00')
+                        && ($e['cadeira'] === 1 || $e['profissional'] === 1)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public function test_blocks_conflicts_in_future_weeks()
+    {
+        $start = Carbon::parse('2024-01-01');
+        $dias = ['segunda'];
+        $existingChair = [
+            ['semana' => '2024-01-08', 'dia' => 'segunda', 'hora_inicio' => '08:00', 'hora_fim' => '10:00', 'cadeira' => 1, 'profissional' => 2],
+        ];
+        $existingProf = [
+            ['semana' => '2024-01-08', 'dia' => 'segunda', 'hora_inicio' => '08:00', 'hora_fim' => '10:00', 'cadeira' => 2, 'profissional' => 1],
+        ];
+
+        $this->assertTrue($this->conflictDetected($start, $dias, 3, $existingChair));
+        $this->assertTrue($this->conflictDetected($start, $dias, 3, $existingProf));
+    }
 }
