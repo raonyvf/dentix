@@ -40,6 +40,5 @@
     @if($inicio && $fim)
         <div>{{ $inicio }} - {{ $fim }}</div>
     @endif
-    <div>{{ $observacao }}</div>
     <div>{{ $statusLabel }}</div>
 </div>
