@@ -227,17 +227,20 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
                 let row = `<tr class="border-t" data-row="${hora}"><td class="bg-gray-50 w-24 min-w-[6rem] h-16 align-middle" data-slot="${hora}" data-hora="${hora}"><div class="h-full flex items-center justify-end px-2 text-xs text-gray-500 whitespace-nowrap">${hora}</div></td>`;
                 professionals.forEach(p => {
                     const cellItems = (agenda[p.id] && agenda[p.id][hora]) || [];
-                    const items = cellItems.filter(it => !it.skip);
                     row += `<td class="relative h-16 cursor-pointer border-l" data-professional-id="${p.id}" data-hora="${hora}" data-date="${date}"><div class="minute-grid"></div><div class="h-full flex flex-col lg:flex-row gap-0.5">`;
-                    if (items.length) {
-                        items.forEach(item => {
-                            const statusClasses = {
-                                confirmado: { color: 'bg-green-100 text-green-700 border-green-800', label: 'Confirmado' },
-                                pendente: { color: 'bg-yellow-100 text-yellow-700 border-yellow-800', label: 'Pendente' },
-                                cancelado: { color: 'bg-red-100 text-red-700 border-red-800', label: 'Cancelado' },
-                            };
-                            const { color, label } = statusClasses[item.status] || { color: 'bg-gray-100 text-gray-700 border-gray-800', label: 'Sem confirmação' };
-                            row += `<div class="relative lg:flex-1"><div class="rounded p-2 text-xs border ${color} absolute w-full z-10" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${label}</div></div></div>`;
+                    if (cellItems.length) {
+                        cellItems.forEach(item => {
+                            if (item.skip) {
+                                row += '<div class="relative lg:flex-1"></div>';
+                            } else {
+                                const statusClasses = {
+                                    confirmado: { color: 'bg-green-100 text-green-700 border-green-800', label: 'Confirmado' },
+                                    pendente: { color: 'bg-yellow-100 text-yellow-700 border-yellow-800', label: 'Pendente' },
+                                    cancelado: { color: 'bg-red-100 text-red-700 border-red-800', label: 'Cancelado' },
+                                };
+                                const { color, label } = statusClasses[item.status] || { color: 'bg-gray-100 text-gray-700 border-gray-800', label: 'Sem confirmação' };
+                                row += `<div class="relative lg:flex-1"><div class="rounded p-2 text-xs border ${color} absolute w-full z-10" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${item.observacao || ''}</div><div>${label}</div></div></div>`;
+                            }
                         });
                     } else {
                         row += '<div class="relative lg:flex-1"></div>';
