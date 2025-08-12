@@ -139,6 +139,36 @@
             </div>
             <div id="calendar-table" class="mb-2 text-sm"></div>
             <div id="selected-dates"></div>
+            <div class="flex gap-2 mb-2">
+                <div>
+                    <label class="block text-sm mb-1">Semana inicial</label>
+                    <input type="date" name="semana" class="border rounded px-2 py-1">
+                </div>
+                <div class="flex-1">
+                    <label class="block text-sm mb-1">Dia da semana</label>
+                    <select name="dias[]" multiple class="border rounded px-2 py-1 w-full">
+                        @foreach($dias as $d)
+                            <option value="{{ $d->toName() }}">{{ ucfirst($d->toName()) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="flex gap-2 mb-2">
+                <div>
+                    <label class="block text-sm mb-1">Repetir até</label>
+                    <input type="date" name="repeat_until" class="border rounded px-2 py-1">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1">Semanas</label>
+                    <input type="number" name="repeat_weeks" min="1" class="border rounded px-2 py-1">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label class="inline-flex items-center">
+                    <input type="checkbox" id="apply-year" class="mr-1">
+                    Aplicar para o ano inteiro
+                </label>
+            </div>
             <div class="flex gap-2 items-end">
                 <div>
                     <label class="block text-sm mb-1">Início</label>
@@ -177,6 +207,7 @@
     const yearInputTop = document.getElementById('anoSelecionado');
     const prevNav = document.getElementById('prev-month-btn');
     const nextNav = document.getElementById('next-month-btn');
+    const applyYear = document.getElementById('apply-year');
 
     if (openCopyBtn && copyModal && copyCancel) {
         openCopyBtn.addEventListener('click', () => {
@@ -219,6 +250,18 @@
     document.getElementById('escala-cancel').addEventListener('click', () => {
         escalaModal.classList.add('hidden');
     });
+
+    if (applyYear) {
+        escalaForm.addEventListener('submit', () => {
+            if (applyYear.checked) {
+                const year = escalaForm.querySelector('[name="year"]').value;
+                const repeatUntil = escalaForm.querySelector('[name="repeat_until"]');
+                const repeatWeeks = escalaForm.querySelector('[name="repeat_weeks"]');
+                if (repeatUntil) repeatUntil.value = `${year}-12-31`;
+                if (repeatWeeks) repeatWeeks.value = '';
+            }
+        });
+    }
 
     document.querySelectorAll('.escala-card').forEach(card => {
         card.addEventListener('dblclick', () => {
