@@ -31,6 +31,6 @@ class Organization extends Model
 
     public function clinics()
     {
-        return $this->hasMany(Clinic::class);
+        return $this->hasMany(Clinic::class, 'organizacao_id');
     }
 }
