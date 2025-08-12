@@ -88,7 +88,7 @@
                                     @else
                                         <div class="relative lg:flex-1">
                                             <x-agenda.agendamento :paciente="$item['paciente']" :inicio="$item['hora_inicio']" :fim="$item['hora_fim']" :observacao="$item['observacao']" :status="$item['status']"
-                                                class="absolute w-full m-0 z-10"
+                                                class="absolute inset-2.5 z-10"
                                                 data-id="{{ $item['id'] }}"
                                                 data-inicio="{{ $item['hora_inicio'] }}"
                                                 data-fim="{{ $item['hora_fim'] }}"
