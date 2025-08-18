@@ -221,7 +221,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
                 let row = `<tr class="border-t" data-row="${hora}"><td class="bg-gray-50 w-24 min-w-[6rem] h-16 align-middle" data-slot="${hora}" data-hora="${hora}"><div class="h-full flex items-center justify-end px-2 text-xs text-gray-500 whitespace-nowrap">${hora}</div></td>`;
                 professionals.forEach(p => {
                     const cellItems = (agenda[p.id] && agenda[p.id][hora]) || [];
-                    row += `<td class="relative h-16 cursor-pointer border-l" data-professional-id="${p.id}" data-hora="${hora}" data-date="${date}"><div class="minute-grid"></div><div class="schedule-gutter absolute left-0 top-0 h-full w-5 z-20 cursor-pointer"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5">`;
+                    row += `<td class="relative h-16 cursor-pointer border-l" data-professional-id="${p.id}" data-hora="${hora}" data-date="${date}"><div class="minute-grid"></div><div class="schedule-gutter absolute left-0 top-0 h-full w-5 z-20 cursor-pointer"></div><div class="relative h-full"><div class="h-full flex flex-col lg:flex-row gap-0.5 ml-5 card-area" style="width:calc(100% - 20px);">`;
                     if (cellItems.length) {
                         cellItems.forEach(item => {
                             if (item.skip) {
