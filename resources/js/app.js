@@ -726,10 +726,27 @@ document.addEventListener('DOMContentLoaded', attachCellHandlers);
 document.addEventListener('schedule:rendered', attachCellHandlers);
 document.addEventListener('DOMContentLoaded', positionAppointments);
 document.addEventListener('schedule:rendered', positionAppointments);
-document.addEventListener('agenda:refresh', e => {
+window.getAgendaComponent = function () {
     const rootEl = document.getElementById('agenda-root');
-    const comp = Alpine.$data(rootEl);
-    comp?.loadData(e.detail?.date);
+    if (!rootEl || !window.Alpine) return null;
+    if (typeof Alpine.$data === 'function') {
+        try { return Alpine.$data(rootEl); } catch (_) {}
+    }
+    const raw = rootEl.__x;
+    return raw?.$data || (typeof raw?.getUnobservedData === 'function' ? raw.getUnobservedData() : null);
+};
+
+document.addEventListener('agenda:changed', e => {
+    try {
+        const comp = window.getAgendaComponent();
+        if (!comp) return;
+        const date = e.detail?.date || comp.selectedDate;
+        if (typeof comp.loadData === 'function') {
+            comp.loadData(date);
+        }
+    } catch (err) {
+        console.error('Erro ao recarregar agenda', err);
+    }
 });
 
 Alpine.start();
@@ -993,7 +1010,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             setTimeout(() => success.classList.add('hidden'), 3000);
                         }
 
-                        document.dispatchEvent(new CustomEvent('agenda:refresh', { detail: { date } }));
+                        document.dispatchEvent(new CustomEvent('agenda:changed', { detail: { date } }));
                         scheduleModal.classList.add('hidden');
                         clearSelection();
 
