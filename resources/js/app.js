@@ -658,7 +658,7 @@ function attachCellHandlers() {
         if (!cell || cell.dataset.professionalId !== selection.professional || cell.dataset.date !== selection.date) return;
         const time = getEventTime(e, cell);
         if (toMinutes(time) < toMinutes(selection.start)) return;
-        selectRange(selection.date, selection.professional, selection.start, addMinutes(time, slotMinutes));
+        selectRange(selection.date, selection.professional, selection.start, time);
     };
 
     handleDblClick = e => {
