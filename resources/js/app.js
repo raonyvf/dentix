@@ -999,9 +999,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             success.classList.remove('hidden');
                             setTimeout(() => success.classList.add('hidden'), 3000);
                         }
+
                         document.dispatchEvent(new CustomEvent('agenda:refresh', { detail: { date } }));
                         scheduleModal.classList.add('hidden');
                         clearSelection();
+
                     })
                     .catch(() => alert('Erro de rede ao salvar agendamento'));
             });
