@@ -47,6 +47,7 @@ const buildDom = () => {
         <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional-id="1" data-hora="10:00" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
         <tr data-row="10:30"><td data-slot="10:30"></td><td data-professional-id="1" data-hora="10:30" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
         <tr data-row="11:00"><td data-slot="11:00"></td><td data-professional-id="1" data-hora="11:00" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
+        <tr data-row="11:30"><td data-slot="11:30"></td><td data-professional-id="1" data-hora="11:30" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
       </tbody>
     </table>
   `;
@@ -146,6 +147,29 @@ describe('schedule selection', () => {
     await new Promise(r => setTimeout(r, 0));
     const success = document.getElementById('schedule-success');
     expect(success.__x.$data.show).toBe(true);
+  });
+
+  it('allows selection via gutter when cell has appointment', () => {
+    const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="11:00"]');
+    const area = cell.querySelector('div.relative.h-full.ml-5 > div');
+    const wrapper = document.createElement('div');
+    wrapper.className = 'relative lg:flex-1';
+    const appt = document.createElement('div');
+    appt.dataset.id = '1';
+    appt.className = 'appointment-card absolute inset-0';
+    wrapper.appendChild(appt);
+    area.appendChild(wrapper);
+    const startGutter = cell.querySelector('.schedule-gutter');
+    startGutter.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 0 }));
+    const endCell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="11:30"]');
+    const endGutter = endCell.querySelector('.schedule-gutter');
+    endGutter.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientY: 10 }));
+    endGutter.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 10 }));
+    endGutter.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 10 }));
+    const modal = document.getElementById('schedule-modal');
+    expect(modal.classList.contains('hidden')).toBe(false);
+    expect(document.getElementById('schedule-start').value).toBe('11:00');
+    expect(document.getElementById('schedule-end').value).toBe('11:45');
   });
 
   it('snaps click at 11:07 to 11:00', () => {
