@@ -320,6 +320,7 @@ function initPatientSearch() {
     };
 }
 let selection = { start: null, end: null, professional: null, date: null };
+
 let dragging = false;
 let suppressClick = false;
 let handleMouseDown, handleMouseMove, handleDblClick, handleClick, handleMouseUp;
@@ -337,6 +338,7 @@ const updateSlotMinutes = () => {
 };
 
 const MIN_CARD_PX = 24;
+
 
 const toMinutes = t => {
     if (!t) return null;

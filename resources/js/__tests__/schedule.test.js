@@ -43,7 +43,9 @@ const buildDom = () => {
       </thead>
       <tbody>
         <tr data-row="09:00"><td data-slot="09:00"></td><td data-professional-id="1" data-hora="09:00" data-date="2024-01-01"></td></tr>
+        <tr data-row="09:15"><td data-slot="09:15"></td><td data-professional-id="1" data-hora="09:15" data-date="2024-01-01"></td></tr>
         <tr data-row="09:30"><td data-slot="09:30"></td><td data-professional-id="1" data-hora="09:30" data-date="2024-01-01"></td></tr>
+        <tr data-row="09:45"><td data-slot="09:45"></td><td data-professional-id="1" data-hora="09:45" data-date="2024-01-01"></td></tr>
         <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional-id="1" data-hora="10:00" data-date="2024-01-01"></td></tr>
       </tbody>
     </table>
@@ -59,13 +61,13 @@ describe('schedule selection', () => {
     document.dispatchEvent(new Event('DOMContentLoaded'));
   });
 
-  it('opens modal with 30min duration on double click', () => {
+  it('opens modal with 15min duration on double click', () => {
     const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
     cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
     const modal = document.getElementById('schedule-modal');
     expect(modal.classList.contains('hidden')).toBe(false);
     expect(document.getElementById('schedule-start').value).toBe('09:00');
-    expect(document.getElementById('schedule-end').value).toBe('09:30');
+    expect(document.getElementById('schedule-end').value).toBe('09:15');
   });
 
   it('opens modal with correct start and end after two clicks', () => {
@@ -82,7 +84,7 @@ describe('schedule selection', () => {
     const modal = document.getElementById('schedule-modal');
     expect(modal.classList.contains('hidden')).toBe(false);
     expect(document.getElementById('schedule-start').value).toBe('09:00');
-    expect(document.getElementById('schedule-end').value).toBe('10:30');
+    expect(document.getElementById('schedule-end').value).toBe('10:15');
   });
 
   it('normalizes selection when clicks are in reverse order', () => {
@@ -99,7 +101,7 @@ describe('schedule selection', () => {
     const modal = document.getElementById('schedule-modal');
     expect(modal.classList.contains('hidden')).toBe(false);
     expect(document.getElementById('schedule-start').value).toBe('09:00');
-    expect(document.getElementById('schedule-end').value).toBe('10:30');
+    expect(document.getElementById('schedule-end').value).toBe('10:15');
   });
 
   it('clears selection when second click has different date', () => {
