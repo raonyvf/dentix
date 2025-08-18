@@ -21,7 +21,7 @@ vi.mock('tom-select', () => ({
 const buildDom = () => {
   document.head.innerHTML = '<meta name="csrf-token" content="token">';
   document.body.innerHTML = `
-    <div id="schedule-success" class="hidden"></div>
+    <div id="schedule-success" class="hidden"><span></span></div>
     <div id="schedule-modal" class="hidden" data-hora="" data-date="">
       <input id="schedule-start" />
       <input id="schedule-end" />
@@ -50,6 +50,8 @@ const buildDom = () => {
       </tbody>
     </table>
   `;
+  const success = document.getElementById('schedule-success');
+  success.__x = { $data: { show: false } };
 };
 
 describe('schedule selection', () => {
@@ -165,7 +167,7 @@ describe('schedule selection', () => {
     save.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     await new Promise(r => setTimeout(r, 0));
     const success = document.getElementById('schedule-success');
-    expect(success.classList.contains('hidden')).toBe(false);
+    expect(success.__x.$data.show).toBe(true);
   });
 });
 
