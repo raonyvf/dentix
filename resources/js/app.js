@@ -1005,9 +1005,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         const success = document.getElementById('schedule-success');
                         if (success) {
-                            success.textContent = 'Agendamento salvo com sucesso';
-                            success.classList.remove('hidden');
-                            setTimeout(() => success.classList.add('hidden'), 3000);
+                            const span = success.querySelector('span');
+                            if (span) {
+                                span.textContent = 'Agendamento salvo com sucesso';
+                            }
+                            if (success.__x) {
+                                success.__x.$data.show = true;
+                                setTimeout(() => {
+                                    success.__x.$data.show = false;
+                                }, 3000);
+                            }
                         }
 
                         document.dispatchEvent(new CustomEvent('agenda:changed', { detail: { date } }));
