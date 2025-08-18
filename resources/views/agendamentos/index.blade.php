@@ -128,11 +128,11 @@
             <div class="flex gap-2 mb-4">
                 <label class="block flex-1">
                     <span class="text-sm">Início</span>
-                    <input id="schedule-start" type="time" class="mt-1 w-full border rounded p-1" />
+                    <input id="schedule-start" type="time" step="900" class="mt-1 w-full border rounded p-1" />
                 </label>
                 <label class="block flex-1">
                     <span class="text-sm">Fim</span>
-                    <input id="schedule-end" type="time" class="mt-1 w-full border rounded p-1" />
+                    <input id="schedule-end" type="time" step="900" class="mt-1 w-full border rounded p-1" />
                 </label>
             </div>
             <input type="hidden" id="hora_inicio" name="hora_inicio">

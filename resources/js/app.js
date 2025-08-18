@@ -317,9 +317,9 @@ let selection = { start: null, end: null, professional: null, date: null };
 let dragging = false;
 let suppressClick = false;
 let handleMouseDown, handleMouseMove, handleDblClick, handleClick, handleMouseUp;
-let lastClickedCell = null;
 let slotMinutes = 15;
 let rowMinutes = 30;
+let highlightEls = [];
 
 const updateRowMinutes = () => {
     const rows = document.querySelectorAll('#schedule-table tbody tr[data-row]');
@@ -361,6 +361,18 @@ const addMinutes = (time, mins) => {
     return `${hh}:${mm}`;
 };
 
+const snapTime = (time, type) => {
+    if (!time) return '';
+    const mins = toMinutes(time);
+    if (mins == null) return '';
+    const snapped = type === 'start'
+        ? Math.floor(mins / slotMinutes) * slotMinutes
+        : Math.ceil(mins / slotMinutes) * slotMinutes;
+    const h = String(Math.floor(snapped / 60)).padStart(2, '0');
+    const m = String(snapped % 60).padStart(2, '0');
+    return `${h}:${m}`;
+};
+
 const toRowTime = time => {
     const mins = toMinutes(time);
     const rowStart = Math.floor(mins / rowMinutes) * rowMinutes;
@@ -380,7 +392,7 @@ const getEventTime = (e, cell) => {
     return addMinutes(base, snapped);
 };
 
-const existeConflitoNaoCancelado = (prof, start, end) => {
+const existeConflitoNaoCancelado = (prof, start, end, ignoreId = null) => {
     const startMin = toMinutes(start);
     const endMin = toMinutes(end);
     const appts = document.querySelectorAll(
@@ -388,6 +400,7 @@ const existeConflitoNaoCancelado = (prof, start, end) => {
     );
     for (const appt of appts) {
         if (['cancelado', 'faltou'].includes(appt.dataset.status || '')) continue;
+        if (ignoreId && appt.dataset.id === String(ignoreId)) continue;
         const agStart = toMinutes(appt.dataset.inicio);
         const agEnd = toMinutes(appt.dataset.fim);
         if (agStart < endMin && agEnd > startMin) {
@@ -417,9 +430,33 @@ const positionAppointments = () => {
     });
 };
 
+const renderSelection = () => {
+    highlightEls.forEach(el => el.remove());
+    highlightEls = [];
+    if (!selection.start) return;
+    const startMin = toMinutes(selection.start);
+    const endMin = toMinutes(selection.end || addMinutes(selection.start, slotMinutes));
+    document.querySelectorAll(`#schedule-table td[data-professional-id="${selection.professional}"][data-date="${selection.date}"]`).forEach(cell => {
+        const cellStart = toMinutes(cell.dataset.hora);
+        const cellEnd = cellStart + rowMinutes;
+        const s = Math.max(startMin, cellStart);
+        const e = Math.min(endMin, cellEnd);
+        if (s >= e) return;
+        const rect = cell.getBoundingClientRect();
+        const top = ((s - cellStart) / rowMinutes) * rect.height;
+        const height = ((e - s) / rowMinutes) * rect.height;
+        const div = document.createElement('div');
+        div.className = 'selection-highlight absolute left-2.5 right-2.5 bg-blue-200 opacity-50 rounded pointer-events-none';
+        div.style.top = `${top}px`;
+        div.style.height = `${height}px`;
+        cell.appendChild(div);
+        highlightEls.push(div);
+    });
+};
+
 const clearSelection = (preserveProfessional = false) => {
-    document.querySelectorAll('#schedule-table td[data-professional-id].selected')
-        .forEach(c => c.classList.remove('selected', 'bg-blue-100'));
+    highlightEls.forEach(el => el.remove());
+    highlightEls = [];
     selection = {
         start: null,
         end: null,
@@ -447,9 +484,6 @@ const selectRange = (date, prof, start, end) => {
     const times = start === end ? [start] : nextTimes(start, end);
     for (const t of times) {
         if (!isOpen(t)) { alert('Horário fora do horário de funcionamento'); clearSelection(); return false; }
-        const rowTime = toRowTime(t);
-        const cell = document.querySelector(`#schedule-table td[data-professional-id="${prof}"][data-hora="${rowTime}"][data-date="${date}"]`);
-        cell?.classList.add('selected', 'bg-blue-100');
     }
     const finalEnd = start === end ? null : end;
     selection = { start, end: finalEnd, professional: prof, date };
@@ -459,7 +493,7 @@ const selectRange = (date, prof, start, end) => {
     if (endInput) endInput.value = finalEnd || '';
     if (professionalInput) professionalInput.value = prof;
     if (dateInput) dateInput.value = date;
-
+    renderSelection();
     return true;
 };
 
@@ -538,8 +572,11 @@ const abrirModalPaciente = () => {
 window.abrirModalPaciente = abrirModalPaciente;
 
 const openScheduleModal = (prof, start, end, date, ag = null) => {
+    if (existeConflitoNaoCancelado(prof, start, end, ag?.id)) {
+        alert('Existe agendamento ativo nessa faixa de horário.');
+        return;
+    }
     if (!selectRange(date, prof, start, end)) return;
-
     abrirModalAgendamento(ag);
 };
 
@@ -577,6 +614,23 @@ function attachCellHandlers() {
     selectedPatientName = document.getElementById('selected-patient-name');
     notFoundMsg = document.getElementById('patient-notfound');
 
+    if (startInput) {
+        startInput.addEventListener('change', e => {
+            e.target.value = snapTime(e.target.value, 'start');
+            selection.start = e.target.value;
+            if (hiddenStart) hiddenStart.value = e.target.value;
+            renderSelection();
+        });
+    }
+    if (endInput) {
+        endInput.addEventListener('change', e => {
+            e.target.value = snapTime(e.target.value, 'end');
+            selection.end = e.target.value;
+            if (hiddenEnd) hiddenEnd.value = e.target.value;
+            renderSelection();
+        });
+    }
+
     updateRowMinutes();
 
     if (handleMouseDown) document.removeEventListener('mousedown', handleMouseDown);
@@ -586,22 +640,16 @@ function attachCellHandlers() {
     if (handleMouseUp) document.removeEventListener('mouseup', handleMouseUp);
 
     handleMouseDown = e => {
-        // Allow multiple mousedown events; double clicks are handled in
-        // handleDblClick so we don't filter them here.
         const cell = e.target.closest('#schedule-table td[data-professional-id]');
-        if (!cell || e.button !== 0 || selection.start) return;
-
+        if (!cell || e.button !== 0 || e.target.closest('div[data-id]') || selection.start) return;
         const time = getEventTime(e, cell);
         const prof = cell.dataset.professionalId;
-
         const date = cell.dataset.date;
         if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
         e.preventDefault();
         dragging = true;
         suppressClick = true;
-
         selectRange(date, prof, time, time);
-
     };
 
     handleMouseMove = e => {
@@ -610,137 +658,41 @@ function attachCellHandlers() {
         if (!cell || cell.dataset.professionalId !== selection.professional || cell.dataset.date !== selection.date) return;
         const time = getEventTime(e, cell);
         if (toMinutes(time) < toMinutes(selection.start)) return;
-
         selectRange(selection.date, selection.professional, selection.start, addMinutes(time, slotMinutes));
-
     };
 
     handleDblClick = e => {
         const appt = e.target.closest('div[data-id]');
-        if (appt) {
-            clearSelection();
-            openEditModal(appt.dataset.id);
-            return;
-        }
+        if (appt) { clearSelection(); openEditModal(appt.dataset.id); return; }
         const cell = e.target.closest('#schedule-table td[data-professional-id]');
         if (!cell) return;
-        clearSelection();
         const prof = cell.dataset.professionalId;
         const date = cell.dataset.date;
         const start = getEventTime(e, cell);
         const end = addMinutes(start, slotMinutes);
-        if (existeConflitoNaoCancelado(prof, start, end)) {
-            alert('Existe agendamento ativo nessa faixa de horário.');
-            return;
-        }
         openScheduleModal(prof, start, end, date);
-    };
-
-    handleClick = e => {
-        const cell = e.target.closest('#schedule-table td[data-professional-id]');
-
-        if (suppressClick) {
-            // Skip the suppressed click (typically the first cell click)
-            // but immediately clear the flag so the next click is handled.
-            suppressClick = false;
-            lastClickedCell = cell;
-            if (selection.start && !e.target.closest('#schedule-table')) {
-                if (!scheduleModal || !scheduleModal.contains(e.target)) {
-                    clearSelection(true);
-                }
-            }
-            return;
-        }
-
-        if (e.detail > 1 && cell === lastClickedCell) {
-            if (selection.start && !e.target.closest('#schedule-table')) {
-                if (!scheduleModal || !scheduleModal.contains(e.target)) {
-                    clearSelection(true);
-                }
-            }
-            lastClickedCell = cell;
-            return;
-        }
-        lastClickedCell = cell;
-        if (!cell) {
-            if (selection.start && (!scheduleModal || !scheduleModal.contains(e.target))) {
-                clearSelection(true);
-            }
-            return;
-        }
-
-        const time = getEventTime(e, cell);
-        const prof = cell.dataset.professionalId;
-
-        const date = cell.dataset.date;
-
-        if (!selection.start) {
-            if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
-            selection.start = time;
-            selection.professional = prof;
-            selection.date = date;
-            cell.classList.add('selected', 'bg-blue-100');
-            if (hiddenStart) hiddenStart.value = time;
-            return;
-        }
-
-        if (selection.start && selection.end == null) {
-            if (prof !== selection.professional || date !== selection.date) {
-                clearSelection();
-                if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
-                selection.start = time;
-                selection.professional = prof;
-                selection.date = date;
-                cell.classList.add('selected', 'bg-blue-100');
-                if (hiddenStart) hiddenStart.value = time;
-                return;
-            }
-            const slotEnd = addMinutes(time, slotMinutes);
-            if (toMinutes(time) < toMinutes(selection.start)) {
-                const startTime = time;
-                const endTime = addMinutes(selection.start, slotMinutes);
-                openScheduleModal(prof, startTime, endTime, date);
-                return;
-            }
-            const startTime = selection.start;
-            const endTime = slotEnd;
-            openScheduleModal(prof, startTime, endTime, selection.date);
-            return;
-        }
-
-        if (selection.start && selection.end != null) {
-            clearSelection();
-            if (!isOpen(time)) { alert('Horário fora do horário de funcionamento'); return; }
-            selection.start = time;
-            selection.professional = prof;
-            selection.date = date;
-            cell.classList.add('selected', 'bg-blue-100');
-            if (hiddenStart) hiddenStart.value = time;
-        }
     };
 
     handleMouseUp = e => {
         if (!dragging) return;
         dragging = false;
+        const end = selection.end || addMinutes(selection.start, slotMinutes);
+        openScheduleModal(selection.professional, selection.start, end, selection.date);
+        suppressClick = true;
+    };
 
-        if (selection.start && selection.end && e.target.closest('#schedule-table')) {
-            openScheduleModal(selection.professional, selection.start, selection.end, selection.date);
-        } else if (!selection.end) {
-            // keep partial selection
-        } else {
-            clearSelection();
+    handleClick = e => {
+        if (suppressClick) { suppressClick = false; return; }
+        if (!e.target.closest('#schedule-table') && (!scheduleModal || !scheduleModal.contains(e.target))) {
+            clearSelection(true);
         }
-
-        // Do not rely on a delayed reset; handleClick will clear the
-        // suppression on the next click so that subsequent clicks are
-        // processed immediately.
     };
 
     document.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('dblclick', handleDblClick);
-    document.addEventListener('click', handleClick);
     document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('click', handleClick);
 }
 
 window.attachCellHandlers = attachCellHandlers;
