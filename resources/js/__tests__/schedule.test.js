@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-vi.mock('alpinejs', () => ({ default: { plugin: vi.fn(), start: vi.fn() } }));
+vi.mock('alpinejs', () => ({ default: { plugin: vi.fn(), start: vi.fn(), $data: vi.fn(() => ({ loadData: vi.fn() })) } }));
 vi.mock('@alpinejs/collapse', () => ({ default: {} }));
 vi.mock('tom-select', () => ({
   default: class {

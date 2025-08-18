@@ -104,38 +104,33 @@ window.agendaCalendar = function agendaCalendar() {
             return Promise.all([
                 this.fetchProfessionals(date),
                 this.fetchHorarios(date),
-            ]);
+            ]).then(([profData, horariosData]) => {
+                window.renderSchedule(profData.professionals, profData.agenda, this.baseTimes, date);
+                window.updateScheduleTable(
+                    horariosData.closed ? [] : horariosData.horarios,
+                    horariosData.start,
+                    horariosData.end,
+                    horariosData.closed
+                );
+                const dbg = document.getElementById('clinic-hours-debug');
+                if (dbg) {
+                    if (horariosData.intervals && horariosData.intervals.length) {
+                        const list = horariosData.intervals.map(i => `${i.inicio}-${i.fim}`).join(', ');
+                        dbg.textContent = `Horários de funcionamento: ${list}`;
+                    } else {
+                        dbg.textContent = '';
+                    }
+                }
+                document.dispatchEvent(new Event('schedule:rendered'));
+            });
         },
         fetchHorarios(date) {
-            if (!this.horariosUrl) return Promise.resolve();
-            return fetch(`${this.horariosUrl}?date=${date}`)
-                .then(r => r.json())
-                .then(data => {
-                    window.updateScheduleTable(
-                        data.closed ? [] : data.horarios,
-                        data.start,
-                        data.end,
-                        data.closed
-                    );
-                    const dbg = document.getElementById('clinic-hours-debug');
-                    if (dbg) {
-                        if (data.intervals && data.intervals.length) {
-                            const list = data.intervals.map(i => `${i.inicio}-${i.fim}`).join(', ');
-                            dbg.textContent = `Horários de funcionamento: ${list}`;
-                        } else {
-                            dbg.textContent = '';
-                        }
-                    }
-                });
+            if (!this.horariosUrl) return Promise.resolve({});
+            return fetch(`${this.horariosUrl}?date=${date}`).then(r => r.json());
         },
         fetchProfessionals(date) {
-            if (!this.professionalsUrl) return Promise.resolve([]);
-            return fetch(`${this.professionalsUrl}?date=${date}`)
-                .then(r => r.json())
-                .then(data => {
-                    window.renderSchedule(data.professionals, data.agenda, this.baseTimes, date);
-                    return data.professionals;
-                });
+            if (!this.professionalsUrl) return Promise.resolve({ professionals: [], agenda: {} });
+            return fetch(`${this.professionalsUrl}?date=${date}`).then(r => r.json());
         },
     };
 }
@@ -176,7 +171,6 @@ window.updateScheduleTable = function(openTimes, start, end, closed) {
             td.classList.add('text-gray-400');
         }
     });
-    document.dispatchEvent(new Event('schedule:rendered'));
 };
 
 window.renderSchedule = function (professionals, agenda, baseTimes, date) {
@@ -255,7 +249,6 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
     }
 
     if (emptyMsg) emptyMsg.classList.add('hidden');
-    document.dispatchEvent(new Event('schedule:rendered'));
 };
 
 let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd, patientSearch, patientResults, step1, step2, selectedPatientName, notFoundMsg, searchBtn, statusSelect;
@@ -735,10 +728,8 @@ document.addEventListener('DOMContentLoaded', positionAppointments);
 document.addEventListener('schedule:rendered', positionAppointments);
 document.addEventListener('agenda:refresh', e => {
     const rootEl = document.getElementById('agenda-root');
-    const comp = Alpine?.$data ? Alpine.$data(rootEl) : rootEl?.__x?.$data;
-    if (comp?.loadData) {
-        comp.loadData(e.detail?.date);
-    }
+    const comp = Alpine.$data(rootEl);
+    comp?.loadData(e.detail?.date);
 });
 
 Alpine.start();
