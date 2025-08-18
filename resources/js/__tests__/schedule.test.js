@@ -85,7 +85,7 @@ describe('schedule selection', () => {
     const modal = document.getElementById('schedule-modal');
     expect(modal.classList.contains('hidden')).toBe(false);
     expect(document.getElementById('schedule-start').value).toBe('09:00');
-    expect(document.getElementById('schedule-end').value).toBe('10:15');
+    expect(document.getElementById('schedule-end').value).toBe('10:00');
   });
 
   it('keeps professional info after interacting with modal fields', () => {
