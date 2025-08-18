@@ -34,3 +34,23 @@
         transparent 100%
     );
 }
+
+:root {
+    --gutter: 20px;
+}
+
+.schedule-gutter {
+    width: var(--gutter);
+    background-color: #f3f4f6;
+    z-index: 20;
+}
+
+.selection-highlight {
+    left: calc(var(--gutter, 20px) + 0.625rem);
+    right: 0.625rem;
+}
+
+.appointment-card {
+    left: 0.625rem;
+    right: 0.625rem;
+}

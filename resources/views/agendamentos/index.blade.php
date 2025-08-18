@@ -81,27 +81,30 @@
                         @endphp
                         <td class="relative h-16 cursor-pointer border-l" data-professional-id="{{ $prof['id'] }}" data-hora="{{ $hora }}" data-date="{{ $date }}">
                             <div class="minute-grid"></div>
-                            <div class="h-full flex flex-col lg:flex-row gap-0.5">
-                                @forelse($display as $item)
-                                    @if(isset($item['skip']) && $item['skip'])
+                            <div class="schedule-gutter absolute left-0 top-0 h-full w-5 z-20 cursor-pointer"></div>
+                            <div class="relative h-full ml-5" style="width:calc(100% - 20px);">
+                                <div class="h-full flex flex-col lg:flex-row gap-0.5">
+                                    @forelse($display as $item)
+                                        @if(isset($item['skip']) && $item['skip'])
+                                            <div class="relative lg:flex-1"></div>
+                                        @else
+                                            <div class="relative lg:flex-1">
+                                                <x-agenda.agendamento :paciente="$item['paciente']" :inicio="$item['hora_inicio']" :fim="$item['hora_fim']" :observacao="$item['observacao']" :status="$item['status']"
+                                                    class="appointment-card absolute z-10"
+                                                    data-id="{{ $item['id'] }}"
+                                                    data-inicio="{{ $item['hora_inicio'] }}"
+                                                    data-fim="{{ $item['hora_fim'] }}"
+                                                    data-observacao="{{ $item['observacao'] }}"
+                                                    data-status="{{ $item['status'] }}"
+                                                    data-date="{{ $date }}"
+                                                    data-profissional-id="{{ $prof['id'] }}"
+                                                />
+                                            </div>
+                                        @endif
+                                    @empty
                                         <div class="relative lg:flex-1"></div>
-                                    @else
-                                        <div class="relative lg:flex-1">
-                                            <x-agenda.agendamento :paciente="$item['paciente']" :inicio="$item['hora_inicio']" :fim="$item['hora_fim']" :observacao="$item['observacao']" :status="$item['status']"
-                                                class="absolute inset-2.5 z-10"
-                                                data-id="{{ $item['id'] }}"
-                                                data-inicio="{{ $item['hora_inicio'] }}"
-                                                data-fim="{{ $item['hora_fim'] }}"
-                                                data-observacao="{{ $item['observacao'] }}"
-                                                data-status="{{ $item['status'] }}"
-                                                data-date="{{ $date }}"
-                                                data-profissional-id="{{ $prof['id'] }}"
-                                            />
-                                        </div>
-                                    @endif
-                                @empty
-                                    <div class="relative lg:flex-1"></div>
-                                @endforelse
+                                    @endforelse
+                                </div>
                             </div>
                         </td>
                     @endforeach

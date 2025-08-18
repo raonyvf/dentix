@@ -42,11 +42,11 @@ const buildDom = () => {
         <tr><th data-professional-id="1">Prof 1</th></tr>
       </thead>
       <tbody>
-        <tr data-row="09:00"><td data-slot="09:00"></td><td data-professional-id="1" data-hora="09:00" data-date="2024-01-01"></td></tr>
-        <tr data-row="09:30"><td data-slot="09:30"></td><td data-professional-id="1" data-hora="09:30" data-date="2024-01-01"></td></tr>
-        <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional-id="1" data-hora="10:00" data-date="2024-01-01"></td></tr>
-        <tr data-row="10:30"><td data-slot="10:30"></td><td data-professional-id="1" data-hora="10:30" data-date="2024-01-01"></td></tr>
-        <tr data-row="11:00"><td data-slot="11:00"></td><td data-professional-id="1" data-hora="11:00" data-date="2024-01-01"></td></tr>
+        <tr data-row="09:00"><td data-slot="09:00"></td><td data-professional-id="1" data-hora="09:00" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
+        <tr data-row="09:30"><td data-slot="09:30"></td><td data-professional-id="1" data-hora="09:30" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
+        <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional-id="1" data-hora="10:00" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
+        <tr data-row="10:30"><td data-slot="10:30"></td><td data-professional-id="1" data-hora="10:30" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
+        <tr data-row="11:00"><td data-slot="11:00"></td><td data-professional-id="1" data-hora="11:00" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
       </tbody>
     </table>
   `;
@@ -68,9 +68,10 @@ describe('schedule selection', () => {
 
   it('opens modal with 15min duration on single click', () => {
     const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
-    cell.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 4 }));
-    cell.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 4 }));
-    cell.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 4 }));
+    const gutter = cell.querySelector('.schedule-gutter');
+    gutter.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 4 }));
+    gutter.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 4 }));
+    gutter.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 4 }));
     const modal = document.getElementById('schedule-modal');
     expect(modal.classList.contains('hidden')).toBe(false);
     expect(document.getElementById('schedule-start').value).toBe('09:00');
@@ -80,10 +81,12 @@ describe('schedule selection', () => {
   it('opens modal with correct start and end after drag', () => {
     const first = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
     const second = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="10:00"]');
-    first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 4 }));
-    second.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientY: 4 }));
-    second.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 4 }));
-    second.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 4 }));
+    const firstGutter = first.querySelector('.schedule-gutter');
+    const secondGutter = second.querySelector('.schedule-gutter');
+    firstGutter.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 4 }));
+    secondGutter.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientY: 4 }));
+    secondGutter.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 4 }));
+    secondGutter.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 4 }));
     const modal = document.getElementById('schedule-modal');
     expect(modal.classList.contains('hidden')).toBe(false);
     expect(document.getElementById('schedule-start').value).toBe('09:00');
@@ -92,9 +95,10 @@ describe('schedule selection', () => {
 
   it('keeps professional info after interacting with modal fields', () => {
     const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
-    cell.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 4 }));
-    cell.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 4 }));
-    cell.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 4 }));
+    const gutter = cell.querySelector('.schedule-gutter');
+    gutter.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 4 }));
+    gutter.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 4 }));
+    gutter.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 4 }));
 
     const profInput = document.getElementById('schedule-professional');
     const summary = document.getElementById('schedule-summary');
@@ -110,9 +114,10 @@ describe('schedule selection', () => {
 
   it('sends selected patient id on save', async () => {
     const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
-    cell.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 4 }));
-    cell.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 4 }));
-    cell.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 4 }));
+    const gutter = cell.querySelector('.schedule-gutter');
+    gutter.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 4 }));
+    gutter.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 4 }));
+    gutter.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 4 }));
     const select = document.getElementById('schedule-paciente');
     select.value = '1';
     global.fetch = vi.fn(() =>
@@ -127,9 +132,10 @@ describe('schedule selection', () => {
 
   it('shows success alert after saving', async () => {
     const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
-    cell.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 4 }));
-    cell.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 4 }));
-    cell.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 4 }));
+    const gutter = cell.querySelector('.schedule-gutter');
+    gutter.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 4 }));
+    gutter.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 4 }));
+    gutter.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 4 }));
     const select = document.getElementById('schedule-paciente');
     select.value = '1';
     global.fetch = vi.fn(() =>
@@ -145,18 +151,20 @@ describe('schedule selection', () => {
   it('snaps click at 11:07 to 11:00', () => {
     const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="11:00"]');
     const pos = 7 * (20 / 30);
-    cell.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: pos }));
-    cell.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: pos }));
-    cell.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: pos }));
+    const gutter = cell.querySelector('.schedule-gutter');
+    gutter.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: pos }));
+    gutter.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: pos }));
+    gutter.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: pos }));
     expect(document.getElementById('schedule-start').value).toBe('11:00');
   });
 
   it('snaps click at 11:22 to 11:15', () => {
     const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="11:00"]');
     const pos = 22 * (20 / 30);
-    cell.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: pos }));
-    cell.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: pos }));
-    cell.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: pos }));
+    const gutter = cell.querySelector('.schedule-gutter');
+    gutter.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: pos }));
+    gutter.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: pos }));
+    gutter.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: pos }));
     expect(document.getElementById('schedule-start').value).toBe('11:15');
   });
 });

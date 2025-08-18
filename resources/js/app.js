@@ -221,7 +221,7 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
                 let row = `<tr class="border-t" data-row="${hora}"><td class="bg-gray-50 w-24 min-w-[6rem] h-16 align-middle" data-slot="${hora}" data-hora="${hora}"><div class="h-full flex items-center justify-end px-2 text-xs text-gray-500 whitespace-nowrap">${hora}</div></td>`;
                 professionals.forEach(p => {
                     const cellItems = (agenda[p.id] && agenda[p.id][hora]) || [];
-                    row += `<td class="relative h-16 cursor-pointer border-l" data-professional-id="${p.id}" data-hora="${hora}" data-date="${date}"><div class="minute-grid"></div><div class="h-full flex flex-col lg:flex-row gap-0.5">`;
+                    row += `<td class="relative h-16 cursor-pointer border-l" data-professional-id="${p.id}" data-hora="${hora}" data-date="${date}"><div class="minute-grid"></div><div class="schedule-gutter absolute left-0 top-0 h-full w-5 z-20 cursor-pointer"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5">`;
                     if (cellItems.length) {
                         cellItems.forEach(item => {
                             if (item.skip) {
@@ -235,13 +235,13 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
                                 };
                                 const { color, label } = statusClasses[item.status] || { color: 'bg-gray-100 text-gray-700 border-gray-800', label: 'Sem confirmação' };
                                 const title = [item.paciente, `${item.hora_inicio} - ${item.hora_fim}`, item.observacao, label].filter(Boolean).join('\n');
-                                row += `<div class="relative lg:flex-1"><div class="rounded p-2 text-xs border ${color} absolute w-full z-10" title="${title}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${label}</div></div></div>`;
+                                row += `<div class="relative lg:flex-1"><div class="appointment-card rounded p-2 text-xs border ${color} absolute z-10" title="${title}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${label}</div></div></div>`;
                             }
                         });
                     } else {
                         row += '<div class="relative lg:flex-1"></div>';
                     }
-                    row += '</div></td>';
+                    row += '</div></div></td>';
                 });
                 row += '</tr>';
                 tbody.insertAdjacentHTML('beforeend', row);
@@ -335,6 +335,7 @@ const updateRowMinutes = () => {
 };
 
 const MIN_CARD_PX = 24;
+const GUTTER_WIDTH = 20;
 
 
 const toMinutes = t => {
@@ -450,7 +451,9 @@ const renderSelection = () => {
         const top = ((s - cellStart) / rowMinutes) * rect.height;
         const height = ((e - s) / rowMinutes) * rect.height;
         const div = document.createElement('div');
-        div.className = 'selection-highlight absolute left-2.5 right-2.5 bg-blue-200 opacity-50 rounded pointer-events-none';
+        div.className = 'selection-highlight absolute bg-blue-200 opacity-50 rounded pointer-events-none';
+        div.style.left = `${GUTTER_WIDTH + 10}px`;
+        div.style.right = '10px';
         div.style.top = `${top}px`;
         div.style.height = `${height}px`;
         cell.appendChild(div);
@@ -646,7 +649,7 @@ function attachCellHandlers() {
 
     handleMouseDown = e => {
         const cell = e.target.closest('#schedule-table td[data-professional-id]');
-        if (!cell || e.button !== 0 || e.target.closest('div[data-id]') || selection.start) return;
+        if (!cell || e.button !== 0 || (e.target.closest('div[data-id]') && !e.target.closest('.schedule-gutter')) || selection.start) return;
         const time = getEventTime(e, cell);
         const prof = cell.dataset.professionalId;
         const date = cell.dataset.date;
