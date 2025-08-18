@@ -26,12 +26,12 @@
     $horarios = [];
     $morningStart = Carbon::createFromTime(8, 0);
     $morningEnd = Carbon::createFromTime(11, 30);
-    for ($time = $morningStart->copy(); $time <= $morningEnd; $time->addMinutes(30)) {
+    for ($time = $morningStart->copy(); $time <= $morningEnd; $time->addMinutes(15)) {
         $horarios[] = $time->format('H:i');
     }
     $afternoonStart = Carbon::createFromTime(14, 0);
     $afternoonEnd = Carbon::createFromTime(16, 30);
-    for ($time = $afternoonStart->copy(); $time <= $afternoonEnd; $time->addMinutes(30)) {
+    for ($time = $afternoonStart->copy(); $time <= $afternoonEnd; $time->addMinutes(15)) {
         $horarios[] = $time->format('H:i');
     }
     $agenda = [

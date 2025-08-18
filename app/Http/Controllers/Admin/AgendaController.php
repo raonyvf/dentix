@@ -89,7 +89,7 @@ class AgendaController extends Controller
                 'inicio' => $start->format('H:i'),
                 'fim' => $end->format('H:i'),
             ];
-            for ($time = $start->copy(); $time <= $end; $time->addMinutes(30)) {
+            for ($time = $start->copy(); $time <= $end; $time->addMinutes(15)) {
                 $horarios[] = $time->format('H:i');
             }
         }
