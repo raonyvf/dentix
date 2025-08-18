@@ -728,8 +728,6 @@ document.addEventListener('agenda:changed', e => {
     }
 });
 
-export { nextTimes, selectRange, isOpen, openTickSet };
-
 Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
