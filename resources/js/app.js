@@ -386,9 +386,10 @@ const getEventTime = (e, cell) => {
     const rect = cell.getBoundingClientRect();
     let offset = e.clientY - rect.top;
     if (offset < 0) offset = 0;
-    let minutes = Math.floor((offset / rect.height) * rowMinutes);
-    if (minutes >= rowMinutes) minutes = rowMinutes - slotMinutes;
-    const snapped = Math.floor(minutes / slotMinutes) * slotMinutes;
+    let minutes = (offset / rect.height) * rowMinutes;
+    let snapped = Math.round(minutes / slotMinutes) * slotMinutes;
+    if (snapped < 0) snapped = 0;
+    if (snapped > rowMinutes - slotMinutes) snapped = rowMinutes - slotMinutes;
     return addMinutes(base, snapped);
 };
 
