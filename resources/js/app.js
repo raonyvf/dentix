@@ -324,7 +324,7 @@ let dragging = false;
 let suppressClick = false;
 let handleMouseDown, handleMouseMove, handleDblClick, handleClick, handleMouseUp;
 let lastClickedCell = null;
-let slotMinutes = 30;
+let slotMinutes = 15;
 
 const updateSlotMinutes = () => {
     const rows = document.querySelectorAll('#schedule-table tbody tr[data-row]');
