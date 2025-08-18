@@ -319,14 +319,15 @@ let suppressClick = false;
 let handleMouseDown, handleMouseMove, handleDblClick, handleClick, handleMouseUp;
 let lastClickedCell = null;
 let slotMinutes = 15;
+let rowMinutes = 30;
 
-const updateSlotMinutes = () => {
+const updateRowMinutes = () => {
     const rows = document.querySelectorAll('#schedule-table tbody tr[data-row]');
     if (rows.length >= 2) {
         const first = rows[0].dataset.row;
         const second = rows[1].dataset.row;
         const diff = toMinutes(second) - toMinutes(first);
-        if (diff > 0) slotMinutes = diff;
+        if (diff > 0) rowMinutes = diff;
     }
 };
 
@@ -360,6 +361,25 @@ const addMinutes = (time, mins) => {
     return `${hh}:${mm}`;
 };
 
+const toRowTime = time => {
+    const mins = toMinutes(time);
+    const rowStart = Math.floor(mins / rowMinutes) * rowMinutes;
+    const h = String(Math.floor(rowStart / 60)).padStart(2, '0');
+    const m = String(rowStart % 60).padStart(2, '0');
+    return `${h}:${m}`;
+};
+
+const getEventTime = (e, cell) => {
+    const base = cell.dataset.hora;
+    const rect = cell.getBoundingClientRect();
+    let offset = e.clientY - rect.top;
+    if (offset < 0) offset = 0;
+    let minutes = Math.floor((offset / rect.height) * rowMinutes);
+    if (minutes >= rowMinutes) minutes = rowMinutes - slotMinutes;
+    const snapped = Math.floor(minutes / slotMinutes) * slotMinutes;
+    return addMinutes(base, snapped);
+};
+
 const existeConflitoNaoCancelado = (prof, start, end) => {
     const startMin = toMinutes(start);
     const endMin = toMinutes(end);
@@ -379,11 +399,11 @@ const existeConflitoNaoCancelado = (prof, start, end) => {
 window.existeConflitoNaoCancelado = existeConflitoNaoCancelado;
 
 const positionAppointments = () => {
-    updateSlotMinutes();
+    updateRowMinutes();
     const firstRow = document.querySelector('#schedule-table tbody tr[data-row]:not(.hidden)');
     if (!firstRow) return;
     const cellHeight = firstRow.offsetHeight;
-    const pxPerMinute = cellHeight / slotMinutes;
+    const pxPerMinute = cellHeight / rowMinutes;
     document.querySelectorAll('#schedule-table td[data-hora]').forEach(cell => {
         const cellStart = toMinutes(cell.dataset.hora);
         cell.querySelectorAll('div[data-id]').forEach(appt => {
@@ -414,9 +434,10 @@ const clearSelection = (preserveProfessional = false) => {
 };
 
 const isOpen = time => {
-    const row = document.querySelector(`tr[data-row="${time}"]`);
+    const rowTime = toRowTime(time);
+    const row = document.querySelector(`tr[data-row="${rowTime}"]`);
     if (!row || row.classList.contains('hidden')) return false;
-    const slot = row.querySelector(`td[data-slot="${time}"]`);
+    const slot = row.querySelector(`td[data-slot="${rowTime}"]`);
     return slot && !slot.classList.contains('text-gray-400');
 };
 
@@ -426,7 +447,8 @@ const selectRange = (date, prof, start, end) => {
     const times = start === end ? [start] : nextTimes(start, end);
     for (const t of times) {
         if (!isOpen(t)) { alert('Horário fora do horário de funcionamento'); clearSelection(); return false; }
-        const cell = document.querySelector(`#schedule-table td[data-professional-id="${prof}"][data-hora="${t}"][data-date="${date}"]`);
+        const rowTime = toRowTime(t);
+        const cell = document.querySelector(`#schedule-table td[data-professional-id="${prof}"][data-hora="${rowTime}"][data-date="${date}"]`);
         cell?.classList.add('selected', 'bg-blue-100');
     }
     const finalEnd = start === end ? null : end;
@@ -555,7 +577,7 @@ function attachCellHandlers() {
     selectedPatientName = document.getElementById('selected-patient-name');
     notFoundMsg = document.getElementById('patient-notfound');
 
-    updateSlotMinutes();
+    updateRowMinutes();
 
     if (handleMouseDown) document.removeEventListener('mousedown', handleMouseDown);
     if (handleMouseMove) document.removeEventListener('mousemove', handleMouseMove);
@@ -569,7 +591,7 @@ function attachCellHandlers() {
         const cell = e.target.closest('#schedule-table td[data-professional-id]');
         if (!cell || e.button !== 0 || selection.start) return;
 
-        const time = cell.dataset.hora;
+        const time = getEventTime(e, cell);
         const prof = cell.dataset.professionalId;
 
         const date = cell.dataset.date;
@@ -586,7 +608,7 @@ function attachCellHandlers() {
         if (!dragging) return;
         const cell = e.target.closest('#schedule-table td[data-professional-id]');
         if (!cell || cell.dataset.professionalId !== selection.professional || cell.dataset.date !== selection.date) return;
-        const time = cell.dataset.hora;
+        const time = getEventTime(e, cell);
         if (toMinutes(time) < toMinutes(selection.start)) return;
 
         selectRange(selection.date, selection.professional, selection.start, addMinutes(time, slotMinutes));
@@ -605,7 +627,7 @@ function attachCellHandlers() {
         clearSelection();
         const prof = cell.dataset.professionalId;
         const date = cell.dataset.date;
-        const start = cell.dataset.hora;
+        const start = getEventTime(e, cell);
         const end = addMinutes(start, slotMinutes);
         if (existeConflitoNaoCancelado(prof, start, end)) {
             alert('Existe agendamento ativo nessa faixa de horário.');
@@ -647,7 +669,7 @@ function attachCellHandlers() {
             return;
         }
 
-        const time = cell.dataset.hora;
+        const time = getEventTime(e, cell);
         const prof = cell.dataset.professionalId;
 
         const date = cell.dataset.date;

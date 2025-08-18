@@ -18,8 +18,8 @@ class AgendamentoController extends Controller
 
         $horarios = [];
         $startTime = Carbon::createFromTime(0, 0);
-        $endTime = Carbon::createFromTime(23, 45);
-        for ($time = $startTime->copy(); $time <= $endTime; $time->addMinutes(15)) {
+        $endTime = Carbon::createFromTime(23, 30);
+        for ($time = $startTime->copy(); $time <= $endTime; $time->addMinutes(30)) {
             $horarios[] = $time->format('H:i');
         }
 
@@ -44,7 +44,8 @@ class AgendamentoController extends Controller
                 $pessoa = optional($ag->paciente)->pessoa;
                 $start = Carbon::parse($ag->hora_inicio);
                 $end = Carbon::parse($ag->hora_fim);
-                $hora = $start->format('H:i');
+                $rowStart = $start->copy()->minute($start->minute >= 30 ? 30 : 0);
+                $hora = $rowStart->format('H:i');
                 $rowspan = max(1, intdiv($start->diffInMinutes($end), 15));
 
                 $agenda[$ag->profissional_id][$hora][] = [
@@ -58,7 +59,7 @@ class AgendamentoController extends Controller
                     'rowspan' => $rowspan,
                 ];
 
-                for ($t = $start->copy()->addMinutes(15); $t < $end; $t->addMinutes(15)) {
+                for ($t = $rowStart->copy()->addMinutes(30); $t < $end; $t->addMinutes(30)) {
                     $agenda[$ag->profissional_id][$t->format('H:i')][] = ['skip' => true];
                 }
             }
@@ -133,7 +134,8 @@ class AgendamentoController extends Controller
                 $pessoa = optional($ag->paciente)->pessoa;
                 $start = Carbon::parse($ag->hora_inicio);
                 $end = Carbon::parse($ag->hora_fim);
-                $hora = $start->format('H:i');
+                $rowStart = $start->copy()->minute($start->minute >= 30 ? 30 : 0);
+                $hora = $rowStart->format('H:i');
                 $rowspan = max(1, intdiv($start->diffInMinutes($end), 15));
 
                 $agenda[$ag->profissional_id][$hora][] = [
@@ -147,7 +149,7 @@ class AgendamentoController extends Controller
                     'rowspan' => $rowspan,
                 ];
 
-                for ($t = $start->copy()->addMinutes(15); $t < $end; $t->addMinutes(15)) {
+                for ($t = $rowStart->copy()->addMinutes(30); $t < $end; $t->addMinutes(30)) {
                     $agenda[$ag->profissional_id][$t->format('H:i')][] = ['skip' => true];
                 }
             }

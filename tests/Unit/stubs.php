@@ -158,6 +158,15 @@ namespace App\Models {
             if ($name === 'get') {
                 return self::$collection;
             }
+            if ($name === 'pluck') {
+                return self::$collection->pluck(...$arguments);
+            }
+            if ($name === 'unique') {
+                return self::$collection->unique(...$arguments);
+            }
+            if ($name === 'toArray') {
+                return self::$collection->toArray();
+            }
             return $this;
         }
     }
@@ -199,6 +208,21 @@ namespace App\Models {
         public function get()
         {
             return self::$collection;
+        }
+    }
+}
+
+namespace Illuminate\Support\Facades {
+    class Cache
+    {
+        public static function remember($key, $minutes, $callback)
+        {
+            return $callback();
+        }
+
+        public static function forget($key)
+        {
+            // no-op for tests
         }
     }
 }
