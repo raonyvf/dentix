@@ -115,11 +115,20 @@ class AgendamentoController extends Controller
 
         if ($professionals) {
             $profIds = array_column($professionals, 'id');
-            $agendamentos = Agendamento::with(['paciente.pessoa'])
-                ->where('clinica_id', $clinicId)
-                ->whereDate('data', $date)
-                ->whereIn('profissional_id', $profIds)
-                ->get();
+
+            $cacheKey = "agendamentos_{$clinicId}_{$date}";
+            $agendamentos = Cache::remember(
+                $cacheKey,
+                60,
+                function () use ($clinicId, $date, $profIds) {
+                    return Agendamento::with(['paciente.pessoa'])
+                        ->where('clinica_id', $clinicId)
+                        ->whereDate('data', $date)
+                        ->whereIn('profissional_id', $profIds)
+                        ->get();
+                }
+            );
+
             foreach ($agendamentos as $ag) {
                 $pessoa = optional($ag->paciente)->pessoa;
                 $start = Carbon::parse($ag->hora_inicio);

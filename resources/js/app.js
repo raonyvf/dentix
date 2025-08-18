@@ -71,11 +71,7 @@ window.agendaCalendar = function agendaCalendar() {
                 this.selectedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
             }
             this.days = buildDays(this.selectedDate);
-            this.fetchProfessionals(this.selectedDate).then(profs => {
-                if (profs && profs.length) {
-                    this.fetchHorarios(this.selectedDate);
-                }
-            });
+            this.loadData(this.selectedDate);
         },
         prevWeek() {
             start.setDate(start.getDate() - 7);
@@ -102,15 +98,17 @@ window.agendaCalendar = function agendaCalendar() {
         selectDay(date) {
             this.selectedDate = date;
             this.days = buildDays(this.selectedDate);
-            this.fetchProfessionals(date).then(profs => {
-                if (profs && profs.length) {
-                    this.fetchHorarios(date);
-                }
-            });
+            this.loadData(date);
+        },
+        loadData(date) {
+            return Promise.all([
+                this.fetchProfessionals(date),
+                this.fetchHorarios(date),
+            ]);
         },
         fetchHorarios(date) {
-            if (!this.horariosUrl) return;
-            fetch(`${this.horariosUrl}?date=${date}`)
+            if (!this.horariosUrl) return Promise.resolve();
+            return fetch(`${this.horariosUrl}?date=${date}`)
                 .then(r => r.json())
                 .then(data => {
                     window.updateScheduleTable(
