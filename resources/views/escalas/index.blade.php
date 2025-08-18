@@ -103,42 +103,52 @@
                     @endforeach
                 </select>
             </div>
-            <div class="mb-2 flex items-center justify-between">
-                <button type="button" id="prev-month" class="px-2">&#60;</button>
-                <span id="calendar-month-label" class="font-semibold"></span>
-                <button type="button" id="next-month" class="px-2">&#62;</button>
-            </div>
-            <div id="calendar-table" class="mb-2 text-sm"></div>
-            <div id="selected-dates"></div>
-            <div class="flex gap-2 mb-2">
-                <div>
-                    <label class="block text-sm mb-1">Semana inicial</label>
-                    <input type="date" name="semana" class="border rounded px-2 py-1">
-                </div>
-                <div class="flex-1">
-                    <label class="block text-sm mb-1">Dia da semana</label>
-                    <select name="dias[]" multiple class="border rounded px-2 py-1 w-full">
-                        @foreach($dias as $d)
-                            <option value="{{ $d->toName() }}">{{ ucfirst($d->toName()) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="flex gap-2 mb-2">
-                <div>
-                    <label class="block text-sm mb-1">Repetir até</label>
-                    <input type="date" name="repeat_until" class="border rounded px-2 py-1">
-                </div>
-                <div>
-                    <label class="block text-sm mb-1">Semanas</label>
-                    <input type="number" name="repeat_weeks" min="1" class="border rounded px-2 py-1">
-                </div>
-            </div>
             <div class="mb-2">
-                <label class="inline-flex items-center">
-                    <input type="checkbox" id="apply-year" class="mr-1">
-                    Aplicar para o ano inteiro
-                </label>
+                <nav class="flex border-b">
+                    <button type="button" data-tab="daily" class="tab-btn px-3 py-1 border-b-2 border-blue-600">Diário</button>
+                    <button type="button" data-tab="recurring" class="tab-btn px-3 py-1 border-b-2 border-transparent">Recorrente</button>
+                </nav>
+            </div>
+            <div id="tab-daily">
+                <div class="mb-2 flex items-center justify-between">
+                    <button type="button" id="prev-month" class="px-2">&#60;</button>
+                    <span id="calendar-month-label" class="font-semibold"></span>
+                    <button type="button" id="next-month" class="px-2">&#62;</button>
+                </div>
+                <div id="calendar-table" class="mb-2 text-sm"></div>
+                <div id="selected-dates"></div>
+            </div>
+            <div id="tab-recurring" class="hidden">
+                <div class="flex gap-2 mb-2">
+                    <div>
+                        <label class="block text-sm mb-1">Semana inicial</label>
+                        <input type="date" name="semana" class="border rounded px-2 py-1" disabled>
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm mb-1">Dia da semana</label>
+                        <select name="dias[]" multiple class="border rounded px-2 py-1 w-full" disabled>
+                            @foreach($dias as $d)
+                                <option value="{{ $d->toName() }}">{{ ucfirst($d->toName()) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="flex gap-2 mb-2">
+                    <div>
+                        <label class="block text-sm mb-1">Repetir até</label>
+                        <input type="date" name="repeat_until" class="border rounded px-2 py-1" disabled>
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1">Semanas</label>
+                        <input type="number" name="repeat_weeks" min="1" class="border rounded px-2 py-1" disabled>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" id="apply-year" class="mr-1" disabled>
+                        Aplicar para o ano inteiro
+                    </label>
+                </div>
             </div>
             <div class="flex gap-2 items-end">
                 <div>
@@ -176,6 +186,41 @@
     const prevNav = document.getElementById('prev-month-btn');
     const nextNav = document.getElementById('next-month-btn');
     const applyYear = document.getElementById('apply-year');
+    const tabButtons = escalaModal.querySelectorAll('.tab-btn');
+    const tabDaily = document.getElementById('tab-daily');
+    const tabRecurring = document.getElementById('tab-recurring');
+    const recurringInputs = tabRecurring.querySelectorAll('input, select');
+
+    function activateTab(name) {
+        if (name === 'daily') {
+            tabDaily.classList.remove('hidden');
+            tabRecurring.classList.add('hidden');
+            tabButtons.forEach(b => b.classList.remove('border-blue-600'));
+            escalaModal.querySelector('[data-tab="daily"]').classList.add('border-blue-600');
+            recurringInputs.forEach(el => {
+                el.disabled = true;
+                if (el.type === 'checkbox') {
+                    el.checked = false;
+                } else {
+                    el.value = '';
+                }
+            });
+            document.getElementById('selected-dates').innerHTML = '';
+        } else {
+            tabDaily.classList.add('hidden');
+            tabRecurring.classList.remove('hidden');
+            tabButtons.forEach(b => b.classList.remove('border-blue-600'));
+            escalaModal.querySelector('[data-tab="recurring"]').classList.add('border-blue-600');
+            recurringInputs.forEach(el => {
+                el.disabled = false;
+            });
+            document.getElementById('selected-dates').innerHTML = '';
+        }
+    }
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+    });
 
     if (prevNav && nextNav && monthSelectTop && yearInputTop) {
         function changeMonth(delta) {
@@ -198,6 +243,7 @@
         if (method) method.remove();
         deleteBtn.classList.add('hidden');
         document.getElementById('selected-dates').innerHTML = '';
+        activateTab('daily');
         escalaModal.classList.remove('hidden');
         initCalendar();
     });
@@ -207,7 +253,7 @@
 
     if (applyYear) {
         escalaForm.addEventListener('submit', () => {
-            if (applyYear.checked) {
+            if (!tabRecurring.classList.contains('hidden') && applyYear.checked) {
                 const year = escalaForm.querySelector('[name="year"]').value;
                 const repeatUntil = escalaForm.querySelector('[name="repeat_until"]');
                 const repeatWeeks = escalaForm.querySelector('[name="repeat_weeks"]');
@@ -241,6 +287,7 @@
             monthInput.value = date.slice(0,7);
             escalaForm.querySelector('[name="year"]').value = date.slice(0,4);
             escalaForm.querySelector('[name="month"]').value = parseInt(date.slice(5,7),10);
+            activateTab('daily');
             escalaModal.classList.remove('hidden');
             initCalendar([date], true);
         });
