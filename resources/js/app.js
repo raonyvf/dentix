@@ -950,8 +950,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                const root = scheduleModal.closest('[x-data]');
-
                 const date = scheduleModal.dataset.date;
 
                 const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -994,13 +992,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             success.classList.remove('hidden');
                             setTimeout(() => success.classList.add('hidden'), 3000);
                         }
-                        const comp = root?.__x?.$data;
-                        if (comp?.fetchProfessionals && comp?.fetchHorarios) {
-                            comp.fetchProfessionals(date).then(profs => {
-                                if (profs && profs.length) {
-                                    comp.fetchHorarios(date);
-                                }
-                            });
+                        const rootEl = document.getElementById('agenda-root');
+                        const comp = Alpine?.$data ? Alpine.$data(rootEl) : rootEl?.__x?.$data;
+                        if (comp?.loadData) {
+                            comp.loadData(date);
                         }
                     })
                     .catch(() => alert('Erro de rede ao salvar agendamento'));
