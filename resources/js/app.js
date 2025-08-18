@@ -731,6 +731,13 @@ document.addEventListener('DOMContentLoaded', attachCellHandlers);
 document.addEventListener('schedule:rendered', attachCellHandlers);
 document.addEventListener('DOMContentLoaded', positionAppointments);
 document.addEventListener('schedule:rendered', positionAppointments);
+document.addEventListener('agenda:refresh', e => {
+    const rootEl = document.getElementById('agenda-root');
+    const comp = Alpine?.$data ? Alpine.$data(rootEl) : rootEl?.__x?.$data;
+    if (comp?.loadData) {
+        comp.loadData(e.detail?.date);
+    }
+});
 
 Alpine.start();
 
@@ -992,16 +999,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             success.classList.remove('hidden');
                             setTimeout(() => success.classList.add('hidden'), 3000);
                         }
-                        const rootEl = document.getElementById('agenda-root');
-                        const comp = Alpine?.$data ? Alpine.$data(rootEl) : rootEl?.__x?.$data;
-                        if (comp?.loadData) {
-                            comp.loadData(date);
-                        }
+
+                        document.dispatchEvent(new CustomEvent('agenda:refresh', { detail: { date } }));
+                        scheduleModal.classList.add('hidden');
+                        clearSelection();
+
                     })
                     .catch(() => alert('Erro de rede ao salvar agendamento'));
-
-                scheduleModal.classList.add('hidden');
-                clearSelection();
             });
         }
         scheduleModal.addEventListener('click', e => {
