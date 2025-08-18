@@ -77,6 +77,8 @@ class EscalaTrabalhoController extends Controller
                 'datas.*' => 'date',
                 'hora_inicio' => 'required',
                 'hora_fim' => 'required',
+            ], [
+                'datas.required' => 'Selecione ao menos uma data na aba Diário.',
             ]);
         } else {
             $data = $request->validate([
@@ -94,6 +96,9 @@ class EscalaTrabalhoController extends Controller
                 'hora_fim' => 'required',
                 'repeat_until' => 'nullable|date|after_or_equal:semana',
                 'repeat_weeks' => 'nullable|integer|min:1',
+            ], [
+                'semana.required' => 'Informe a semana inicial na aba Recorrente.',
+                'dias.required' => 'Selecione pelo menos um dia da semana na aba Recorrente.',
             ]);
         }
 
