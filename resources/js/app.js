@@ -136,6 +136,8 @@ window.agendaCalendar = function agendaCalendar() {
 }
 
 window.updateScheduleTable = function(openTimes, start, end, closed) {
+    openTickSet.clear();
+    (openTimes || []).forEach(t => openTickSet.add(t));
     const container = document.getElementById('schedule-container');
     const table = document.getElementById('schedule-table');
     const closedMsg = document.getElementById('schedule-closed');
@@ -320,6 +322,7 @@ let handleMouseDown, handleMouseMove, handleDblClick, handleClick, handleMouseUp
 let slotMinutes = 15;
 let rowMinutes = 30;
 let highlightEls = [];
+const openTickSet = new Set();
 
 const updateRowMinutes = () => {
     const rows = document.querySelectorAll('#schedule-table tbody tr[data-row]');
@@ -344,7 +347,7 @@ const nextTimes = (start, end) => {
     const times = [];
     let cur = toMinutes(start);
     const final = toMinutes(end);
-    while (cur < final) {
+    while (cur <= final) {
         const h = String(Math.floor(cur / 60)).padStart(2, '0');
         const m = String(cur % 60).padStart(2, '0');
         times.push(`${h}:${m}`);
@@ -472,6 +475,7 @@ const clearSelection = (preserveProfessional = false) => {
 };
 
 const isOpen = time => {
+    if (openTickSet.size) return openTickSet.has(time);
     const rowTime = toRowTime(time);
     const row = document.querySelector(`tr[data-row="${rowTime}"]`);
     if (!row || row.classList.contains('hidden')) return false;
@@ -723,6 +727,8 @@ document.addEventListener('agenda:changed', e => {
         console.error('Erro ao recarregar agenda', err);
     }
 });
+
+export { nextTimes, selectRange, isOpen, openTickSet };
 
 Alpine.start();
 
@@ -1152,3 +1158,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+export { nextTimes, selectRange, isOpen, openTickSet };
