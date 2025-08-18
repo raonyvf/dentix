@@ -179,7 +179,7 @@ class AgendamentoController extends Controller
             'tipo' => 'nullable|string',
             'contato' => 'nullable|string',
             'observacao' => 'nullable|string',
-            'status' => 'required|in:confirmado,pendente,cancelado',
+            'status' => 'required|in:confirmado,pendente,cancelado,faltou',
         ]);
 
         $data['hora_inicio'] = Carbon::parse($data['hora_inicio'])->format('H:i:s');
@@ -191,7 +191,7 @@ class AgendamentoController extends Controller
 
         $conflict = Agendamento::where('profissional_id', $data['profissional_id'])
             ->whereDate('data', $data['data'])
-            ->where('status', '!=', 'cancelado')
+            ->whereNotIn('status', ['cancelado', 'faltou'])
             ->where(function ($q) use ($data) {
                 $q->where('hora_inicio', '<', $data['hora_fim'])
                     ->where('hora_fim', '>', $data['hora_inicio']);
@@ -221,7 +221,7 @@ class AgendamentoController extends Controller
             'hora_inicio' => 'required',
             'hora_fim' => 'required',
             'observacao' => 'nullable|string',
-            'status' => 'required|in:confirmado,pendente,cancelado',
+            'status' => 'required|in:confirmado,pendente,cancelado,faltou',
         ]);
 
         $data['hora_inicio'] = Carbon::parse($data['hora_inicio'])->format('H:i:s');
@@ -230,7 +230,7 @@ class AgendamentoController extends Controller
         $conflict = Agendamento::where('profissional_id', $agendamento->profissional_id)
             ->whereDate('data', $data['data'])
             ->where('id', '!=', $agendamento->id)
-            ->where('status', '!=', 'cancelado')
+            ->whereNotIn('status', ['cancelado', 'faltou'])
             ->where(function ($q) use ($data) {
                 $q->where('hora_inicio', '<', $data['hora_fim'])
                     ->where('hora_fim', '>', $data['hora_inicio']);

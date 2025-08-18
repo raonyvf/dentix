@@ -151,6 +151,7 @@
                     <option value="confirmado">Confirmado</option>
                     <option value="pendente">Pendente</option>
                     <option value="cancelado">Cancelado</option>
+                    <option value="faltou">Faltou</option>
                 </select>
             </label>
             <div class="flex justify-end gap-2">
