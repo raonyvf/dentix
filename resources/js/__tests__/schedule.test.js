@@ -43,15 +43,16 @@ const buildDom = () => {
       </thead>
       <tbody>
         <tr data-row="09:00"><td data-slot="09:00"></td><td data-professional-id="1" data-hora="09:00" data-date="2024-01-01"></td></tr>
-        <tr data-row="09:15"><td data-slot="09:15"></td><td data-professional-id="1" data-hora="09:15" data-date="2024-01-01"></td></tr>
         <tr data-row="09:30"><td data-slot="09:30"></td><td data-professional-id="1" data-hora="09:30" data-date="2024-01-01"></td></tr>
-        <tr data-row="09:45"><td data-slot="09:45"></td><td data-professional-id="1" data-hora="09:45" data-date="2024-01-01"></td></tr>
         <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional-id="1" data-hora="10:00" data-date="2024-01-01"></td></tr>
       </tbody>
     </table>
   `;
   const success = document.getElementById('schedule-success');
   success.__x = { $data: { show: false } };
+  document.querySelectorAll('#schedule-table td[data-professional-id]').forEach(td => {
+    td.getBoundingClientRect = () => ({ top: 0, height: 20 });
+  });
 };
 
 describe('schedule selection', () => {
@@ -65,7 +66,7 @@ describe('schedule selection', () => {
 
   it('opens modal with 15min duration on double click', () => {
     const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
-    cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, clientY: 5 }));
     const modal = document.getElementById('schedule-modal');
     expect(modal.classList.contains('hidden')).toBe(false);
     expect(document.getElementById('schedule-start').value).toBe('09:00');
@@ -74,14 +75,14 @@ describe('schedule selection', () => {
 
   it('opens modal with correct start and end after two clicks', () => {
     const first = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
-    first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-    first.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-    first.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 5 }));
+    first.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 5 }));
+    first.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 5 }));
 
     const second = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="10:00"]');
-    second.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-    second.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-    second.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    second.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 5 }));
+    second.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 5 }));
+    second.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 5 }));
 
     const modal = document.getElementById('schedule-modal');
     expect(modal.classList.contains('hidden')).toBe(false);
@@ -91,14 +92,14 @@ describe('schedule selection', () => {
 
   it('normalizes selection when clicks are in reverse order', () => {
     const first = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="10:00"]');
-    first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-    first.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-    first.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 5 }));
+    first.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 5 }));
+    first.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 5 }));
 
     const second = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
-    second.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-    second.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-    second.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    second.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 5 }));
+    second.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 5 }));
+    second.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 5 }));
 
     const modal = document.getElementById('schedule-modal');
     expect(modal.classList.contains('hidden')).toBe(false);
@@ -108,15 +109,15 @@ describe('schedule selection', () => {
 
   it('clears selection when second click has different date', () => {
     const first = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
-    first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-    first.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-    first.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    first.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 5 }));
+    first.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 5 }));
+    first.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 5 }));
 
     const second = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="10:00"]');
     second.dataset.date = '2024-01-02';
-    second.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-    second.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-    second.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    second.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 5 }));
+    second.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientY: 5 }));
+    second.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY: 5 }));
 
     const modal = document.getElementById('schedule-modal');
     expect(modal.classList.contains('hidden')).toBe(true);
@@ -126,7 +127,7 @@ describe('schedule selection', () => {
 
   it('keeps professional info after interacting with modal fields', () => {
     const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
-    cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, clientY: 5 }));
 
     const profInput = document.getElementById('schedule-professional');
     const summary = document.getElementById('schedule-summary');
@@ -142,7 +143,7 @@ describe('schedule selection', () => {
 
   it('sends selected patient id on save', async () => {
     const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
-    cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, clientY: 5 }));
     const select = document.getElementById('schedule-paciente');
     select.value = '1';
     global.fetch = vi.fn(() =>
@@ -157,7 +158,7 @@ describe('schedule selection', () => {
 
   it('shows success alert after saving', async () => {
     const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="09:00"]');
-    cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    cell.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, clientY: 5 }));
     const select = document.getElementById('schedule-paciente');
     select.value = '1';
     global.fetch = vi.fn(() =>
