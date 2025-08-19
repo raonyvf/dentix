@@ -68,6 +68,11 @@ window.agendaCalendar = function agendaCalendar() {
                     this.selectedDate = initial;
                 }
             }
+            const params = new URLSearchParams(window.location.search);
+            const profId = params.get('profissionalId');
+            if (profId) {
+                selectedProfessionalId = profId;
+            }
             if (!this.selectedDate) {
                 this.selectedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
             }
@@ -176,23 +181,54 @@ window.updateScheduleTable = function(openTimes, start, end, closed) {
     });
 };
 
+let selectedProfessionalId = null;
+
+function applyProfessionalFilter() {
+    const table = document.getElementById('schedule-table');
+    if (!table) return;
+    const cells = table.querySelectorAll('th[data-professional-id], td[data-professional-id]');
+    cells.forEach(el => {
+        const show = !selectedProfessionalId || el.dataset.professionalId === String(selectedProfessionalId);
+        el.classList.toggle('hidden', !show);
+    });
+    table.classList.toggle('table-fixed', !selectedProfessionalId);
+}
+
+function updateProfessionalQuery() {
+    const url = new URL(window.location);
+    if (selectedProfessionalId) {
+        url.searchParams.set('profissionalId', selectedProfessionalId);
+    } else {
+        url.searchParams.delete('profissionalId');
+    }
+    history.replaceState(null, '', url);
+}
+
 window.renderSchedule = function (professionals, agenda, baseTimes, date) {
     const bar = document.getElementById('professionals-bar');
     const table = document.getElementById('schedule-table');
     const emptyMsg = document.getElementById('schedule-empty');
     const hasProfessionals = professionals.length > 0;
 
+    if (selectedProfessionalId && !professionals.some(p => String(p.id) === String(selectedProfessionalId))) {
+        selectedProfessionalId = null;
+        updateProfessionalQuery();
+    }
+
     if (bar) {
         bar.innerHTML = '';
         if (hasProfessionals) {
+            const allClasses = selectedProfessionalId ? 'bg-white text-gray-700' : 'bg-primary text-white';
             bar.insertAdjacentHTML(
                 'beforeend',
-                '<button class="px-4 py-2 rounded border text-sm whitespace-nowrap bg-primary text-white">Todos os Profissionais</button>'
+                `<button class="px-4 py-2 rounded border text-sm whitespace-nowrap ${allClasses}">Todos os Profissionais</button>`
             );
             professionals.forEach(p => {
+                const active = selectedProfessionalId && String(selectedProfessionalId) === String(p.id);
+                const btnClass = active ? 'bg-primary text-white' : 'bg-white text-gray-700';
                 bar.insertAdjacentHTML(
                     'beforeend',
-                    `<button class="px-4 py-2 rounded border text-sm whitespace-nowrap bg-white text-gray-700" data-professional-id="${p.id}">${p.name}</button>`
+                    `<button class="px-4 py-2 rounded border text-sm whitespace-nowrap ${btnClass}" data-professional-id="${p.id}">${p.name}</button>`
                 );
             });
         }
@@ -252,7 +288,28 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
     }
 
     if (emptyMsg) emptyMsg.classList.add('hidden');
+
+    applyProfessionalFilter();
 };
+
+document.addEventListener('click', e => {
+    const bar = document.getElementById('professionals-bar');
+    if (!bar || !bar.contains(e.target)) return;
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    selectedProfessionalId = btn.dataset.professionalId || null;
+    const buttons = bar.querySelectorAll('button');
+    buttons.forEach(b => {
+        b.classList.remove('bg-primary', 'text-white');
+        b.classList.add('bg-white', 'text-gray-700');
+    });
+    btn.classList.add('bg-primary', 'text-white');
+    btn.classList.remove('bg-white', 'text-gray-700');
+    updateProfessionalQuery();
+    applyProfessionalFilter();
+});
+
+document.addEventListener('schedule:rendered', applyProfessionalFilter);
 
 let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd, patientSearch, patientResults, step1, step2, selectedPatientName, notFoundMsg, searchBtn, statusSelect;
 
