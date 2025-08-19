@@ -14,7 +14,7 @@
 
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
 </head>
 <body class="flex h-full bg-gray-100">
     @auth
