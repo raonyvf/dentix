@@ -38,7 +38,7 @@
     $title = implode(' | ', $titleParts);
 @endphp
 {{-- Additional data-* attributes are forwarded to the root div --}}
-<div {{ $attributes->merge(['class' => "rounded p-2 text-xs $color overflow-hidden break-words", 'style' => "border: 2px solid $borderColor", 'title' => $title]) }}>
+<div {{ $attributes->merge(['class' => "rounded p-2 text-xs $color overflow-hidden break-words", 'style' => "border: 2px solid $borderColor", 'title' => $title, 'draggable' => 'true']) }}>
     <div class="font-bold text-sm">{{ $paciente }}</div>
     @if($inicio && $fim)
         <div>{{ $inicio }} - {{ $fim }}</div>

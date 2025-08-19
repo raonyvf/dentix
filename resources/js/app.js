@@ -233,9 +233,9 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
                                     cancelado: { color: 'bg-red-100 text-red-700 border-red-800', label: 'Cancelado' },
                                     faltou: { color: 'bg-blue-100 text-blue-700 border-blue-800', label: 'Faltou' },
                                 };
-                                const { color, label } = statusClasses[item.status] || { color: 'bg-gray-100 text-gray-700 border-gray-800', label: 'Sem confirmação' };
-                                const title = [item.paciente, `${item.hora_inicio} - ${item.hora_fim}`, item.observacao, label].filter(Boolean).join('\n');
-                                row += `<div class="relative lg:flex-1"><div class="appointment-card rounded p-2 text-xs border ${color} absolute z-10" title="${title}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${label}</div></div></div>`;
+                                  const { color, label } = statusClasses[item.status] || { color: 'bg-gray-100 text-gray-700 border-gray-800', label: 'Sem confirmação' };
+                                  const title = [item.paciente, `${item.hora_inicio} - ${item.hora_fim}`, item.observacao, label].filter(Boolean).join('\n');
+                                  row += `<div class="relative lg:flex-1"><div class="appointment-card rounded p-2 text-xs border ${color} absolute z-10" draggable="true" title="${title}" data-id="${item.id}" data-inicio="${item.hora_inicio}" data-fim="${item.hora_fim}" data-observacao="${item.observacao || ''}" data-status="${item.status}" data-date="${date}" data-profissional-id="${p.id}"><div class="font-bold text-sm">${item.paciente}</div><div>${item.hora_inicio} - ${item.hora_fim}</div><div>${label}</div></div></div>`;
                             }
                         });
                     } else {
@@ -708,6 +708,79 @@ document.addEventListener('DOMContentLoaded', attachCellHandlers);
 document.addEventListener('schedule:rendered', attachCellHandlers);
 document.addEventListener('DOMContentLoaded', positionAppointments);
 document.addEventListener('schedule:rendered', positionAppointments);
+
+let draggedCard = null;
+
+document.addEventListener('dragstart', e => {
+    const card = e.target.closest('.appointment-card');
+    if (!card) return;
+    draggedCard = {
+        el: card,
+        id: card.dataset.id,
+        inicio: card.dataset.inicio,
+        fim: card.dataset.fim,
+        profissionalId: card.dataset.profissionalId,
+    };
+    e.dataTransfer.setData('text/plain', card.dataset.id || '');
+});
+
+const clearDropHighlight = cell => cell.classList.remove('bg-blue-100');
+
+document.addEventListener('dragenter', e => {
+    const cell = e.target.closest('td[data-professional-id]');
+    if (!cell) return;
+    e.preventDefault();
+    cell.classList.add('bg-blue-100');
+});
+
+document.addEventListener('dragover', e => {
+    const cell = e.target.closest('td[data-professional-id]');
+    if (!cell) return;
+    e.preventDefault();
+});
+
+document.addEventListener('dragleave', e => {
+    const cell = e.target.closest('td[data-professional-id]');
+    if (cell) clearDropHighlight(cell);
+});
+
+document.addEventListener('drop', e => {
+    const cell = e.target.closest('td[data-professional-id]');
+    if (!cell || !draggedCard) return;
+    e.preventDefault();
+    clearDropHighlight(cell);
+
+    const duration = toMinutes(draggedCard.fim) - toMinutes(draggedCard.inicio);
+    const start = cell.dataset.hora;
+    const end = addMinutes(start, duration);
+    const date = cell.dataset.date;
+    const profissionalId = cell.dataset.professionalId;
+
+    fetch(`admin/agendamentos/${draggedCard.id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: JSON.stringify({
+            data: date,
+            hora_inicio: start,
+            hora_fim: end,
+            observacao: draggedCard.el.dataset.observacao || '',
+            status: draggedCard.el.dataset.status || '',
+            profissional_id: profissionalId,
+        }),
+    })
+        .then(resp => {
+            if (!resp.ok) return;
+            document.dispatchEvent(new CustomEvent('agenda:changed', { detail: { date } }));
+            positionAppointments();
+        })
+        .catch(err => console.error(err));
+
+    draggedCard = null;
+});
+
 window.getAgendaComponent = function () {
     const rootEl = document.getElementById('agenda-root');
     if (!rootEl || !window.Alpine) return null;
