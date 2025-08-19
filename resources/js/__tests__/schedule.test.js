@@ -42,12 +42,12 @@ const buildDom = () => {
         <tr><th data-professional-id="1">Prof 1</th></tr>
       </thead>
       <tbody>
-        <tr data-row="09:00"><td data-slot="09:00"></td><td data-professional-id="1" data-hora="09:00" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter" aria-label="Selecionar horário"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
-        <tr data-row="09:30"><td data-slot="09:30"></td><td data-professional-id="1" data-hora="09:30" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter" aria-label="Selecionar horário"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
-        <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional-id="1" data-hora="10:00" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter" aria-label="Selecionar horário"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
-        <tr data-row="10:30"><td data-slot="10:30"></td><td data-professional-id="1" data-hora="10:30" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter" aria-label="Selecionar horário"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
-        <tr data-row="11:00"><td data-slot="11:00"></td><td data-professional-id="1" data-hora="11:00" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter" aria-label="Selecionar horário"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
-        <tr data-row="11:30"><td data-slot="11:30"></td><td data-professional-id="1" data-hora="11:30" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter" aria-label="Selecionar horário"></div><div class="relative h-full ml-5" style="width:calc(100% - 20px);"><div class="h-full flex flex-col lg:flex-row gap-0.5"></div></div></td></tr>
+        <tr data-row="09:00"><td data-slot="09:00"></td><td data-professional-id="1" data-hora="09:00" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter" aria-label="Selecionar horário"></div><div class="relative h-full"><div class="h-full flex flex-col lg:flex-row gap-0.5 card-area" style="width:calc(100% - 20px);"></div></div></td></tr>
+        <tr data-row="09:30"><td data-slot="09:30"></td><td data-professional-id="1" data-hora="09:30" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter" aria-label="Selecionar horário"></div><div class="relative h-full"><div class="h-full flex flex-col lg:flex-row gap-0.5 card-area" style="width:calc(100% - 20px);"></div></div></td></tr>
+        <tr data-row="10:00"><td data-slot="10:00"></td><td data-professional-id="1" data-hora="10:00" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter" aria-label="Selecionar horário"></div><div class="relative h-full"><div class="h-full flex flex-col lg:flex-row gap-0.5 card-area" style="width:calc(100% - 20px);"></div></div></td></tr>
+        <tr data-row="10:30"><td data-slot="10:30"></td><td data-professional-id="1" data-hora="10:30" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter" aria-label="Selecionar horário"></div><div class="relative h-full"><div class="h-full flex flex-col lg:flex-row gap-0.5 card-area" style="width:calc(100% - 20px);"></div></div></td></tr>
+        <tr data-row="11:00"><td data-slot="11:00"></td><td data-professional-id="1" data-hora="11:00" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter" aria-label="Selecionar horário"></div><div class="relative h-full"><div class="h-full flex flex-col lg:flex-row gap-0.5 card-area" style="width:calc(100% - 20px);"></div></div></td></tr>
+        <tr data-row="11:30"><td data-slot="11:30"></td><td data-professional-id="1" data-hora="11:30" data-date="2024-01-01"><div class="minute-grid"></div><div class="schedule-gutter" aria-label="Selecionar horário"></div><div class="relative h-full"><div class="h-full flex flex-col lg:flex-row gap-0.5 card-area" style="width:calc(100% - 20px);"></div></div></td></tr>
       </tbody>
     </table>
   `;
@@ -151,7 +151,7 @@ describe('schedule selection', () => {
 
   it('allows selection via gutter when cell has appointment', () => {
     const cell = document.querySelector('#schedule-table td[data-professional-id="1"][data-hora="11:00"]');
-    const area = cell.querySelector('div.relative.h-full.ml-5 > div');
+    const area = cell.querySelector('div.relative.h-full > div.card-area');
     const wrapper = document.createElement('div');
     wrapper.className = 'relative lg:flex-1';
     const appt = document.createElement('div');
