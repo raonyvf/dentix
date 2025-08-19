@@ -756,11 +756,14 @@ document.addEventListener('drop', e => {
     const date = cell.dataset.date;
     const profissionalId = parseInt(cell.dataset.professionalId, 10);
 
-    fetch(`admin/agendamentos/${draggedCard.id}`, {
+    const csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+    fetch(`/admin/agendamentos/${draggedCard.id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrf,
         },
         body: JSON.stringify({
             data: date,
@@ -776,7 +779,7 @@ document.addEventListener('drop', e => {
             document.dispatchEvent(new CustomEvent('agenda:changed', { detail: { date } }));
             positionAppointments();
         })
-        .catch(err => console.error(err));
+        .catch(resp => console.error(resp?.status, resp));
 
     draggedCard = null;
 });
