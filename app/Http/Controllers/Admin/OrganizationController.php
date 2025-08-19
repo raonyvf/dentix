@@ -82,7 +82,6 @@ class OrganizationController extends Controller
             'Prontuários',
             'Profissionais',
             'Estoque',
-            'Financeiro',
             'Clínicas',
             'Cadeiras',
             'Usuários',

@@ -39,9 +39,6 @@
             <button type="button" @click="activeTab = 'documentos'" :class="activeTab === 'documentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                 Documentos
             </button>
-            <button type="button" @click="activeTab = 'financeiro'" :class="activeTab === 'financeiro' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                Financeiro
-            </button>
             <button type="button" @click="activeTab = 'orcamentos'" :class="activeTab === 'orcamentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                 Orçamentos
             </button>
@@ -164,9 +161,6 @@
     </section>
     <section x-show="activeTab === 'documentos'" x-cloak>
         <p class="text-gray-700">Conteúdo de Documentos</p>
-    </section>
-    <section x-show="activeTab === 'financeiro'" x-cloak>
-        @include('pacientes.financeiro')
     </section>
     <section x-show="activeTab === 'orcamentos'" x-cloak>
         @include('pacientes.orcamentos')
