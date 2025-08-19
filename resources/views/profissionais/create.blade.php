@@ -198,7 +198,6 @@
                         <option value="Assistencial" @selected(old('funcao')==='Assistencial')>Assistencial</option>
                         <option value="Administrativa" @selected(old('funcao')==='Administrativa')>Administrativa</option>
                         <option value="Recepcionista" @selected(old('funcao')==='Recepcionista')>Recepcionista</option>
-                        <option value="Financeiro" @selected(old('funcao')==='Financeiro')>Financeiro</option>
                         <option value="Comercial" @selected(old('funcao')==='Comercial')>Comercial</option>
                         <option value="Outros" @selected(old('funcao')==='Outros')>Outros</option>
                     </select>

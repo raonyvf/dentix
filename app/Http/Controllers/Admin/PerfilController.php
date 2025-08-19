@@ -73,7 +73,6 @@ class PerfilController extends Controller
             'Prontuários',
             'Profissionais',
             'Estoque',
-            'Financeiro',
             'Clínicas',
             'Cadeiras',
             'Usuários',

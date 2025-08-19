@@ -203,7 +203,6 @@
                         <option value="Assistencial" @selected(old('funcao', $profissional->funcao ?? '')==='Assistencial')>Assistencial</option>
                         <option value="Administrativa" @selected(old('funcao', $profissional->funcao ?? '')==='Administrativa')>Administrativa</option>
                         <option value="Recepcionista" @selected(old('funcao', $profissional->funcao ?? '')==='Recepcionista')>Recepcionista</option>
-                        <option value="Financeiro" @selected(old('funcao', $profissional->funcao ?? '')==='Financeiro')>Financeiro</option>
                         <option value="Comercial" @selected(old('funcao', $profissional->funcao ?? '')==='Comercial')>Comercial</option>
                         <option value="Outros" @selected(old('funcao', $profissional->funcao ?? '')==='Outros')>Outros</option>
                     </select>
