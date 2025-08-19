@@ -96,10 +96,10 @@
             const el = document.getElementById(id);
             if (!el || !window.Chart) return;
 
-            const existing = Chart.getChart ? Chart.getChart(el) : null;
-            if (existing) existing.destroy();
-
-            new Chart(el, config);
+            if (el._chart) {
+                el._chart.destroy();
+            }
+            el._chart = new Chart(el, config);
         };
 
         createChart('formas-chart', {
