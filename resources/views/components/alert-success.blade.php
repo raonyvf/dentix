@@ -1,4 +1,11 @@
-<div x-data="{ show: true }" x-show="show" x-transition class="mb-4 flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700">
+@php
+    $attributes = $attributes ?? new \Illuminate\View\ComponentAttributeBag;
+    $show = $attributes->has('show')
+        ? filter_var($attributes->get('show'), FILTER_VALIDATE_BOOLEAN)
+        : ($show ?? true);
+    $attributes = $attributes->except('show');
+@endphp
+<div x-data="{ show: {{ $show ? 'true' : 'false' }} }" x-show="show" x-transition {{ $attributes->merge(['class' => 'mb-4 flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700']) }}>
     <div class="flex items-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
