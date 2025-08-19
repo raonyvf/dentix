@@ -99,10 +99,11 @@
             const el = document.getElementById(id);
             if (!el || !window.Chart) return;
 
-            if (el._chart) {
-                el._chart.destroy();
-            }
-            el._chart = new Chart(el, config);
+            const existing = Chart.getChart(el);
+            if (existing) existing.destroy();
+
+            el.dataset.chartInitialized = 'true';
+            return new Chart(el, config);
         };
 
         createChart('formas-chart', {
@@ -112,6 +113,10 @@
                 datasets: [{ data: @json(collect($formasPagamento)->pluck('percent')), backgroundColor: ['#3b82f6','#10b981','#f59e0b','#6366f1'] }]
             },
             options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        document.addEventListener('turbo:before-cache', () => {
+            Chart.getChart('formas-chart')?.destroy();
         });
     });
 </script>
