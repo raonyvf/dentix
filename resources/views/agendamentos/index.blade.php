@@ -10,7 +10,7 @@
     <h1 class="text-2xl font-bold">Agendamentos</h1>
     <p class="text-gray-600">Agenda semanal por profissional</p>
 </div>
-<x-alert-success id="schedule-success" class="hidden">Agendamento salvo com sucesso</x-alert-success>
+<x-alert-success id="schedule-success" :show="false">Agendamento salvo com sucesso</x-alert-success>
 @php
     // Dados de agenda são fornecidos pelo controlador
 @endphp
