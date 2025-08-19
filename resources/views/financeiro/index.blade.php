@@ -50,7 +50,7 @@
 <div class="bg-white rounded-lg shadow p-4 mb-6">
     <h3 class="text-lg font-semibold mb-2">Formas de Pagamento</h3>
     <p class="text-sm text-gray-500">Distribuição das receitas por forma de pagamento</p>
-    <canvas id="formas-chart" class="w-full h-64" height="256"></canvas>
+    <canvas id="formas-chart" class="w-full h-64" height="256" data-formas='@json($formasPagamento)'></canvas>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <div class="bg-white rounded-lg shadow p-4">
@@ -91,33 +91,3 @@
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const createChart = (id, config) => {
-            const el = document.getElementById(id);
-            if (!el || !window.Chart) return;
-
-            const existing = Chart.getChart(el);
-            if (existing) existing.destroy();
-
-            el.dataset.chartInitialized = 'true';
-            return new Chart(el, config);
-        };
-
-        createChart('formas-chart', {
-            type: 'doughnut',
-            data: {
-                labels: @json(collect($formasPagamento)->pluck('label')),
-                datasets: [{ data: @json(collect($formasPagamento)->pluck('percent')), backgroundColor: ['#3b82f6','#10b981','#f59e0b','#6366f1'] }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-
-        document.addEventListener('turbo:before-cache', () => {
-            Chart.getChart('formas-chart')?.destroy();
-        });
-    });
-</script>
-@endpush
