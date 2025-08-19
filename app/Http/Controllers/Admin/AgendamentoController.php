@@ -224,12 +224,13 @@ class AgendamentoController extends Controller
             'hora_fim' => 'required',
             'observacao' => 'nullable|string',
             'status' => 'required|in:confirmado,pendente,cancelado,faltou',
+            'profissional_id' => 'required|exists:users,id',
         ]);
 
         $data['hora_inicio'] = Carbon::parse($data['hora_inicio'])->format('H:i:s');
         $data['hora_fim'] = Carbon::parse($data['hora_fim'])->format('H:i:s');
 
-        $conflict = Agendamento::where('profissional_id', $agendamento->profissional_id)
+        $conflict = Agendamento::where('profissional_id', $data['profissional_id'])
             ->whereDate('data', $data['data'])
             ->where('id', '!=', $agendamento->id)
             ->whereNotIn('status', ['cancelado', 'faltou'])
@@ -246,11 +247,17 @@ class AgendamentoController extends Controller
             ], 409);
         }
 
+        $oldDate = $agendamento->data;
         $agendamento->update($data);
 
         if ($clinicId) {
-            $cacheKey = "agendamentos_{$clinicId}_" . Carbon::parse($data['data'])->format('Y-m-d');
-            Cache::forget($cacheKey);
+            $newDate = Carbon::parse($data['data'])->format('Y-m-d');
+            Cache::forget("agendamentos_{$clinicId}_{$newDate}");
+
+            $oldDateFormatted = Carbon::parse($oldDate)->format('Y-m-d');
+            if ($oldDateFormatted !== $newDate) {
+                Cache::forget("agendamentos_{$clinicId}_{$oldDateFormatted}");
+            }
         }
 
         return response()->json(['success' => true]);

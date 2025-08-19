@@ -1032,11 +1032,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     hora_inicio: startInput.value,
                     hora_fim: endInput.value,
                     observacao: document.getElementById('schedule-observacao')?.value || '',
-                    status: statusSelect?.value || 'confirmado'
+                    status: statusSelect?.value || 'confirmado',
+                    profissional_id: selection.professional,
                 };
                 if (action === 'store') {
                     body.paciente_id = pacienteInput.value;
-                    body.profissional_id = selection.professional;
                 } else {
                     const id = document.getElementById('agendamento-id').value;
                     url = `${saveBtn.dataset.updateUrl}/${id}`;
