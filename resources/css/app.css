@@ -41,7 +41,10 @@
 
 .schedule-gutter {
     width: var(--gutter);
+    min-width: 20px;
+    touch-action: none;
     background-color: #f3f4f6;
+    border-right: 1px solid #d1d5db;
     z-index: 20;
 }
 
