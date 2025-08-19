@@ -83,7 +83,7 @@
                             <div class="minute-grid"></div>
                             <div class="schedule-gutter absolute left-0 top-0 h-full w-5 z-20 cursor-pointer" aria-label="Selecionar horário"></div>
                             <div class="relative h-full">
-                                <div class="h-full flex flex-col lg:flex-row gap-0.5 ml-5 card-area" style="width:calc(100% - 20px);">
+                                <div class="h-full flex flex-col lg:flex-row gap-0.5 card-area" style="width:calc(100% - 20px);">
                                     @forelse($display as $item)
                                         @if(isset($item['skip']) && $item['skip'])
                                             <div class="relative lg:flex-1"></div>
