@@ -1,5 +1,6 @@
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
+import initFinanceiro from './pages/financeiro';
 
 Alpine.plugin(collapse);
 window.Alpine = Alpine;
@@ -1234,5 +1235,8 @@ document.addEventListener('DOMContentLoaded', () => {
             },
         });
     });
+    if (document.querySelector('#formas-chart')) {
+        initFinanceiro();
+    }
 });
 export { nextTimes, selectRange, isOpen, openTickSet };
