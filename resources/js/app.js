@@ -754,7 +754,7 @@ document.addEventListener('drop', e => {
     const start = cell.dataset.hora;
     const end = addMinutes(start, duration);
     const date = cell.dataset.date;
-    const profissionalId = cell.dataset.professionalId;
+    const profissionalId = parseInt(cell.dataset.professionalId, 10);
 
     fetch(`admin/agendamentos/${draggedCard.id}`, {
         method: 'PUT',

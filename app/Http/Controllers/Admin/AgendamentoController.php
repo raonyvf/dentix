@@ -224,7 +224,7 @@ class AgendamentoController extends Controller
             'hora_fim' => 'required',
             'observacao' => 'nullable|string',
             'status' => 'required|in:confirmado,pendente,cancelado,faltou',
-            'profissional_id' => 'required|exists:users,id',
+            'profissional_id' => 'required|exists:profissionais,id',
         ]);
 
         $data['hora_inicio'] = Carbon::parse($data['hora_inicio'])->format('H:i:s');
@@ -248,7 +248,14 @@ class AgendamentoController extends Controller
         }
 
         $oldDate = $agendamento->data;
-        $agendamento->update($data);
+        $agendamento->update([
+            'data' => $data['data'],
+            'hora_inicio' => $data['hora_inicio'],
+            'hora_fim' => $data['hora_fim'],
+            'observacao' => $data['observacao'] ?? '',
+            'status' => $data['status'],
+            'profissional_id' => $data['profissional_id'],
+        ]);
 
         if ($clinicId) {
             $newDate = Carbon::parse($data['data'])->format('Y-m-d');
