@@ -156,7 +156,7 @@
         <div class="bg-white rounded-lg shadow p-4">
             <div class="flex justify-between items-center mb-2">
                 <h2 class="font-semibold">Lista de Espera</h2>
-                <button class="p-1 text-blue-600 hover:text-blue-800">
+                <button id="waitlist-add" class="p-1 text-blue-600 hover:text-blue-800">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
