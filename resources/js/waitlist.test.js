@@ -27,11 +27,24 @@ describe('waitlist integration', () => {
     window.updateScheduleTable = vi.fn();
     fetchMock = vi.fn((url) => {
       if (url.includes('waitlist')) {
-        const date = url.split('date=')[1];
+        const [, qs = ''] = url.split('?');
+        const params = new URLSearchParams(qs);
+        const date = params.get('date');
+        const range = Number(params.get('range') || 0);
+
+        if (date === '2025-08-09' && range === 0) {
+          return Promise.resolve({ json: () => Promise.resolve({ waitlist: [] }) });
+        }
+        if (date === '2025-08-09' && range > 0) {
+          return Promise.resolve({
+            json: () => Promise.resolve({ waitlist: [{ id: 3, paciente: 'Carlos', contato: '789', observacao: 'obs3', data: '2025-08-10' }] })
+          });
+        }
+
         const name = date === '2025-08-07' ? 'Joao' : 'Maria';
         const observacao = date === '2025-08-07' ? 'obs1' : 'obs2';
         return Promise.resolve({
-          json: () => Promise.resolve({ waitlist: [{ id: 1, paciente: name, contato: '123', observacao }] })
+          json: () => Promise.resolve({ waitlist: [{ id: 1, paciente: name, contato: '123', observacao, data: date }] })
         });
       }
       return Promise.resolve({ json: () => Promise.resolve({}) });
@@ -71,6 +84,17 @@ describe('waitlist integration', () => {
     const content = document.getElementById('waitlist-container').textContent;
     expect(content).toContain('Maria');
     expect(content).toContain('obs2');
+  });
+
+  it('falls back to range search when no entries for date', async () => {
+    await window.loadWaitlist('2025-08-09');
+    await new Promise(r => setTimeout(r, 0));
+
+    expect(fetchMock).toHaveBeenCalledWith('/admin/agendamentos/waitlist?date=2025-08-09&range=0');
+    expect(fetchMock).toHaveBeenCalledWith('/admin/agendamentos/waitlist?date=2025-08-09&range=3');
+    const content = document.getElementById('waitlist-container').textContent;
+    expect(content).toContain('Carlos');
+    expect(content).toContain('2025-08-10');
   });
 
   it('calls loadWaitlist when agenda changes without component', () => {
