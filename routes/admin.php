@@ -25,6 +25,7 @@ Route::put('agendamentos/{agendamento}', [AgendamentoController::class, 'update'
 Route::get('agendamentos/horarios', [AgendaController::class, 'horarios'])->name('agendamentos.horarios');
 Route::get('agendamentos/profissionais', [AgendamentoController::class, 'professionals'])->name('agendamentos.professionals');
 Route::get('agendamentos/waitlist', [AgendamentoController::class, 'waitlist'])->name('agendamentos.waitlist');
+Route::get('waitlist/month', [AgendamentoController::class, 'waitlistMonthly'])->name('waitlist.month');
 
 
 Route::resource('clinicas', ClinicController::class)
