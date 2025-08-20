@@ -175,6 +175,7 @@ class AgendamentoController extends Controller
         $consultas = Agendamento::with(['paciente.pessoa', 'profissional.pessoa'])
             ->where('clinica_id', $clinicId)
             ->whereDate('data', $date)
+            ->whereIn('status', ['pendente', 'cancelado', 'confirmado'])
             ->get()
             ->map(function ($ag) {
                 $paciente = optional($ag->paciente)->pessoa;
