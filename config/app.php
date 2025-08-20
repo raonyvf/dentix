@@ -36,11 +36,13 @@ return [
         Illuminate\Pipeline\PipelineServiceProvider::class,
         Illuminate\Queue\QueueServiceProvider::class,
         Illuminate\Notifications\NotificationServiceProvider::class,
+        Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\Mail\MailServiceProvider::class,
         Illuminate\Redis\RedisServiceProvider::class,
         Laravel\Breeze\BreezeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
     ],
 
     'aliases' => [
