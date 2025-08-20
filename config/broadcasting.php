@@ -1,7 +1,21 @@
 <?php
 
+// Laravel's Pusher broadcaster requires the "pusher/pusher-php-server" package.
+// In environments where that package isn't installed (such as CI or local
+// development without the dependency), attempting to use the "pusher" driver
+// results in a fatal error: "Class 'Pusher\\Pusher' not found". To make the
+// configuration more robust, we fallback to the "log" driver whenever the
+// Pusher class cannot be resolved. This keeps the application functional while
+// still allowing Pusher to be used when the dependency is present.
+
+$defaultDriver = env('BROADCAST_DRIVER', 'null');
+
+if ($defaultDriver === 'pusher' && ! class_exists(\Pusher\Pusher::class)) {
+    $defaultDriver = 'log';
+}
+
 return [
-    'default' => env('BROADCAST_DRIVER', 'null'),
+    'default' => $defaultDriver,
 
     'connections' => [
         'pusher' => [
