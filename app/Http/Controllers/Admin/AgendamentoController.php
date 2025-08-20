@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Agendamento;
+use App\Models\Clinic;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -219,7 +220,7 @@ class AgendamentoController extends Controller
             return response()->json(['waitlist' => []]);
         }
 
-        $range = $request->query('range', 0);
+        $range = $request->query('range', 3);
         $start = Carbon::parse($date);
         $end = $start->copy()->addDays($range);
 
@@ -229,19 +230,79 @@ class AgendamentoController extends Controller
             ->where('status', 'lista_espera')
             ->orderBy('data')
             ->get()
-            ->map(function ($ag) {
+            ->map(function ($ag) use ($clinicId, $start, $range) {
                 $pessoa = optional($ag->paciente)->pessoa;
+                $sugestao = $this->buscarProximoHorarioDisponivel($clinicId, $start->copy(), $range);
+
                 return [
                     'id' => $ag->id,
                     'data' => Carbon::parse($ag->data)->format('Y-m-d'),
                     'paciente' => $pessoa ? trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')) : '',
                     'contato' => $ag->contato ?? '',
                     'observacao' => $ag->observacao ?? '',
+                    'sugestao' => $sugestao,
                 ];
             })
             ->values();
 
         return response()->json(['waitlist' => $waitlist]);
+    }
+
+    protected function buscarProximoHorarioDisponivel(int $clinicId, Carbon $start, int $range = 3, int $slotMinutes = 15)
+    {
+        $clinic = Clinic::with('horarios')->find($clinicId);
+        if (! $clinic) {
+            return null;
+        }
+
+        $endDate = $start->copy()->addDays($range);
+
+        for ($date = $start->copy(); $date <= $endDate; $date->addDay()) {
+            $diaSemana = $date->isoWeekday();
+            $horarioClinic = $clinic->horarios->firstWhere('dia_semana', $diaSemana);
+            if (! $horarioClinic) {
+                continue;
+            }
+
+            $diaInicio = $date->copy()->setTimeFromTimeString($horarioClinic->hora_inicio);
+            $diaFim = $date->copy()->setTimeFromTimeString($horarioClinic->hora_fim);
+
+            $agendamentos = Agendamento::where('clinica_id', $clinicId)
+                ->whereDate('data', $date->format('Y-m-d'))
+                ->where('status', '!=', 'lista_espera')
+                ->orderBy('hora_inicio')
+                ->get();
+
+            $current = $diaInicio->copy();
+            foreach ($agendamentos as $ag) {
+                $agStart = Carbon::parse($ag->hora_inicio);
+                $agStart->setDate($date->year, $date->month, $date->day);
+                $agEnd = Carbon::parse($ag->hora_fim);
+                $agEnd->setDate($date->year, $date->month, $date->day);
+
+                if ($current->diffInMinutes($agStart, false) >= $slotMinutes) {
+                    return [
+                        'data' => $current->format('Y-m-d'),
+                        'inicio' => $current->format('H:i'),
+                        'fim' => $current->copy()->addMinutes($slotMinutes)->format('H:i'),
+                    ];
+                }
+
+                if ($agEnd->greaterThan($current)) {
+                    $current = $agEnd->copy();
+                }
+            }
+
+            if ($current->diffInMinutes($diaFim, false) >= $slotMinutes) {
+                return [
+                    'data' => $current->format('Y-m-d'),
+                    'inicio' => $current->format('H:i'),
+                    'fim' => $current->copy()->addMinutes($slotMinutes)->format('H:i'),
+                ];
+            }
+        }
+
+        return null;
     }
 
     public function store(Request $request)
