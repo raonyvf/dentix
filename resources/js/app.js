@@ -129,7 +129,7 @@ window.agendaCalendar = function agendaCalendar() {
                         dbg.textContent = '';
                     }
                 }
-                window.renderWaitlist(waitlistData.waitlist || []);
+                window.renderWaitlist(waitlistData.waitlist || [], date);
                 document.dispatchEvent(new Event('schedule:rendered'));
             });
         },
@@ -300,28 +300,69 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
     applyProfessionalFilter();
 };
 
-window.renderWaitlist = function (items) {
+window.renderWaitlist = function (items, date, allowFallback = true) {
     const container = document.getElementById('waitlist-container');
     if (!container) return;
     container.innerHTML = '';
+
+    const renderItems = list => {
+        list.forEach(item => {
+            container.insertAdjacentHTML(
+                'beforeend',
+                `<div class="border rounded p-3 flex flex-col gap-2 mb-2.5"><div class="font-medium">${item.paciente || ''}</div><div class="text-sm text-gray-500">${item.contato || ''}</div><div class="text-sm text-gray-500">${item.observacao || ''}</div><div class="flex justify-between items-center"><span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Lista de espera</span><button class="text-sm text-blue-600 hover:underline" data-id="${item.id}">Encaixar</button></div></div>`
+            );
+        });
+    };
+
+    const groupAndRender = list => {
+        const today = list.filter(i => i.data === date);
+        const next = list.filter(i => i.data !== date);
+        if (today.length) {
+            container.insertAdjacentHTML('beforeend', '<h4 class="text-sm font-medium mb-2">Dia corrente</h4>');
+            renderItems(today);
+        }
+        if (next.length) {
+            container.insertAdjacentHTML('beforeend', '<h4 class="text-sm font-medium mb-2">Próximos dias</h4>');
+            const grouped = next.reduce((acc, item) => {
+                (acc[item.data] = acc[item.data] || []).push(item);
+                return acc;
+            }, {});
+            Object.keys(grouped).sort().forEach(d => {
+                container.insertAdjacentHTML('beforeend', `<div class="text-xs text-gray-500 mb-1">${d}</div>`);
+                renderItems(grouped[d]);
+            });
+        }
+    };
+
     if (!items.length) {
         container.innerHTML = '<p class="text-sm text-gray-500">Nenhum paciente na lista de espera.</p>';
+        if (allowFallback && date) {
+            loadWaitlist(date, 3, false).then(extra => {
+                if (!extra.length) return;
+                container.innerHTML = '';
+                groupAndRender(extra);
+            });
+        }
         return;
     }
-    items.forEach(item => {
-        container.insertAdjacentHTML(
-            'beforeend',
-            `<div class="border rounded p-3 flex flex-col gap-2 mb-2.5"><div class="font-medium">${item.paciente || ''}</div><div class="text-sm text-gray-500">${item.contato || ''}</div><div class="text-sm text-gray-500">${item.observacao || ''}</div><div class="flex justify-between items-center"><span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Lista de espera</span><button class="text-sm text-blue-600 hover:underline" data-id="${item.id}">Encaixar</button></div></div>`
-        );
-    });
+
+    const hasOtherDays = items.some(i => i.data !== date);
+    if (hasOtherDays) {
+        groupAndRender(items);
+        return;
+    }
+
+    renderItems(items);
 };
 
-async function loadWaitlist(date) {
+async function loadWaitlist(date, range = 0, render = true) {
     try {
-        const res = await fetch(`/admin/agendamentos/waitlist?date=${date}`);
+        const res = await fetch(`/admin/agendamentos/waitlist?date=${date}&range=${range}`);
         const data = await res.json();
         const list = data.waitlist || [];
-        window.renderWaitlist(list);
+        if (render) {
+            window.renderWaitlist(list, date);
+        }
         return list;
     } catch (err) {
         console.error('Erro ao carregar lista de espera', err);
@@ -1479,7 +1520,7 @@ window.Echo.channel('horarios-liberados').listen('HorarioLiberado', data => {
 document.addEventListener('horario:liberado', async e => {
     const { data, hora, profissional_id } = e.detail || {};
     if (!data) return;
-    const waitlist = await loadWaitlist(data);
+    const waitlist = await loadWaitlist(data, 3);
     if (!waitlist.length) return;
     const match = waitlist.find(w => !profissional_id || String(w.profissional_id) === String(profissional_id));
     if (!match) return;
