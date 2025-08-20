@@ -313,6 +313,16 @@ document.addEventListener('schedule:rendered', applyProfessionalFilter);
 
 let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd, patientSearch, patientResults, step1, step2, selectedPatientName, notFoundMsg, searchBtn, statusSelect;
 
+function updateSaveBtn() {
+    if (!saveBtn) return;
+    const status = statusSelect?.value;
+    if (status === 'lista_espera') {
+        saveBtn.disabled = !pacienteInput?.value;
+    } else {
+        saveBtn.disabled = !(pacienteInput?.value && selection.professional && startInput?.value && endInput?.value);
+    }
+}
+
 function initPatientSearch() {
     patientSearch = document.getElementById('patient-search');
     patientResults = document.getElementById('patient-results');
@@ -359,7 +369,7 @@ function initPatientSearch() {
                         selectedPatientName.textContent = p.nome || '';
                         step1.classList.add('hidden');
                         step2.classList.remove('hidden');
-                        if (saveBtn) saveBtn.disabled = false;
+                        updateSaveBtn();
                     });
                     patientResults.appendChild(li);
                 });
@@ -534,6 +544,7 @@ const clearSelection = (preserveProfessional = false) => {
     if (!preserveProfessional && professionalInput) professionalInput.value = '';
     if (dateInput && !preserveProfessional) dateInput.value = '';
     if (!preserveProfessional && summary) summary.textContent = '';
+    updateSaveBtn();
 };
 
 const isOpen = time => {
@@ -561,6 +572,7 @@ const selectRange = (date, prof, start, end) => {
     if (professionalInput) professionalInput.value = prof;
     if (dateInput) dateInput.value = date;
     renderSelection();
+    updateSaveBtn();
     return true;
 };
 
@@ -625,6 +637,7 @@ const abrirModalAgendamento = (ag, status = 'confirmado') => {
             initPatientSearch();
         }
         scheduleModal.classList.remove('hidden');
+        updateSaveBtn();
     }
 };
 window.abrirModalAgendamento = abrirModalAgendamento;
@@ -680,6 +693,14 @@ function attachCellHandlers() {
     patientResults = document.getElementById('patient-results');
     selectedPatientName = document.getElementById('selected-patient-name');
     notFoundMsg = document.getElementById('patient-notfound');
+    statusSelect = document.getElementById('schedule-status');
+
+    if (pacienteInput) {
+        pacienteInput.addEventListener('change', updateSaveBtn);
+    }
+    if (statusSelect) {
+        statusSelect.addEventListener('change', updateSaveBtn);
+    }
 
     if (startInput) {
         startInput.addEventListener('change', e => {
@@ -687,6 +708,7 @@ function attachCellHandlers() {
             selection.start = e.target.value;
             if (hiddenStart) hiddenStart.value = e.target.value;
             renderSelection();
+            updateSaveBtn();
         });
     }
     if (endInput) {
@@ -695,6 +717,7 @@ function attachCellHandlers() {
             selection.end = e.target.value;
             if (hiddenEnd) hiddenEnd.value = e.target.value;
             renderSelection();
+            updateSaveBtn();
         });
     }
 
@@ -1100,11 +1123,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (saveBtn) {
             saveBtn.addEventListener('click', () => {
                 const action = saveBtn.dataset.action || 'store';
+                const statusVal = statusSelect?.value || 'confirmado';
                 if (action === 'store' && !pacienteInput?.value) {
                     alert('Selecione um paciente');
                     return;
                 }
-                if (!selection.professional || !startInput.value || !endInput.value) {
+                if (statusVal !== 'lista_espera' && (!selection.professional || !startInput.value || !endInput.value)) {
                     alert('Preencha todos os campos do agendamento');
                     return;
                 }
@@ -1116,12 +1140,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 let method = 'POST';
                 const body = {
                     data: date,
-                    hora_inicio: startInput.value,
-                    hora_fim: endInput.value,
                     observacao: document.getElementById('schedule-observacao')?.value || '',
-                    status: statusSelect?.value || 'confirmado',
-                    profissional_id: selection.professional,
+                    status: statusVal,
                 };
+                if (statusVal !== 'lista_espera') {
+                    body.hora_inicio = startInput.value;
+                    body.hora_fim = endInput.value;
+                    body.profissional_id = selection.professional;
+                } else {
+                    body.hora_inicio = null;
+                    body.hora_fim = null;
+                    body.profissional_id = null;
+                }
                 if (action === 'store') {
                     body.paciente_id = pacienteInput.value;
                 } else {
