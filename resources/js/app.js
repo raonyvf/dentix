@@ -1,3 +1,4 @@
+import './echo';
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
 
@@ -1448,3 +1449,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 export { nextTimes, selectRange, isOpen, openTickSet };
+
+window.Echo.channel('horarios-liberados').listen('HorarioLiberado', () => {
+    document.dispatchEvent(new Event('horario:liberado'));
+});
