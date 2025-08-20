@@ -40,6 +40,7 @@
                     <option value="pendente">Pendente</option>
                     <option value="cancelado">Cancelado</option>
                     <option value="faltou">Faltou</option>
+                    <option value="lista_espera">Lista de espera</option>
                 </select>
             </label>
             <div class="flex justify-end gap-2">

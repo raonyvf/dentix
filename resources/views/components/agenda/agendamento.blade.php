@@ -11,6 +11,7 @@
         'pendente' => 'Pendente',
         'cancelado' => 'Cancelado',
         'faltou' => 'Faltou',
+        'lista_espera' => 'Lista de espera',
         default => 'Sem confirmação',
     };
     $borderColor = match ($status) {
@@ -18,6 +19,7 @@
         'pendente' => 'rgb(250 204 21 / var(--tw-bg-opacity, 1))',
         'cancelado' => 'rgb(248 113 113 / var(--tw-bg-opacity, 1))',
         'faltou' => 'rgb(30 64 175 / var(--tw-bg-opacity, 1))',
+        'lista_espera' => 'rgb(192 132 252 / var(--tw-bg-opacity, 1))',
         default => 'rgb(156 163 175 / var(--tw-bg-opacity, 1))',
     };
     $color = match ($status) {
@@ -25,6 +27,7 @@
         'pendente' => 'bg-yellow-100 text-yellow-700',
         'cancelado' => 'bg-red-100 text-red-700',
         'faltou' => 'bg-blue-100 text-blue-700',
+        'lista_espera' => 'bg-purple-100 text-purple-700',
         default => 'bg-gray-100 text-gray-700',
     };
     $titleParts = [$paciente];
