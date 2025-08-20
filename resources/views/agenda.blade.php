@@ -135,5 +135,26 @@
         </div>
     </div>
 </div>
+<div id="waitlist-month-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded p-4 w-[32rem]">
+        <div class="flex justify-between items-center mb-2">
+            <button id="wl-month-prev" class="p-1">&lt;</button>
+            <h2 id="wl-month-title" class="font-semibold"></h2>
+            <button id="wl-month-next" class="p-1">&gt;</button>
+        </div>
+        <table class="w-full text-sm">
+            <thead>
+                <tr>
+                    <th class="border p-1">Dia</th>
+                    <th class="border p-1">Pacientes</th>
+                </tr>
+            </thead>
+            <tbody id="wl-month-body"></tbody>
+        </table>
+        <div class="text-right mt-2">
+            <button id="wl-month-close" class="px-3 py-1 border rounded">Fechar</button>
+        </div>
+    </div>
+</div>
 @include('agendamentos.partials.modal')
 @endsection
