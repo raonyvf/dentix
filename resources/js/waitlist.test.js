@@ -67,4 +67,11 @@ describe('waitlist integration', () => {
     expect(fetchMock).toHaveBeenCalledWith('/admin/agendamentos/waitlist?date=2025-08-08');
     expect(document.getElementById('waitlist-container').textContent).toContain('Maria');
   });
+
+  it('calls loadWaitlist when agenda changes without component', () => {
+    const spy = vi.spyOn(window, 'loadWaitlist').mockResolvedValue();
+    vi.spyOn(window, 'getAgendaComponent').mockReturnValue(null);
+    document.dispatchEvent(new CustomEvent('agenda:changed', { detail: { date: '2025-09-01' } }));
+    expect(spy).toHaveBeenCalledWith('2025-09-01');
+  });
 });
