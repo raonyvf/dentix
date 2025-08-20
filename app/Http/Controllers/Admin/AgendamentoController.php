@@ -14,6 +14,9 @@ class AgendamentoController extends Controller
     {
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
         $date = $request->query('date', Carbon::today()->format('Y-m-d'));
+        $range = $request->query('range', 0);
+        $start = Carbon::parse($date);
+        $end = $start->copy()->addDays($range);
         $professionals = $clinicId ? $this->professionalsForDate($clinicId, $date) : [];
 
         $horarios = [];
@@ -27,16 +30,17 @@ class AgendamentoController extends Controller
         if ($clinicId && $professionals) {
             $profIds = array_column($professionals, 'id');
 
-            $cacheKey = "agendamentos_{$clinicId}_{$date}";
+            $cacheKey = "agendamentos_{$clinicId}_{$start->format('Y-m-d')}_{$end->format('Y-m-d')}";
             $agendamentos = Cache::remember(
                 $cacheKey,
                 60,
-                function () use ($clinicId, $date, $profIds) {
+                function () use ($clinicId, $start, $end, $profIds) {
                     return Agendamento::with(['paciente.pessoa'])
                         ->where('clinica_id', $clinicId)
-                        ->whereDate('data', $date)
+                        ->whereBetween('data', [$start, $end])
                         ->whereIn('profissional_id', $profIds)
                         ->where('status', '!=', 'lista_espera')
+                        ->orderBy('data')
                         ->get();
                 }
             );
@@ -51,6 +55,7 @@ class AgendamentoController extends Controller
 
                 $agenda[$ag->profissional_id][$hora][] = [
                     'id' => $ag->id,
+                    'data' => Carbon::parse($ag->data)->format('Y-m-d'),
                     'hora_inicio' => $start->format('H:i'),
                     'hora_fim' => $end->format('H:i'),
                     'paciente_id' => $ag->paciente_id,
@@ -112,22 +117,27 @@ class AgendamentoController extends Controller
             return response()->json(['professionals' => [], 'agenda' => []]);
         }
 
+        $range = $request->query('range', 0);
+        $start = Carbon::parse($date);
+        $end = $start->copy()->addDays($range);
+
         $professionals = $this->professionalsForDate($clinicId, $date);
         $agenda = [];
 
         if ($professionals) {
             $profIds = array_column($professionals, 'id');
 
-            $cacheKey = "agendamentos_{$clinicId}_{$date}";
+            $cacheKey = "agendamentos_{$clinicId}_{$start->format('Y-m-d')}_{$end->format('Y-m-d')}";
             $agendamentos = Cache::remember(
                 $cacheKey,
                 60,
-                function () use ($clinicId, $date, $profIds) {
+                function () use ($clinicId, $start, $end, $profIds) {
                     return Agendamento::with(['paciente.pessoa'])
                         ->where('clinica_id', $clinicId)
-                        ->whereDate('data', $date)
+                        ->whereBetween('data', [$start, $end])
                         ->whereIn('profissional_id', $profIds)
                         ->where('status', '!=', 'lista_espera')
+                        ->orderBy('data')
                         ->get();
                 }
             );
@@ -142,6 +152,7 @@ class AgendamentoController extends Controller
 
                 $agenda[$ag->profissional_id][$hora][] = [
                     'id' => $ag->id,
+                    'data' => Carbon::parse($ag->data)->format('Y-m-d'),
                     'hora_inicio' => $start->format('H:i'),
                     'hora_fim' => $end->format('H:i'),
                     'paciente_id' => $ag->paciente_id,
@@ -172,15 +183,21 @@ class AgendamentoController extends Controller
             return response()->json(['consultas' => []]);
         }
 
+        $range = $request->query('range', 0);
+        $start = Carbon::parse($date);
+        $end = $start->copy()->addDays($range);
+
         $consultas = Agendamento::with(['paciente.pessoa', 'profissional.pessoa'])
             ->where('clinica_id', $clinicId)
-            ->whereDate('data', $date)
+            ->whereBetween('data', [$start, $end])
             ->whereIn('status', ['pendente', 'cancelado', 'confirmado'])
+            ->orderBy('data')
             ->get()
             ->map(function ($ag) {
                 $paciente = optional($ag->paciente)->pessoa;
                 $prof = optional($ag->profissional)->pessoa;
                 return [
+                    'data' => Carbon::parse($ag->data)->format('Y-m-d'),
                     'hora' => Carbon::parse($ag->hora_inicio)->format('H:i'),
                     'paciente' => $paciente ? trim(($paciente->primeiro_nome ?? '') . ' ' . ($paciente->ultimo_nome ?? '')) : '',
                     'tipo' => $ag->tipo ?? '',
@@ -202,15 +219,21 @@ class AgendamentoController extends Controller
             return response()->json(['waitlist' => []]);
         }
 
+        $range = $request->query('range', 0);
+        $start = Carbon::parse($date);
+        $end = $start->copy()->addDays($range);
+
         $waitlist = Agendamento::with(['paciente.pessoa'])
             ->where('clinica_id', $clinicId)
-            ->whereDate('data', $date)
+            ->whereBetween('data', [$start, $end])
             ->where('status', 'lista_espera')
+            ->orderBy('data')
             ->get()
             ->map(function ($ag) {
                 $pessoa = optional($ag->paciente)->pessoa;
                 return [
                     'id' => $ag->id,
+                    'data' => Carbon::parse($ag->data)->format('Y-m-d'),
                     'paciente' => $pessoa ? trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')) : '',
                     'contato' => $ag->contato ?? '',
                     'observacao' => $ag->observacao ?? '',
