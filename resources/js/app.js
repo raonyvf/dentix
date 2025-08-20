@@ -310,7 +310,7 @@ window.renderWaitlist = function (items) {
     items.forEach(item => {
         container.insertAdjacentHTML(
             'beforeend',
-            `<div class="border rounded p-3 flex flex-col gap-2"><div class="font-medium">${item.paciente || ''}</div><div class="text-sm text-gray-500">${item.contato || ''}</div><div class="flex justify-between items-center"><span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Lista de espera</span><button class="text-sm text-blue-600 hover:underline" data-id="${item.id}">Encaixar</button></div></div>`
+            `<div class="border rounded p-3 flex flex-col gap-2"><div class="font-medium">${item.paciente || ''}</div><div class="text-sm text-gray-500">${item.contato || ''}</div><div class="text-sm text-gray-500">${item.observacao || ''}</div><div class="flex justify-between items-center"><span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Lista de espera</span><button class="text-sm text-blue-600 hover:underline" data-id="${item.id}">Encaixar</button></div></div>`
         );
     });
 };

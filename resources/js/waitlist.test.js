@@ -29,8 +29,9 @@ describe('waitlist integration', () => {
       if (url.includes('waitlist')) {
         const date = url.split('date=')[1];
         const name = date === '2025-08-07' ? 'Joao' : 'Maria';
+        const observacao = date === '2025-08-07' ? 'obs1' : 'obs2';
         return Promise.resolve({
-          json: () => Promise.resolve({ waitlist: [{ id: 1, paciente: name, contato: '123' }] })
+          json: () => Promise.resolve({ waitlist: [{ id: 1, paciente: name, contato: '123', observacao }] })
         });
       }
       return Promise.resolve({ json: () => Promise.resolve({}) });
@@ -48,7 +49,9 @@ describe('waitlist integration', () => {
     await comp.loadData('2025-08-07');
 
     expect(fetchMock).toHaveBeenCalledWith('/admin/agendamentos/waitlist?date=2025-08-07');
-    expect(document.getElementById('waitlist-container').textContent).toContain('Joao');
+    const content = document.getElementById('waitlist-container').textContent;
+    expect(content).toContain('Joao');
+    expect(content).toContain('obs1');
   });
 
   it('updates waitlist when date changes', async () => {
@@ -65,7 +68,9 @@ describe('waitlist integration', () => {
     await comp.loadData('2025-08-08');
 
     expect(fetchMock).toHaveBeenCalledWith('/admin/agendamentos/waitlist?date=2025-08-08');
-    expect(document.getElementById('waitlist-container').textContent).toContain('Maria');
+    const content = document.getElementById('waitlist-container').textContent;
+    expect(content).toContain('Maria');
+    expect(content).toContain('obs2');
   });
 
   it('calls loadWaitlist when agenda changes without component', () => {

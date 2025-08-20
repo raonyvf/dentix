@@ -212,6 +212,7 @@ class AgendamentoController extends Controller
                     'id' => $ag->id,
                     'paciente' => $pessoa ? trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')) : '',
                     'contato' => $ag->contato ?? '',
+                    'observacao' => $ag->observacao ?? '',
                 ];
             })
             ->values();
