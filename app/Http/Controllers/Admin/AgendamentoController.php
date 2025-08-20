@@ -36,6 +36,7 @@ class AgendamentoController extends Controller
                         ->where('clinica_id', $clinicId)
                         ->whereDate('data', $date)
                         ->whereIn('profissional_id', $profIds)
+                        ->where('status', '!=', 'lista_espera')
                         ->get();
                 }
             );
@@ -126,6 +127,7 @@ class AgendamentoController extends Controller
                         ->where('clinica_id', $clinicId)
                         ->whereDate('data', $date)
                         ->whereIn('profissional_id', $profIds)
+                        ->where('status', '!=', 'lista_espera')
                         ->get();
                 }
             );

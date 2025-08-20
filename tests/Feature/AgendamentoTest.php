@@ -8,7 +8,7 @@ namespace App\Models {
             return new self;
         }
 
-        public function where($field, $value)
+        public function where($field, $operator = null, $value = null)
         {
             return $this;
         }
