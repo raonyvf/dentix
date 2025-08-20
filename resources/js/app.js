@@ -315,6 +315,17 @@ window.renderWaitlist = function (items) {
     });
 };
 
+async function loadWaitlist(date) {
+    try {
+        const res = await fetch(`/admin/agendamentos/waitlist?date=${date}`);
+        const data = await res.json();
+        window.renderWaitlist(data.waitlist || []);
+    } catch (err) {
+        console.error('Erro ao carregar lista de espera', err);
+    }
+}
+window.loadWaitlist = loadWaitlist;
+
 document.addEventListener('click', e => {
     const bar = document.getElementById('professionals-bar');
     if (!bar || !bar.contains(e.target)) return;
@@ -912,10 +923,11 @@ window.getAgendaComponent = function () {
 document.addEventListener('agenda:changed', e => {
     try {
         const comp = window.getAgendaComponent();
-        if (!comp) return;
-        const date = e.detail?.date || comp.selectedDate;
-        if (typeof comp.loadData === 'function') {
+        const date = e.detail?.date || comp?.selectedDate;
+        if (comp && typeof comp.loadData === 'function') {
             comp.loadData(date);
+        } else if (date) {
+            window.loadWaitlist(date);
         }
     } catch (err) {
         console.error('Erro ao recarregar agenda', err);
@@ -969,6 +981,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    if (document.getElementById('waitlist-container')) {
+        window.loadWaitlist(todayStr);
+    }
+
     if (agendaDays.length) {
         window.selectedAgendaDate = document.querySelector('.agenda-day.bg-blue-500')?.dataset.date || null;
         if (window.selectedAgendaDate) {
@@ -980,6 +998,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 agendaDays.forEach(d => d.classList.remove('bg-blue-500', 'text-white'));
                 day.classList.add('bg-blue-500', 'text-white');
                 loadConsultas(day.dataset.date);
+                window.loadWaitlist(day.dataset.date);
             });
         });
     }
