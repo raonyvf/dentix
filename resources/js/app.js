@@ -1019,6 +1019,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if (saveBtn) saveBtn.disabled = true;
         });
     }
+
+    const waitlistContainer = document.getElementById('waitlist-container');
+    if (waitlistContainer) {
+        waitlistContainer.addEventListener('click', e => {
+            const btn = e.target.closest('button[data-id]');
+            if (!btn) return;
+            const pacienteId = btn.dataset.id;
+            const name = btn.closest('.border')?.querySelector('.font-medium')?.textContent.trim() || '';
+            const date = window.selectedAgendaDate;
+            if (!date) return;
+            selection.date = date;
+            selection.start = null;
+            selection.end = null;
+            selection.professional = null;
+            abrirModalAgendamento({ paciente_id: pacienteId, paciente: name }, 'confirmado');
+            if (saveBtn) saveBtn.dataset.action = 'store';
+            updateSaveBtn();
+        });
+    }
     if (window.flatpickr) {
         flatpickr('.datepicker', {
             altInput: true,
