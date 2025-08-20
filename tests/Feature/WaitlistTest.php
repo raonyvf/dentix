@@ -126,6 +126,7 @@ namespace {
                 'data' => '2025-08-07',
                 'status' => 'lista_espera',
                 'contato' => '1199999999',
+                'observacao' => 'Checar radiografia',
             ]);
             $res = $controller->store($storeReq);
             $this->assertSame(['success' => true], $res);
@@ -136,6 +137,7 @@ namespace {
             $this->assertSame(1, count($items));
             $this->assertSame('Ana Silva', $items[0]['paciente']);
             $this->assertSame('1199999999', $items[0]['contato']);
+            $this->assertSame('Checar radiografia', $items[0]['observacao']);
         }
     }
 
