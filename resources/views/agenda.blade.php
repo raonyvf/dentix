@@ -50,7 +50,7 @@
                         $isToday = $today->year == $currentDate->year && $today->month == $currentDate->month && $today->day == $day;
                     @endphp
                     <span
-                        class="agenda-day p-1 rounded {{ $isToday ? 'bg-blue-500 text-white' : '' }}"
+                        class="agenda-day p-1 rounded cursor-pointer {{ $isToday ? 'bg-blue-500 text-white' : '' }}"
                         data-date="{{ $currentDate->copy()->day($day)->format('Y-m-d') }}"
                     >{{ $day }}</span>
                 @endfor
