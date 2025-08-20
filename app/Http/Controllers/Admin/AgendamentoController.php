@@ -222,7 +222,7 @@ class AgendamentoController extends Controller
 
         $range = $request->query('range', 3);
         $start = Carbon::parse($date);
-        $end = $start->copy()->addDays($range);
+        $end = $start->copy()->modify("+{$range} days");
 
         $waitlist = Agendamento::with(['paciente.pessoa'])
             ->where('clinica_id', $clinicId)
@@ -244,6 +244,50 @@ class AgendamentoController extends Controller
                 ];
             })
             ->values();
+
+        return response()->json(['waitlist' => $waitlist]);
+    }
+
+    public function waitlistMonthly(Request $request)
+    {
+        $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
+        if (! $clinicId) {
+            return response()->json(['waitlist' => []]);
+        }
+
+        $month = $request->query('month');
+        $year = $request->query('year');
+        $date = $request->query('date');
+
+        if ($date) {
+            $start = Carbon::parse($date)->modify('first day of this month');
+        } else {
+            $now = Carbon::parse('now');
+            $year = $year ?? $now->format('Y');
+            $month = $month ?? $now->format('m');
+            $start = Carbon::parse(sprintf('%04d-%02d-01', $year, $month));
+        }
+
+        $end = $start->copy()->modify('last day of this month');
+
+        $waitlist = Agendamento::with(['paciente.pessoa'])
+            ->where('clinica_id', $clinicId)
+            ->where('status', 'lista_espera')
+            ->whereBetween('data', [$start, $end])
+            ->orderBy('data')
+            ->get()
+            ->map(function ($ag) {
+                $pessoa = optional($ag->paciente)->pessoa;
+                return [
+                    'id' => $ag->id,
+                    'data' => Carbon::parse($ag->data)->format('Y-m-d'),
+                    'paciente' => $pessoa ? trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')) : '',
+                    'contato' => $ag->contato ?? '',
+                    'observacao' => $ag->observacao ?? '',
+                ];
+            })
+            ->groupBy('data')
+            ->map(fn($items) => $items->values());
 
         return response()->json(['waitlist' => $waitlist]);
     }
