@@ -23,6 +23,7 @@ Route::post('agendamentos', [AgendamentoController::class, 'store'])->name('agen
 Route::put('agendamentos/{agendamento}', [AgendamentoController::class, 'update'])->name('agendamentos.update');
 Route::get('agendamentos/horarios', [AgendaController::class, 'horarios'])->name('agendamentos.horarios');
 Route::get('agendamentos/profissionais', [AgendamentoController::class, 'professionals'])->name('agendamentos.professionals');
+Route::get('agendamentos/waitlist', [AgendamentoController::class, 'waitlist'])->name('agendamentos.waitlist');
 
 
 Route::resource('clinicas', ClinicController::class)

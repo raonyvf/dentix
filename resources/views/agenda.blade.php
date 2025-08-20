@@ -165,14 +165,7 @@
                     </svg>
                 </button>
             </div>
-            <div class="border rounded p-3 flex flex-col gap-2">
-                <div class="font-medium">Juliana Prado</div>
-                <div class="text-sm text-gray-500">(11) 99999-9999</div>
-                <div class="flex justify-between items-center">
-                    <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Alta</span>
-                    <button class="text-sm text-blue-600 hover:underline">Encaixar</button>
-                </div>
-            </div>
+            <div id="waitlist-container"></div>
         </div>
     </div>
 </div>

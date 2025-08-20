@@ -163,6 +163,33 @@ class AgendamentoController extends Controller
         ]);
     }
 
+    public function waitlist(Request $request)
+    {
+        $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
+        $date = $request->query('date');
+
+        if (! $clinicId || ! $date) {
+            return response()->json(['waitlist' => []]);
+        }
+
+        $waitlist = Agendamento::with(['paciente.pessoa'])
+            ->where('clinica_id', $clinicId)
+            ->whereDate('data', $date)
+            ->where('status', 'lista_espera')
+            ->get()
+            ->map(function ($ag) {
+                $pessoa = optional($ag->paciente)->pessoa;
+                return [
+                    'id' => $ag->id,
+                    'paciente' => $pessoa ? trim(($pessoa->primeiro_nome ?? '') . ' ' . ($pessoa->ultimo_nome ?? '')) : '',
+                    'contato' => $ag->contato ?? '',
+                ];
+            })
+            ->values();
+
+        return response()->json(['waitlist' => $waitlist]);
+    }
+
     public function store(Request $request)
     {
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
