@@ -76,9 +76,9 @@
         </div>
     </div>
     <div class="lg:col-span-1 space-y-4 lg:col-span-2">
-        <div class="bg-white rounded-lg shadow p-4">
+        <div class="bg-white rounded-lg shadow p-4" data-consultas-url="{{ route('agenda.consultas') }}">
             <div class="flex justify-between items-start mb-4">
-                <h2 class="text-lg font-bold">Consultas do Dia <span class="text-gray-500 font-normal">{{ $today->format('d/m/Y') }}</span></h2>
+                <h2 class="text-lg font-bold">Consultas do Dia <span id="consultas-dia-data" class="text-gray-500 font-normal">{{ $today->format('d/m/Y') }}</span></h2>
                 <a href="#" class="py-2 px-3 bg-red-600 text-white text-sm rounded hover:bg-red-700">Bloquear Horário</a>
             </div>
             <div class="overflow-x-auto">
@@ -93,46 +93,7 @@
                             <th class="px-4 py-2 text-left font-medium text-gray-700">Ações</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-4 py-2 whitespace-nowrap">09:00</td>
-                            <td class="px-4 py-2 whitespace-nowrap">Maria Silva</td>
-                            <td class="px-4 py-2 whitespace-nowrap">Consulta</td>
-                            <td class="px-4 py-2 whitespace-nowrap">Dr. João</td>
-                            <td class="px-4 py-2 whitespace-nowrap">Confirmado</td>
-                            <td class="px-4 py-2 whitespace-nowrap flex gap-2">
-                                <button class="text-blue-600 hover:underline" title="Chat">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 1.657-1.343 3-3 3H7l-4 4V6c0-1.657 1.343-3 3-3h12c1.657 0 3 1.343 3 3v6z" />
-                                    </svg>
-                                </button>
-                                <button class="text-blue-600 hover:underline" title="E-mail">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H8m8-4H8m8 8H8m12 2H4a2 2 0 01-2-2V6a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2z" />
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-4 py-2 whitespace-nowrap">10:30</td>
-                            <td class="px-4 py-2 whitespace-nowrap">Pedro Santos</td>
-                            <td class="px-4 py-2 whitespace-nowrap">Retorno</td>
-                            <td class="px-4 py-2 whitespace-nowrap">Dra. Ana</td>
-                            <td class="px-4 py-2 whitespace-nowrap">Aguardando</td>
-                            <td class="px-4 py-2 whitespace-nowrap flex gap-2">
-                                <button class="text-blue-600 hover:underline" title="Chat">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 1.657-1.343 3-3 3H7l-4 4V6c0-1.657 1.343-3 3-3h12c1.657 0 3 1.343 3 3v6z" />
-                                    </svg>
-                                </button>
-                                <button class="text-blue-600 hover:underline" title="E-mail">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H8m8-4H8m8 8H8m12 2H4a2 2 0 01-2-2V6a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2z" />
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
+                    <tbody id="consultas-dia-body" class="divide-y divide-gray-200"></tbody>
                 </table>
             </div>
         </div>

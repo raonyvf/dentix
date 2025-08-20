@@ -163,6 +163,35 @@ class AgendamentoController extends Controller
         ]);
     }
 
+    public function consultasDia(Request $request)
+    {
+        $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
+        $date = $request->query('date');
+
+        if (! $clinicId || ! $date) {
+            return response()->json(['consultas' => []]);
+        }
+
+        $consultas = Agendamento::with(['paciente.pessoa', 'profissional.pessoa'])
+            ->where('clinica_id', $clinicId)
+            ->whereDate('data', $date)
+            ->get()
+            ->map(function ($ag) {
+                $paciente = optional($ag->paciente)->pessoa;
+                $prof = optional($ag->profissional)->pessoa;
+                return [
+                    'hora' => Carbon::parse($ag->hora_inicio)->format('H:i'),
+                    'paciente' => $paciente ? trim(($paciente->primeiro_nome ?? '') . ' ' . ($paciente->ultimo_nome ?? '')) : '',
+                    'tipo' => $ag->tipo ?? '',
+                    'profissional' => $prof ? trim(($prof->primeiro_nome ?? '') . ' ' . ($prof->ultimo_nome ?? '')) : '',
+                    'status' => $ag->status ?? '',
+                ];
+            })
+            ->values();
+
+        return response()->json(['consultas' => $consultas]);
+    }
+
     public function waitlist(Request $request)
     {
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;

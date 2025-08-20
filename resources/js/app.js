@@ -926,13 +926,60 @@ Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
     const agendaDays = document.querySelectorAll('.agenda-day');
+    const consultasCard = document.querySelector('[data-consultas-url]');
+    const consultasBody = document.getElementById('consultas-dia-body');
+    const consultasDate = document.getElementById('consultas-dia-data');
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+    async function loadConsultas(date) {
+        if (!consultasCard || !consultasBody) return;
+        try {
+            const url = `${consultasCard.dataset.consultasUrl}?date=${date}`;
+            const res = await fetch(url, {
+                headers: {
+                    'X-CSRF-TOKEN': csrf || '',
+                    'Accept': 'application/json',
+                },
+            });
+            const data = await res.json();
+            consultasBody.innerHTML = '';
+            if (data.consultas && data.consultas.length) {
+                data.consultas.forEach(c => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="px-4 py-2 whitespace-nowrap">${c.hora}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">${c.paciente}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">${c.tipo}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">${c.profissional}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">${c.status}</td>
+                        <td class="px-4 py-2 whitespace-nowrap flex gap-2"></td>`;
+                    consultasBody.appendChild(tr);
+                });
+            } else {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="px-4 py-2 text-center text-gray-500" colspan="6">Sem consultas para esta data</td>`;
+                consultasBody.appendChild(tr);
+            }
+            if (consultasDate) {
+                const d = new Date(`${date}T00:00:00`);
+                consultasDate.textContent = d.toLocaleDateString('pt-BR');
+            }
+        } catch (err) {
+            console.error('Erro ao carregar consultas', err);
+        }
+    }
+
     if (agendaDays.length) {
         window.selectedAgendaDate = document.querySelector('.agenda-day.bg-blue-500')?.dataset.date || null;
+        if (window.selectedAgendaDate) {
+            loadConsultas(window.selectedAgendaDate);
+        }
         agendaDays.forEach(day => {
             day.addEventListener('click', () => {
                 window.selectedAgendaDate = day.dataset.date;
                 agendaDays.forEach(d => d.classList.remove('bg-blue-500', 'text-white'));
                 day.classList.add('bg-blue-500', 'text-white');
+                loadConsultas(day.dataset.date);
             });
         });
     }
