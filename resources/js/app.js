@@ -58,6 +58,7 @@ window.agendaCalendar = function agendaCalendar() {
         init() {
             this.horariosUrl = this.$root.dataset.horariosUrl;
             this.professionalsUrl = this.$root.dataset.professionalsUrl;
+            this.waitlistUrl = this.$root.dataset.waitlistUrl || '/admin/agendamentos/waitlist';
             this.baseTimes = JSON.parse(this.$root.dataset.baseTimes || '[]');
             const initial = this.$root.dataset.currentDate;
             if (initial) {
@@ -109,7 +110,8 @@ window.agendaCalendar = function agendaCalendar() {
             return Promise.all([
                 this.fetchProfessionals(date),
                 this.fetchHorarios(date),
-            ]).then(([profData, horariosData]) => {
+                this.fetchWaitlist(date),
+            ]).then(([profData, horariosData, waitlistData]) => {
                 window.renderSchedule(profData.professionals, profData.agenda, this.baseTimes, date);
                 window.updateScheduleTable(
                     horariosData.closed ? [] : horariosData.horarios,
@@ -126,6 +128,7 @@ window.agendaCalendar = function agendaCalendar() {
                         dbg.textContent = '';
                     }
                 }
+                window.renderWaitlist(waitlistData.waitlist || []);
                 document.dispatchEvent(new Event('schedule:rendered'));
             });
         },
@@ -136,6 +139,10 @@ window.agendaCalendar = function agendaCalendar() {
         fetchProfessionals(date) {
             if (!this.professionalsUrl) return Promise.resolve({ professionals: [], agenda: {} });
             return fetch(`${this.professionalsUrl}?date=${date}`).then(r => r.json());
+        },
+        fetchWaitlist(date) {
+            if (!this.waitlistUrl) return Promise.resolve({ waitlist: [] });
+            return fetch(`${this.waitlistUrl}?date=${date}`).then(r => r.json());
         },
     };
 }
@@ -290,6 +297,22 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
     if (emptyMsg) emptyMsg.classList.add('hidden');
 
     applyProfessionalFilter();
+};
+
+window.renderWaitlist = function (items) {
+    const container = document.getElementById('waitlist-container');
+    if (!container) return;
+    container.innerHTML = '';
+    if (!items.length) {
+        container.innerHTML = '<p class="text-sm text-gray-500">Nenhum paciente na lista de espera.</p>';
+        return;
+    }
+    items.forEach(item => {
+        container.insertAdjacentHTML(
+            'beforeend',
+            `<div class="border rounded p-3 flex flex-col gap-2"><div class="font-medium">${item.paciente || ''}</div><div class="text-sm text-gray-500">${item.contato || ''}</div><div class="flex justify-between items-center"><span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Lista de espera</span><button class="text-sm text-blue-600 hover:underline" data-id="${item.id}">Encaixar</button></div></div>`
+        );
+    });
 };
 
 document.addEventListener('click', e => {
