@@ -373,6 +373,7 @@ function initPatientSearch() {
     };
 }
 let selection = { start: null, end: null, professional: null, date: null };
+window.selectedAgendaDate = null;
 
 let dragging = false;
 let suppressClick = false;
@@ -868,11 +869,23 @@ document.addEventListener('agenda:changed', e => {
 Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
+    const agendaDays = document.querySelectorAll('.agenda-day');
+    if (agendaDays.length) {
+        window.selectedAgendaDate = document.querySelector('.agenda-day.bg-blue-500')?.dataset.date || null;
+        agendaDays.forEach(day => {
+            day.addEventListener('click', () => {
+                window.selectedAgendaDate = day.dataset.date;
+                agendaDays.forEach(d => d.classList.remove('bg-blue-500', 'text-white'));
+                day.classList.add('bg-blue-500', 'text-white');
+            });
+        });
+    }
+
     const waitlistBtn = document.getElementById('waitlist-add');
     if (waitlistBtn) {
         waitlistBtn.addEventListener('click', () => {
             const comp = window.getAgendaComponent();
-            const date = comp?.selectedDate;
+            const date = window.selectedAgendaDate || comp?.selectedDate;
             if (!date) return;
             selection.date = date;
             selection.start = null;
