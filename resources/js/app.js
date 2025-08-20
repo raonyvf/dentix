@@ -300,6 +300,12 @@ window.renderSchedule = function (professionals, agenda, baseTimes, date) {
     applyProfessionalFilter();
 };
 
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const [year, month, day] = dateStr.split('-');
+    return `${day}/${month}/${year}`;
+}
+
 window.renderWaitlist = function (items, date, allowFallback = true) {
     const container = document.getElementById('waitlist-container');
     if (!container) return;
@@ -309,7 +315,7 @@ window.renderWaitlist = function (items, date, allowFallback = true) {
         list.forEach(item => {
             container.insertAdjacentHTML(
                 'beforeend',
-                `<div class="border rounded p-3 flex flex-col gap-2 mb-2.5"><div class="font-medium">${item.paciente || ''}</div><div class="text-sm text-gray-500">${item.contato || ''}</div><div class="text-sm text-gray-500">${item.observacao || ''}</div><div class="flex justify-between items-center"><span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Lista de espera</span><button class="text-sm text-blue-600 hover:underline" data-id="${item.id}">Encaixar</button></div></div>`
+                `<div class="border rounded p-3 flex flex-col gap-2 mb-2.5"><div class="font-medium">${item.paciente || ''}</div><div class="text-sm text-gray-500">${item.contato || ''}</div><div class="text-sm text-gray-500">${item.observacao || ''}</div><div class="flex justify-between items-center"><span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Lista de espera</span><span class="text-xs text-gray-600 ml-2">Sugestão: ${formatDate(item.sugestao.data)} ${item.sugestao.inicio}–${item.sugestao.fim}</span><button class="text-sm text-blue-600 hover:underline" data-id="${item.id}">Encaixar</button></div></div>`
             );
         });
     };
@@ -338,9 +344,9 @@ window.renderWaitlist = function (items, date, allowFallback = true) {
         container.innerHTML = '<p class="text-sm text-gray-500">Nenhum paciente na lista de espera.</p>';
         if (allowFallback && date) {
             loadWaitlist(date, 3, false).then(extra => {
-                if (!extra.length) return;
+                if (!extra.waitlist?.length) return;
                 container.innerHTML = '';
-                groupAndRender(extra);
+                groupAndRender(extra.waitlist);
             });
         }
         return;
@@ -363,10 +369,10 @@ async function loadWaitlist(date, range = 0, render = true) {
         if (render) {
             window.renderWaitlist(list, date);
         }
-        return list;
+        return data;
     } catch (err) {
         console.error('Erro ao carregar lista de espera', err);
-        return [];
+        return { waitlist: [] };
     }
 }
 window.loadWaitlist = loadWaitlist;
@@ -1520,9 +1526,9 @@ window.Echo.channel('horarios-liberados').listen('HorarioLiberado', data => {
 document.addEventListener('horario:liberado', async e => {
     const { data, hora, profissional_id } = e.detail || {};
     if (!data) return;
-    const waitlist = await loadWaitlist(data, 3);
-    if (!waitlist.length) return;
-    const match = waitlist.find(w => !profissional_id || String(w.profissional_id) === String(profissional_id));
+    const waitlistData = await loadWaitlist(data, 3);
+    if (!waitlistData.waitlist.length) return;
+    const match = waitlistData.waitlist.find(w => !profissional_id || String(w.profissional_id) === String(profissional_id));
     if (!match) return;
     const msg = `Horário às ${hora} liberado. Encaixar ${match.paciente} (${match.contato})?`;
     if (!window.confirm(msg)) return;

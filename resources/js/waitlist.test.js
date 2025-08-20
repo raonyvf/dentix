@@ -37,14 +37,14 @@ describe('waitlist integration', () => {
         }
         if (date === '2025-08-09' && range > 0) {
           return Promise.resolve({
-            json: () => Promise.resolve({ waitlist: [{ id: 3, paciente: 'Carlos', contato: '789', observacao: 'obs3', data: '2025-08-10' }] })
+            json: () => Promise.resolve({ waitlist: [{ id: 3, paciente: 'Carlos', contato: '789', observacao: 'obs3', data: '2025-08-10', sugestao: { data: '2025-08-10', inicio: '10:00', fim: '10:30' } }] })
           });
         }
 
         const name = date === '2025-08-07' ? 'Joao' : 'Maria';
         const observacao = date === '2025-08-07' ? 'obs1' : 'obs2';
         return Promise.resolve({
-          json: () => Promise.resolve({ waitlist: [{ id: 1, paciente: name, contato: '123', observacao, data: date }] })
+          json: () => Promise.resolve({ waitlist: [{ id: 1, paciente: name, contato: '123', observacao, data: date, sugestao: { data: date, inicio: '09:00', fim: '09:30' } }] })
         });
       }
       return Promise.resolve({ json: () => Promise.resolve({}) });
@@ -65,6 +65,7 @@ describe('waitlist integration', () => {
     const content = document.getElementById('waitlist-container').textContent;
     expect(content).toContain('Joao');
     expect(content).toContain('obs1');
+    expect(content).toContain('Sugestão: 07/08/2025 09:00–09:30');
   });
 
   it('updates waitlist when date changes', async () => {
@@ -84,6 +85,7 @@ describe('waitlist integration', () => {
     const content = document.getElementById('waitlist-container').textContent;
     expect(content).toContain('Maria');
     expect(content).toContain('obs2');
+    expect(content).toContain('Sugestão: 08/08/2025 09:00–09:30');
   });
 
   it('falls back to range search when no entries for date', async () => {
@@ -95,6 +97,7 @@ describe('waitlist integration', () => {
     const content = document.getElementById('waitlist-container').textContent;
     expect(content).toContain('Carlos');
     expect(content).toContain('2025-08-10');
+    expect(content).toContain('Sugestão: 10/08/2025 10:00–10:30');
   });
 
   it('calls loadWaitlist when agenda changes without component', () => {
