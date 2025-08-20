@@ -1530,11 +1530,18 @@ document.addEventListener('horario:liberado', async e => {
     if (!waitlistData.waitlist.length) return;
     const match = waitlistData.waitlist.find(w => !profissional_id || String(w.profissional_id) === String(profissional_id));
     if (!match) return;
-    const msg = `Horário às ${hora} liberado. Encaixar ${match.paciente} (${match.contato})?`;
+    const { sugestao } = match;
+    const sugestaoInicio = sugestao?.inicio;
+    const sugestaoFim = sugestao?.fim;
+    const sugText = sugestaoInicio && sugestaoFim ? `${sugestaoInicio}–${sugestaoFim}` : sugestaoInicio || '';
+    let msg = `Horário às ${hora} liberado. Encaixar ${match.paciente} (${match.contato})?`;
+    if (sugText && sugestaoInicio !== hora) {
+        msg = `Horário às ${hora} liberado (sugestão: ${sugText}). Encaixar ${match.paciente} (${match.contato})?`;
+    }
     if (!window.confirm(msg)) return;
     selection.date = data;
     selection.professional = profissional_id;
-    selection.start = hora;
-    selection.end = null;
+    selection.start = sugestaoInicio || hora;
+    selection.end = sugestaoFim || null;
     abrirModalAgendamento({ ...match, status: 'confirmado' });
 });
