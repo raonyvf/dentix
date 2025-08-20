@@ -311,7 +311,7 @@ document.addEventListener('click', e => {
 
 document.addEventListener('schedule:rendered', applyProfessionalFilter);
 
-let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd, patientSearch, patientResults, step1, step2, selectedPatientName, notFoundMsg, searchBtn, statusSelect;
+let scheduleModal, cancel, startInput, endInput, saveBtn, pacienteInput, professionalInput, dateInput, summary, hiddenStart, hiddenEnd, patientSearch, patientResults, step1, step2, selectedPatientName, notFoundMsg, searchBtn, statusSelect, scheduleTime;
 
 function updateSaveBtn() {
     if (!saveBtn) return;
@@ -604,12 +604,16 @@ const abrirModalAgendamento = (ag, status = 'confirmado') => {
         scheduleModal.dataset.date = date;
         const obs = document.getElementById('schedule-observacao');
         const statusSel = statusSelect || document.getElementById('schedule-status');
+        const currentStatus = ag?.status || status;
+        if (scheduleTime) {
+            scheduleTime.classList.toggle('hidden', currentStatus === 'lista_espera');
+        }
         if (ag) {
             document.getElementById('agendamento-id').value = ag.id || '';
             if (pacienteInput) pacienteInput.value = ag.paciente_id || '';
             if (selectedPatientName) selectedPatientName.textContent = ag.paciente || '';
             if (obs) obs.value = ag.observacao || '';
-            if (statusSel) statusSel.value = ag.status || status;
+            if (statusSel) statusSel.value = currentStatus;
             if (step1 && step2) {
                 step1.classList.add('hidden');
                 step2.classList.remove('hidden');
@@ -625,7 +629,7 @@ const abrirModalAgendamento = (ag, status = 'confirmado') => {
             if (pacienteInput) pacienteInput.value = '';
             if (selectedPatientName) selectedPatientName.textContent = '';
             if (obs) obs.value = '';
-            if (statusSel) statusSel.value = status;
+            if (statusSel) statusSel.value = currentStatus;
             if (step1 && step2) {
                 step1.classList.remove('hidden');
                 step2.classList.add('hidden');
@@ -694,12 +698,18 @@ function attachCellHandlers() {
     selectedPatientName = document.getElementById('selected-patient-name');
     notFoundMsg = document.getElementById('patient-notfound');
     statusSelect = document.getElementById('schedule-status');
+    scheduleTime = document.getElementById('schedule-time');
 
     if (pacienteInput) {
         pacienteInput.addEventListener('change', updateSaveBtn);
     }
     if (statusSelect) {
-        statusSelect.addEventListener('change', updateSaveBtn);
+        statusSelect.addEventListener('change', e => {
+            if (scheduleTime) {
+                scheduleTime.classList.toggle('hidden', e.target.value === 'lista_espera');
+            }
+            updateSaveBtn();
+        });
     }
 
     if (startInput) {

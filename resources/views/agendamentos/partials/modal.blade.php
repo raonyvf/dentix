@@ -13,15 +13,17 @@
             <h2 class="text-lg font-semibold mb-2">Confirmar Agendamento</h2>
             <p id="schedule-summary" class="text-sm text-gray-600 mb-4"></p>
             <p class="mb-4"><span class="font-medium">Paciente:</span> <span id="selected-patient-name"></span></p>
-            <div class="flex gap-2 mb-4">
-                <label class="block flex-1">
-                    <span class="text-sm">Início</span>
-                    <input id="schedule-start" type="time" step="900" class="mt-1 w-full border rounded p-1" />
-                </label>
-                <label class="block flex-1">
-                    <span class="text-sm">Fim</span>
-                    <input id="schedule-end" type="time" step="900" class="mt-1 w-full border rounded p-1" />
-                </label>
+            <div id="schedule-time">
+                <div class="flex gap-2 mb-4">
+                    <label class="block flex-1">
+                        <span class="text-sm">Início</span>
+                        <input id="schedule-start" type="time" step="900" class="mt-1 w-full border rounded p-1" />
+                    </label>
+                    <label class="block flex-1">
+                        <span class="text-sm">Fim</span>
+                        <input id="schedule-end" type="time" step="900" class="mt-1 w-full border rounded p-1" />
+                    </label>
+                </div>
             </div>
             <input type="hidden" id="hora_inicio" name="hora_inicio">
             <input type="hidden" id="hora_fim" name="hora_fim">
