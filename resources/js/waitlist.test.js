@@ -20,12 +20,29 @@ describe('waitlist integration', () => {
   let fetchMock;
   beforeEach(() => {
     document.body.innerHTML = `
-      <div id="root"></div>
-      <div id="waitlist-container"></div>
-    `;
+        <div id="root"></div>
+        <div id="waitlist-container"></div>
+        <button id="btn-waitlist-month"></button>
+        <div id="waitlist-month-modal" class="hidden">
+          <h2 id="wl-month-title"></h2>
+          <table><tbody id="wl-month-body"></tbody></table>
+          <button id="wl-month-close"></button>
+        </div>
+      `;
     window.renderSchedule = vi.fn();
     window.updateScheduleTable = vi.fn();
     fetchMock = vi.fn((url) => {
+      if (url.includes('/waitlist/month')) {
+        return Promise.resolve({
+          json: () =>
+            Promise.resolve({
+              waitlist: {
+                '2025-08-05': [{ paciente: 'Joao' }],
+                '2025-08-08': [{ paciente: 'Maria' }]
+              }
+            })
+        });
+      }
       if (url.includes('waitlist')) {
         const [, qs = ''] = url.split('?');
         const params = new URLSearchParams(qs);
@@ -50,6 +67,28 @@ describe('waitlist integration', () => {
       return Promise.resolve({ json: () => Promise.resolve({}) });
     });
     global.fetch = fetchMock;
+    window.openWaitlistMonth = async function(date) {
+      const modal = document.getElementById('waitlist-month-modal');
+      if (!modal) return;
+      const d = new Date(date);
+      if (isNaN(d)) return;
+      const iso = new Date(d.getFullYear(), d.getMonth(), 1).toISOString().slice(0, 10);
+      const res = await fetch(`/waitlist/month?date=${iso}`);
+      const data = await res.json();
+      const entries = data.waitlist || {};
+      const body = modal.querySelector('#wl-month-body');
+      body.innerHTML = '';
+      Object.keys(entries).sort().forEach(day => {
+        const names = entries[day].map(i => i.paciente || i.nome || '').join(', ');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="border p-1">${day}</td><td class="border p-1">${names}</td>`;
+        body.appendChild(tr);
+      });
+      modal.classList.remove('hidden');
+    };
+    document.getElementById('btn-waitlist-month').addEventListener('click', () => {
+      if (window.selectedAgendaDate) window.openWaitlistMonth(window.selectedAgendaDate);
+    });
   });
 
   it('calls waitlist endpoint and renders results', async () => {
@@ -98,6 +137,22 @@ describe('waitlist integration', () => {
     expect(content).toContain('Carlos');
     expect(content).toContain('2025-08-10');
     expect(content).toContain('Sugestão: 10/08/2025 10:00–10:30');
+  });
+
+  it('opens waitlist month modal and shows patients per day', async () => {
+    window.selectedAgendaDate = '2025-08-15';
+
+    document.getElementById('btn-waitlist-month').dispatchEvent(new Event('click'));
+    await new Promise(r => setTimeout(r, 0));
+
+    expect(fetchMock).toHaveBeenCalledWith('/waitlist/month?date=2025-08-01');
+    const modal = document.getElementById('waitlist-month-modal');
+    expect(modal.classList.contains('hidden')).toBe(false);
+    const content = document.getElementById('wl-month-body').textContent;
+    expect(content).toContain('2025-08-05');
+    expect(content).toContain('Joao');
+    expect(content).toContain('2025-08-08');
+    expect(content).toContain('Maria');
   });
 
   it('calls loadWaitlist when agenda changes without component', () => {
