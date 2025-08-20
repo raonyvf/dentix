@@ -320,9 +320,12 @@ async function loadWaitlist(date) {
     try {
         const res = await fetch(`/admin/agendamentos/waitlist?date=${date}`);
         const data = await res.json();
-        window.renderWaitlist(data.waitlist || []);
+        const list = data.waitlist || [];
+        window.renderWaitlist(list);
+        return list;
     } catch (err) {
         console.error('Erro ao carregar lista de espera', err);
+        return [];
     }
 }
 window.loadWaitlist = loadWaitlist;
@@ -1450,6 +1453,22 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 export { nextTimes, selectRange, isOpen, openTickSet };
 
-window.Echo.channel('horarios-liberados').listen('HorarioLiberado', () => {
-    document.dispatchEvent(new Event('horario:liberado'));
+window.Echo.channel('horarios-liberados').listen('HorarioLiberado', data => {
+    document.dispatchEvent(new CustomEvent('horario:liberado', { detail: data }));
+});
+
+document.addEventListener('horario:liberado', async e => {
+    const { data, hora, profissional_id } = e.detail || {};
+    if (!data) return;
+    const waitlist = await loadWaitlist(data);
+    if (!waitlist.length) return;
+    const match = waitlist.find(w => !profissional_id || String(w.profissional_id) === String(profissional_id));
+    if (!match) return;
+    const msg = `Horário às ${hora} liberado. Encaixar ${match.paciente} (${match.contato})?`;
+    if (!window.confirm(msg)) return;
+    selection.date = data;
+    selection.professional = profissional_id;
+    selection.start = hora;
+    selection.end = null;
+    abrirModalAgendamento({ ...match, status: 'confirmado' });
 });
