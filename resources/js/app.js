@@ -563,7 +563,7 @@ const selectRange = (date, prof, start, end) => {
     return true;
 };
 
-const abrirModalAgendamento = ag => {
+const abrirModalAgendamento = (ag, status = 'confirmado') => {
 
     const date = selection.date || '';
 
@@ -596,7 +596,7 @@ const abrirModalAgendamento = ag => {
             if (pacienteInput) pacienteInput.value = ag.paciente_id || '';
             if (selectedPatientName) selectedPatientName.textContent = ag.paciente || '';
             if (obs) obs.value = ag.observacao || '';
-            if (statusSel) statusSel.value = ag.status || 'confirmado';
+            if (statusSel) statusSel.value = ag.status || status;
             if (step1 && step2) {
                 step1.classList.add('hidden');
                 step2.classList.remove('hidden');
@@ -612,7 +612,7 @@ const abrirModalAgendamento = ag => {
             if (pacienteInput) pacienteInput.value = '';
             if (selectedPatientName) selectedPatientName.textContent = '';
             if (obs) obs.value = '';
-            if (statusSel) statusSel.value = 'confirmado';
+            if (statusSel) statusSel.value = status;
             if (step1 && step2) {
                 step1.classList.remove('hidden');
                 step2.classList.add('hidden');
@@ -868,6 +868,19 @@ document.addEventListener('agenda:changed', e => {
 Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
+    const waitlistBtn = document.getElementById('waitlist-add');
+    if (waitlistBtn) {
+        waitlistBtn.addEventListener('click', () => {
+            const comp = window.getAgendaComponent();
+            const date = comp?.selectedDate;
+            if (!date) return;
+            selection.date = date;
+            selection.start = null;
+            selection.end = null;
+            abrirModalAgendamento(null, 'lista_espera');
+            if (saveBtn) saveBtn.disabled = true;
+        });
+    }
     if (window.flatpickr) {
         flatpickr('.datepicker', {
             altInput: true,
