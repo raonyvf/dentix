@@ -175,32 +175,40 @@ class AgendamentoController extends Controller
         }
 
         $data = $request->validate([
-            'profissional_id' => 'required|exists:profissionais,id',
+            'profissional_id' => 'nullable|exists:profissionais,id',
             'paciente_id' => 'required|exists:pacientes,id',
             'data' => 'required|date',
-            'hora_inicio' => 'required',
-            'hora_fim' => 'required',
+            'hora_inicio' => 'nullable|required_unless:status,lista_espera',
+            'hora_fim' => 'nullable|required_unless:status,lista_espera',
             'tipo' => 'nullable|string',
             'contato' => 'nullable|string',
             'observacao' => 'nullable|string',
             'status' => 'required|in:confirmado,pendente,cancelado,faltou,lista_espera',
         ]);
 
-        $data['hora_inicio'] = Carbon::parse($data['hora_inicio'])->format('H:i:s');
-        $data['hora_fim'] = Carbon::parse($data['hora_fim'])->format('H:i:s');
+        $data['profissional_id'] = $data['profissional_id'] ?? null;
+        $data['hora_inicio'] = isset($data['hora_inicio']) && $data['hora_inicio']
+            ? Carbon::parse($data['hora_inicio'])->format('H:i:s')
+            : null;
+        $data['hora_fim'] = isset($data['hora_fim']) && $data['hora_fim']
+            ? Carbon::parse($data['hora_fim'])->format('H:i:s')
+            : null;
 
         $data['clinica_id'] = $clinicId;
         $data['tipo'] = $data['tipo'] ?? 'Consulta';
         $data['contato'] = $data['contato'] ?? '';
 
-        $conflict = Agendamento::where('profissional_id', $data['profissional_id'])
-            ->whereDate('data', $data['data'])
-            ->whereNotIn('status', ['cancelado', 'faltou'])
-            ->where(function ($q) use ($data) {
-                $q->where('hora_inicio', '<', $data['hora_fim'])
-                    ->where('hora_fim', '>', $data['hora_inicio']);
-            })
-            ->exists();
+        $conflict = false;
+        if ($data['profissional_id'] && $data['hora_inicio'] && $data['hora_fim']) {
+            $conflict = Agendamento::where('profissional_id', $data['profissional_id'])
+                ->whereDate('data', $data['data'])
+                ->whereNotIn('status', ['cancelado', 'faltou'])
+                ->where(function ($q) use ($data) {
+                    $q->where('hora_inicio', '<', $data['hora_fim'])
+                        ->where('hora_fim', '>', $data['hora_inicio']);
+                })
+                ->exists();
+        }
 
         if ($conflict) {
             return response()->json([
@@ -222,25 +230,33 @@ class AgendamentoController extends Controller
 
         $data = $request->validate([
             'data' => 'required|date',
-            'hora_inicio' => 'required',
-            'hora_fim' => 'required',
+            'hora_inicio' => 'nullable|required_unless:status,lista_espera',
+            'hora_fim' => 'nullable|required_unless:status,lista_espera',
             'observacao' => 'nullable|string',
             'status' => 'required|in:confirmado,pendente,cancelado,faltou,lista_espera',
-            'profissional_id' => 'required|exists:profissionais,id',
+            'profissional_id' => 'nullable|exists:profissionais,id',
         ]);
 
-        $data['hora_inicio'] = Carbon::parse($data['hora_inicio'])->format('H:i:s');
-        $data['hora_fim'] = Carbon::parse($data['hora_fim'])->format('H:i:s');
+        $data['profissional_id'] = $data['profissional_id'] ?? null;
+        $data['hora_inicio'] = isset($data['hora_inicio']) && $data['hora_inicio']
+            ? Carbon::parse($data['hora_inicio'])->format('H:i:s')
+            : null;
+        $data['hora_fim'] = isset($data['hora_fim']) && $data['hora_fim']
+            ? Carbon::parse($data['hora_fim'])->format('H:i:s')
+            : null;
 
-        $conflict = Agendamento::where('profissional_id', $data['profissional_id'])
-            ->whereDate('data', $data['data'])
-            ->where('id', '!=', $agendamento->id)
-            ->whereNotIn('status', ['cancelado', 'faltou'])
-            ->where(function ($q) use ($data) {
-                $q->where('hora_inicio', '<', $data['hora_fim'])
-                    ->where('hora_fim', '>', $data['hora_inicio']);
-            })
-            ->exists();
+        $conflict = false;
+        if ($data['profissional_id'] && $data['hora_inicio'] && $data['hora_fim']) {
+            $conflict = Agendamento::where('profissional_id', $data['profissional_id'])
+                ->whereDate('data', $data['data'])
+                ->where('id', '!=', $agendamento->id)
+                ->whereNotIn('status', ['cancelado', 'faltou'])
+                ->where(function ($q) use ($data) {
+                    $q->where('hora_inicio', '<', $data['hora_fim'])
+                        ->where('hora_fim', '>', $data['hora_inicio']);
+                })
+                ->exists();
+        }
 
         if ($conflict) {
             return response()->json([
