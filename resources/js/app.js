@@ -1085,6 +1085,66 @@ document.addEventListener('DOMContentLoaded', () => {
             updateSaveBtn();
         });
     }
+
+    const waitlistMonthBtn = document.getElementById('btn-waitlist-month');
+    const waitlistMonthModal = document.getElementById('waitlist-month-modal');
+    const waitlistMonthPrev = document.getElementById('wl-month-prev');
+    const waitlistMonthNext = document.getElementById('wl-month-next');
+    const waitlistMonthClose = document.getElementById('wl-month-close');
+    let waitlistMonthCurrent = null;
+
+    window.openWaitlistMonth = async function(date) {
+        if (!waitlistMonthModal) return;
+        const d = new Date(date);
+        if (isNaN(d)) return;
+        waitlistMonthCurrent = new Date(d.getFullYear(), d.getMonth(), 1);
+        const iso = waitlistMonthCurrent.toISOString().slice(0, 10);
+        const res = await fetch(`/waitlist/month?date=${iso}`);
+        const data = await res.json();
+        const entries = Array.isArray(data.waitlist)
+            ? data.waitlist.reduce((acc, item) => {
+                const day = item.data || item.date;
+                if (!day) return acc;
+                (acc[day] = acc[day] || []).push(item);
+                return acc;
+            }, {})
+            : (data.waitlist || {});
+        const body = waitlistMonthModal.querySelector('#wl-month-body');
+        body.innerHTML = '';
+        Object.keys(entries).sort().forEach(day => {
+            const names = entries[day].map(i => i.paciente || i.nome || '').join(', ');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td class="border p-1">${day}</td><td class="border p-1">${names}</td>`;
+            body.appendChild(tr);
+        });
+        waitlistMonthModal.querySelector('#wl-month-title').textContent =
+            waitlistMonthCurrent.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+        waitlistMonthModal.classList.remove('hidden');
+    };
+
+    if (waitlistMonthBtn && waitlistMonthModal) {
+        waitlistMonthBtn.addEventListener('click', () => {
+            const comp = window.getAgendaComponent();
+            const date = window.selectedAgendaDate || comp?.selectedDate;
+            if (date) openWaitlistMonth(date);
+        });
+        waitlistMonthClose?.addEventListener('click', () => {
+            waitlistMonthModal.classList.add('hidden');
+        });
+        waitlistMonthPrev?.addEventListener('click', () => {
+            if (!waitlistMonthCurrent) return;
+            const d = new Date(waitlistMonthCurrent);
+            d.setMonth(d.getMonth() - 1);
+            openWaitlistMonth(d.toISOString().slice(0, 10));
+        });
+        waitlistMonthNext?.addEventListener('click', () => {
+            if (!waitlistMonthCurrent) return;
+            const d = new Date(waitlistMonthCurrent);
+            d.setMonth(d.getMonth() + 1);
+            openWaitlistMonth(d.toISOString().slice(0, 10));
+        });
+    }
+
     if (window.flatpickr) {
         flatpickr('.datepicker', {
             altInput: true,
