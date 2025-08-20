@@ -30,7 +30,7 @@
                 @include('partials.topbar')
             @endunless
         @endauth
-        <main class="flex-1 p-6 overflow-y-auto">
+        <main class="flex-1 p-6 overflow-y-scroll">
             @if ($errors->any() && !(isset($hideErrors) && $hideErrors))
                 @include('components.alert-error', ['slot' => $errors->first()])
             @endif
