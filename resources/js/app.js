@@ -981,16 +981,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    if (document.getElementById('waitlist-container')) {
-        window.loadWaitlist(todayStr);
-    }
-
     if (agendaDays.length) {
         window.selectedAgendaDate = document.querySelector('.agenda-day.bg-blue-500')?.dataset.date || null;
         if (window.selectedAgendaDate) {
             loadConsultas(window.selectedAgendaDate);
+            window.loadWaitlist(window.selectedAgendaDate);
         }
         agendaDays.forEach(day => {
             day.addEventListener('click', () => {
@@ -1001,6 +996,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.loadWaitlist(day.dataset.date);
             });
         });
+    } else if (document.getElementById('waitlist-container')) {
+        const today = new Date();
+        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        window.loadWaitlist(todayStr);
     }
 
     const waitlistBtn = document.getElementById('waitlist-add');
