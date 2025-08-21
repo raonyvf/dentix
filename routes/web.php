@@ -23,6 +23,8 @@ Route::get('/', function () {
 
 require __DIR__.'/auth.php';
 
+Route::view('orcamentos/assinar', 'orcamentos.assinar')->name('orcamentos.assinar');
+
 Route::middleware(['web', 'auth', 'forcepasswordchange'])->group(function () {
     Route::get('/password/change', [\App\Http\Controllers\Auth\PasswordController::class, 'edit'])->name('password.change');
     Route::post('/password/change', [\App\Http\Controllers\Auth\PasswordController::class, 'update'])->name('password.update');
