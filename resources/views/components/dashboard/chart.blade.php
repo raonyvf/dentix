@@ -1,4 +1,4 @@
-@props(['title', 'chartId' => null])
+@props(['title', 'chartId' => null, 'height' => 'h-64'])
 
 @php
     $id = $chartId ?: \Illuminate\Support\Str::slug($title);
@@ -9,7 +9,7 @@
         <h3 class="text-lg font-semibold text-gray-700">{{ $title }}</h3>
         {{ $header ?? '' }}
     </div>
-    <div class="h-64">
+    <div class="{{ $height }}">
         <canvas id="{{ $id }}" class="w-full h-full"></canvas>
     </div>
     {{ $slot ?? '' }}
