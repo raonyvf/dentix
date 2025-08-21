@@ -49,3 +49,5 @@ Route::resource('escalas', EscalaTrabalhoController::class)->only(['index','stor
 
 Route::get('estoque', [EstoqueController::class, 'index'])->name('estoque.index');
 
+Route::view('financeiro', 'financeiro.index', ['clinics' => ['Clínica Centro', 'Clínica Norte']])->name('financeiro.index');
+
