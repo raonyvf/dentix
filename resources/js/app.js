@@ -315,7 +315,7 @@ window.renderWaitlist = function (items, date, allowFallback = true) {
         list.forEach(item => {
             container.insertAdjacentHTML(
                 'beforeend',
-                `<div class="border rounded p-3 flex flex-col gap-2 mb-2.5"><div class="font-medium">${item.paciente || ''}</div><div class="text-sm text-gray-500">${item.contato || ''}</div><div class="text-sm text-gray-500">${item.observacao || ''}</div><div class="flex justify-between items-center"><span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Lista de espera</span><span class="text-xs text-gray-600 ml-2">Sugestão: ${formatDate(item.sugestao.data)} ${item.sugestao.inicio}–${item.sugestao.fim}</span><button class="text-sm text-blue-600 hover:underline" data-id="${item.id}">Encaixar</button></div></div>`
+                `<div class="border rounded p-3 flex flex-col gap-2 mb-2.5"><div class="font-medium">${item.paciente || ''}</div><div class="text-sm text-gray-500">${item.contato || ''}</div><div class="text-sm text-gray-500">${item.observacao || ''}</div><div class="flex justify-between items-center"><span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Lista de espera</span><span class="text-xs text-gray-600 ml-2">Sugestão: ${formatDate(item.sugestao.data)} ${item.sugestao.inicio}–${item.sugestao.fim}</span><button class="text-sm text-blue-600 hover:underline" data-id="${item.id}" data-sugestao-data="${item.sugestao.data}" data-sugestao-inicio="${item.sugestao.inicio}" data-sugestao-fim="${item.sugestao.fim}">Encaixar</button></div></div>`
             );
         });
     };
@@ -1074,11 +1074,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!btn) return;
             const pacienteId = btn.dataset.id;
             const name = btn.closest('.border')?.querySelector('.font-medium')?.textContent.trim() || '';
-            const date = window.selectedAgendaDate;
-            if (!date) return;
-            selection.date = date;
-            selection.start = null;
-            selection.end = null;
+            const sugData = btn.dataset.sugestaoData;
+            const sugInicio = btn.dataset.sugestaoInicio;
+            const sugFim = btn.dataset.sugestaoFim;
+            const fallbackDate = window.selectedAgendaDate;
+            if (!sugData && !fallbackDate) return;
+            selection.date = sugData || fallbackDate;
+            selection.start = sugInicio || null;
+            selection.end = sugFim || null;
             selection.professional = null;
             abrirModalAgendamento({ paciente_id: pacienteId, paciente: name }, 'confirmado');
             if (saveBtn) saveBtn.dataset.action = 'store';
