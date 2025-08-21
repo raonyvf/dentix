@@ -48,7 +48,7 @@
                             <span class="px-2 py-1 rounded-full text-xs {{ $statusColors[$o['status']] ?? 'bg-gray-100 text-gray-800' }}">{{ $o['status'] }}</span>
                         </td>
                         <td class="px-4 py-2 whitespace-nowrap">
-                            <a href="#" class="text-gray-600 hover:text-blue-600" title="Visualizar">
+                            <a href="{{ url('orcamentos/assinar') }}" class="text-gray-600 hover:text-blue-600" title="Visualizar">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
