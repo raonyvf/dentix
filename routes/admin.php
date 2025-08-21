@@ -41,8 +41,6 @@ Route::get('pacientes/search', [PatientController::class, 'search'])->name('paci
 Route::resource('pacientes', PatientController::class)
     ->parameters(['pacientes' => 'paciente']);
 
-Route::view('orcamentos/assinar', 'orcamentos.assinar')->name('orcamentos.assinar');
-
 Route::post('selecionar-clinica', [ClinicContextController::class, 'update'])->name('clinicas.selecionar');
 
 Route::resource('escalas', EscalaTrabalhoController::class)->only(['index','store','update','destroy']);
