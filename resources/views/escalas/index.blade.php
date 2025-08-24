@@ -293,6 +293,18 @@
         escalaModal.classList.add('hidden');
     });
 
+    escalaForm.addEventListener('submit', () => {
+        if (!tabRecurring.classList.contains('hidden')) {
+            recurringInputs.forEach(el => {
+                el.disabled = false;
+            });
+            ['hora_inicio','hora_fim'].forEach(name => {
+                const input = escalaForm.querySelector(`[name="${name}"]`);
+                if (input) input.disabled = false;
+            });
+        }
+    });
+
     if (applyYear) {
         escalaForm.addEventListener('submit', () => {
             if (!tabRecurring.classList.contains('hidden') && applyYear.checked) {

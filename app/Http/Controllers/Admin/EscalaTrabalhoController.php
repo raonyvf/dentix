@@ -251,7 +251,7 @@ class EscalaTrabalhoController extends Controller
                 'dias.*' => 'in:segunda,terca,quarta,quinta,sexta,sabado,domingo',
                 'hora_inicio' => 'required',
                 'hora_fim' => 'required',
-                'repeat_until' => 'nullable|date|after_or_equal:semana',
+                'repeat_until' => 'required_with:repeat_weeks|nullable|date|after_or_equal:semana',
                 'repeat_weeks' => 'nullable|integer|min:1',
                 'overwrite' => 'sometimes|boolean',
             ], [
