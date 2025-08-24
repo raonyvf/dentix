@@ -323,9 +323,15 @@
             monthInput.value = date.slice(0,7);
             escalaForm.querySelector('[name="year"]').value = date.slice(0,4);
             escalaForm.querySelector('[name="month"]').value = parseInt(date.slice(5,7),10);
-            activateTab('daily');
+            activateTab('recurring');
+            escalaForm.querySelector('[name="semana"]').value = date;
+            const dayName = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+            const diasSelect = escalaForm.querySelector('[name="dias[]"]');
+            [...diasSelect.options].forEach(opt => {
+                opt.selected = opt.value.toLowerCase() === dayName;
+            });
+            escalaForm.querySelector('[name="repeat_until"]').value = '';
             escalaModal.classList.remove('hidden');
-            initCalendar([date], true);
         });
     });
 
