@@ -62,6 +62,8 @@
                 @endfor
             </div>
         </div>
+    </div>
+    <div class="lg:col-span-1 space-y-4 lg:col-span-2">
         <div class="bg-white rounded-lg shadow p-4 space-y-4">
             <div>
                 <label class="block text-sm font-medium mb-1" for="professional">Profissional</label>
@@ -84,8 +86,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="lg:col-span-1 space-y-4 lg:col-span-2">
         <div class="bg-white rounded-lg shadow p-4" data-consultas-url="{{ route('agenda.consultas') }}">
             <div class="flex justify-between items-start mb-4">
                 <h2 class="text-lg font-bold">Consultas do Dia <span id="consultas-dia-data" class="text-gray-500 font-normal">{{ $today->format('d/m/Y') }}</span></h2>
