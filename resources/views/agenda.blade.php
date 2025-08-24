@@ -82,8 +82,8 @@
         </div>
     </div>
     <div class="space-y-4 lg:col-span-2">
-        <div class="bg-white rounded-lg shadow p-4 space-y-4">
-            <div>
+        <div class="bg-white rounded-lg shadow p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="w-full">
                 <label class="block text-sm font-medium mb-1" for="professional">Profissional</label>
                 <div class="relative z-20 w-full">
                     <select id="professional" class="relative z-20 w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black outline-none transition focus:border-primary">
@@ -93,7 +93,7 @@
                     </select>
                 </div>
             </div>
-            <div>
+            <div class="w-full">
                 <label class="block text-sm font-medium mb-1" for="type">Tipo de Consulta</label>
                 <div class="relative z-20 w-full">
                     <select id="type" class="relative z-20 w-full rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black outline-none transition focus:border-primary">
