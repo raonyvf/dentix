@@ -38,6 +38,11 @@ class AgendaController extends Controller
         ));
     }
 
+    public function fluxo()
+    {
+        return view('agenda.fluxo');
+    }
+
     public function horarios(Request $request)
     {
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;

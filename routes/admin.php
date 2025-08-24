@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\EstoqueController;
 Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
 
 Route::get('agenda', [AgendaController::class, 'index'])->name('agenda.index');
+Route::get('agenda/fluxo', [AgendaController::class, 'fluxo'])->name('agenda.fluxo');
 Route::get('agenda/consultas', [AgendamentoController::class, 'consultasDia'])->name('agenda.consultas');
 Route::get('agendamentos', [AgendamentoController::class, 'index'])->name('agendamentos.index');
 Route::post('agendamentos', [AgendamentoController::class, 'store'])->name('agendamentos.store');
