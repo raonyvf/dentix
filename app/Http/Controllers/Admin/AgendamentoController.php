@@ -363,7 +363,7 @@ class AgendamentoController extends Controller
         $data = $request->validate([
             'profissional_id' => 'nullable|exists:profissionais,id',
             'paciente_id' => 'required|exists:pacientes,id',
-            'data' => 'required|date',
+            'data' => ['required', 'date', 'after_or_equal:today'],
             'hora_inicio' => 'nullable|required_unless:status,lista_espera',
             'hora_fim' => 'nullable|required_unless:status,lista_espera',
             'tipo' => 'nullable|string',
@@ -371,6 +371,16 @@ class AgendamentoController extends Controller
             'observacao' => 'nullable|string',
             'status' => 'required|in:confirmado,pendente,cancelado,faltou,lista_espera',
         ]);
+
+        if (! empty($data['hora_inicio'])) {
+            $scheduledAt = Carbon::parse("{$data['data']} {$data['hora_inicio']}");
+            if ($scheduledAt->isBefore(now())) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Consulta não pode ser agendada no passado.',
+                ], 422);
+            }
+        }
 
         $data['profissional_id'] = $data['profissional_id'] ?? null;
         $data['hora_inicio'] = isset($data['hora_inicio']) && $data['hora_inicio']
@@ -415,13 +425,23 @@ class AgendamentoController extends Controller
         $clinicId = app()->bound('clinic_id') ? app('clinic_id') : null;
 
         $data = $request->validate([
-            'data' => 'required|date',
+            'data' => ['required', 'date', 'after_or_equal:today'],
             'hora_inicio' => 'nullable|required_unless:status,lista_espera',
             'hora_fim' => 'nullable|required_unless:status,lista_espera',
             'observacao' => 'nullable|string',
             'status' => 'required|in:confirmado,pendente,cancelado,faltou,lista_espera',
             'profissional_id' => 'nullable|exists:profissionais,id',
         ]);
+
+        if (! empty($data['hora_inicio'])) {
+            $scheduledAt = Carbon::parse("{$data['data']} {$data['hora_inicio']}");
+            if ($scheduledAt->isBefore(now())) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Consulta não pode ser agendada no passado.',
+                ], 422);
+            }
+        }
 
         $data['profissional_id'] = $data['profissional_id'] ?? null;
         $data['hora_inicio'] = isset($data['hora_inicio']) && $data['hora_inicio']

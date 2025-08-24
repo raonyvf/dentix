@@ -4,15 +4,32 @@ namespace Carbon {
     {
         public const MONDAY = 1;
         public const SUNDAY = 7;
+        public static $now = null;
 
         public static function parse(string $date): self
         {
             return new self($date);
         }
 
+        public static function now(): self
+        {
+            return new self(self::$now ?? 'now');
+        }
+
         public function copy(): self
         {
             return clone $this;
+        }
+
+        public function addDays(int $days): self
+        {
+            $interval = new \DateInterval('P' . abs($days) . 'D');
+            if ($days >= 0) {
+                $this->add($interval);
+            } else {
+                $this->sub($interval);
+            }
+            return $this;
         }
 
         public function startOfWeek(int $dayOfWeek): self
@@ -37,6 +54,20 @@ namespace Carbon {
         public function toDateString(): string
         {
             return $this->format('Y-m-d');
+        }
+
+        public function isBefore($date): bool
+        {
+            $compare = $date instanceof \DateTimeInterface ? $date : new self($date);
+            return $this < $compare;
+        }
+    }
+}
+
+namespace {
+    if (!function_exists('now')) {
+        function now() {
+            return \Carbon\Carbon::now();
         }
     }
 }

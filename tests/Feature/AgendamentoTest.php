@@ -23,6 +23,11 @@ namespace App\Models {
             return $this;
         }
 
+        public function __call($name, $arguments)
+        {
+            return $this;
+        }
+
         public function get()
         {
             return collect([]);
