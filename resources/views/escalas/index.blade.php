@@ -212,6 +212,20 @@
     const tabDaily = document.getElementById('tab-daily');
     const tabRecurring = document.getElementById('tab-recurring');
     const recurringInputs = tabRecurring.querySelectorAll('input, select');
+    const semanaInput = escalaForm.querySelector('[name="semana"]');
+    const formYearInput = document.getElementById('form-year');
+    const formMonthInput = document.getElementById('form-month');
+
+    if (semanaInput) {
+        semanaInput.addEventListener('change', () => {
+            const val = semanaInput.value;
+            if (val) {
+                const [year, month] = val.split('-');
+                formYearInput.value = year;
+                formMonthInput.value = parseInt(month, 10);
+            }
+        });
+    }
 
     function activateTab(name) {
         if (name === 'daily') {
