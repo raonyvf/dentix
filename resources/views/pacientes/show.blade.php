@@ -31,21 +31,46 @@
             <a href="#" class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700">Novo Orçamento</a>
         </div>
     </div>
-    <div class="border-b mb-4">
-        <nav class="-mb-px flex space-x-4" aria-label="Tabs">
-            <button type="button" @click="activeTab = 'dados'" :class="activeTab === 'dados' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+    <div class="mb-4 border-b border-stroke">
+        <nav class="-mb-px flex flex-wrap" aria-label="Tabs">
+            <button
+                type="button"
+                @click="activeTab = 'dados'"
+                :class="activeTab === 'dados' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                class="inline-flex items-center gap-2 py-4 px-4 text-sm font-medium border-b-2">
+                <x-lucide-icon name="user" class="w-4 h-4" />
                 Dados Pessoais
             </button>
-            <button type="button" @click="activeTab = 'documentos'" :class="activeTab === 'documentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+            <button
+                type="button"
+                @click="activeTab = 'documentos'"
+                :class="activeTab === 'documentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                class="inline-flex items-center gap-2 py-4 px-4 text-sm font-medium border-b-2">
+                <x-lucide-icon name="folder" class="w-4 h-4" />
                 Documentos
             </button>
-            <button type="button" @click="activeTab = 'orcamentos'" :class="activeTab === 'orcamentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+            <button
+                type="button"
+                @click="activeTab = 'orcamentos'"
+                :class="activeTab === 'orcamentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                class="inline-flex items-center gap-2 py-4 px-4 text-sm font-medium border-b-2">
+                <x-lucide-icon name="dollar-sign" class="w-4 h-4" />
                 Orçamentos
             </button>
-            <button type="button" @click="activeTab = 'agendamentos'" :class="activeTab === 'agendamentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+            <button
+                type="button"
+                @click="activeTab = 'agendamentos'"
+                :class="activeTab === 'agendamentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                class="inline-flex items-center gap-2 py-4 px-4 text-sm font-medium border-b-2">
+                <x-lucide-icon name="calendar" class="w-4 h-4" />
                 Agendamentos
             </button>
-            <button type="button" @click="activeTab = 'plano'" :class="activeTab === 'plano' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+            <button
+                type="button"
+                @click="activeTab = 'plano'"
+                :class="activeTab === 'plano' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                class="inline-flex items-center gap-2 py-4 px-4 text-sm font-medium border-b-2">
+                <x-lucide-icon name="heart-pulse" class="w-4 h-4" />
                 Plano de Tratamento
             </button>
         </nav>
