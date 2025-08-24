@@ -427,7 +427,19 @@ class EscalaTrabalhoController extends Controller
 
     public function destroy(Request $request, EscalaTrabalho $escala)
     {
-        $escala->delete();
+        if ($request->filled('semana') && $request->filled('repeat_until')) {
+            $start = Carbon::parse($request->input('semana'))->startOfWeek(Carbon::MONDAY);
+            $end = Carbon::parse($request->input('repeat_until'))->startOfWeek(Carbon::MONDAY);
+
+            EscalaTrabalho::where('clinica_id', $escala->clinica_id)
+                ->where('cadeira_id', $escala->cadeira_id)
+                ->where('profissional_id', $escala->profissional_id)
+                ->where('dia_semana', $escala->dia_semana)
+                ->whereBetween('semana', [$start, $end])
+                ->delete();
+        } else {
+            $escala->delete();
+        }
 
         $params = [
             'clinic_id' => $escala->clinica_id,
