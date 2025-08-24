@@ -29,7 +29,7 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Clínica</label>
-            <select x-model="filters.clinicId" class="w-full border-gray-300 rounded-lg">
+            <select x-model="filters.clinicId" class="form-select block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:border-primary focus:ring-primary">
                 <option value="all">Todas</option>
                 <template x-for="c in clinics" :key="c.id">
                     <option :value="c.id" x-text="c.name"></option>
@@ -38,7 +38,7 @@
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Profissional</label>
-            <select x-model="filters.professionalId" class="w-full border-gray-300 rounded-lg">
+            <select x-model="filters.professionalId" class="form-select block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:border-primary focus:ring-primary">
                 <option value="all">Todos</option>
                 <template x-for="p in professionals" :key="p.id">
                     <option :value="p.id" x-text="p.name"></option>
@@ -47,7 +47,7 @@
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Período</label>
-            <select x-model="filters.period" class="w-full border-gray-300 rounded-lg">
+            <select x-model="filters.period" class="form-select block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:border-primary focus:ring-primary">
                 <option value="all">Dia todo</option>
                 <option value="morning">Manhã</option>
                 <option value="afternoon">Tarde</option>
@@ -55,7 +55,7 @@
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Data</label>
-            <input type="date" x-model="filters.date" class="w-full border-gray-300 rounded-lg" />
+            <input type="date" x-model="filters.date" class="form-input block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:border-primary focus:ring-primary" />
         </div>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
