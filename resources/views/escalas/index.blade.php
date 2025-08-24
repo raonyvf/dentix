@@ -170,13 +170,13 @@
                 </div>
             </div>
             <div class="flex gap-2 items-end">
-                <div>
+                <div class="w-1/2">
                     <label class="block text-sm mb-1">Início</label>
-                    <input type="time" name="hora_inicio" class="border rounded px-2 py-1">
+                    <input type="time" name="hora_inicio" class="w-full border rounded px-2 py-1">
                 </div>
-                <div>
+                <div class="w-1/2">
                     <label class="block text-sm mb-1">Fim</label>
-                    <input type="time" name="hora_fim" class="border rounded px-2 py-1">
+                    <input type="time" name="hora_fim" class="w-full border rounded px-2 py-1">
                 </div>
             </div>
             <div>
