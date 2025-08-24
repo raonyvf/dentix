@@ -37,13 +37,20 @@
             </label>
             <label class="block mb-4">
                 <span class="text-sm">Status</span>
-                <select id="schedule-status" class="mt-1 w-full border rounded p-1">
-                    <option value="confirmado">Confirmado</option>
-                    <option value="pendente">Pendente</option>
-                    <option value="cancelado">Cancelado</option>
-                    <option value="faltou">Faltou</option>
-                    <option value="lista_espera">Lista de espera</option>
-                </select>
+                <div class="relative z-20 mt-1 w-full">
+                    <select id="schedule-status" class="relative z-20 w-full appearance-none rounded border-[1.5px] border-stroke bg-gray-2 py-3 px-5 text-sm text-black outline-none transition focus:border-primary">
+                        <option value="confirmado">Confirmado</option>
+                        <option value="pendente">Pendente</option>
+                        <option value="cancelado">Cancelado</option>
+                        <option value="faltou">Faltou</option>
+                        <option value="lista_espera">Lista de espera</option>
+                    </select>
+                    <span class="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2">
+                        <svg class="h-5 w-5 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 8l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        </svg>
+                    </span>
+                </div>
             </label>
             <div class="flex justify-end gap-2">
                 <button id="schedule-cancel" class="px-3 py-1 border rounded">Cancelar</button>
