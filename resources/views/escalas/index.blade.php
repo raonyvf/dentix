@@ -348,7 +348,7 @@
             form.method = 'POST';
             form.action = escalaForm.action;
             form.innerHTML = `<input type="hidden" name="_token" value="${document.querySelector('meta[name=csrf-token]').content}"><input type="hidden" name="_method" value="DELETE">`;
-            ['clinic_id','year','month'].forEach(name => {
+            ['clinic_id','year','month','semana','repeat_until'].forEach(name => {
                 const input = escalaForm.querySelector(`[name="${name}"]`);
                 if (input) {
                     const copy = document.createElement('input');
