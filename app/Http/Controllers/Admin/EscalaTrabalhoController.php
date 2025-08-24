@@ -225,6 +225,109 @@ class EscalaTrabalhoController extends Controller
 
     public function update(Request $request, EscalaTrabalho $escala)
     {
+        if ($request->filled('semana') && $request->filled('dias')) {
+            $data = $request->validate([
+                'profissional_id' => [
+                    'required',
+                    'exists:profissionais,id',
+                    Rule::exists('clinica_profissional', 'profissional_id')
+                        ->where(fn($q) => $q->where('clinica_id', $escala->clinica_id)),
+                ],
+                'cadeira_id' => 'required|exists:cadeiras,id',
+                'semana' => 'required|date',
+                'dias' => 'required|array',
+                'dias.*' => 'in:segunda,terca,quarta,quinta,sexta,sabado,domingo',
+                'hora_inicio' => 'required',
+                'hora_fim' => 'required',
+                'repeat_until' => 'nullable|date|after_or_equal:semana',
+                'repeat_weeks' => 'nullable|integer|min:1',
+            ], [
+                'semana.required' => 'Informe a semana inicial na aba Recorrente.',
+                'dias.required' => 'Selecione pelo menos um dia da semana na aba Recorrente.',
+            ]);
+
+            $clinic = Clinic::with('horarios')->find($escala->clinica_id);
+
+            $startWeek = Carbon::parse($data['semana'])->startOfWeek(Carbon::MONDAY);
+            $endWeek = $startWeek->copy();
+            if (!empty($data['repeat_until'])) {
+                $endWeek = Carbon::parse($data['repeat_until'])->startOfWeek(Carbon::MONDAY);
+            } elseif (!empty($data['repeat_weeks'])) {
+                $endWeek = $startWeek->copy()->addWeeks($data['repeat_weeks'] - 1);
+            }
+
+            $records = [];
+            for ($week = $startWeek->copy(); $week->lte($endWeek); $week->addWeek()) {
+                foreach ($data['dias'] as $diaNome) {
+                    $dia = DiaSemana::fromName($diaNome)?->value;
+                    if (! $dia) {
+                        continue;
+                    }
+
+                    $ref = $clinic->horarios->firstWhere('dia_semana', $dia);
+                    if (! $ref
+                        || Carbon::parse($data['hora_inicio']) < Carbon::parse($ref->hora_inicio)
+                        || Carbon::parse($data['hora_fim']) > Carbon::parse($ref->hora_fim)) {
+                        return back()->with('error', 'Horário fora do expediente da clínica.');
+                    }
+
+                    $weekStart = $week->toDateString();
+
+                    $conflict = EscalaTrabalho::where('clinica_id', $escala->clinica_id)
+                        ->where('cadeira_id', $data['cadeira_id'])
+                        ->where('semana', $weekStart)
+                        ->where('dia_semana', $dia)
+                        ->where('id', '!=', $escala->id)
+                        ->where(function ($q) use ($data) {
+                            $q->where('hora_inicio', '<', $data['hora_fim'])
+                              ->where('hora_fim', '>', $data['hora_inicio']);
+                        })->exists();
+
+                    $conflictProf = EscalaTrabalho::where('clinica_id', $escala->clinica_id)
+                        ->where('profissional_id', $data['profissional_id'])
+                        ->where('semana', $weekStart)
+                        ->where('dia_semana', $dia)
+                        ->where('id', '!=', $escala->id)
+                        ->where(function ($q) use ($data) {
+                            $q->where('hora_inicio', '<', $data['hora_fim'])
+                              ->where('hora_fim', '>', $data['hora_inicio']);
+                        })->exists();
+
+                    if ($conflict || $conflictProf) {
+                        return back()->with('error', 'Conflito de horários detectado.');
+                    }
+
+                    $records[] = [
+                        'clinica_id' => $escala->clinica_id,
+                        'cadeira_id' => $data['cadeira_id'],
+                        'profissional_id' => $data['profissional_id'],
+                        'semana' => $weekStart,
+                        'dia_semana' => $dia,
+                        'hora_inicio' => $data['hora_inicio'],
+                        'hora_fim' => $data['hora_fim'],
+                    ];
+                }
+            }
+
+            $escala->delete();
+            foreach ($records as $record) {
+                EscalaTrabalho::create($record);
+            }
+
+            $params = [
+                'clinic_id' => $escala->clinica_id,
+            ];
+            if ($request->filled('year')) {
+                $params['year'] = $request->input('year');
+            }
+            if ($request->filled('month')) {
+                $params['month'] = $request->input('month');
+            }
+
+            return redirect()->route('escalas.index', $params)
+                ->with('success', 'Escala atualizada com sucesso.');
+        }
+
         $data = $request->validate([
             'profissional_id' => [
                 'required',
@@ -290,7 +393,6 @@ class EscalaTrabalhoController extends Controller
             $params['year'] = $request->input('year');
             $params['month'] = $request->input('month');
         } else {
-            $date = Carbon::parse($data['data']);
             $params['year'] = $date->year;
             $params['month'] = $date->month;
         }
