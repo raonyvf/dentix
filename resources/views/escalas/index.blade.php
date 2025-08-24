@@ -30,7 +30,14 @@
     </div>
     <div>
         <label class="block text-sm font-medium mb-1">Ano</label>
-        <input type="number" name="year" id="anoSelecionado" class="border rounded px-2 py-1" value="{{ $month->year }}" onchange="this.form.submit()">
+        <input
+            type="number"
+            name="year"
+            id="anoSelecionado"
+            class="appearance-none w-24 rounded border border-stroke bg-transparent py-2 px-3 focus:border-primary focus:ring-primary"
+            value="{{ $month->year }}"
+            onchange="this.form.submit()"
+        >
     </div>
     <div>
         <label class="block text-sm font-medium mb-1">Mês</label>
