@@ -21,6 +21,12 @@
         </a>
     </div>
 </div>
+<div class="border-b mb-6">
+    <nav class="-mb-px flex gap-4">
+        <a href="{{ route('agenda.index') }}" class="px-1 pb-2 border-b-2 border-blue-600 text-blue-600">Agenda</a>
+        <a href="{{ url('/admin/agenda/fluxo') }}" class="px-1 pb-2 text-gray-500 hover:text-gray-700">Fluxo</a>
+    </nav>
+</div>
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
     <div class="space-y-4">
         <div class="bg-white rounded-lg shadow p-4">
