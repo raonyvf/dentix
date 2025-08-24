@@ -1,5 +1,6 @@
 @props(['name'])
-<svg {{ $attributes }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Placeholder icon: {{ $name }} -->
-    <circle cx="12" cy="12" r="10" />
-</svg>
+@php
+    $component = 'lucide-' . \Illuminate\Support\Str::kebab($name);
+@endphp
+<x-dynamic-component :component="$component" {{ $attributes }} />
+

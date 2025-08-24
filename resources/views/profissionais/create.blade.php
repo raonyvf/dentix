@@ -12,19 +12,19 @@
         <ul class="flex flex-wrap -mb-px" aria-label="Tabs">
             <li>
                 <button type="button" class="inline-flex items-center gap-2 py-4 px-4 border-b-2" @click="activeTab = 'dados'" :class="activeTab === 'dados' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
-                    <x-lucide-icon name="user" class="w-5 h-5" />
+                    <x-lucide-user class="w-5 h-5" />
                     Dados cadastrais
                 </button>
             </li>
             <li>
                 <button type="button" class="inline-flex items-center gap-2 py-4 px-4 border-b-2" @click="activeTab = 'adm'" :class="activeTab === 'adm' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
-                    <x-lucide-icon name="lock" class="w-5 h-5" />
+                    <x-lucide-lock class="w-5 h-5" />
                     Dados admissionais
                 </button>
             </li>
             <li>
                 <button type="button" class="inline-flex items-center gap-2 py-4 px-4 border-b-2" @click="activeTab = 'rem'" :class="activeTab === 'rem' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
-                    <x-lucide-icon name="wallet" class="w-5 h-5" />
+                    <x-lucide-wallet class="w-5 h-5" />
                     Remuneração
                 </button>
             </li>
