@@ -28,6 +28,9 @@ Route::view('orcamentos/assinar', 'orcamentos.assinar')->name('orcamentos.assina
 Route::middleware(['web', 'auth', 'forcepasswordchange'])->group(function () {
     Route::get('/password/change', [\App\Http\Controllers\Auth\PasswordController::class, 'edit'])->name('password.change');
     Route::post('/password/change', [\App\Http\Controllers\Auth\PasswordController::class, 'update'])->name('password.update');
+
+    Route::get('/profile/edit', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/account/settings', [\App\Http\Controllers\AccountSettingsController::class, 'index'])->name('account.settings');
 });
 
 Route::middleware(['web', 'auth', 'forcepasswordchange', 'paciente'])
