@@ -38,7 +38,7 @@
                 @click="activeTab = 'dados'"
                 :class="activeTab === 'dados' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                 class="inline-flex items-center gap-2 py-4 px-4 text-sm font-medium border-b-2">
-                <x-lucide-icon name="user" class="w-4 h-4" />
+                <x-lucide-user class="w-4 h-4" />
                 Dados Pessoais
             </button>
             <button
@@ -46,7 +46,7 @@
                 @click="activeTab = 'documentos'"
                 :class="activeTab === 'documentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                 class="inline-flex items-center gap-2 py-4 px-4 text-sm font-medium border-b-2">
-                <x-lucide-icon name="folder" class="w-4 h-4" />
+                <x-lucide-folder class="w-4 h-4" />
                 Documentos
             </button>
             <button
@@ -54,7 +54,7 @@
                 @click="activeTab = 'orcamentos'"
                 :class="activeTab === 'orcamentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                 class="inline-flex items-center gap-2 py-4 px-4 text-sm font-medium border-b-2">
-                <x-lucide-icon name="dollar-sign" class="w-4 h-4" />
+                <x-lucide-dollar-sign class="w-4 h-4" />
                 Orçamentos
             </button>
             <button
@@ -62,7 +62,7 @@
                 @click="activeTab = 'agendamentos'"
                 :class="activeTab === 'agendamentos' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                 class="inline-flex items-center gap-2 py-4 px-4 text-sm font-medium border-b-2">
-                <x-lucide-icon name="calendar" class="w-4 h-4" />
+                <x-lucide-calendar class="w-4 h-4" />
                 Agendamentos
             </button>
             <button
@@ -70,7 +70,7 @@
                 @click="activeTab = 'plano'"
                 :class="activeTab === 'plano' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                 class="inline-flex items-center gap-2 py-4 px-4 text-sm font-medium border-b-2">
-                <x-lucide-icon name="heart-pulse" class="w-4 h-4" />
+                <x-lucide-heart-pulse class="w-4 h-4" />
                 Plano de Tratamento
             </button>
         </nav>
