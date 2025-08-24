@@ -35,6 +35,11 @@ namespace App\Models {
             return $this;
         }
 
+        public function __call($name, $arguments)
+        {
+            return $this;
+        }
+
         public function get()
         {
             $results = array_filter(self::$records, function ($rec) {
@@ -46,6 +51,19 @@ namespace App\Models {
                 return true;
             });
             return collect(array_map(fn($r) => (object) $r, $results));
+        }
+    }
+
+    class Clinic
+    {
+        public static function with($relations)
+        {
+            return new self;
+        }
+
+        public function find($id)
+        {
+            return null;
         }
     }
 }

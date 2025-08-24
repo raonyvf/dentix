@@ -28,6 +28,11 @@ namespace App\Models {
             $this->filters[] = [$field, 'in', $values];
             return $this;
         }
+
+        public function __call($name, $arguments)
+        {
+            return $this;
+        }
         public function get()
         {
             $results = array_filter(self::$records, function ($rec) {
