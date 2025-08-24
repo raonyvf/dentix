@@ -20,16 +20,12 @@
     <div>
         <label class="block text-sm font-medium mb-1">Clínica</label>
         <div class="relative">
-            <select name="clinic_id" class="appearance-none w-full rounded border border-stroke bg-transparent py-2 pl-3 pr-10 focus:border-primary" onchange="this.form.submit()">
+            <select name="clinic_id" class="w-full rounded border border-stroke bg-transparent py-2 pl-3 pr-10 focus:border-primary" onchange="this.form.submit()">
                 @foreach($clinics as $c)
                     <option value="{{ $c->id }}" @selected($clinicId==$c->id)>{{ $c->nome }}</option>
                 @endforeach
             </select>
-            <span class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2">
-                <svg class="fill-current" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6.00016 7.33325L0.666992 1.99992L1.84016 0.826752L6.00016 4.98675L10.1602 0.826752L11.3335 1.99992L6.00016 7.33325Z" fill="currentColor"/>
-                </svg>
-            </span>
+            {{-- Removed custom arrow to use native browser arrow --}}
         </div>
     </div>
     <div>
@@ -39,16 +35,12 @@
     <div>
         <label class="block text-sm font-medium mb-1">Mês</label>
         <div class="relative">
-            <select name="month" id="mesSelecionado" class="appearance-none w-full rounded border border-stroke bg-transparent py-2 pl-3 pr-10 focus:border-primary" onchange="this.form.submit()">
+            <select name="month" id="mesSelecionado" class="w-full rounded border border-stroke bg-transparent py-2 pl-3 pr-10 focus:border-primary" onchange="this.form.submit()">
                 @foreach($mesesDisponiveis as $mes)
                     <option value="{{ $mes->month }}" @selected($mes->equalTo($month))>{{ $mes->translatedFormat('F') }}</option>
                 @endforeach
             </select>
-            <span class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2">
-                <svg class="fill-current" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6.00016 7.33325L0.666992 1.99992L1.84016 0.826752L6.00016 4.98675L10.1602 0.826752L11.3335 1.99992L6.00016 7.33325Z" fill="currentColor"/>
-                </svg>
-            </span>
+            {{-- Removed custom arrow to use native browser arrow --}}
         </div>
     </div>
     <div class="flex items-end gap-2">
@@ -112,16 +104,12 @@
             <div>
                 <label class="block text-sm mb-1">Profissional</label>
                 <div class="relative">
-                    <select name="profissional_id" class="appearance-none w-full rounded border border-stroke bg-transparent py-2 pl-3 pr-10 focus:border-primary">
+                    <select name="profissional_id" class="w-full rounded border border-stroke bg-transparent py-2 pl-3 pr-10 focus:border-primary">
                         @foreach($dentistas as $d)
                             <option value="{{ $d->id }}">{{ $d->pessoa->primeiro_nome }} {{ $d->pessoa->ultimo_nome }}</option>
                         @endforeach
                     </select>
-                    <span class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2">
-                        <svg class="fill-current" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6.00016 7.33325L0.666992 1.99992L1.84016 0.826752L6.00016 4.98675L10.1602 0.826752L11.3335 1.99992L6.00016 7.33325Z" fill="currentColor"/>
-                        </svg>
-                    </span>
+                    {{-- Removed custom arrow to use native browser arrow --}}
                 </div>
             </div>
             <div class="mb-2">
@@ -148,16 +136,12 @@
                     <div class="flex-1">
                         <label class="block text-sm mb-1">Dia da semana</label>
                         <div class="relative">
-                            <select name="dias[]" multiple class="appearance-none w-full rounded border border-stroke bg-transparent py-2 pl-3 pr-10 focus:border-primary" disabled>
+                            <select name="dias[]" multiple class="w-full rounded border border-stroke bg-transparent py-2 pl-3 pr-10 focus:border-primary" disabled>
                                 @foreach($dias as $d)
                                     <option value="{{ $d->toName() }}">{{ ucfirst($d->toName()) }}</option>
                                 @endforeach
                             </select>
-                            <span class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2">
-                                <svg class="fill-current" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6.00016 7.33325L0.666992 1.99992L1.84016 0.826752L6.00016 4.98675L10.1602 0.826752L11.3335 1.99992L6.00016 7.33325Z" fill="currentColor"/>
-                                </svg>
-                            </span>
+                            {{-- Removed custom arrow to use native browser arrow --}}
                         </div>
                     </div>
                 </div>
@@ -191,16 +175,12 @@
             <div>
                 <label class="block text-sm mb-1">Cadeira</label>
                 <div class="relative">
-                    <select name="cadeira_id" class="appearance-none w-full rounded border border-stroke bg-transparent py-2 pl-3 pr-10 focus:border-primary">
+                    <select name="cadeira_id" class="w-full rounded border border-stroke bg-transparent py-2 pl-3 pr-10 focus:border-primary">
                         @foreach($cadeiras as $c)
                             <option value="{{ $c->id }}">{{ $c->nome }}</option>
                         @endforeach
                     </select>
-                    <span class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2">
-                        <svg class="fill-current" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6.00016 7.33325L0.666992 1.99992L1.84016 0.826752L6.00016 4.98675L10.1602 0.826752L11.3335 1.99992L6.00016 7.33325Z" fill="currentColor"/>
-                        </svg>
-                    </span>
+                    {{-- Removed custom arrow to use native browser arrow --}}
                 </div>
             </div>
             <div class="text-right space-x-2">
