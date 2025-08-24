@@ -22,11 +22,18 @@
             @if ($clinics->count() > 1)
                 <form method="POST" action="{{ route('clinicas.selecionar') }}">
                     @csrf
-                    <select name="clinic_id" onchange="this.form.submit()" class="border-gray-300 rounded py-2 px-2 text-sm">
-                        @foreach ($clinics as $clinic)
-                            <option value="{{ $clinic->id }}" @selected($clinic->id == $currentClinic)>{{ $clinic->nome }}</option>
-                        @endforeach
-                    </select>
+                    <div class="relative">
+                        <select name="clinic_id" onchange="this.form.submit()" class="appearance-none rounded border-[1.5px] border-stroke bg-gray-2 py-2 pl-3 pr-8 text-sm text-black focus:border-primary focus:outline-none">
+                            @foreach ($clinics as $clinic)
+                                <option value="{{ $clinic->id }}" @selected($clinic->id == $currentClinic)>{{ $clinic->nome }}</option>
+                            @endforeach
+                        </select>
+                        <span class="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2">
+                            <svg class="h-4 w-4 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 8l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            </svg>
+                        </span>
+                    </div>
                 </form>
             @elseif ($clinics->count() === 1)
                 <span class="text-sm text-gray-600">{{ $clinics->first()->nome }}</span>
