@@ -75,8 +75,12 @@
                     <p class="text-xs text-gray-500">{{ $user->email }}</p>
                 @endif
             </div>
-            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-100">Editar Perfil</a>
-            <a href="{{ route('account.settings') }}" class="block px-4 py-2 hover:bg-gray-100">Configurações da Conta</a>
+            @if (\Illuminate\Support\Facades\Route::has('profile.edit'))
+                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-100">Editar Perfil</a>
+            @endif
+            @if (\Illuminate\Support\Facades\Route::has('account.settings'))
+                <a href="{{ route('account.settings') }}" class="block px-4 py-2 hover:bg-gray-100">Configurações da Conta</a>
+            @endif
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Sair</button>
