@@ -12,25 +12,19 @@
         <ul class="flex flex-wrap -mb-px" aria-label="Tabs">
             <li>
                 <button type="button" class="inline-flex items-center gap-2 py-4 px-4 border-b-2" @click="activeTab = 'dados'" :class="activeTab === 'dados' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.33 0 4.5.533 6.879 1.532M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
+                    <x-lucide-icon name="user" class="w-5 h-5" />
                     Dados cadastrais
                 </button>
             </li>
             <li>
                 <button type="button" class="inline-flex items-center gap-2 py-4 px-4 border-b-2" @click="activeTab = 'adm'" :class="activeTab === 'adm' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V6a4 4 0 014-4 4 4 0 014 4v1m-8 0h8m-8 0a2 2 0 00-2 2v9a2 2 0 002 2h8a2 2 0 002-2V9a2 2 0 00-2-2H8z" />
-                    </svg>
+                    <x-lucide-icon name="lock" class="w-5 h-5" />
                     Dados admissionais
                 </button>
             </li>
             <li>
                 <button type="button" class="inline-flex items-center gap-2 py-4 px-4 border-b-2" @click="activeTab = 'rem'" :class="activeTab === 'rem' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3 1.343 3 3-1.343 3-3 3m0-12V4m0 16v-4m0 4c1.657 0 3-1.343 3-3s-1.343-3-3-3-3-1.343-3-3 1.343-3 3-3" />
-                    </svg>
+                    <x-lucide-icon name="wallet" class="w-5 h-5" />
                     Remuneração
                 </button>
             </li>
