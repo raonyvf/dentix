@@ -77,6 +77,7 @@ class EscalaTrabalhoController extends Controller
                 'datas.*' => 'date',
                 'hora_inicio' => 'required',
                 'hora_fim' => 'required',
+                'overwrite' => 'sometimes|boolean',
             ], [
                 'datas.required' => 'Selecione ao menos uma data na aba Diário.',
             ]);
@@ -96,6 +97,7 @@ class EscalaTrabalhoController extends Controller
                 'hora_fim' => 'required',
                 'repeat_until' => 'nullable|date|after_or_equal:semana',
                 'repeat_weeks' => 'nullable|integer|min:1',
+                'overwrite' => 'sometimes|boolean',
             ], [
                 'semana.required' => 'Informe a semana inicial na aba Recorrente.',
                 'dias.required' => 'Selecione pelo menos um dia da semana na aba Recorrente.',
@@ -117,26 +119,31 @@ class EscalaTrabalhoController extends Controller
                     return back()->with('error', 'Horário fora do expediente da clínica.');
                 }
 
-                $conflict = EscalaTrabalho::where('clinica_id', $data['clinic_id'])
+                $conflictQuery = EscalaTrabalho::where('clinica_id', $data['clinic_id'])
                     ->where('cadeira_id', $data['cadeira_id'])
                     ->where('semana', $weekStart)
                     ->where('dia_semana', $dia)
                     ->where(function ($q) use ($data) {
                         $q->where('hora_inicio', '<', $data['hora_fim'])
                           ->where('hora_fim', '>', $data['hora_inicio']);
-                    })->exists();
+                    });
 
-                $conflictProf = EscalaTrabalho::where('clinica_id', $data['clinic_id'])
+                $conflictProfQuery = EscalaTrabalho::where('clinica_id', $data['clinic_id'])
                     ->where('profissional_id', $data['profissional_id'])
                     ->where('semana', $weekStart)
                     ->where('dia_semana', $dia)
                     ->where(function ($q) use ($data) {
                         $q->where('hora_inicio', '<', $data['hora_fim'])
                           ->where('hora_fim', '>', $data['hora_inicio']);
-                    })->exists();
+                    });
 
-                if ($conflict || $conflictProf) {
-                    return back()->with('error', 'Conflito de horários detectado.');
+                if ((clone $conflictQuery)->exists() || (clone $conflictProfQuery)->exists()) {
+                    if ($request->boolean('overwrite')) {
+                        $conflictQuery->delete();
+                        $conflictProfQuery->delete();
+                    } else {
+                        return back()->with('error', 'Conflito de horários detectado.');
+                    }
                 }
 
                 EscalaTrabalho::create([
@@ -174,26 +181,31 @@ class EscalaTrabalhoController extends Controller
 
                     $weekStart = $week->toDateString();
 
-                    $conflict = EscalaTrabalho::where('clinica_id', $data['clinic_id'])
+                    $conflictQuery = EscalaTrabalho::where('clinica_id', $data['clinic_id'])
                         ->where('cadeira_id', $data['cadeira_id'])
                         ->where('semana', $weekStart)
                         ->where('dia_semana', $dia)
                         ->where(function ($q) use ($data) {
                             $q->where('hora_inicio', '<', $data['hora_fim'])
                               ->where('hora_fim', '>', $data['hora_inicio']);
-                        })->exists();
+                        });
 
-                    $conflictProf = EscalaTrabalho::where('clinica_id', $data['clinic_id'])
+                    $conflictProfQuery = EscalaTrabalho::where('clinica_id', $data['clinic_id'])
                         ->where('profissional_id', $data['profissional_id'])
                         ->where('semana', $weekStart)
                         ->where('dia_semana', $dia)
                         ->where(function ($q) use ($data) {
                             $q->where('hora_inicio', '<', $data['hora_fim'])
                               ->where('hora_fim', '>', $data['hora_inicio']);
-                        })->exists();
+                        });
 
-                    if ($conflict || $conflictProf) {
-                        return back()->with('error', 'Conflito de horários detectado.');
+                    if ((clone $conflictQuery)->exists() || (clone $conflictProfQuery)->exists()) {
+                        if ($request->boolean('overwrite')) {
+                            $conflictQuery->delete();
+                            $conflictProfQuery->delete();
+                        } else {
+                            return back()->with('error', 'Conflito de horários detectado.');
+                        }
                     }
 
                     EscalaTrabalho::create([
@@ -241,6 +253,7 @@ class EscalaTrabalhoController extends Controller
                 'hora_fim' => 'required',
                 'repeat_until' => 'nullable|date|after_or_equal:semana',
                 'repeat_weeks' => 'nullable|integer|min:1',
+                'overwrite' => 'sometimes|boolean',
             ], [
                 'semana.required' => 'Informe a semana inicial na aba Recorrente.',
                 'dias.required' => 'Selecione pelo menos um dia da semana na aba Recorrente.',
@@ -273,7 +286,7 @@ class EscalaTrabalhoController extends Controller
 
                     $weekStart = $week->toDateString();
 
-                    $conflict = EscalaTrabalho::where('clinica_id', $escala->clinica_id)
+                    $conflictQuery = EscalaTrabalho::where('clinica_id', $escala->clinica_id)
                         ->where('cadeira_id', $data['cadeira_id'])
                         ->where('semana', $weekStart)
                         ->where('dia_semana', $dia)
@@ -281,9 +294,9 @@ class EscalaTrabalhoController extends Controller
                         ->where(function ($q) use ($data) {
                             $q->where('hora_inicio', '<', $data['hora_fim'])
                               ->where('hora_fim', '>', $data['hora_inicio']);
-                        })->exists();
+                        });
 
-                    $conflictProf = EscalaTrabalho::where('clinica_id', $escala->clinica_id)
+                    $conflictProfQuery = EscalaTrabalho::where('clinica_id', $escala->clinica_id)
                         ->where('profissional_id', $data['profissional_id'])
                         ->where('semana', $weekStart)
                         ->where('dia_semana', $dia)
@@ -291,10 +304,15 @@ class EscalaTrabalhoController extends Controller
                         ->where(function ($q) use ($data) {
                             $q->where('hora_inicio', '<', $data['hora_fim'])
                               ->where('hora_fim', '>', $data['hora_inicio']);
-                        })->exists();
+                        });
 
-                    if ($conflict || $conflictProf) {
-                        return back()->with('error', 'Conflito de horários detectado.');
+                    if ((clone $conflictQuery)->exists() || (clone $conflictProfQuery)->exists()) {
+                        if ($request->boolean('overwrite')) {
+                            $conflictQuery->delete();
+                            $conflictProfQuery->delete();
+                        } else {
+                            return back()->with('error', 'Conflito de horários detectado.');
+                        }
                     }
 
                     $records[] = [
@@ -339,6 +357,7 @@ class EscalaTrabalhoController extends Controller
             'data' => 'required|date',
             'hora_inicio' => 'required',
             'hora_fim' => 'required',
+            'overwrite' => 'sometimes|boolean',
         ]);
 
         $date = Carbon::parse($data['data']);
@@ -353,7 +372,7 @@ class EscalaTrabalhoController extends Controller
             return back()->with('error', 'Horário fora do expediente da clínica.');
         }
 
-        $conflict = EscalaTrabalho::where('clinica_id', $escala->clinica_id)
+        $conflictQuery = EscalaTrabalho::where('clinica_id', $escala->clinica_id)
             ->where('cadeira_id', $data['cadeira_id'])
             ->where('semana', $weekStart)
             ->where('dia_semana', $dia)
@@ -361,9 +380,9 @@ class EscalaTrabalhoController extends Controller
             ->where(function ($q) use ($data) {
                 $q->where('hora_inicio', '<', $data['hora_fim'])
                   ->where('hora_fim', '>', $data['hora_inicio']);
-            })->exists();
+            });
 
-        $conflictProf = EscalaTrabalho::where('clinica_id', $escala->clinica_id)
+        $conflictProfQuery = EscalaTrabalho::where('clinica_id', $escala->clinica_id)
             ->where('profissional_id', $data['profissional_id'])
             ->where('semana', $weekStart)
             ->where('dia_semana', $dia)
@@ -371,10 +390,15 @@ class EscalaTrabalhoController extends Controller
             ->where(function ($q) use ($data) {
                 $q->where('hora_inicio', '<', $data['hora_fim'])
                   ->where('hora_fim', '>', $data['hora_inicio']);
-            })->exists();
+            });
 
-        if ($conflict || $conflictProf) {
-            return back()->with('error', 'Conflito de horários detectado.');
+        if ((clone $conflictQuery)->exists() || (clone $conflictProfQuery)->exists()) {
+            if ($request->boolean('overwrite')) {
+                $conflictQuery->delete();
+                $conflictProfQuery->delete();
+            } else {
+                return back()->with('error', 'Conflito de horários detectado.');
+            }
         }
 
         $escala->update([

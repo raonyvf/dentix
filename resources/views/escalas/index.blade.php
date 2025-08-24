@@ -190,6 +190,12 @@
                     {{-- Removed custom arrow to use native browser arrow --}}
                 </div>
             </div>
+            <div>
+                <label class="inline-flex items-center">
+                    <input type="checkbox" name="overwrite" value="1" class="mr-1">
+                    Sobrescrever conflitos
+                </label>
+            </div>
             <div class="text-right space-x-2">
                 <button type="button" id="escala-delete" class="px-3 py-1 border rounded text-red-600 hidden">Excluir</button>
                 <button type="button" id="escala-cancel" class="px-3 py-1 border rounded">Cancelar</button>
